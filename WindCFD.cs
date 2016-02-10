@@ -1,15 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using RobotOM;
-using BHoM.Structural;
 
 namespace RobotToolkit
 {
+    /// <summary>
+    /// Wind CFD controller object
+    /// </summary>
     public class WindCFD
     {
+        /// <summary>
+        /// Generate wind CFD analysis
+        /// </summary>
+        /// <param name="windDir"></param>
+        /// <param name="windParams"></param>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
         public static bool Generate(WindDirection windDir, WindParams windParams, string FilePath = "LiveLink")
         {
             RobotApplication robot = null;
@@ -40,19 +45,38 @@ namespace RobotToolkit
         }
     }
 
+    /// <summary>
+    /// Wind directions
+    /// </summary>
     public class WindDirection
     {
+        /// <summary>Wind in positive X direction</summary>
         public bool x_positive {get; private set;}
+        /// <summary>Wind in positive Y direction</summary>
         public bool y_positive {get; private set;}
+        /// <summary>Wind in negative X direction</summary>
         public bool x_negative {get; private set;}
+        /// <summary>Wind in negative Y direction</summary>
         public bool y_negative {get; private set;}
+        /// <summary>Wind in quadrants direction</summary>
         public bool quadrants {get; private set;}
         
+        /// <summary>
+        /// Construct a wind directions object
+        /// </summary>
         public WindDirection()
         {
             this.SetDirection();
         }
 
+        /// <summary>
+        /// Set wind directions
+        /// </summary>
+        /// <param name="x_positive"></param>
+        /// <param name="y_positive"></param>
+        /// <param name="x_negative"></param>
+        /// <param name="y_negative"></param>
+        /// <param name="quadrants"></param>
         public void SetDirection(
             bool x_positive = true, 
             bool y_positive = true, 
@@ -68,18 +92,35 @@ namespace RobotToolkit
         }
     }
 
+    /// <summary>
+    /// Wind parameters for CFD analysis
+    /// </summary>
     public class WindParams
     {
+        /// <summary>Deviation of the solution</summary>
         public double deviationPercent { get; private set; }
+        /// <summary>Terrain level for wind modelling</summary>
         public double terrainLevel { get; private set; }
+        /// <summary>Wind velocity</summary>
         public double velocity { get; private set; }
+        /// <summary>Panel openings assumed closed or open</summary>
         public bool openingsClosed { get; private set; }
 
+        /// <summary>
+        /// Wind parameters constructor
+        /// </summary>
         public WindParams()
         {
             this.SetParameters();
         }
 
+        /// <summary>
+        /// Set wind parameters
+        /// </summary>
+        /// <param name="deviationPercent"></param>
+        /// <param name="terrainLevel"></param>
+        /// <param name="velocity"></param>
+        /// <param name="openingsClosed"></param>
         public void SetParameters(
             double deviationPercent = 0.5, 
             double terrainLevel = 0, 

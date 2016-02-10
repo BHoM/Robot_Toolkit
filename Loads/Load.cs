@@ -8,9 +8,24 @@ using BHoM.Structural;
 
 namespace RobotToolkit
 {
+    /// <summary>
+    /// Load objects and methods
+    /// </summary>
     public class Load
     {
-        public static bool CreatePanelLoad(RobotApplication robot, int loadCaseId, IRobotLoadRecordType type, string selString, LoadAxis axis, bool localAxis, bool projected, double value)
+        /// <summary>
+        /// Create a panel load
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="loadCaseId"></param>
+        /// <param name="type"></param>
+        /// <param name="selString"></param>
+        /// <param name="axis"></param>
+        /// <param name="localAxis"></param>
+        /// <param name="projected"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool CreatePanelLoad(RobotApplication robot, int loadCaseId, IRobotLoadRecordType type, string selString, AxisDirection axis, bool localAxis, bool projected, double value)
         {
             IRobotLoadRecord loadRecord;
             IRobotSimpleCase loadCase = (IRobotSimpleCase)robot.Project.Structure.Cases.Get(loadCaseId);
@@ -26,13 +41,13 @@ namespace RobotToolkit
 
             switch (axis)
             {
-                case LoadAxis.X:
+                case AxisDirection.X:
                     loadRecord.SetValue((int)IRobotUniformRecordValues.I_URV_PX, value);
                     break;
-                case LoadAxis.Y:
+                case AxisDirection.Y:
                     loadRecord.SetValue((int)IRobotUniformRecordValues.I_URV_PY, value);
                     break;
-                case LoadAxis.Z:
+                case AxisDirection.Z:
                     loadRecord.SetValue((int)IRobotUniformRecordValues.I_URV_PZ, value);
                     break;
                 default:
@@ -44,6 +59,14 @@ namespace RobotToolkit
             return true;
         }
 
+        /// <summary>
+        /// Create a thermal load on a beam
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="loadCaseId"></param>
+        /// <param name="selString"></param>
+        /// <param name="val"></param>
+        /// <returns></returns>
         public static bool CreateThermalBeamLoad(RobotApplication robot, int loadCaseId, string selString, double val)
         {
             IRobotLoadRecord loadRecord;
@@ -64,6 +87,16 @@ namespace RobotToolkit
             return true;
         }
 
+        /// <summary>
+        /// Create a gravity load
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="loadCaseId"></param>
+        /// <param name="selString"></param>
+        /// <param name="valX"></param>
+        /// <param name="valY"></param>
+        /// <param name="valZ"></param>
+        /// <returns></returns>
         public static bool CreateGravityLoad(RobotApplication robot, int loadCaseId, string selString, double valX, double valY, double valZ)
         {
             IRobotLoadRecord loadRecord;
@@ -87,6 +120,16 @@ namespace RobotToolkit
             return true;
         }
 
+        /// <summary>
+        /// Create a distributed moment on a beam
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="loadCaseId"></param>
+        /// <param name="selString"></param>
+        /// <param name="mx"></param>
+        /// <param name="my"></param>
+        /// <param name="mz"></param>
+        /// <returns></returns>
         public static bool CreateBeamDistributedMomentLoad(RobotApplication robot, int loadCaseId, string selString, double mx, double my, double mz)
         {
             IRobotLoadRecord loadRecord;
@@ -106,19 +149,28 @@ namespace RobotToolkit
             return true;
         }
 
-        public static bool CreateBeamDistributedMomentLoad(RobotApplication robot, int loadCaseId, string selString, double value, LoadAxis loadAxis)
+        /// <summary>
+        /// Create a beam distributed moment load
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="loadCaseId"></param>
+        /// <param name="selString"></param>
+        /// <param name="value"></param>
+        /// <param name="AxisDirection"></param>
+        /// <returns></returns>
+        public static bool CreateBeamDistributedMomentLoad(RobotApplication robot, int loadCaseId, string selString, double value, AxisDirection AxisDirection)
         {
-            switch (loadAxis)
+            switch (AxisDirection)
             {
-                case LoadAxis.X:
-                case LoadAxis.Y:
-                case LoadAxis.Z:
+                case AxisDirection.X:
+                case AxisDirection.Y:
+                case AxisDirection.Z:
                     return false;
-                case LoadAxis.YY:
+                case AxisDirection.YY:
                     return CreateBeamDistributedMomentLoad(robot, loadCaseId, selString, value, 0, 0);
-                case LoadAxis.XX:
+                case AxisDirection.XX:
                     return CreateBeamDistributedMomentLoad(robot, loadCaseId, selString, 0, value, 0);
-                case LoadAxis.ZZ:
+                case AxisDirection.ZZ:
                     return CreateBeamDistributedMomentLoad(robot, loadCaseId, selString, 0, 0, value);
                 default:
                     return false;
@@ -127,6 +179,18 @@ namespace RobotToolkit
 
         }
 
+        /// <summary>
+        /// Create a uniformly distributed load on a beam
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="loadCaseId"></param>
+        /// <param name="selString"></param>
+        /// <param name="px"></param>
+        /// <param name="py"></param>
+        /// <param name="pz"></param>
+        /// <param name="projected"></param>
+        /// <param name="local"></param>
+        /// <returns></returns>
         public static bool CreateBeamUDL(RobotApplication robot, int loadCaseId, string selString, double px, double py, double pz, bool projected, bool local)
         {
             IRobotLoadRecord loadRecord;
@@ -150,25 +214,54 @@ namespace RobotToolkit
             return true;
         }
 
-        public static bool CreateBeamUDL(RobotApplication robot, int loadCaseId, string selString, double value, LoadAxis loadAxis, bool projected, bool local)
+        /// <summary>
+        /// Create a uniformly distributed load on a beam
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="loadCaseId"></param>
+        /// <param name="selString"></param>
+        /// <param name="value"></param>
+        /// <param name="AxisDirection"></param>
+        /// <param name="projected"></param>
+        /// <param name="local"></param>
+        /// <returns></returns>
+        public static bool CreateBeamUDL(RobotApplication robot, int loadCaseId, string selString, double value, AxisDirection AxisDirection, bool projected, bool local)
         {
-            switch (loadAxis)
+            switch (AxisDirection)
             {
-                case LoadAxis.X:
+                case AxisDirection.X:
                     return CreateBeamUDL(robot, loadCaseId, selString, value, 0, 0, projected, local);
-                case LoadAxis.Y:
+                case AxisDirection.Y:
                     return CreateBeamUDL(robot, loadCaseId, selString, 0, value, 0, projected, local);
-                case LoadAxis.Z:
+                case AxisDirection.Z:
                     return CreateBeamUDL(robot, loadCaseId, selString, 0, 0, value, projected, local);
-                case LoadAxis.YY:
-                case LoadAxis.XX:
-                case LoadAxis.ZZ:
+                case AxisDirection.YY:
+                case AxisDirection.XX:
+                case AxisDirection.ZZ:
                 default:
                     return false;
             }
 
         }
 
+        /// <summary>
+        /// Create a patch load on a beam
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="loadCaseId"></param>
+        /// <param name="selString"></param>
+        /// <param name="px1"></param>
+        /// <param name="py1"></param>
+        /// <param name="pz1"></param>
+        /// <param name="pos1"></param>
+        /// <param name="px2"></param>
+        /// <param name="py2"></param>
+        /// <param name="pz2"></param>
+        /// <param name="pos2"></param>
+        /// <param name="normalised"></param>
+        /// <param name="projected"></param>
+        /// <param name="local"></param>
+        /// <returns></returns>
         public static bool CreateBeamPatchLoad(RobotApplication robot, int loadCaseId, string selString, double px1, double py1, double pz1, double pos1,
             double px2, double py2, double pz2, double pos2, bool normalised, bool projected, bool local)
         {
@@ -202,26 +295,58 @@ namespace RobotToolkit
             return true;
         }
 
-        public static bool CreateBeamPatchLoad(RobotApplication robot, int loadCaseId, string selString, LoadAxis loadAxis, double value1, double pos1,
+        /// <summary>
+        /// Create a patch load on a beam
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="loadCaseId"></param>
+        /// <param name="selString"></param>
+        /// <param name="AxisDirection"></param>
+        /// <param name="value1"></param>
+        /// <param name="pos1"></param>
+        /// <param name="value2"></param>
+        /// <param name="pos2"></param>
+        /// <param name="normalised"></param>
+        /// <param name="projected"></param>
+        /// <param name="local"></param>
+        /// <returns></returns>
+        public static bool CreateBeamPatchLoad(RobotApplication robot, int loadCaseId, string selString, AxisDirection AxisDirection, double value1, double pos1,
             double value2, double pos2, bool normalised, bool projected, bool local)
         {
-            switch (loadAxis)
+            switch (AxisDirection)
             {
-                case LoadAxis.X:
+                case AxisDirection.X:
                     return CreateBeamPatchLoad(robot, loadCaseId, selString, value1, 0, 0, pos1, value2, 0, 0, pos2, normalised, projected, local);
-                case LoadAxis.Y:
+                case AxisDirection.Y:
                     return CreateBeamPatchLoad(robot, loadCaseId, selString, 0, value1, 0, pos1, 0, value2, 0, pos2, normalised, projected, local);
-                case LoadAxis.Z:
+                case AxisDirection.Z:
                     return CreateBeamPatchLoad(robot, loadCaseId, selString, 0, 0, value1, pos1, 0, 0, value2, pos2, normalised, projected, local);
-                case LoadAxis.XX:
-                case LoadAxis.YY:
-                case LoadAxis.ZZ:
+                case AxisDirection.XX:
+                case AxisDirection.YY:
+                case AxisDirection.ZZ:
                 default:
                     return false;
             }
 
         }
 
+        /// <summary>
+        /// Create a point load on a beam
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="loadCaseId"></param>
+        /// <param name="selString"></param>
+        /// <param name="pos"></param>
+        /// <param name="fx"></param>
+        /// <param name="fy"></param>
+        /// <param name="fz"></param>
+        /// <param name="mx"></param>
+        /// <param name="my"></param>
+        /// <param name="mz"></param>
+        /// <param name="normalised"></param>
+        /// <param name="local"></param>
+        /// <param name="generateCalcNode"></param>
+        /// <returns></returns>
         public static bool CreateBeamPointLoad(RobotApplication robot, int loadCaseId, string selString, double pos, double fx, double fy, double fz,
             double mx, double my, double mz, bool normalised, bool local, bool generateCalcNode)
         {
@@ -254,27 +379,40 @@ namespace RobotToolkit
             return true;
         }
         
+        /// <summary>
+        /// Create a point load on a beam
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="loadCaseId"></param>
+        /// <param name="selString"></param>
+        /// <param name="pos"></param>
+        /// <param name="value"></param>
+        /// <param name="AxisDirection"></param>
+        /// <param name="normalised"></param>
+        /// <param name="local"></param>
+        /// <param name="generateCalcNode"></param>
+        /// <returns></returns>
         public static bool CreateBeamPointLoad(RobotApplication robot, int loadCaseId, string selString, double pos,
-            double value, LoadAxis loadAxis, bool normalised, bool local, bool generateCalcNode)
+            double value, AxisDirection AxisDirection, bool normalised, bool local, bool generateCalcNode)
         {
-            switch (loadAxis)
+            switch (AxisDirection)
             {
-                case LoadAxis.X:
+                case AxisDirection.X:
                     return CreateBeamPointLoad(robot, loadCaseId, selString, pos, value, 0, 0, 0, 0, 0,
                         normalised, local, generateCalcNode);
-                case LoadAxis.Y:
+                case AxisDirection.Y:
                     return CreateBeamPointLoad(robot, loadCaseId, selString, pos, 0, value, 0, 0, 0, 0,
                         normalised, local, generateCalcNode);
-                case LoadAxis.Z:
+                case AxisDirection.Z:
                     return CreateBeamPointLoad(robot, loadCaseId, selString, pos, 0, 0, value, 0, 0, 0,
                         normalised, local, generateCalcNode);
-                case LoadAxis.XX:
+                case AxisDirection.XX:
                     return CreateBeamPointLoad(robot, loadCaseId, selString, pos, 0, 0, 0, value, 0, 0,
                         normalised, local, generateCalcNode);
-                case LoadAxis.YY:
+                case AxisDirection.YY:
                     return CreateBeamPointLoad(robot, loadCaseId, selString, pos, 0, 0, 0, 0, value, 0,
                         normalised, local, generateCalcNode);
-                case LoadAxis.ZZ:
+                case AxisDirection.ZZ:
                     return CreateBeamPointLoad(robot, loadCaseId, selString, pos, 0, 0, 0, 0, 0, value,
                         normalised, local, generateCalcNode);
                 default:
@@ -283,6 +421,19 @@ namespace RobotToolkit
 
         }
 
+        /// <summary>
+        /// Create a nodal load
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="loadCaseId"></param>
+        /// <param name="selString"></param>
+        /// <param name="fx"></param>
+        /// <param name="fy"></param>
+        /// <param name="fz"></param>
+        /// <param name="mx"></param>
+        /// <param name="my"></param>
+        /// <param name="mz"></param>
+        /// <returns></returns>
         public static bool CreateNodalLoad(RobotApplication robot, int loadCaseId, string selString, double fx, double fy, double fz,
             double mx, double my, double mz)
         {
@@ -309,14 +460,23 @@ namespace RobotToolkit
             return true;
         }
 
-        public static bool CreateNodalLoad(RobotApplication robot, int loadCaseId, string selString, LoadAxis axis, double value)
+        /// <summary>
+        /// Create a nodal load
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="loadCaseId"></param>
+        /// <param name="selString"></param>
+        /// <param name="axis"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool CreateNodalLoad(RobotApplication robot, int loadCaseId, string selString, AxisDirection axis, double value)
         {
-            double fx = axis == LoadAxis.X ? value : 0;
-            double fy = axis == LoadAxis.Y ? value : 0;
-            double fz = axis == LoadAxis.Z ? value : 0;
-            double mx = axis == LoadAxis.XX ? value : 0;
-            double my = axis == LoadAxis.YY ? value : 0;
-            double mz = axis == LoadAxis.ZZ ? value : 0;
+            double fx = axis == AxisDirection.X ? value : 0;
+            double fy = axis == AxisDirection.Y ? value : 0;
+            double fz = axis == AxisDirection.Z ? value : 0;
+            double mx = axis == AxisDirection.XX ? value : 0;
+            double my = axis == AxisDirection.YY ? value : 0;
+            double mz = axis == AxisDirection.ZZ ? value : 0;
 
             return CreateNodalLoad(robot, loadCaseId, selString, fx, fy, fz, mx, my, mz);
         }

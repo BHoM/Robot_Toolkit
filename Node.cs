@@ -8,8 +8,16 @@ using BHoM;
 
 namespace RobotToolkit
 {
+    /// <summary>
+    /// Node objects
+    /// </summary>
     public class Node
     {
+        /// <summary>
+        /// Get nodes using the fast query method
+        /// </summary>
+        /// <param name="str_nodes"></param>
+        /// <param name="FilePath"></param>
         public static void GetNodesQuery(out Dictionary<int, BHoM.Structural.Node> str_nodes, string FilePath = "")
         {
             RobotApplication robot = new RobotApplication();
@@ -64,6 +72,12 @@ namespace RobotToolkit
             str_nodes = _str_nodes;
         }
   
+        /// <summary>
+        /// Create nodes using the fast cache method
+        /// </summary>
+        /// <param name="str_nodes"></param>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
         public static bool CreateNodesByCache(BHoM.Structural.Node[] str_nodes, string FilePath = "LiveLink")
         {
             RobotApplication robot = null;
@@ -81,6 +95,11 @@ namespace RobotToolkit
             return true;
         }
 
+        /// <summary>
+        /// Delete nodes by selection. Selection is in Robot string format. 
+        /// </summary>
+        /// <param name="selString"></param>
+        /// <param name="FilePath"></param>
         public static void DeleteNodes(string selString, string FilePath = "LiveLink")
         {
             RobotApplication robot = null;
@@ -92,6 +111,10 @@ namespace RobotToolkit
             robot.Project.Structure.Nodes.DeleteMany(sel);
         }
 
+        /// <summary>
+        /// Delete isolated nodes. 
+        /// </summary>
+        /// <param name="FilePath"></param>
         public static void DeleteIsolatedNodes(string FilePath = "LiveLink")
         {
             RobotApplication robot = null;
@@ -101,6 +124,12 @@ namespace RobotToolkit
             robot.Project.Structure.Nodes.DeleteMany(sel);
         }
 
+        /// <summary>
+        /// Set nodal restraints
+        /// </summary>
+        /// <param name="str_nodes"></param>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
         public static bool SetRestraints(List<BHoM.Structural.Node> str_nodes, string FilePath = "LiveLink")
         {
             RobotApplication robot = null;
@@ -119,6 +148,13 @@ namespace RobotToolkit
             return true;
         }
    
+        /// <summary>
+        /// Set rigid links by master and slave nodes
+        /// </summary>
+        /// <param name="masterNodeNumber"></param>
+        /// <param name="slaveNodeNumbers"></param>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
         public static bool SetRigidLinks(int masterNodeNumber, List<int> slaveNodeNumbers, string FilePath = "LiveLink")
         {
             RobotApplication robot = null;

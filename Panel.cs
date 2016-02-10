@@ -8,14 +8,30 @@ using BHoM.Structural;
 
 namespace RobotToolkit
 {
+    /// <summary>
+    /// Robot panel objects
+    /// </summary>
     public class Panel
     {
+        /// <summary>
+        /// Get the first free panel number (by free object number)
+        /// </summary>
+        /// <param name="freePanelNum"></param>
+        /// <param name="FilePath"></param>
         public static void GetFreePanelNumber(out int freePanelNum, string FilePath = "LiveLink")
         {
             RobotApplication robot = null;
             if (FilePath == "LiveLink") robot = new RobotApplication();
             freePanelNum = robot.Project.Structure.Objects.FreeNumber;
         }
+
+        /// <summary>
+        /// Get panel objects from Robot using the COM interface
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="coords"></param>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
         public static bool GetPanels(out int[] ids, out double[][,] coords, string FilePath = "LiveLink" )
         {
             RobotApplication robot = null;
@@ -62,6 +78,13 @@ namespace RobotToolkit
             return true;
         }
 
+        /// <summary>
+        /// Get contour geometry from Robot using the COM interface
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="coords"></param>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
         public static bool GetContours(out int[] ids, out double[][,] coords, string FilePath = "LiveLink")
         {
             RobotApplication robot = null;
@@ -103,6 +126,14 @@ namespace RobotToolkit
             return true;
         }
 
+        /// <summary>
+        /// Create Robot panels
+        /// </summary>
+        /// <param name="PanelNumbers"></param>
+        /// <param name="EdgePointCoords"></param>
+        /// <param name="thicknessNames"></param>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
         public static bool CreatePanels(List<int> PanelNumbers, List<double[,]> EdgePointCoords, List<string> thicknessNames, string FilePath = "LiveLink")
         {
             RobotApplication robot = null;
@@ -133,6 +164,13 @@ namespace RobotToolkit
             return true;
         }
 
+        /// <summary>
+        /// Create Robot openings in panels
+        /// </summary>
+        /// <param name="PanelNumbers"></param>
+        /// <param name="EdgePointCoords"></param>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
         public static bool CreateOpenings(List<int> PanelNumbers, List<double[,]> EdgePointCoords, string FilePath = "LiveLink")
         {
             RobotApplication robot = null;
@@ -158,6 +196,13 @@ namespace RobotToolkit
             return true;
         }
 
+        /// <summary>
+        /// Update panel geometry by redefinition of edge point coordinates
+        /// </summary>
+        /// <param name="PanelNumbers"></param>
+        /// <param name="EdgePointCoords"></param>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
         public static bool UpdateGeometry(List<int> PanelNumbers, List<double[,]> EdgePointCoords, string FilePath = "LiveLink")
         {
             RobotApplication robot = null;
@@ -189,6 +234,11 @@ namespace RobotToolkit
             return true;
         }
 
+        /// <summary>
+        /// Delete panels in a Robot model
+        /// </summary>
+        /// <param name="selString"></param>
+        /// <param name="FilePath"></param>
         public static void DeletePanels(string selString, string FilePath = "LiveLink")
         {
             RobotApplication robot = null;

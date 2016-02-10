@@ -8,8 +8,16 @@ using BHoM.Structural;
 
 namespace RobotToolkit
 {
+    /// <summary>
+    /// Robot label object - to manage all label objects to/from Robot
+    /// </summary>
     public class Label
     {
+        /// <summary>
+        /// Get all section property label names from a Robot model
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <returns></returns>
         public static string[] GetAllSectionPropertyNames(RobotApplication robot)
         {
             RobotNamesArray names = robot.Project.Structure.Labels.GetAvailableNames(IRobotLabelType.I_LT_BAR_SECTION);
@@ -22,6 +30,11 @@ namespace RobotToolkit
             return outPut;
         }
 
+        /// <summary>
+        /// Get all support label names from a Robot model
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <returns></returns>
         public static string[] GetAllSupportNames(RobotApplication robot)
         {
             RobotNamesArray names = robot.Project.Structure.Labels.GetAvailableNames(IRobotLabelType.I_LT_SUPPORT);
@@ -34,6 +47,11 @@ namespace RobotToolkit
             return outPut;
         }
 
+        /// <summary>
+        /// Get all release label names from a Robot model
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <returns></returns>
         public static string[] GetAllReleaseNames(RobotApplication robot)
         {
             RobotNamesArray names = robot.Project.Structure.Labels.GetAvailableNames(IRobotLabelType.I_LT_BAR_RELEASE);
@@ -46,6 +64,11 @@ namespace RobotToolkit
             return outPut;
         }
 
+        /// <summary>
+        /// Get all material label names from a Robot model
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <returns></returns>
         public static string[] GetAllMaterialNames(RobotApplication robot)
         {
             RobotNamesArray names = robot.Project.Structure.Labels.GetAvailableNames(IRobotLabelType.I_LT_MATERIAL);
@@ -58,6 +81,11 @@ namespace RobotToolkit
             return outPut;
         }
 
+        /// <summary>
+        /// Get all member type names from a Robot model
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <returns></returns>
         public static string[] GetAllBarMemberTypeNames(RobotApplication robot)
         {
             RobotNamesArray names = robot.Project.Structure.Labels.GetAvailableNames(IRobotLabelType.I_LT_MEMBER_TYPE);
@@ -70,6 +98,28 @@ namespace RobotToolkit
             return outPut;
         }
 
+        /// <summary>
+        /// Get all section properties from a Robot model
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="uniqueIds"></param>
+        /// <param name="names"></param>
+        /// <param name="materialNames"></param>
+        /// <param name="types"></param>
+        /// <param name="shapeTypes"></param>
+        /// <param name="D"></param>
+        /// <param name="BF"></param>
+        /// <param name="BF2"></param>
+        /// <param name="tw"></param>
+        /// <param name="tf"></param>
+        /// <param name="tf2"></param>
+        /// <param name="Ax"></param>
+        /// <param name="Ixx"></param>
+        /// <param name="Iyy"></param>
+        /// <param name="Izz"></param>
+        /// <param name="mass"></param>
+        /// <param name="aliases"></param>
+        /// <returns></returns>
         public static bool GetAllSectionProperties(RobotApplication robot, out int[] uniqueIds, out string[] names, out string[] materialNames,
            out IRobotBarSectionType[] types, out IRobotBarSectionShapeType[] shapeTypes, out double[] D, out double[] BF, out double[] BF2,
             out double[] tw, out double[] tf, out double[] tf2, out double[] Ax, out double[] Ixx, out double[] Iyy, out double[] Izz, out double[] mass, out string[][] aliases)
@@ -137,6 +187,22 @@ namespace RobotToolkit
             return true;
         }
 
+        /// <summary>
+        /// Get all material properties from a Robot model
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="ids"></param>
+        /// <param name="names"></param>
+        /// <param name="types"></param>
+        /// <param name="E"></param>
+        /// <param name="nu"></param>
+        /// <param name="G"></param>
+        /// <param name="density"></param>
+        /// <param name="alpha"></param>
+        /// <param name="dampingRatio"></param>
+        /// <param name="fy"></param>
+        /// <param name="fu"></param>
+        /// <returns></returns>
         public static bool GetAllMaterials(RobotApplication robot, out int[] ids, out string[] names, out IRobotMaterialType[] types, out double[] E, out double[] nu,
             out double[] G, out double[] density, out double[] alpha, out double[] dampingRatio, out double[] fy, out double[] fu)
         {
@@ -179,6 +245,14 @@ namespace RobotToolkit
             return true;
         }
 
+        /// <summary>
+        /// Create a Robot section property label from a section database
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="name"></param>
+        /// <param name="mat"></param>
+        /// <param name="searchString"></param>
+        /// <returns></returns>
         public static bool CreateSectionPropertyFromDatabase(RobotApplication robot, string name, string mat, string searchString)
         {
 
@@ -195,6 +269,16 @@ namespace RobotToolkit
             return success;
         }
 
+        /// <summary>
+        /// Create an RHS section property label 
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="name"></param>
+        /// <param name="mat"></param>
+        /// <param name="D"></param>
+        /// <param name="B"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public static bool CreateSectionPropertyRHS(RobotApplication robot, string name, string mat, double D, double B, double t)
         {
             IRobotLabel section = robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, name);
@@ -219,6 +303,15 @@ namespace RobotToolkit
             return true;
         }
 
+        /// <summary>
+        /// Create a CHS section property label
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="name"></param>
+        /// <param name="mat"></param>
+        /// <param name="D"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public static bool CreateSectionPropertyCHS(RobotApplication robot, string name, string mat, double D, double t)
         {
             IRobotLabel section = robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, name);
@@ -242,6 +335,17 @@ namespace RobotToolkit
             return true;
         }
 
+        /// <summary>
+        /// Create a tee section property label
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="name"></param>
+        /// <param name="mat"></param>
+        /// <param name="D"></param>
+        /// <param name="B"></param>
+        /// <param name="tw"></param>
+        /// <param name="tf"></param>
+        /// <returns></returns>
         public static bool CreateSectionPropertyT(RobotApplication robot, string name, string mat, double D, double B, double tw, double tf)
         {
             IRobotLabel section = robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, name);
@@ -267,6 +371,17 @@ namespace RobotToolkit
             return true;
         }
 
+        /// <summary>
+        /// Create a box section property label
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="name"></param>
+        /// <param name="mat"></param>
+        /// <param name="D"></param>
+        /// <param name="B"></param>
+        /// <param name="tw"></param>
+        /// <param name="tf"></param>
+        /// <returns></returns>
         public static bool CreateSectionPropertyBox(RobotApplication robot, string name, string mat, double D, double B, double tw, double tf)
         {
             IRobotLabel section = robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, name);
@@ -292,6 +407,17 @@ namespace RobotToolkit
             return true;
         }
 
+        /// <summary>
+        /// Create an I section property label with bi-symmetry
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="name"></param>
+        /// <param name="mat"></param>
+        /// <param name="D"></param>
+        /// <param name="B"></param>
+        /// <param name="tw"></param>
+        /// <param name="tf"></param>
+        /// <returns></returns>
         public static bool CreateSectionPropertyIBiSymmetric(RobotApplication robot, string name, string mat, double D, double B, double tw, double tf)
         {
             IRobotLabel section = robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, name);
@@ -317,7 +443,14 @@ namespace RobotToolkit
             return true;
         }
 
-        public static bool CreateReleaseLabel(RobotApplication robot, BHoM.Structural.Release startRelease, BHoM.Structural.Release endRelease)
+        /// <summary>
+        /// Create a release label
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="startRelease"></param>
+        /// <param name="endRelease"></param>
+        /// <returns></returns>
+        public static bool CreateReleaseLabel(RobotApplication robot, BHoM.Structural.BarRelease startRelease, BHoM.Structural.BarRelease endRelease)
         {
             IRobotLabel robot_release = robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_RELEASE, startRelease.Name + "-" + endRelease.Name);
             if (robot.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_SUPPORT, startRelease.Name + "-" + endRelease.Name) == 1)
@@ -349,7 +482,13 @@ namespace RobotToolkit
             return true;
         }
 
-        public static bool CreateSupportLabel(RobotApplication robot, BHoM.Structural.Restraint restraint)
+        /// <summary>
+        /// Create a support label
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="restraint"></param>
+        /// <returns></returns>
+        public static bool CreateSupportLabel(RobotApplication robot, BHoM.Structural.Constraint restraint)
         {
             IRobotLabel robot_restraint = robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_SUPPORT, restraint.Name);
             if (robot.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_SUPPORT, restraint.Name) == 1)
@@ -377,6 +516,21 @@ namespace RobotToolkit
             return true;
         }
 
+        /// <summary>
+        /// Create a material label
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="name"></param>
+        /// <param name="materialType"></param>
+        /// <param name="E"></param>
+        /// <param name="nu"></param>
+        /// <param name="G"></param>
+        /// <param name="density"></param>
+        /// <param name="alpha"></param>
+        /// <param name="dampingRatio"></param>
+        /// <param name="fy"></param>
+        /// <param name="fu"></param>
+        /// <returns></returns>
         public static bool CreateMaterialLabel(RobotApplication robot, string name, IRobotMaterialType materialType,
      double E, double nu, double G, double density, double alpha, double dampingRatio, double fy, double fu)
         {

@@ -8,8 +8,17 @@ using BHoM.Structural;
 
 namespace RobotToolkit
 {
+    /// <summary>
+    /// Loadcase objects
+    /// </summary>
     public class Loadcase
     {
+        /// <summary>
+        /// Create Robot loadcases
+        /// </summary>
+        /// <param name="loadcases"></param>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
         public static bool CreateLoadcases(BHoM.Structural.Loads.Loadcase[] loadcases, string FilePath = "LiveLink")
         {
             RobotApplication robot = null;

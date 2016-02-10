@@ -8,8 +8,20 @@ using BHoM.Structural;
 
 namespace RobotToolkit
 {
+    /// <summary>
+    /// Finite elements class for 2D planar shell finite element objects
+    /// </summary>
     public class FiniteElement
     {
+        /// <summary>
+        /// Gets the FE meshes from a Robot model using the fast query method
+        /// </summary>
+        /// <param name="panel_ids"></param>
+        /// <param name="coords"></param>
+        /// <param name="vertex_indices"></param>
+        /// <param name="str_nodes"></param>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
         public static bool GetFEMeshQuery(out int[] panel_ids, out double[][] coords, out Dictionary<int, int[]> vertex_indices, out Dictionary<int, BHoM.Structural.Node> str_nodes, string FilePath = "LiveLink")
         {
             RobotApplication robot = null;

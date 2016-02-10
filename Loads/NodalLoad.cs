@@ -8,8 +8,17 @@ using BHoM.Structural;
 
 namespace RobotToolkit
 {
+    /// <summary>
+    /// Nodal load objects
+    /// </summary>
     public class NodalLoad
     {
+        /// <summary>
+        /// Create a nodal load displacement
+        /// </summary>
+        /// <param name="nodalLoads"></param>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
         public static bool CreateNodalLoadDisplacement(BHoM.Structural.Loads.NodalLoad[] nodalLoads, string FilePath = "LiveLink")
         {
             RobotApplication robot = null;

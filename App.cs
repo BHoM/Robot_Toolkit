@@ -8,8 +8,15 @@ using BHoM.Structural;
 
 namespace RobotToolkit
 {
+    /// <summary>
+    /// Application class for Robot application controls
+    /// </summary>
     public class App
     {
+        /// <summary>
+        /// Runs the Robot calculations engine
+        /// </summary>
+        /// <param name="FilePath"></param>
         public static void RunCalculations(string FilePath = "LiveLink")
         {
             RobotApplication robot = null;
@@ -23,6 +30,10 @@ namespace RobotToolkit
             robot.Project.CalcEngine.AutoFreezeResults = false;
         }
 
+        /// <summary>
+        /// Stops the Robot calculation engine
+        /// </summary>
+        /// <param name="FilePath"></param>
         public static void StopCalculations(string FilePath = "LiveLing")
         {
             RobotApplication robot = null;

@@ -8,8 +8,15 @@ using BHoM.Structural;
 
 namespace RobotToolkit
 {
+    /// <summary>
+    /// General tools
+    /// </summary>
     public class General
     {
+        /// <summary>
+        /// Refreshes the Robot view
+        /// </summary>
+        /// <param name="FilePath"></param>
         public static void RefreshView(string FilePath = "LiveLink")
         {
             RobotApplication robot = null;
@@ -17,6 +24,10 @@ namespace RobotToolkit
             robot.Project.ViewMngr.Refresh();
         }
 
+        /// <summary>
+        /// Deletes all elements from a Robot structure
+        /// </summary>
+        /// <param name="FilePath"></param>
         public static void ClearStructure(string FilePath = "LiveLink")
         {
             RobotApplication robot = null;
@@ -24,6 +35,13 @@ namespace RobotToolkit
             robot.Project.Structure.Clear();
         }
 
+        /// <summary>
+        /// Get free node, bar, object numbers from a Robot model (the next highest number)
+        /// </summary>
+        /// <param name="freeNodeNum"></param>
+        /// <param name="freeBarNum"></param>
+        /// <param name="freeObjNum"></param>
+        /// <param name="FilePath"></param>
         public static void GetFreeNumbers(out int freeNodeNum, out int freeBarNum, out int freeObjNum, string FilePath = "LiveLink")
         {
             RobotApplication robot = null;

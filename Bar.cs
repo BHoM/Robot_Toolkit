@@ -1,15 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RobotOM;
 using BHoM.Structural;
 
 namespace RobotToolkit
 {
+    /// <summary>
+    /// Robot bar class, for all bar objects and operations
+    /// </summary>
     public class Bar
     {
+        /// <summary>
+        /// Gets Robot bars using the faster 'query' method. This does not return all Robot bar data
+        /// as the only information returned is in double format. To get all bar data use 'GetBars' method.
+        /// </summary>
+        /// <param name="str_bars"></param>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
         public static bool GetBarsQuery(out Dictionary<int,BHoM.Structural.Bar> str_bars, string FilePath = "")
         {
             RobotApplication robot = new RobotApplication();
@@ -72,7 +79,7 @@ namespace RobotToolkit
                     nod1 = (int)result_row.GetValue(nod1_id);
                     nod2 = (int)result_row.GetValue(nod2_id);
 
-                    _str_bars.Add(bar_num, new BHoM.Structural.Bar(str_nodes[(int)nod1], str_nodes[(int)nod2], bar_num));
+                    _str_bars.Add(bar_num, new BHoM.Structural.Bar(bar_num, str_nodes[(int)nod1], str_nodes[(int)nod2]));
 
                     ok = row_set.MoveNext();
                 }
@@ -84,6 +91,13 @@ namespace RobotToolkit
             return false;
         }
 
+        /// <summary>
+        /// Get bars method, gets bars from a Robot model and all associated data. Much slower than
+        /// the get bars query as it uses the COM interface. 
+        /// </summary>
+        /// <param name="str_bars"></param>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
         public static bool GetBars(out Dictionary<int, BHoM.Structural.Bar> str_bars, string FilePath = "")
         {
             RobotApplication robot = new RobotApplication();
@@ -104,7 +118,7 @@ namespace RobotToolkit
             {
                 RobotBar rbar = (RobotBar)collection.Get(i + 1);
 
-                BHoM.Structural.Bar str_bar = new BHoM.Structural.Bar(str_nodes[rbar.StartNode], str_nodes[rbar.EndNode], rbar.Number);
+                BHoM.Structural.Bar str_bar = new BHoM.Structural.Bar(rbar.Number, str_nodes[rbar.StartNode], str_nodes[rbar.EndNode]);
                 str_bar.OrientationAngle = rbar.Gamma;
                 str_bar.SetSectionPropertyName(rbar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION));
                 
@@ -117,6 +131,12 @@ namespace RobotToolkit
             return true;
         }
    
+        /// <summary>
+        /// Creates bars using the fast cache method. 
+        /// </summary>
+        /// <param name="str_bars"></param>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
         public static bool CreateBarsByCache(BHoM.Structural.Bar[] str_bars, string FilePath = "LiveLink")
         {
             RobotApplication robot = null;
@@ -130,8 +150,8 @@ namespace RobotToolkit
             for (int i = 0; i < str_bars.Length;i++)
             {
                 BHoM.Structural.Bar bar = str_bars[i];
-                BHoM.Structural.Node start_node = bar.GetStartNode();
-                BHoM.Structural.Node end_node = bar.GetEndNode();
+                BHoM.Structural.Node start_node = bar.StartNode;
+                BHoM.Structural.Node end_node = bar.EndNode;
 
                 if (!node_dictionary.ContainsKey(start_node.Number))
                 {
@@ -144,11 +164,11 @@ namespace RobotToolkit
                     structureCache.AddNode(end_node.Number, end_node.X, end_node.Y, end_node.Z);
                 }
 
-                structureCache.AddBar(bar.Number, bar.StartNodeNumber, bar.EndNodeNumber, "UB 305x165x40", "S355", 0);
+                structureCache.AddBar(bar.Number, bar.StartNode.Number, bar.EndNode.Number, "UB 305x165x40", "S355", 0);
                 structureCache.SetBarLabel(bar.Number, IRobotLabelType.I_LT_BAR_SECTION, bar.SectionProperty.Name);
-                if (avail_mem_type_names.Contains(bar.TypeName) == false) try { mem_types.Add(bar.TypeName, bar.TypeName); }
+                if (avail_mem_type_names.Contains(bar.DesignGroupName) == false) try { mem_types.Add(bar.DesignGroupName, bar.DesignGroupName); }
                     catch { }
-                structureCache.SetBarLabel(bar.Number, IRobotLabelType.I_LT_MEMBER_TYPE, bar.TypeName);
+                structureCache.SetBarLabel(bar.Number, IRobotLabelType.I_LT_MEMBER_TYPE, bar.DesignGroupName);
             }
             for (int i = 0; i < mem_types.Count; i++)
             {
@@ -161,6 +181,13 @@ namespace RobotToolkit
             return true;
         }
 
+        /// <summary>
+        /// Creates bars using the slower COM interface. More control over the bar and node 
+        /// numbering is possible using this method as bars are created one by one.
+        /// </summary>
+        /// <param name="str_bars"></param>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
         public static bool CreateBars(BHoM.Structural.Bar[] str_bars, string FilePath = "LiveLink")
         {
             RobotApplication robot = null;
@@ -169,13 +196,19 @@ namespace RobotToolkit
             robot.Project.Structure.Bars.BeginMultiOperation();
             foreach (BHoM.Structural.Bar bar in str_bars)
             {
-                robot.Project.Structure.Bars.Create(bar.Number, bar.StartNodeNumber, bar.EndNodeNumber);
+                robot.Project.Structure.Bars.Create(bar.Number, bar.StartNode.Number, bar.EndNode.Number);
             }
             robot.Project.Structure.Bars.EndMultiOperation();
 
         return true;
         }
 
+        /// <summary>
+        /// Deletes bars from a Robot model using a selection string. The selection string is similar
+        /// in format to a Robot object selection string (can be a list of numbers as a string, or include 'to' words).
+        /// </summary>
+        /// <param name="selString"></param>
+        /// <param name="FilePath"></param>
         public static void DeleteBars(string selString, string FilePath = "LiveLink")
         {
             RobotApplication robot = null;

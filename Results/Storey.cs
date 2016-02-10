@@ -12,13 +12,13 @@ namespace RobotToolkit.Results
         public void GetStoreyResults(
             BHoM.Structural.Loads.Loadcase loadcase,
             BHoM.Structural.Storey storey,
-            out BHoM.Structural.Results.StoreyResult storeyResult,  
+            out BHoM.Structural.Results.Building.StoreyResult storeyResult,  
             string FilePath = "LiveLink")
         {
             RobotApplication robot = null;
             if (FilePath == "LiveLink") robot = new RobotApplication();
 
-            storeyResult = new BHoM.Structural.Results.StoreyResult(loadcase);
+            storeyResult = new BHoM.Structural.Results.Building.StoreyResult(loadcase);
             RobotStoreyResultServer robotResult = robot.Project.Structure.Results.Storeys;
             RobotStoreyDisplacements robotDisplacements = robotResult.Displacements(storey.Number, loadcase.Number);
             RobotStoreyReducedForces robotForces = robotResult.ReducedForces(storey.Number, loadcase.Number);

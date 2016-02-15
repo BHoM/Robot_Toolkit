@@ -23,7 +23,7 @@ namespace RobotToolkit
             robot.Visible = 1;
             robot.UserControl = true;
             robot.Interactive = 1;
-
+            
             IRobotWindLoadsSimulationParams robotWindParams = robot.Project.Structure.Cases.WindLoadsSimulationEngine.Params;
             robotWindParams.DirectionXNEnabled = windDir.x_negative;
             robotWindParams.DirectionXPEnabled = windDir.x_positive;

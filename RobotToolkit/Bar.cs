@@ -107,7 +107,7 @@ namespace RobotToolkit
             }
 
             Dictionary<int, BHoM.Structural.Node> str_nodes = new Dictionary<int, BHoM.Structural.Node>();
-            RobotToolkit.Node.GetNodesQuery(out str_nodes, FilePath);
+            RobotToolkit.Node.GetNodes(out str_nodes, FilePath);
              
             RobotBarCollection collection = (RobotBarCollection)robot.Project.Structure.Bars.GetAll();
             str_bars = new Dictionary<int, BHoM.Structural.Bar>();

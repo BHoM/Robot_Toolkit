@@ -31,8 +31,7 @@ namespace RobotToolkit
             rstructure = robot.Project.Structure;
             RobotSelection nod_sel = default(RobotSelection);
             IRobotResultQueryReturnType query_return = default(IRobotResultQueryReturnType);
-
-
+            
             nod_sel = rstructure.Selections.CreateFull(IRobotObjectType.I_OT_NODE);
             result_params.ResultIds.SetSize(3);
             result_params.ResultIds.Set(1, 0);
@@ -71,7 +70,51 @@ namespace RobotToolkit
 
             str_nodes = _str_nodes;
         }
-  
+
+        /// <summary>
+        /// Get nodes method, gets nodes from a Robot model and all associated data. Much slower than
+        /// the get nodes query as it uses the COM interface. 
+        /// </summary>
+        /// <param name="str_nodes"></param>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
+        public static bool GetNodes(out Dictionary<int, BHoM.Structural.Node> str_nodes, string FilePath = "")
+        {
+            RobotApplication robot = new RobotApplication();
+            if (FilePath != "")
+            {
+                robot.Project.Open(FilePath);
+            }
+
+
+            RobotNodeCollection collection = (RobotNodeCollection)robot.Project.Structure.Nodes.GetAll();
+            str_nodes = new Dictionary<int, BHoM.Structural.Node>();
+            
+            for (int i = 0; i < collection.Count; i++)
+            {
+                RobotNode rnode = (RobotNode)collection.Get(i + 1);
+
+                Dictionary<string, BHoM.Structural.Constraint> constraints = new Dictionary<string, BHoM.Structural.Constraint>();
+
+                BHoM.Structural.Node str_node = new BHoM.Structural.Node(rnode.X, rnode.Y, rnode.Z, rnode.Number);
+                if (rnode.HasLabel(IRobotLabelType.I_LT_SUPPORT) == 1)
+                {
+                    string rnodeSupportName = rnode.GetLabelName(IRobotLabelType.I_LT_SUPPORT);
+                    if (constraints.ContainsKey(rnodeSupportName))
+                    {
+                        str_node.SetConstraint(constraints[rnodeSupportName]);
+                    }
+                    else
+                    {
+                        BHoM.Structural.Constraint constraint = new BHoM.Structural.Constraint();
+                        str_node.SetConstraint(constraint);
+                    }
+                }
+                str_nodes.Add(str_node.Number, str_node);
+            }
+            return true;
+        }
+
         /// <summary>
         /// Create nodes using the fast cache method
         /// </summary>

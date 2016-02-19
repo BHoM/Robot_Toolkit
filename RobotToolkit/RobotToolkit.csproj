@@ -58,6 +58,7 @@
     <Compile Include="Loads\NodalLoad.cs" />
     <Compile Include="Results\Global.cs" />
     <Compile Include="Results\Storey.cs" />
+    <Compile Include="Section Properties\Robot_SectionProperty.cs" />
     <Compile Include="WindCFD.cs" />
     <Compile Include="Loads\Load.cs" />
     <Compile Include="RobotEnums.cs" />
@@ -67,7 +68,10 @@
     <Compile Include="Bar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Section Properties\Reinforced Concrete\" />
+    <Folder Include="Section Properties\Steel\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)Build\$(ProjectName).dll"

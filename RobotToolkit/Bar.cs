@@ -141,7 +141,7 @@ namespace RobotToolkit
                     }
                 }
 
-
+                
                 if (sec_data.NonstdCount != 0)
                 {
                     IRobotBarSectionNonstdData sec_nonstd = sec_data.GetNonstd(1);
@@ -178,11 +178,6 @@ namespace RobotToolkit
         public static bool CreateBarsByCache(BHoM.Structural.Bar[] str_bars, string FilePath = "LiveLink")
         {
             RobotApplication robot = new RobotApplication();
-            if (FilePath != "")
-            {
-                robot.Project.Open(FilePath);
-                robot.Visible = 0;
-            }
             RobotStructureCache structureCache = robot.Project.Structure.CreateCache();
 
             Dictionary<int, object> node_dictionary = new Dictionary<int, object>();
@@ -194,9 +189,7 @@ namespace RobotToolkit
 
             RobotNamesArray mat_names = robot.Project.Structure.Labels.GetAvailableNames(IRobotLabelType.I_LT_MATERIAL);
             string defaultMaterialName = mat_names.Get(1).ToString();
-
-
-
+            
             for (int i = 0; i < str_bars.Length;i++)
             {
                 BHoM.Structural.Bar bar = str_bars[i];
@@ -234,8 +227,7 @@ namespace RobotToolkit
             //}           
 
            RobotStructureApplyInfo applyInfo = robot.Project.Structure.ApplyCache(structureCache);
-            if (FilePath != "") { robot.Project.Close(); }
-            return true;
+           return true;
         }
 
         /// <summary>

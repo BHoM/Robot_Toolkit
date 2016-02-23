@@ -23,6 +23,7 @@ namespace RobotToolkit
             RobotApplication robot = new RobotApplication();
             if (FilePath != "")
             {
+                robot.Visible = 0;
                 robot.Project.Open(FilePath);
             }
             
@@ -90,6 +91,7 @@ namespace RobotToolkit
             result_params.Reset();
 
             str_bars = _str_bars;
+            if (FilePath != "") { robot.Project.Close(); }
             return false;
         }
 
@@ -105,6 +107,7 @@ namespace RobotToolkit
             RobotApplication robot = new RobotApplication();
             if (FilePath != "")
             {
+                robot.Visible = 0;
                 robot.Project.Open(FilePath);
             }
 
@@ -124,30 +127,45 @@ namespace RobotToolkit
                 str_bar.OrientationAngle = rbar.Gamma;
                 IRobotLabel sec_label = rbar.GetLabel(IRobotLabelType.I_LT_BAR_SECTION);
                 BHoM.Collections.Dictionary<string, object> userInfo = new BHoM.Collections.Dictionary<string, object>();
-
+                
                 IRobotBarSectionData sec_data = sec_label.Data;
+
                 var values = IRobotBarSectionDataValue.GetValues(typeof(IRobotBarSectionDataValue));
                 userInfo.Add("ShapeType", sec_data.ShapeType.ToString());
                 userInfo.Add("c", sec_data.NonstdCount.ToString());
-                foreach(var val in values)
-                {
-                    userInfo.Add(val.ToString(), sec_data.GetValue((IRobotBarSectionDataValue)val));
-                }
-                
 
-               
+                foreach (var val in values)
+                {
+                    {
+                        userInfo.Add(val.ToString(), sec_data.GetValue((IRobotBarSectionDataValue)val));
+                    }
+                }
+
+
+                if (sec_data.NonstdCount != 0)
+                {
+                    IRobotBarSectionNonstdData sec_nonstd = sec_data.GetNonstd(1);
+                    var nonstdValues = IRobotBarSectionNonstdDataValue.GetValues(typeof(IRobotBarSectionNonstdDataValue));
+
+                    foreach (var val in nonstdValues)
+                    {
+                        try
+                        {
+                            userInfo.Add(val.ToString(), sec_nonstd.GetValue((IRobotBarSectionNonstdDataValue)val));
+                        }
+                        catch { }
+                    }
+                }
+  
+                    str_bar.SetSectionProperty(SectionProperties.SectionProperty.Get(sec_label));
 
                 str_bar.UserData = userInfo;
-                
-                str_bar.SetSectionPropertyName(sec_label.Name);
-                
-                                
                 str_bars.Add(rbar.Number, str_bar);
-                
             }
 
             robot.Project.Structure.Bars.EndMultiOperation();
-           
+            if (FilePath != "")  { robot.Project.Close(); }
+
             return true;
         }
    
@@ -159,13 +177,17 @@ namespace RobotToolkit
         /// <returns></returns>
         public static bool CreateBarsByCache(BHoM.Structural.Bar[] str_bars, string FilePath = "LiveLink")
         {
-            RobotApplication robot = null;
-            if (FilePath == "LiveLink") robot = new RobotApplication();
-            //RobotStructureCache structureCache = robot.Project.Structure.CreateCache();
+            RobotApplication robot = new RobotApplication();
+            if (FilePath != "")
+            {
+                robot.Project.Open(FilePath);
+                robot.Visible = 0;
+            }
+            RobotStructureCache structureCache = robot.Project.Structure.CreateCache();
 
             Dictionary<int, object> node_dictionary = new Dictionary<int, object>();
-            //string[] avail_mem_type_names = RobotToolkit.Label.GetAllBarMemberTypeNames(robot);
-            //Dictionary<string, string> mem_types = new Dictionary<string, string>();
+            string[] avail_mem_type_names = RobotToolkit.Label.GetAllBarMemberTypeNames(robot);
+            Dictionary<string, string> mem_types = new Dictionary<string, string>();
 
             RobotNamesArray sec_names = robot.Project.Structure.Labels.GetAvailableNames(IRobotLabelType.I_LT_BAR_SECTION);
             string defaultSectionName = sec_names.Get(1).ToString();
@@ -184,20 +206,16 @@ namespace RobotToolkit
                 if (!node_dictionary.ContainsKey(start_node.Number))
                 {
                     node_dictionary.Add(start_node.Number, start_node);
-                    //structureCache.AddNode(start_node.Number, start_node.X, start_node.Y, start_node.Z);
-                    robot.Project.Structure.Nodes.Create(start_node.Number, start_node.X, start_node.Y, start_node.Z);
+                    structureCache.AddNode(start_node.Number, start_node.X, start_node.Y, start_node.Z);
                 }
                 if (!node_dictionary.ContainsKey(end_node.Number))
                 {
                     node_dictionary.Add(end_node.Number, end_node);
-                    robot.Project.Structure.Nodes.Create(end_node.Number, end_node.X, end_node.Y, end_node.Z);
-                   // structureCache.AddNode(end_node.Number, end_node.X, end_node.Y, end_node.Z);
+                   structureCache.AddNode(end_node.Number, end_node.X, end_node.Y, end_node.Z);
                 }
+                
 
-                robot.Project.Structure.Bars.Create(bar.Number, bar.StartNode.Number, bar.EndNode.Number);
-
-
-                //structureCache.AddBar(bar.Number, bar.StartNode.Number, bar.EndNode.Number, "W 16x40", "STEEL", 0);
+                structureCache.AddBar(bar.Number, bar.StartNode.Number, bar.EndNode.Number, defaultSectionName, defaultMaterialName, 0);
                 //if (bar.SectionProperty.Name != "")
                 //{
                 //    structureCache.SetBarLabel(bar.Number, IRobotLabelType.I_LT_BAR_SECTION, bar.SectionProperty.Name);
@@ -215,8 +233,8 @@ namespace RobotToolkit
             //    robot.Project.Structure.Labels.Store(mem_type_label);
             //}           
 
-           // RobotStructureApplyInfo applyInfo = robot.Project.Structure.ApplyCache(structureCache);
-            
+           RobotStructureApplyInfo applyInfo = robot.Project.Structure.ApplyCache(structureCache);
+            if (FilePath != "") { robot.Project.Close(); }
             return true;
         }
 

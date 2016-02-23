@@ -31,8 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BHoM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="BHoM">
       <HintPath>..\..\BHoM\Build\BHoM.dll</HintPath>
     </Reference>
     <Reference Include="Interop.RobotOM">
@@ -56,6 +55,7 @@
     <Compile Include="App.cs" />
     <Compile Include="Loads\Loadcase.cs" />
     <Compile Include="Loads\NodalLoad.cs" />
+    <Compile Include="Results\BarForces.cs" />
     <Compile Include="Results\Global.cs" />
     <Compile Include="Results\Storey.cs" />
     <Compile Include="Section Properties\Robot_SectionProperty.cs" />

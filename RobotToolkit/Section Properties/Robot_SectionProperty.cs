@@ -1,171 +1,252 @@
-﻿namespace RobotToolkit.SectionProperties
+﻿using System;
+using BHoM.Structural.SectionProperties;
+using RobotOM;
+
+namespace RobotToolkit.SectionProperties
 {
     /// <summary>
     /// Section property class, the parent abstract class for all structural 
     /// sections (RC, steel, PT beams, columns, bracing). Properties defined in this 
     /// parent class are those that would populate a multi category section database only
     /// </summary>
-    public abstract class SectionProperty
+    public class SectionProperty
     {
-        /// <summary>Mass per metre based on section properties</summary>
-        public double MassPerMetre { get; set; }
+        /// <summary>Set the BHoM section shape type</summary>
+        public static BHoM.Structural.SectionProperties.SectionProperty Get(IRobotLabel sec_label)
+        {
+           IRobotBarSectionData sec_data = sec_label.Data;
 
-        /// <summary>Name of section propert - a user defined, instance based parameter</summary>
-        public string Name { get; set; }
+            ///<summary>Universal column</summary>
+            if (sec_data.ShapeType == IRobotBarSectionShapeType.I_BSST_HEA)
+            {
+                BHoM.Structural.SectionProperties.SectionFactory sec_factory = new BHoM.Structural.SectionProperties.SectionFactory();
+                BHoM.Structural.SectionProperties.SteelISection sec_prop = (SteelISection)sec_factory.Create(BHoM.Structural.SectionProperties.ShapeType.SteelI);
+                sec_prop.Name = "temporary name";
+                sec_prop.Depth = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+                sec_prop.BottomFlangeWidth = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
+                sec_prop.BottomFlangeThickness = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);
+                sec_prop.TopFlangeWidth = sec_prop.BottomFlangeWidth;
+                sec_prop.TopFlangeThickness = sec_prop.BottomFlangeThickness;
+                sec_prop.WebThickness = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);
+                return sec_prop;
+            }
+            return null;
 
-        /// <summary>Section type</summary>
-        public string Type { get; set; }
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_COL_R;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_COL_T;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_COL_L;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_COL_Z;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_COL_P;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_COL_C;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_COL_CH;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_COL_CQ;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_I;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_RECT;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_T;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_UNKNOWN;
 
-        /// <summary>Information regarding section property type for the user</summary>
-        public string Description { get; set; }
+            ///<summary>Equal Angle (xy axis, parallel to legs)</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CAE;
 
-        /// <summary>Section material</summary>
-        public BHoM.Materials.Material Material { get; set; }
+            ///<summary>Equal Angle (uv main axis)</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CAEP;
 
-   
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_COL_R;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_COL_T;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_COL_L;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_COL_Z;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_COL_P;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_COL_C;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_COL_CH;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_COL_CQ;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_I;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_RECT;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_T;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_UNKNOWN;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CAE;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CAEP;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CAI;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CAIP;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_DCEC;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_DCED;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_DCEP;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_DCIG;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_DCIP;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_HEA;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_HEAA;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_HEB;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_HEC;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_HEM;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_HER;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_HHEA;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_HHEB;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_HHEM;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_IIPE;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_IPE;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_IPEA;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_IPEO;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_IPER;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_IPEV;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_IPN;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_MHEA;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_MHEB;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_MHEM;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_MIPE;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_PRS;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_TCAR;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_TEAE;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_TEAI;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_THEX;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_TREC;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_TRON;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_UAP;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_UPN;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_UUAP;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_UUPN;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_FRTG;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_WOOD_RECT;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_UPAF;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_RECT_FILLED;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CIRC_FILLED;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CCL;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_URND;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_TRND;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CUAP;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_SPEC_SFB;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_SPEC_IFBA;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_SPEC_IFBB;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_BOX;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_BOX;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_RECT;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_RECT;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_TUBE;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_TUBE;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_ISYM;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_I_BISYM;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_INSYM;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_I_MONOSYM;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_TUSER;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_T_SHAPE;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CUSER;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_C_SHAPE;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_TBETC;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_DRECT;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_WOOD_DRECT;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_WOOD_CIRC;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_CIRC_FILLED;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_BOX_2;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_POLYGONAL;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_SPEC_CORRUGATED_WEB;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_BOX_3;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_WELD_CROSS;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_CROSS;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_JOIST_K;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_JOIST_LH;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_JOIST_KCS;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_JOIST_DLH;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_JOIST_SLH;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_JOIST_G;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_JOIST_VG;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_JOIST_BG;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_SIGMA1;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_SIGMA2;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_ZED1;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_U;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_CE1;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_ANGL;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_OMEGA;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_SO1;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_RIVE1;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_C_PLUS;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_SIGMA_SL;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_SIGMA;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_Z;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_L_LIPS;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_Z_ROT;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2C_FACE;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2C_BACK;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2I;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_CI;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2LI;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_4L_FACE;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_4L_BACK;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_SHORT;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_LONG;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_CROSS;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_FACE_SHORT;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_FACE_LONG;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_CI_BACK;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2C_FACE_WELD;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2C_BACK_WELD;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2I_WELD;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_CI_WELD;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2LI_WELD;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_4L_FACE_WELD;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_4L_BACK_WELD;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_SHORT_WELD;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_LONG_WELD;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_CROSS_WELD;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_FACE_SHORT_WELD;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_FACE_LONG_WELD;
-        //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_CI_BACK_WELD;
+            ///<summary>Unequal Angles (xy axis, parallel to legs)</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CAI;
 
+            ///<summary>Unequal Angle (uv main axis) </summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CAIP;
+
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_DCEC;
+
+            ///<summary>Compound Equal Angles Legs Back to Back</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_DCED;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_DCEP;
+
+            ///<summary>Compound Unequal Angles Long Legs Back to Back</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_DCIG;
+
+            ///<summary>Compound Unequal Angles Short Legs Back to Back</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_DCIP;
+
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_HEAA;
+
+            ///<summary>Universal bearing pile</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_HEB;
+
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_HEC;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_HEM;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_HER;
+
+
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_HHEA;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_HHEB;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_HHEM;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_IIPE;
+
+            ///<summary>Universal beam</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_IPE;
+
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_IPEA;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_IPEO;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_IPER;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_IPEV;
+
+            ///<summary>Rolled Steel Joists</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_IPN;
+
+            ///<summary>Structural Tees cut from Universal Columns</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_MHEA;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_MHEB;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_MHEM;
+
+            ///<summary>Structural Tees cut from Universal Beams</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_MIPE;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_PRS;
+
+            ///<summary>Square hollow section</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_TCAR;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_TEAE;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_TEAI;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_THEX;
+
+            ///<summary>Rectangular hollow section</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_TREC;
+
+            ///<summary>Circular Hollow Section</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_TRON;
+
+            ///<summary>Parallel flange channel</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_UAP;
+
+            ///<summary>Rolled steel channel</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_UPN;
+
+            ///<summary>Two Parallel Flange Channel Back to Back</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_UUAP;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_UUPN;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_FRTG;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_WOOD_RECT;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_UPAF;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_RECT_FILLED;
+
+            ///<summary>Solid circular section</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CIRC_FILLED;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CCL;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_URND;
+
+            ///<summary>Square and Rectangular Hollow Sections</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_TRND;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CUAP;
+
+            ///<summary>Castellated beam</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS;
+
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_SPEC_SFB;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_SPEC_IFBA;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_SPEC_IFBB;
+
+            ///<summary>User defined fabricated box with bi symmetry (flanges and webs similar)</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_BOX;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_BOX;
+
+            ///<summary>Rectangular section (solid or hollow)</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_RECT;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_RECT;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_TUBE;
+
+            ///<summary>User defined circular hollow section</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_TUBE;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_ISYM;
+
+            ///<summary>I section with bi symmetry (flanges similar)</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_I_BISYM;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_INSYM;
+
+            ///<summary>I section with mono symmetry (flanges different)</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_I_MONOSYM;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_TUSER;
+
+            ///<summary>User defined tee shape</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_T_SHAPE;
+
+            ///<summary>User defined channel</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CUSER;
+
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_C_SHAPE;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_TBETC;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_DRECT;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_WOOD_DRECT;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_WOOD_CIRC;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_CIRC_FILLED;
+
+            ///<summary>User defined fabricated box with offset webs and bi symmetry (flanges similar)</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_BOX_2;
+
+            ///<summary>User defined polygonal</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_POLYGONAL;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_SPEC_CORRUGATED_WEB;
+
+            ///<summary>User defined fabricated box with offset webs and mono symmetry (flanges different)</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_BOX_3;
+
+            ///<summary>Cruciform section with flanges</summary>
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_WELD_CROSS;
+
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_CROSS;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_JOIST_K;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_JOIST_LH;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_JOIST_KCS;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_JOIST_DLH;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_JOIST_SLH;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_JOIST_G;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_JOIST_VG;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_JOIST_BG;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_SIGMA1;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_SIGMA2;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_ZED1;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_U;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_CE1;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_ANGL;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_OMEGA;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_SO1;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_RIVE1;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_C_PLUS;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_SIGMA_SL;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_SIGMA;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_Z;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_L_LIPS;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COLD_Z_ROT;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2C_FACE;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2C_BACK;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2I;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_CI;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2LI;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_4L_FACE;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_4L_BACK;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_SHORT;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_LONG;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_CROSS;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_FACE_SHORT;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_FACE_LONG;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_CI_BACK;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2C_FACE_WELD;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2C_BACK_WELD;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2I_WELD;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_CI_WELD;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2LI_WELD;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_4L_FACE_WELD;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_4L_BACK_WELD;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_SHORT_WELD;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_LONG_WELD;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_CROSS_WELD;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_FACE_SHORT_WELD;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_2L_FACE_LONG_WELD;
+            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_COMP_CI_BACK_WELD;
+        }
 
         //sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_AX);
         //sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_AY);

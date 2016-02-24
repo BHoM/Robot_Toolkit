@@ -70,7 +70,7 @@ namespace RobotToolkit
                 {
                     loadRecord.Objects.AddOne(loadCaseNumber);
                 }
-                
+
             }
             return true;
         }

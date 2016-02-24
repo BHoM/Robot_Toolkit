@@ -8,7 +8,7 @@ namespace RobotToolkit
     /// <summary>
     /// Robot bar class, for all bar objects and operations
     /// </summary>
-    public class Bar 
+    public class Bar
     {
         /// <summary>
         /// Gets Robot bars using the faster 'query' method. This does not return all Robot bar data
@@ -17,16 +17,16 @@ namespace RobotToolkit
         /// <param name="str_bars"></param>
         /// <param name="FilePath"></param>
         /// <returns></returns>
-        public static bool GetBarsQuery(out Dictionary<int,BHoM.Structural.Bar> str_bars, string FilePath = "")
+        public static bool GetBarsQuery(out Dictionary<int, BHoM.Structural.Bar> str_bars, string FilePath = "")
         {
-       
+
             RobotApplication robot = new RobotApplication();
             if (FilePath != "")
             {
                 robot.Visible = 0;
                 robot.Project.Open(FilePath);
             }
-            
+
 
             //Get Nodes
             Dictionary<int, BHoM.Structural.Node> str_nodes = new Dictionary<int, BHoM.Structural.Node>();
@@ -113,7 +113,7 @@ namespace RobotToolkit
 
             Dictionary<int, BHoM.Structural.Node> str_nodes = new Dictionary<int, BHoM.Structural.Node>();
             RobotToolkit.Node.GetNodes(out str_nodes, FilePath);
-             
+
             RobotBarCollection collection = (RobotBarCollection)robot.Project.Structure.Bars.GetAll();
             str_bars = new Dictionary<int, BHoM.Structural.Bar>();
 
@@ -127,7 +127,7 @@ namespace RobotToolkit
                 str_bar.OrientationAngle = rbar.Gamma;
                 IRobotLabel sec_label = rbar.GetLabel(IRobotLabelType.I_LT_BAR_SECTION);
                 BHoM.Collections.Dictionary<string, object> userInfo = new BHoM.Collections.Dictionary<string, object>();
-                
+
                 IRobotBarSectionData sec_data = sec_label.Data;
 
                 var values = IRobotBarSectionDataValue.GetValues(typeof(IRobotBarSectionDataValue));
@@ -141,7 +141,7 @@ namespace RobotToolkit
                     }
                 }
 
-                
+
                 if (sec_data.NonstdCount != 0)
                 {
                     IRobotBarSectionNonstdData sec_nonstd = sec_data.GetNonstd(1);
@@ -156,19 +156,19 @@ namespace RobotToolkit
                         catch { }
                     }
                 }
-  
-                    str_bar.SetSectionProperty(SectionProperties.SectionProperty.Get(sec_label));
+
+                str_bar.SetSectionProperty(SectionProperties.SectionProperty.Get(sec_label));
 
                 str_bar.UserData = userInfo;
                 str_bars.Add(rbar.Number, str_bar);
             }
 
             robot.Project.Structure.Bars.EndMultiOperation();
-            if (FilePath != "")  { robot.Project.Close(); }
+            if (FilePath != "") { robot.Project.Close(); }
 
             return true;
         }
-   
+
         /// <summary>
         /// Creates bars using the fast cache method. 
         /// </summary>
@@ -178,10 +178,7 @@ namespace RobotToolkit
         public static bool CreateBarsByCache(BHoM.Structural.Bar[] str_bars, string FilePath = "LiveLink")
         {
             RobotApplication robot = new RobotApplication();
-<<<<<<< HEAD
-=======
 
->>>>>>> refs/heads/pr/1
             RobotStructureCache structureCache = robot.Project.Structure.CreateCache();
 
             Dictionary<int, object> node_dictionary = new Dictionary<int, object>();
@@ -193,8 +190,10 @@ namespace RobotToolkit
 
             RobotNamesArray mat_names = robot.Project.Structure.Labels.GetAvailableNames(IRobotLabelType.I_LT_MATERIAL);
             string defaultMaterialName = mat_names.Get(1).ToString();
-            
-            for (int i = 0; i < str_bars.Length;i++)
+
+
+
+            for (int i = 0; i < str_bars.Length; i++)
             {
                 BHoM.Structural.Bar bar = str_bars[i];
                 BHoM.Structural.Node start_node = bar.StartNode;
@@ -208,9 +207,9 @@ namespace RobotToolkit
                 if (!node_dictionary.ContainsKey(end_node.Number))
                 {
                     node_dictionary.Add(end_node.Number, end_node);
-                   structureCache.AddNode(end_node.Number, end_node.X, end_node.Y, end_node.Z);
+                    structureCache.AddNode(end_node.Number, end_node.X, end_node.Y, end_node.Z);
                 }
-                
+
 
                 structureCache.AddBar(bar.Number, bar.StartNode.Number, bar.EndNode.Number, defaultSectionName, defaultMaterialName, 0);
                 //if (bar.SectionProperty.Name != "")
@@ -230,12 +229,8 @@ namespace RobotToolkit
             //    robot.Project.Structure.Labels.Store(mem_type_label);
             //}           
 
-           RobotStructureApplyInfo applyInfo = robot.Project.Structure.ApplyCache(structureCache);
-<<<<<<< HEAD
-           return true;
-=======
+            RobotStructureApplyInfo applyInfo = robot.Project.Structure.ApplyCache(structureCache);
             return true;
->>>>>>> refs/heads/pr/1
         }
 
         /// <summary>
@@ -257,7 +252,7 @@ namespace RobotToolkit
             }
             robot.Project.Structure.Bars.EndMultiOperation();
 
-        return true;
+            return true;
         }
 
         /// <summary>
@@ -273,6 +268,6 @@ namespace RobotToolkit
             RobotSelection sel = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
             sel.AddText(selString);
         }
-        
+
     }
 }

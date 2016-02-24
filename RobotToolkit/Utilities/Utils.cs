@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 
 namespace RobotToolkit.Utilities
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class Utils
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="selection"></param>
+        /// <returns></returns>
         public static List<int> GetNumbersFromText(string selection)
         {
             List<int> output = new List<int>();

@@ -34,7 +34,8 @@ namespace RobotToolkit
                 return false;
 
             loadRecord = loadCase.Records.Create(type);
-           
+
+
             loadRecord.SetValue((int)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM, Convert.ToInt32(localAxis));
             loadRecord.SetValue((int)IRobotUniformRecordValues.I_URV_PROJECTED, Convert.ToInt32(projected));
 
@@ -57,8 +58,6 @@ namespace RobotToolkit
 
             return true;
         }
-<<<<<<< HEAD
-=======
 
         /// <summary>
         /// Get Load Objects for uniform area loads
@@ -78,14 +77,14 @@ namespace RobotToolkit
                 for (int j = 1; j <= sCase.Records.Count; j++)
                 {
                     IRobotLoadRecord loadRecord = sCase.Records.Get(j);
-                   
+
                     switch (loadRecord.Type)
                     {
                         case IRobotLoadRecordType.I_LRT_UNIFORM:
                             double Px = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PX);
                             double Py = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PY);
                             double Pz = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PZ);
-                            BHoM.Structural.Loads.AreaUniformalyDistributedLoad load = new BHoM.Structural.Loads.AreaUniformalyDistributedLoad(Px,Py,Pz);
+                            BHoM.Structural.Loads.AreaUniformalyDistributedLoad load = new BHoM.Structural.Loads.AreaUniformalyDistributedLoad(Px, Py, Pz);
                             load.ObjectNumbers = RobotToolkit.Utilities.Utils.GetNumbersFromText(loadRecord.Objects.ToText());
                             loads.Add(load);
                             break;
@@ -414,37 +413,108 @@ namespace RobotToolkit
 
             return true;
         }
->>>>>>> refs/heads/pr/1
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="robapp"></param>
-        /// <param name="loadcase"></param>
-        /// <param name="loads"></param>
-        public void GetLoads(RobotToolkit.App robapp, BHoM.Structural.Loads.Loadcase loadcase, out List<BHoM.Structural.Loads.AreaUniformalyDistributedLoad> loads)
-        {
-            RobotApplication robot = robapp.RobApp;
-            IRobotCase lCase = robot.Project.Structure.Cases.Get(loadcase.Number);
-            loads = new List<BHoM.Structural.Loads.AreaUniformalyDistributedLoad>();
-            if (lCase.Type == IRobotCaseType.I_CT_SIMPLE || loadcase.Number < 0)
-            {
-                IRobotSimpleCase sCase = (lCase as IRobotSimpleCase);
 
-                for (int j = 1; j <= sCase.Records.Count; j++)
-                {
-                    IRobotLoadRecord loadRecord = sCase.Records.Get(j);
-                    switch (loadRecord.Type)
-                    {
-                        case IRobotLoadRecordType.I_LRT_UNIFORM:
-                            double Px = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PX);
-                            double Py = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PY);
-                            double Pz = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PZ);
-                            loads.Add(new BHoM.Structural.Loads.AreaUniformalyDistributedLoad());
-                            break;
-                    }
-                }
+        /// <summary>
+        /// Create a point load on a beam
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="loadCaseId"></param>
+        /// <param name="selString"></param>
+        /// <param name="pos"></param>
+        /// <param name="value"></param>
+        /// <param name="AxisDirection"></param>
+        /// <param name="normalised"></param>
+        /// <param name="local"></param>
+        /// <param name="generateCalcNode"></param>
+        /// <returns></returns>
+        public static bool CreateBeamPointLoad(RobotApplication robot, int loadCaseId, string selString, double pos,
+            double value, AxisDirection AxisDirection, bool normalised, bool local, bool generateCalcNode)
+        {
+            switch (AxisDirection)
+            {
+                case AxisDirection.X:
+                    return CreateBeamPointLoad(robot, loadCaseId, selString, pos, value, 0, 0, 0, 0, 0,
+                        normalised, local, generateCalcNode);
+                case AxisDirection.Y:
+                    return CreateBeamPointLoad(robot, loadCaseId, selString, pos, 0, value, 0, 0, 0, 0,
+                        normalised, local, generateCalcNode);
+                case AxisDirection.Z:
+                    return CreateBeamPointLoad(robot, loadCaseId, selString, pos, 0, 0, value, 0, 0, 0,
+                        normalised, local, generateCalcNode);
+                case AxisDirection.XX:
+                    return CreateBeamPointLoad(robot, loadCaseId, selString, pos, 0, 0, 0, value, 0, 0,
+                        normalised, local, generateCalcNode);
+                case AxisDirection.YY:
+                    return CreateBeamPointLoad(robot, loadCaseId, selString, pos, 0, 0, 0, 0, value, 0,
+                        normalised, local, generateCalcNode);
+                case AxisDirection.ZZ:
+                    return CreateBeamPointLoad(robot, loadCaseId, selString, pos, 0, 0, 0, 0, 0, value,
+                        normalised, local, generateCalcNode);
+                default:
+                    return false;
             }
+
         }
+
+        /// <summary>
+        /// Create a nodal load
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="loadCaseId"></param>
+        /// <param name="selString"></param>
+        /// <param name="fx"></param>
+        /// <param name="fy"></param>
+        /// <param name="fz"></param>
+        /// <param name="mx"></param>
+        /// <param name="my"></param>
+        /// <param name="mz"></param>
+        /// <returns></returns>
+        public static bool CreateNodalLoad(RobotApplication robot, int loadCaseId, string selString, double fx, double fy, double fz,
+            double mx, double my, double mz)
+        {
+            IRobotLoadRecord loadRecord;
+            IRobotSimpleCase loadCase = (IRobotSimpleCase)robot.Project.Structure.Cases.Get(loadCaseId);
+
+            if (!Convert.ToBoolean(robot.Project.Structure.Cases.Exist(loadCaseId)))
+                return false;
+
+            loadRecord = loadCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_FORCE);
+
+            loadRecord.SetValue((int)IRobotNodeForceRecordValues.I_NFRV_FX, fx);
+            loadRecord.SetValue((int)IRobotNodeForceRecordValues.I_NFRV_FY, fy);
+            loadRecord.SetValue((int)IRobotNodeForceRecordValues.I_NFRV_FZ, fz);
+
+
+            loadRecord.SetValue((int)IRobotNodeForceRecordValues.I_NFRV_CX, mx);
+            loadRecord.SetValue((int)IRobotNodeForceRecordValues.I_NFRV_CY, my);
+            loadRecord.SetValue((int)IRobotNodeForceRecordValues.I_NFRV_CZ, mz);
+
+
+            loadRecord.Objects.FromText(selString);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Create a nodal load
+        /// </summary>
+        /// <param name="robot"></param>
+        /// <param name="loadCaseId"></param>
+        /// <param name="selString"></param>
+        /// <param name="axis"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool CreateNodalLoad(RobotApplication robot, int loadCaseId, string selString, AxisDirection axis, double value)
+        {
+            double fx = axis == AxisDirection.X ? value : 0;
+            double fy = axis == AxisDirection.Y ? value : 0;
+            double fz = axis == AxisDirection.Z ? value : 0;
+            double mx = axis == AxisDirection.XX ? value : 0;
+            double my = axis == AxisDirection.YY ? value : 0;
+            double mz = axis == AxisDirection.ZZ ? value : 0;
+
+            return CreateNodalLoad(robot, loadCaseId, selString, fx, fy, fz, mx, my, mz);
+        }
+
     }
 }

@@ -362,13 +362,182 @@
             <param name="value"></param>
             <returns></returns>
         </member>
-        <member name="M:RobotToolkit.Load.GetLoads(RobotToolkit.App,BHoM.Structural.Loads.Loadcase,System.Collections.Generic.List{BHoM.Structural.Loads.AreaUniformalyDistributedLoad}@)">
+        <member name="M:RobotToolkit.Load.GetLoads(BHoM.Structural.Loads.Loadcase,System.Collections.Generic.List{BHoM.Structural.Loads.AreaUniformalyDistributedLoad}@)">
             <summary>
-            
+            Get Load Objects for uniform area loads
             </summary>
             <param name="robapp"></param>
             <param name="loadcase"></param>
             <param name="loads"></param>
+        </member>
+        <member name="M:RobotToolkit.Load.CreateThermalBeamLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double)">
+            <summary>
+            Create a thermal load on a beam
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="val"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load.CreateGravityLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double)">
+            <summary>
+            Create a gravity load
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="valX"></param>
+            <param name="valY"></param>
+            <param name="valZ"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load.CreateBeamDistributedMomentLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double)">
+            <summary>
+            Create a distributed moment on a beam
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="mx"></param>
+            <param name="my"></param>
+            <param name="mz"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load.CreateBeamDistributedMomentLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,BHoM.Structural.AxisDirection)">
+            <summary>
+            Create a beam distributed moment load
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="value"></param>
+            <param name="AxisDirection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load.CreateBeamUDL(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double,System.Boolean,System.Boolean)">
+            <summary>
+            Create a uniformly distributed load on a beam
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="px"></param>
+            <param name="py"></param>
+            <param name="pz"></param>
+            <param name="projected"></param>
+            <param name="local"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load.CreateBeamUDL(RobotOM.RobotApplication,System.Int32,System.String,System.Double,BHoM.Structural.AxisDirection,System.Boolean,System.Boolean)">
+            <summary>
+            Create a uniformly distributed load on a beam
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="value"></param>
+            <param name="AxisDirection"></param>
+            <param name="projected"></param>
+            <param name="local"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load.CreateBeamPatchLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Create a patch load on a beam
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="px1"></param>
+            <param name="py1"></param>
+            <param name="pz1"></param>
+            <param name="pos1"></param>
+            <param name="px2"></param>
+            <param name="py2"></param>
+            <param name="pz2"></param>
+            <param name="pos2"></param>
+            <param name="normalised"></param>
+            <param name="projected"></param>
+            <param name="local"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load.CreateBeamPatchLoad(RobotOM.RobotApplication,System.Int32,System.String,BHoM.Structural.AxisDirection,System.Double,System.Double,System.Double,System.Double,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Create a patch load on a beam
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="AxisDirection"></param>
+            <param name="value1"></param>
+            <param name="pos1"></param>
+            <param name="value2"></param>
+            <param name="pos2"></param>
+            <param name="normalised"></param>
+            <param name="projected"></param>
+            <param name="local"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load.CreateBeamPointLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Create a point load on a beam
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="pos"></param>
+            <param name="fx"></param>
+            <param name="fy"></param>
+            <param name="fz"></param>
+            <param name="mx"></param>
+            <param name="my"></param>
+            <param name="mz"></param>
+            <param name="normalised"></param>
+            <param name="local"></param>
+            <param name="generateCalcNode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load.CreateBeamPointLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,BHoM.Structural.AxisDirection,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Create a point load on a beam
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="pos"></param>
+            <param name="value"></param>
+            <param name="AxisDirection"></param>
+            <param name="normalised"></param>
+            <param name="local"></param>
+            <param name="generateCalcNode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load.CreateNodalLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Create a nodal load
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="fx"></param>
+            <param name="fy"></param>
+            <param name="fz"></param>
+            <param name="mx"></param>
+            <param name="my"></param>
+            <param name="mz"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load.CreateNodalLoad(RobotOM.RobotApplication,System.Int32,System.String,BHoM.Structural.AxisDirection,System.Double)">
+            <summary>
+            Create a nodal load
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="axis"></param>
+            <param name="value"></param>
+            <returns></returns>
         </member>
         <member name="T:RobotToolkit.NodalLoad">
             <summary>
@@ -392,6 +561,18 @@
         </member>
         <member name="M:RobotToolkit.SectionProperties.SectionProperty.Get(RobotOM.IRobotLabel)">
             <summary>Set the BHoM section shape type</summary>
+        </member>
+        <member name="T:RobotToolkit.Utilities.Utils">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:RobotToolkit.Utilities.Utils.GetNumbersFromText(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="selection"></param>
+            <returns></returns>
         </member>
         <member name="T:RobotToolkit.WindCFD">
             <summary>

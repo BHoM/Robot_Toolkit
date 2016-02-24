@@ -54,13 +54,14 @@
     <Compile Include="Labels\Label.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Loads\Loadcase.cs" />
+    <Compile Include="Loads\Load.cs" />
     <Compile Include="Loads\NodalLoad.cs" />
     <Compile Include="Results\BarForces.cs" />
     <Compile Include="Results\Global.cs" />
     <Compile Include="Results\Storey.cs" />
     <Compile Include="Section Properties\Robot_SectionProperty.cs" />
     <Compile Include="WindCFD.cs" />
-    <Compile Include="Loads\Load.cs" />
+    <Compile Include="Loads\Load_Legacy.cs" />
     <Compile Include="RobotEnums.cs" />
     <Compile Include="General.cs" />
     <Compile Include="Panel.cs" />

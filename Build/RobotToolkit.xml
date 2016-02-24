@@ -301,6 +301,17 @@
             Application class for Robot application controls
             </summary>
         </member>
+        <member name="P:RobotToolkit.App.RobApp">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:RobotToolkit.App.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="filePath"></param>
+        </member>
         <member name="M:RobotToolkit.App.RunCalculations(System.String)">
             <summary>
             Runs the Robot calculations engine
@@ -312,6 +323,12 @@
             Stops the Robot calculation engine
             </summary>
             <param name="FilePath"></param>
+        </member>
+        <member name="M:RobotToolkit.App.BeginMultiCaseOperation(RobotOM.RobotApplication)">
+            <summary>
+            
+            </summary>
+            <param name="robot"></param>
         </member>
         <member name="T:RobotToolkit.Loadcase">
             <summary>
@@ -325,6 +342,33 @@
             <param name="loadcases"></param>
             <param name="FilePath"></param>
             <returns></returns>
+        </member>
+        <member name="T:RobotToolkit.Load">
+            <summary>
+            Load objects and methods
+            </summary>
+        </member>
+        <member name="M:RobotToolkit.Load.CreatePanelLoad(RobotOM.RobotApplication,System.Int32,RobotOM.IRobotLoadRecordType,System.String,BHoM.Structural.AxisDirection,System.Boolean,System.Boolean,System.Double)">
+            <summary>
+            Create a panel load
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="type"></param>
+            <param name="selString"></param>
+            <param name="axis"></param>
+            <param name="localAxis"></param>
+            <param name="projected"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load.GetLoads(RobotToolkit.App,BHoM.Structural.Loads.Loadcase,System.Collections.Generic.List{BHoM.Structural.Loads.AreaUniformalyDistributedLoad}@)">
+            <summary>
+            
+            </summary>
+            <param name="robapp"></param>
+            <param name="loadcase"></param>
+            <param name="loads"></param>
         </member>
         <member name="T:RobotToolkit.NodalLoad">
             <summary>
@@ -429,12 +473,12 @@
             <param name="velocity"></param>
             <param name="openingsClosed"></param>
         </member>
-        <member name="T:RobotToolkit.Load">
+        <member name="T:RobotToolkit.Load_Legacy">
             <summary>
             Load objects and methods
             </summary>
         </member>
-        <member name="M:RobotToolkit.Load.CreatePanelLoad(RobotOM.RobotApplication,System.Int32,RobotOM.IRobotLoadRecordType,System.String,BHoM.Structural.AxisDirection,System.Boolean,System.Boolean,System.Double)">
+        <member name="M:RobotToolkit.Load_Legacy.CreatePanelLoad(RobotOM.RobotApplication,System.Int32,RobotOM.IRobotLoadRecordType,System.String,BHoM.Structural.AxisDirection,System.Boolean,System.Boolean,System.Double)">
             <summary>
             Create a panel load
             </summary>
@@ -448,7 +492,7 @@
             <param name="value"></param>
             <returns></returns>
         </member>
-        <member name="M:RobotToolkit.Load.CreateThermalBeamLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double)">
+        <member name="M:RobotToolkit.Load_Legacy.CreateThermalBeamLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double)">
             <summary>
             Create a thermal load on a beam
             </summary>
@@ -458,7 +502,7 @@
             <param name="val"></param>
             <returns></returns>
         </member>
-        <member name="M:RobotToolkit.Load.CreateGravityLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double)">
+        <member name="M:RobotToolkit.Load_Legacy.CreateGravityLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double)">
             <summary>
             Create a gravity load
             </summary>
@@ -470,7 +514,7 @@
             <param name="valZ"></param>
             <returns></returns>
         </member>
-        <member name="M:RobotToolkit.Load.CreateBeamDistributedMomentLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double)">
+        <member name="M:RobotToolkit.Load_Legacy.CreateBeamDistributedMomentLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double)">
             <summary>
             Create a distributed moment on a beam
             </summary>
@@ -482,7 +526,7 @@
             <param name="mz"></param>
             <returns></returns>
         </member>
-        <member name="M:RobotToolkit.Load.CreateBeamDistributedMomentLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,BHoM.Structural.AxisDirection)">
+        <member name="M:RobotToolkit.Load_Legacy.CreateBeamDistributedMomentLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,BHoM.Structural.AxisDirection)">
             <summary>
             Create a beam distributed moment load
             </summary>
@@ -493,7 +537,7 @@
             <param name="AxisDirection"></param>
             <returns></returns>
         </member>
-        <member name="M:RobotToolkit.Load.CreateBeamUDL(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double,System.Boolean,System.Boolean)">
+        <member name="M:RobotToolkit.Load_Legacy.CreateBeamUDL(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double,System.Boolean,System.Boolean)">
             <summary>
             Create a uniformly distributed load on a beam
             </summary>
@@ -507,7 +551,7 @@
             <param name="local"></param>
             <returns></returns>
         </member>
-        <member name="M:RobotToolkit.Load.CreateBeamUDL(RobotOM.RobotApplication,System.Int32,System.String,System.Double,BHoM.Structural.AxisDirection,System.Boolean,System.Boolean)">
+        <member name="M:RobotToolkit.Load_Legacy.CreateBeamUDL(RobotOM.RobotApplication,System.Int32,System.String,System.Double,BHoM.Structural.AxisDirection,System.Boolean,System.Boolean)">
             <summary>
             Create a uniformly distributed load on a beam
             </summary>
@@ -520,7 +564,7 @@
             <param name="local"></param>
             <returns></returns>
         </member>
-        <member name="M:RobotToolkit.Load.CreateBeamPatchLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Boolean,System.Boolean,System.Boolean)">
+        <member name="M:RobotToolkit.Load_Legacy.CreateBeamPatchLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
             Create a patch load on a beam
             </summary>
@@ -540,7 +584,7 @@
             <param name="local"></param>
             <returns></returns>
         </member>
-        <member name="M:RobotToolkit.Load.CreateBeamPatchLoad(RobotOM.RobotApplication,System.Int32,System.String,BHoM.Structural.AxisDirection,System.Double,System.Double,System.Double,System.Double,System.Boolean,System.Boolean,System.Boolean)">
+        <member name="M:RobotToolkit.Load_Legacy.CreateBeamPatchLoad(RobotOM.RobotApplication,System.Int32,System.String,BHoM.Structural.AxisDirection,System.Double,System.Double,System.Double,System.Double,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
             Create a patch load on a beam
             </summary>
@@ -557,7 +601,7 @@
             <param name="local"></param>
             <returns></returns>
         </member>
-        <member name="M:RobotToolkit.Load.CreateBeamPointLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Boolean,System.Boolean,System.Boolean)">
+        <member name="M:RobotToolkit.Load_Legacy.CreateBeamPointLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
             Create a point load on a beam
             </summary>
@@ -576,7 +620,7 @@
             <param name="generateCalcNode"></param>
             <returns></returns>
         </member>
-        <member name="M:RobotToolkit.Load.CreateBeamPointLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,BHoM.Structural.AxisDirection,System.Boolean,System.Boolean,System.Boolean)">
+        <member name="M:RobotToolkit.Load_Legacy.CreateBeamPointLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,BHoM.Structural.AxisDirection,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
             Create a point load on a beam
             </summary>
@@ -591,7 +635,7 @@
             <param name="generateCalcNode"></param>
             <returns></returns>
         </member>
-        <member name="M:RobotToolkit.Load.CreateNodalLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+        <member name="M:RobotToolkit.Load_Legacy.CreateNodalLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
             <summary>
             Create a nodal load
             </summary>
@@ -606,7 +650,7 @@
             <param name="mz"></param>
             <returns></returns>
         </member>
-        <member name="M:RobotToolkit.Load.CreateNodalLoad(RobotOM.RobotApplication,System.Int32,System.String,BHoM.Structural.AxisDirection,System.Double)">
+        <member name="M:RobotToolkit.Load_Legacy.CreateNodalLoad(RobotOM.RobotApplication,System.Int32,System.String,BHoM.Structural.AxisDirection,System.Double)">
             <summary>
             Create a nodal load
             </summary>

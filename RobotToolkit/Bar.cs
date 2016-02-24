@@ -178,6 +178,10 @@ namespace RobotToolkit
         public static bool CreateBarsByCache(BHoM.Structural.Bar[] str_bars, string FilePath = "LiveLink")
         {
             RobotApplication robot = new RobotApplication();
+<<<<<<< HEAD
+=======
+
+>>>>>>> refs/heads/pr/1
             RobotStructureCache structureCache = robot.Project.Structure.CreateCache();
 
             Dictionary<int, object> node_dictionary = new Dictionary<int, object>();
@@ -227,7 +231,11 @@ namespace RobotToolkit
             //}           
 
            RobotStructureApplyInfo applyInfo = robot.Project.Structure.ApplyCache(structureCache);
+<<<<<<< HEAD
            return true;
+=======
+            return true;
+>>>>>>> refs/heads/pr/1
         }
 
         /// <summary>

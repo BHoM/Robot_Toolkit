@@ -66,7 +66,7 @@ namespace RobotToolkit
                     loadRecord.SetValue((int)IRobotNodeForceRecordValues.I_NFRV_CZ, nodalLoad.Rotation.Z);
                 }
 
-                foreach (int loadCaseNumber in nodalLoad.NodeNumbers)
+                foreach (int loadCaseNumber in nodalLoad.ObjectNumbers)
                 {
                     loadRecord.Objects.AddOne(loadCaseNumber);
                 }

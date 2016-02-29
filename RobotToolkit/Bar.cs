@@ -2,6 +2,8 @@
 using System.Linq;
 using RobotOM;
 using BHoM.Structural;
+using BHoM.Global;
+using System;
 
 namespace RobotToolkit
 {
@@ -17,7 +19,7 @@ namespace RobotToolkit
         /// <param name="str_bars"></param>
         /// <param name="FilePath"></param>
         /// <returns></returns>
-        public static bool GetBarsQuery(out Dictionary<int,BHoM.Structural.Bar> str_bars, string FilePath = "")
+        public static bool GetBarsQuery(Project project, string FilePath = "")
         {
        
             RobotApplication robot = new RobotApplication();
@@ -29,8 +31,7 @@ namespace RobotToolkit
             
 
             //Get Nodes
-            Dictionary<int, BHoM.Structural.Node> str_nodes = new Dictionary<int, BHoM.Structural.Node>();
-            RobotToolkit.Node.GetNodesQuery(out str_nodes, FilePath);
+            RobotToolkit.Node.GetNodesQuery(project, FilePath);
 
             RobotResultQueryParams result_params = default(RobotResultQueryParams);
             result_params = (RobotResultQueryParams)robot.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
@@ -40,13 +41,12 @@ namespace RobotToolkit
             RobotSelection bar_sel = default(RobotSelection);
             IRobotResultQueryReturnType query_return = default(IRobotResultQueryReturnType);
 
-            Dictionary<int, BHoM.Structural.Bar> _str_bars = new Dictionary<int, BHoM.Structural.Bar>();
             bool ok = false;
             RobotResultRow result_row = default(RobotResultRow);
             int bar_num = 0;
 
-            double nod1 = 0;
-            double nod2 = 0;
+            int nod1 = 0;
+            int nod2 = 0;
 
             int nod1_id = 15;
             int nod2_id = 16;
@@ -70,6 +70,9 @@ namespace RobotToolkit
             result_params.SetParam(IRobotResultParamType.I_RPT_THREAD_COUNT, 4);
             RobotResultRowSet row_set = new RobotResultRowSet();
 
+            BarFactory bFactory = project.Structure.Bars;
+            NodeFactory nFactory = project.Structure.Nodes;
+
             while (!(query_return == IRobotResultQueryReturnType.I_RQRT_DONE))
             {
                 query_return = rstructure.Results.Query(result_params, row_set);
@@ -82,7 +85,7 @@ namespace RobotToolkit
                     nod1 = (int)result_row.GetValue(nod1_id);
                     nod2 = (int)result_row.GetValue(nod2_id);
 
-                    _str_bars.Add(bar_num, new BHoM.Structural.Bar(str_nodes[(int)nod1], str_nodes[(int)nod2], bar_num));
+                    bFactory.Create(bar_num, nFactory[nod1] as BHoM.Structural.Node, nFactory[nod2] as BHoM.Structural.Node);
 
                     ok = row_set.MoveNext();
                 }
@@ -90,7 +93,6 @@ namespace RobotToolkit
             }
             result_params.Reset();
 
-            str_bars = _str_bars;
             if (FilePath != "") { robot.Project.Close(); }
             return false;
         }
@@ -102,7 +104,8 @@ namespace RobotToolkit
         /// <param name="str_bars"></param>
         /// <param name="FilePath"></param>
         /// <returns></returns>
-        public static bool GetBars(out Dictionary<int, BHoM.Structural.Bar> str_bars, string FilePath = "")
+        //public static bool GetBars(out Dictionary<int, BHoM.Structural.Bar> str_bars, string FilePath = "")
+        public static bool GetBars(BHoM.Global.Project project, string bars, string FilePath = "")
         {
             RobotApplication robot = new RobotApplication();
             if (FilePath != "")
@@ -110,20 +113,37 @@ namespace RobotToolkit
                 robot.Visible = 0;
                 robot.Project.Open(FilePath);
             }
+            BarFactory bFactory = project.Structure.Bars;
+            NodeFactory nodes = project.Structure.Nodes;
+            
+            RobotSelection barSelection = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
+            
+            barSelection.FromText(bars);
 
-            Dictionary<int, BHoM.Structural.Node> str_nodes = new Dictionary<int, BHoM.Structural.Node>();
-            RobotToolkit.Node.GetNodes(out str_nodes, FilePath);
-             
-            RobotBarCollection collection = (RobotBarCollection)robot.Project.Structure.Bars.GetAll();
-            str_bars = new Dictionary<int, BHoM.Structural.Bar>();
-
+            IRobotCollection barServer = robot.Project.Structure.Bars.GetMany(barSelection) as IRobotCollection;
+            RobotNodeServer nodeServer = robot.Project.Structure.Nodes as RobotNodeServer;
+           
             robot.Project.Structure.Bars.BeginMultiOperation();
 
-            for (int i = 0; i < collection.Count; i++)
+            Dictionary<int, int> nodeKeys = new Dictionary<int, int>();
+            int currentNode = 0;
+            for (int i = 0; i < barServer.Count; i++)
             {
-                RobotBar rbar = (RobotBar)collection.Get(i + 1);
-
-                BHoM.Structural.Bar str_bar = new BHoM.Structural.Bar(str_nodes[rbar.StartNode], str_nodes[rbar.EndNode], rbar.Number);
+                RobotBar rbar = (RobotBar)barServer.Get(i + 1);
+                BHoM.Structural.Node n1 = nodes[rbar.StartNode] as  BHoM.Structural.Node;
+                BHoM.Structural.Node n2 = nodes[rbar.EndNode] as  BHoM.Structural.Node;
+                if (n1 == null)
+                {
+                    RobotNode n = nodes.Get(rbar.StartNode) as RobotNode;
+                    n1 = nodes.Create(n.Number, n.X, n.Y, n.Z);
+                }
+                if (n2 == null)
+                {
+                    RobotNode n = nodes.Get(rbar.EndNode) as RobotNode;
+                    n2 = nodes.Create(n.Number, n.X, n.Y, n.Z);
+                }
+                BHoM.Structural.Bar str_bar = bFactory.Create(rbar.Number, n1, n2);
+            
                 str_bar.OrientationAngle = rbar.Gamma;
                 IRobotLabel sec_label = rbar.GetLabel(IRobotLabelType.I_LT_BAR_SECTION);
                 BHoM.Collections.Dictionary<string, object> userInfo = new BHoM.Collections.Dictionary<string, object>();
@@ -157,10 +177,9 @@ namespace RobotToolkit
                     }
                 }
   
-                    str_bar.SetSectionProperty(SectionProperties.SectionProperty.Get(sec_label));
+                str_bar.SetSectionProperty(SectionProperties.SectionProperty.Get(sec_label));
 
                 str_bar.UserData = userInfo;
-                str_bars.Add(rbar.Number, str_bar);
             }
 
             robot.Project.Structure.Bars.EndMultiOperation();

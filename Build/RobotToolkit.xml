@@ -9,12 +9,6 @@
             Input/output class to control how Robot application is accessed
             </summary>
         </member>
-        <member name="P:RobotToolkit.FileIO.robotLink">
-            <summary>Robotlink object</summary>
-        </member>
-        <member name="P:RobotToolkit.FileIO.HasLicense">
-            <summary>True if a license is available</summary>
-        </member>
         <member name="F:RobotToolkit.FileIO.robapp">
             <summary>Robot application object</summary>
         </member>
@@ -51,13 +45,16 @@
             </summary>
             <param name="path"></param>
         </member>
+        <member name="P:RobotToolkit.FileIO.robotLink">
+            <summary>Robotlink object</summary>
+        </member>
+        <member name="P:RobotToolkit.FileIO.HasLicense">
+            <summary>True if a license is available</summary>
+        </member>
         <member name="T:RobotToolkit.RobotLink">
             <summary>
             Robot Link object
             </summary>
-        </member>
-        <member name="P:RobotToolkit.RobotLink.Link">
-            <summary>Robot COM link</summary>
         </member>
         <member name="M:RobotToolkit.RobotLink.#ctor">
             <summary>Contructs and empty RobotLink</summary>
@@ -78,6 +75,9 @@
             <summary>
             RobotLink
             </summary>
+        </member>
+        <member name="P:RobotToolkit.RobotLink.Link">
+            <summary>Robot COM link</summary>
         </member>
         <member name="T:RobotToolkit.FiniteElement">
             <summary>
@@ -368,21 +368,6 @@
             Wind directions
             </summary>
         </member>
-        <member name="P:RobotToolkit.WindDirection.x_positive">
-            <summary>Wind in positive X direction</summary>
-        </member>
-        <member name="P:RobotToolkit.WindDirection.y_positive">
-            <summary>Wind in positive Y direction</summary>
-        </member>
-        <member name="P:RobotToolkit.WindDirection.x_negative">
-            <summary>Wind in negative X direction</summary>
-        </member>
-        <member name="P:RobotToolkit.WindDirection.y_negative">
-            <summary>Wind in negative Y direction</summary>
-        </member>
-        <member name="P:RobotToolkit.WindDirection.quadrants">
-            <summary>Wind in quadrants direction</summary>
-        </member>
         <member name="M:RobotToolkit.WindDirection.#ctor">
             <summary>
             Construct a wind directions object
@@ -398,22 +383,25 @@
             <param name="y_negative"></param>
             <param name="quadrants"></param>
         </member>
+        <member name="P:RobotToolkit.WindDirection.x_positive">
+            <summary>Wind in positive X direction</summary>
+        </member>
+        <member name="P:RobotToolkit.WindDirection.y_positive">
+            <summary>Wind in positive Y direction</summary>
+        </member>
+        <member name="P:RobotToolkit.WindDirection.x_negative">
+            <summary>Wind in negative X direction</summary>
+        </member>
+        <member name="P:RobotToolkit.WindDirection.y_negative">
+            <summary>Wind in negative Y direction</summary>
+        </member>
+        <member name="P:RobotToolkit.WindDirection.quadrants">
+            <summary>Wind in quadrants direction</summary>
+        </member>
         <member name="T:RobotToolkit.WindParams">
             <summary>
             Wind parameters for CFD analysis
             </summary>
-        </member>
-        <member name="P:RobotToolkit.WindParams.deviationPercent">
-            <summary>Deviation of the solution</summary>
-        </member>
-        <member name="P:RobotToolkit.WindParams.terrainLevel">
-            <summary>Terrain level for wind modelling</summary>
-        </member>
-        <member name="P:RobotToolkit.WindParams.velocity">
-            <summary>Wind velocity</summary>
-        </member>
-        <member name="P:RobotToolkit.WindParams.openingsClosed">
-            <summary>Panel openings assumed closed or open</summary>
         </member>
         <member name="M:RobotToolkit.WindParams.#ctor">
             <summary>
@@ -428,6 +416,18 @@
             <param name="terrainLevel"></param>
             <param name="velocity"></param>
             <param name="openingsClosed"></param>
+        </member>
+        <member name="P:RobotToolkit.WindParams.deviationPercent">
+            <summary>Deviation of the solution</summary>
+        </member>
+        <member name="P:RobotToolkit.WindParams.terrainLevel">
+            <summary>Terrain level for wind modelling</summary>
+        </member>
+        <member name="P:RobotToolkit.WindParams.velocity">
+            <summary>Wind velocity</summary>
+        </member>
+        <member name="P:RobotToolkit.WindParams.openingsClosed">
+            <summary>Panel openings assumed closed or open</summary>
         </member>
         <member name="T:RobotToolkit.Load">
             <summary>

@@ -12,16 +12,15 @@ namespace RobotToolkit.SectionProperties
     public class SectionProperty
     {
         /// <summary>Set the BHoM section shape type</summary>
-        public static BHoM.Structural.SectionProperties.SectionProperty Get(IRobotLabel sec_label)
+        public static BHoM.Structural.SectionProperties.SectionProperty Get(BHoM.Global.Project project, IRobotLabel sec_label)
         {
            IRobotBarSectionData sec_data = sec_label.Data;
 
             ///<summary>Universal column</summary>
             if (sec_data.ShapeType == IRobotBarSectionShapeType.I_BSST_HEA)
             {
-                BHoM.Structural.SectionProperties.SectionFactory sec_factory = new BHoM.Structural.SectionProperties.SectionFactory();
-                BHoM.Structural.SectionProperties.SteelISection sec_prop = (SteelISection)sec_factory.Create(BHoM.Structural.SectionProperties.ShapeType.SteelI);
-                sec_prop.Name = "temporary name";
+                SectionFactory sec_factory = project.Structure.SectionProperties;
+                BHoM.Structural.SectionProperties.SteelISection sec_prop = (SteelISection)sec_factory.CreateSteelI(sec_label.Name);
                 sec_prop.Depth = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
                 sec_prop.BottomFlangeWidth = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
                 sec_prop.BottomFlangeThickness = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);

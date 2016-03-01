@@ -20,18 +20,18 @@ namespace RobotToolkit
         /// <param name="coords"></param>
         /// <param name="vertex_indices"></param>
         /// <param name="str_nodes"></param>
-        /// <param name="FilePath"></param>
+        /// <param name="filePath"></param>
         /// <returns></returns>
-        public static bool GetFEMeshQuery(out int[] panel_ids, out double[][] coords, out Dictionary<int, int[]> vertex_indices, out Dictionary<int, BHoM.Structural.Node> str_nodes, string FilePath = "LiveLink")
+        public static bool GetFEMeshQuery(BHoM.Global.Project project, out int[] panel_ids, out double[][] coords, out Dictionary<int, int[]> vertex_indices, out Dictionary<int, BHoM.Structural.Node> str_nodes, string filePath = "LiveLink")
         {
             RobotApplication robot = null;
-            if (FilePath == "LiveLink") robot = new RobotApplication();
+            if (filePath == "LiveLink") robot = new RobotApplication();
 
             //First call getnodesquery to get node points
             double[][] nodeCoords = null;
 
             Dictionary<int, BHoM.Structural.Node> _str_nodes = new Dictionary<int, BHoM.Structural.Node>();
-            RobotToolkit.Node.GetNodesQuery(out _str_nodes);
+            RobotToolkit.Node.GetNodesQuery(project, filePath);
             Dictionary<int, int> _nodeIds = new Dictionary<int, int>();
             for (int i = 0; i < _str_nodes.Count; i++)
             {

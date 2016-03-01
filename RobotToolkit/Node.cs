@@ -13,7 +13,7 @@ namespace RobotToolkit
     /// </summary>
     public class Node
     {
-        public static BHoM.Structural.Constraint GetConstraint(BHoM.Global.ConstraintFactory factory, IRobotNode node)
+        public static BHoM.Structural.Constraint GetConstraint(BHoM.Structural.ConstraintFactory factory, IRobotNode node)
         {
             if (node.HasLabel(IRobotLabelType.I_LT_SUPPORT) != 0)
             {
@@ -44,21 +44,25 @@ namespace RobotToolkit
             return factory.Create("Free", "ffffff");
         }
 
-        public static void GetNodesQuery(BHoM.Global.Project project, string selection, string FilePath = "")
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="selection"></param>
+        /// <param name="filePath"></param>
+        public static void GetNodesQuery(BHoM.Global.Project project, string selection = "all", string filePath = "")
         {
             RobotApplication robot = new RobotApplication();
-            if (FilePath != "")
+            if (filePath != "")
             {
-                robot.Project.Open(FilePath);
+                robot.Project.Open(filePath);
             }
-            RobotResultQueryParams result_params = default(RobotResultQueryParams);
-            result_params = (RobotResultQueryParams)robot.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
-            RobotStructure rstructure = default(RobotStructure);
-            rstructure = robot.Project.Structure;
-            RobotSelection nod_sel = default(RobotSelection);
-            IRobotResultQueryReturnType query_return = default(IRobotResultQueryReturnType);
+            RobotResultQueryParams result_params = robot.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
 
-            nod_sel = rstructure.Selections.Create(IRobotObjectType.I_OT_NODE);
+            RobotStructure rstructure = robot.Project.Structure;
+            RobotSelection nod_sel = rstructure.Selections.Create(IRobotObjectType.I_OT_NODE);
+            IRobotResultQueryReturnType query_return = default(IRobotResultQueryReturnType);
+            
             nod_sel.FromText(selection);
             result_params.ResultIds.SetSize(3);
             result_params.ResultIds.Set(1, 0);
@@ -76,11 +80,11 @@ namespace RobotToolkit
             int nod_num = 0;
             int kounta = 0;
 
-            BHoM.Global.NodeFactory factory = project.Structure.Nodes;
+            BHoM.Structural.NodeFactory factory = project.Structure.Nodes;
 
             while (!(query_return == IRobotResultQueryReturnType.I_RQRT_DONE))
             {
-                query_return = rstructure.Results.Query(result_params, row_set);
+                query_return = robot.Project.Structure.Results.Query(result_params, row_set);
                 ok = row_set.MoveFirst();
                 while (ok)
                 {
@@ -95,78 +99,26 @@ namespace RobotToolkit
             result_params.Reset();
         }
 
+       
         /// <summary>
-        /// Get nodes using the fast query method
+        /// 
         /// </summary>
-        /// <param name="str_nodes"></param>
-        /// <param name="FilePath"></param>
-        public static void GetNodesQuery(BHoM.Global.Project project, string FilePath = "")
-        {
-            GetNodesQuery(project, "All", FilePath);
-
-            //RobotApplication robot = new RobotApplication();
-            //if (FilePath != "")
-            //{
-            //    robot.Project.Open(FilePath);
-            //}
-            //RobotResultQueryParams result_params = default(RobotResultQueryParams);
-            //result_params = (RobotResultQueryParams)robot.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
-            //RobotStructure rstructure = default(RobotStructure);
-            //rstructure = robot.Project.Structure;
-            //RobotSelection nod_sel = default(RobotSelection);
-            //IRobotResultQueryReturnType query_return = default(IRobotResultQueryReturnType);
-            
-            //nod_sel = rstructure.Selections.CreateFull(IRobotObjectType.I_OT_NODE);
-            //result_params.ResultIds.SetSize(3);
-            //result_params.ResultIds.Set(1, 0);
-            //result_params.ResultIds.Set(2, 1);
-            //result_params.ResultIds.Set(3, 2);
-
-            //result_params.Selection.Set(IRobotObjectType.I_OT_NODE, nod_sel);
-            //result_params.SetParam(IRobotResultParamType.I_RPT_MULTI_THREADS, true);
-            //result_params.SetParam(IRobotResultParamType.I_RPT_THREAD_COUNT, 4);
-            //query_return = IRobotResultQueryReturnType.I_RQRT_MORE_AVAILABLE;
-            //RobotResultRowSet row_set = new RobotResultRowSet();
-            //bool ok = false;
-
-            //RobotResultRow result_row = default(RobotResultRow);
-            //int nod_num = 0;
-            //int kounta = 0;
-
-            //Dictionary<int, BHoM.Structural.Node> _str_nodes = new Dictionary<int, BHoM.Structural.Node>();
-
-            //while (!(query_return == IRobotResultQueryReturnType.I_RQRT_DONE))
-            //{
-            //    query_return = rstructure.Results.Query(result_params, row_set);
-            //    ok = row_set.MoveFirst();
-            //    while (ok)
-            //    {
-            //        result_row = row_set.CurrentRow;
-            //        nod_num = (int)result_row.GetParam(IRobotResultParamType.I_RPT_NODE);
-            //        BHoM.Structural.Node nod = new BHoM.Structural.Node((double)row_set.CurrentRow.GetValue(0), (double)row_set.CurrentRow.GetValue(1), (double)row_set.CurrentRow.GetValue(2), nod_num);
-            //        _str_nodes.Add(nod_num, nod);
-            //        kounta++;
-            //        ok = row_set.MoveNext();
-            //    }
-            //    row_set.Clear();
-            //}
-            //result_params.Reset();
-
-            //str_nodes = _str_nodes;
-        }
-
-        public static bool GetNodes(BHoM.Global.Project project, string nodes, string FilePath = "")
+        /// <param name="project"></param>
+        /// <param name="nodes"></param>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static bool GetNodes(BHoM.Global.Project project, string nodes = "all", string filePath = "")
         {
             RobotApplication robot = new RobotApplication();
-            if (FilePath != "")
+            if (filePath != "")
             {
-                robot.Project.Open(FilePath);
+                robot.Project.Open(filePath);
             }
             RobotSelection selection = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
             selection.FromText(nodes);
             RobotNodeCollection collection = (RobotNodeCollection)robot.Project.Structure.Nodes.GetMany(selection);
-            BHoM.Global.NodeFactory bHomNodes = project.Structure.Nodes;
-            BHoM.Global.ConstraintFactory bHomConstraints = project.Structure.Constraints;
+            BHoM.Structural.NodeFactory bHomNodes = project.Structure.Nodes;
+            BHoM.Structural.ConstraintFactory bHomConstraints = project.Structure.Constraints;
            
             for (int i = 0; i < collection.Count; i++)
             {
@@ -179,19 +131,7 @@ namespace RobotToolkit
             return true;
         }
 
-        /// <summary>
-        /// Get nodes method, gets nodes from a Robot model and all associated data. Much slower than
-        /// the get nodes query as it uses the COM interface. 
-        /// </summary>
-        /// <param name="str_nodes"></param>
-        /// <param name="FilePath"></param>
-        /// <returns></returns>
-        public static bool GetNodes(BHoM.Global.Project project, string FilePath = "")
-        {
-            return GetNodes(project, "All", FilePath);
-        }
-
-        /// <summary>
+       /// <summary>
         /// Create nodes using the fast cache method
         /// </summary>
         /// <param name="str_nodes"></param>

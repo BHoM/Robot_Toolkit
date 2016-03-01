@@ -9,6 +9,12 @@
             Input/output class to control how Robot application is accessed
             </summary>
         </member>
+        <member name="P:RobotToolkit.FileIO.robotLink">
+            <summary>Robotlink object</summary>
+        </member>
+        <member name="P:RobotToolkit.FileIO.HasLicense">
+            <summary>True if a license is available</summary>
+        </member>
         <member name="F:RobotToolkit.FileIO.robapp">
             <summary>Robot application object</summary>
         </member>
@@ -45,16 +51,13 @@
             </summary>
             <param name="path"></param>
         </member>
-        <member name="P:RobotToolkit.FileIO.robotLink">
-            <summary>Robotlink object</summary>
-        </member>
-        <member name="P:RobotToolkit.FileIO.HasLicense">
-            <summary>True if a license is available</summary>
-        </member>
         <member name="T:RobotToolkit.RobotLink">
             <summary>
             Robot Link object
             </summary>
+        </member>
+        <member name="P:RobotToolkit.RobotLink.Link">
+            <summary>Robot COM link</summary>
         </member>
         <member name="M:RobotToolkit.RobotLink.#ctor">
             <summary>Contructs and empty RobotLink</summary>
@@ -76,15 +79,12 @@
             RobotLink
             </summary>
         </member>
-        <member name="P:RobotToolkit.RobotLink.Link">
-            <summary>Robot COM link</summary>
-        </member>
         <member name="T:RobotToolkit.FiniteElement">
             <summary>
             Finite elements class for 2D planar shell finite element objects
             </summary>
         </member>
-        <member name="M:RobotToolkit.FiniteElement.GetFEMeshQuery(System.Int32[]@,System.Double[][]@,System.Collections.Generic.Dictionary{System.Int32,System.Int32[]}@,System.Collections.Generic.Dictionary{System.Int32,BHoM.Structural.Node}@,System.String)">
+        <member name="M:RobotToolkit.FiniteElement.GetFEMeshQuery(BHoM.Global.Project,System.Int32[]@,System.Double[][]@,System.Collections.Generic.Dictionary{System.Int32,System.Int32[]}@,System.Collections.Generic.Dictionary{System.Int32,BHoM.Structural.Node}@,System.String)">
             <summary>
             Gets the FE meshes from a Robot model using the fast query method
             </summary>
@@ -92,7 +92,7 @@
             <param name="coords"></param>
             <param name="vertex_indices"></param>
             <param name="str_nodes"></param>
-            <param name="FilePath"></param>
+            <param name="filePath"></param>
             <returns></returns>
         </member>
         <member name="T:RobotToolkit.Labels.Support">
@@ -346,8 +346,20 @@
             parent class are those that would populate a multi category section database only
             </summary>
         </member>
-        <member name="M:RobotToolkit.SectionProperties.SectionProperty.Get(RobotOM.IRobotLabel)">
+        <member name="M:RobotToolkit.SectionProperties.SectionProperty.Get(BHoM.Global.Project,RobotOM.IRobotLabel)">
             <summary>Set the BHoM section shape type</summary>
+        </member>
+        <member name="T:RobotToolkit.Utilities.Utils">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:RobotToolkit.Utilities.Utils.GetNumbersFromText(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="selection"></param>
+            <returns></returns>
         </member>
         <member name="T:RobotToolkit.WindCFD">
             <summary>
@@ -368,21 +380,6 @@
             Wind directions
             </summary>
         </member>
-        <member name="M:RobotToolkit.WindDirection.#ctor">
-            <summary>
-            Construct a wind directions object
-            </summary>
-        </member>
-        <member name="M:RobotToolkit.WindDirection.SetDirection(System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
-            <summary>
-            Set wind directions
-            </summary>
-            <param name="x_positive"></param>
-            <param name="y_positive"></param>
-            <param name="x_negative"></param>
-            <param name="y_negative"></param>
-            <param name="quadrants"></param>
-        </member>
         <member name="P:RobotToolkit.WindDirection.x_positive">
             <summary>Wind in positive X direction</summary>
         </member>
@@ -398,10 +395,37 @@
         <member name="P:RobotToolkit.WindDirection.quadrants">
             <summary>Wind in quadrants direction</summary>
         </member>
+        <member name="M:RobotToolkit.WindDirection.#ctor">
+            <summary>
+            Construct a wind directions object
+            </summary>
+        </member>
+        <member name="M:RobotToolkit.WindDirection.SetDirection(System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Set wind directions
+            </summary>
+            <param name="x_positive"></param>
+            <param name="y_positive"></param>
+            <param name="x_negative"></param>
+            <param name="y_negative"></param>
+            <param name="quadrants"></param>
+        </member>
         <member name="T:RobotToolkit.WindParams">
             <summary>
             Wind parameters for CFD analysis
             </summary>
+        </member>
+        <member name="P:RobotToolkit.WindParams.deviationPercent">
+            <summary>Deviation of the solution</summary>
+        </member>
+        <member name="P:RobotToolkit.WindParams.terrainLevel">
+            <summary>Terrain level for wind modelling</summary>
+        </member>
+        <member name="P:RobotToolkit.WindParams.velocity">
+            <summary>Wind velocity</summary>
+        </member>
+        <member name="P:RobotToolkit.WindParams.openingsClosed">
+            <summary>Panel openings assumed closed or open</summary>
         </member>
         <member name="M:RobotToolkit.WindParams.#ctor">
             <summary>
@@ -416,18 +440,6 @@
             <param name="terrainLevel"></param>
             <param name="velocity"></param>
             <param name="openingsClosed"></param>
-        </member>
-        <member name="P:RobotToolkit.WindParams.deviationPercent">
-            <summary>Deviation of the solution</summary>
-        </member>
-        <member name="P:RobotToolkit.WindParams.terrainLevel">
-            <summary>Terrain level for wind modelling</summary>
-        </member>
-        <member name="P:RobotToolkit.WindParams.velocity">
-            <summary>Wind velocity</summary>
-        </member>
-        <member name="P:RobotToolkit.WindParams.openingsClosed">
-            <summary>Panel openings assumed closed or open</summary>
         </member>
         <member name="T:RobotToolkit.Load">
             <summary>
@@ -447,6 +459,14 @@
             <param name="projected"></param>
             <param name="value"></param>
             <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load.GetLoads(BHoM.Structural.Loads.Loadcase,System.Collections.Generic.List{BHoM.Structural.Loads.AreaUniformalyDistributedLoad}@)">
+            <summary>
+            Get Load Objects for uniform area loads
+            </summary>
+            <param name="robapp"></param>
+            <param name="loadcase"></param>
+            <param name="loads"></param>
         </member>
         <member name="M:RobotToolkit.Load.CreateThermalBeamLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double)">
             <summary>
@@ -724,20 +744,21 @@
             Node objects
             </summary>
         </member>
-        <member name="M:RobotToolkit.Node.GetNodesQuery(System.Collections.Generic.Dictionary{System.Int32,BHoM.Structural.Node}@,System.String)">
+        <member name="M:RobotToolkit.Node.GetNodesQuery(BHoM.Global.Project,System.String,System.String)">
             <summary>
-            Get nodes using the fast query method
+            
             </summary>
-            <param name="str_nodes"></param>
-            <param name="FilePath"></param>
+            <param name="project"></param>
+            <param name="selection"></param>
+            <param name="filePath"></param>
         </member>
-        <member name="M:RobotToolkit.Node.GetNodes(System.Collections.Generic.Dictionary{System.Int32,BHoM.Structural.Node}@,System.String)">
+        <member name="M:RobotToolkit.Node.GetNodes(BHoM.Global.Project,System.String,System.String)">
             <summary>
-            Get nodes method, gets nodes from a Robot model and all associated data. Much slower than
-            the get nodes query as it uses the COM interface. 
+            
             </summary>
-            <param name="str_nodes"></param>
-            <param name="FilePath"></param>
+            <param name="project"></param>
+            <param name="nodes"></param>
+            <param name="filePath"></param>
             <returns></returns>
         </member>
         <member name="M:RobotToolkit.Node.CreateNodesByCache(BHoM.Structural.Node[],System.String)">
@@ -783,30 +804,30 @@
             Robot bar class, for all bar objects and operations
             </summary>
         </member>
-        <member name="M:RobotToolkit.Bar.GetBarsQuery(System.Collections.Generic.Dictionary{System.Int32,BHoM.Structural.Bar}@,System.String)">
+        <member name="M:RobotToolkit.Bar.GetBarsQuery(BHoM.Global.Project,System.String,System.String)">
             <summary>
             Gets Robot bars using the faster 'query' method. This does not return all Robot bar data
             as the only information returned is in double format. To get all bar data use 'GetBars' method.
             </summary>
-            <param name="str_bars"></param>
-            <param name="FilePath"></param>
+            <param name="project"></param>
+            <param name="filePath"></param>
             <returns></returns>
         </member>
-        <member name="M:RobotToolkit.Bar.GetBars(System.Collections.Generic.Dictionary{System.Int32,BHoM.Structural.Bar}@,System.String)">
+        <member name="M:RobotToolkit.Bar.GetBars(BHoM.Global.Project,System.String,System.String)">
             <summary>
             Get bars method, gets bars from a Robot model and all associated data. Much slower than
             the get bars query as it uses the COM interface. 
             </summary>
-            <param name="str_bars"></param>
-            <param name="FilePath"></param>
+            <param name="project"></param>
+            <param name="barNumbers"></param>
+            <param name="filePath"></param>
             <returns></returns>
         </member>
-        <member name="M:RobotToolkit.Bar.CreateBarsByCache(BHoM.Structural.Bar[],System.String)">
+        <member name="M:RobotToolkit.Bar.CreateBarsByCache(BHoM.Structural.Bar[])">
             <summary>
             Creates bars using the fast cache method. 
             </summary>
             <param name="str_bars"></param>
-            <param name="FilePath"></param>
             <returns></returns>
         </member>
         <member name="M:RobotToolkit.Bar.CreateBars(BHoM.Structural.Bar[],System.String)">

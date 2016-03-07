@@ -339,6 +339,20 @@
             <param name="FilePath"></param>
             <returns></returns>
         </member>
+        <member name="T:RobotToolkit.Results.Bars.BarForces">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:RobotToolkit.Results.Bars.BarForces.GetBarForcesQuery(BHoM.Global.Project,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="project"></param>
+            <param name="selection"></param>
+            <param name="filePath"></param>
+            <returns></returns>
+        </member>
         <member name="T:RobotToolkit.SectionProperties.SectionProperty">
             <summary>
             Section property class, the parent abstract class for all structural 

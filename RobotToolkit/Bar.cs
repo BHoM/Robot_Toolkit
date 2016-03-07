@@ -86,7 +86,7 @@ namespace RobotToolkit
                     nod1 = (int)result_row.GetValue(nod1_id);
                     nod2 = (int)result_row.GetValue(nod2_id);
 
-                    bFactory.Create(bar_num, nFactory[nod1] as BHoM.Structural.Node, nFactory[nod2] as BHoM.Structural.Node);
+                    bFactory.Create(bar_num);
 
                     ok = row_set.MoveNext();
                 }
@@ -142,8 +142,10 @@ namespace RobotToolkit
                     RobotNode n = nodeServer.Get(rbar.EndNode) as RobotNode;
                     n2 = nodes.Create(n.Number, n.X, n.Y, n.Z);
                 }
-                BHoM.Structural.Bar str_bar = bFactory.Create(rbar.Number, n1, n2);
-             
+                BHoM.Structural.Bar str_bar = bFactory.Create(rbar.Number);
+                str_bar.SetStartNode(n1);
+                str_bar.SetEndNode(n2);
+
                 str_bar.OrientationAngle = rbar.Gamma;
                 IRobotLabel sec_label = rbar.GetLabel(IRobotLabelType.I_LT_BAR_SECTION);
                 BHoM.Collections.Dictionary<string, object> userInfo = new BHoM.Collections.Dictionary<string, object>();
@@ -176,9 +178,51 @@ namespace RobotToolkit
                         catch { }
                     }
                 }
-  
-                str_bar.SetSectionProperty(SectionProperties.SectionProperty.Get(project, sec_label));
 
+                if (sec_data.IsSpecial)
+                {
+                    IRobotBarSectionSpecialData spec_data = sec_data.Special;
+                    var specialvalues = IRobotBarSectionSpecialDataValue.GetValues(typeof(IRobotBarSectionSpecialDataValue));
+
+                    foreach (var val in specialvalues)
+                    {
+                        try
+                        {
+                            userInfo.Add(val.ToString(), spec_data.GetValue((IRobotBarSectionSpecialDataValue)val));
+                        }
+                        catch { }
+                    }
+                }
+
+
+                try
+                {
+                        userInfo.Add("member1", sec_data.Members.GetValue(IRobotBarSectionComponentShape.I_BSCS_C,IRobotBarSectionDataValue.I_BSDV_DIM1));                    
+                }
+                catch { }
+
+                try
+                {
+                    userInfo.Add("member2", sec_data.Members.GetValue(IRobotBarSectionComponentShape.I_BSCS_I, IRobotBarSectionDataValue.I_BSDV_DIM1));
+                }
+                catch { }
+
+                try
+                {
+                    userInfo.Add("member3", sec_data.Members.GetValue(IRobotBarSectionComponentShape.I_BSCS_L, IRobotBarSectionDataValue.I_BSDV_DIM1));
+                }
+                catch { }
+
+                try
+                {
+                    userInfo.Add("member4", sec_data.Members.GetValue(IRobotBarSectionComponentShape.I_BSCS_UNDEFINED, IRobotBarSectionDataValue.I_BSDV_DIM1));
+                }
+                catch { }
+
+
+
+                BHoM.Structural.Sections.SectionProperty sec_prop = SectionProperties.SectionProperty.Get(project, sec_label);
+                str_bar.SetSectionProperty(sec_prop);
                 str_bar.UserData = userInfo;
             }
 
@@ -208,8 +252,6 @@ namespace RobotToolkit
 
             RobotNamesArray mat_names = robot.Project.Structure.Labels.GetAvailableNames(IRobotLabelType.I_LT_MATERIAL);
             string defaultMaterialName = mat_names.Get(1).ToString();
-
-
 
             for (int i = 0; i < str_bars.Length;i++)
             {

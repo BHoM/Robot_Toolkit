@@ -59,6 +59,7 @@
     <Compile Include="Results\Global.cs" />
     <Compile Include="Results\Storey.cs" />
     <Compile Include="Section Properties\Robot_SectionProperty.cs" />
+    <Compile Include="Utilities\Utils.cs" />
     <Compile Include="WindCFD.cs" />
     <Compile Include="Loads\Load.cs" />
     <Compile Include="RobotEnums.cs" />
@@ -76,8 +77,8 @@
   <PropertyGroup>
     <PostBuildEvent>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)Build\$(ProjectName).dll"
 copy /Y "$(TargetDir)$(ProjectName).xml" "$(SolutionDir)Build\$(ProjectName).xml"
-copy /Y "$(TargetDir)$(ProjectName).dll" "C:\Users\rmay\AppData\Roaming\Dynamo\0.9\packages\BH Dynamo Tools\bin\$(ProjectName).dll"
-copy /Y "$(TargetDir)$(ProjectName).xml" "C:\Users\rmay\AppData\Roaming\Dynamo\0.9\packages\BH Dynamo Tools\bin\$(ProjectName).xml"</PostBuildEvent>
+copy /Y "$(TargetDir)$(ProjectName).dll" "C:\Users\$(Username)\AppData\Roaming\Dynamo\0.9\packages\BH Dynamo Tools\bin\$(ProjectName).dll"
+copy /Y "$(TargetDir)$(ProjectName).xml" "C:\Users\$(Username)\AppData\Roaming\Dynamo\0.9\packages\BH Dynamo Tools\bin\$(ProjectName).xml"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

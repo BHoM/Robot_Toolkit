@@ -28,19 +28,19 @@ namespace RobotToolkit.Labels
             }
             IRobotNodeSupportData data = (IRobotNodeSupportData)robot_restraint.Data;
 
-            data.UX = (restraint.X.Type == DOFType.Fixed) ? -1 : 0;
-            data.UY = (restraint.Y.Type == DOFType.Fixed) ? -1 : 0;
-            data.UZ = (restraint.Z.Type == DOFType.Fixed) ? -1 : 0;
-            data.RX = (restraint.XX.Type == DOFType.Fixed) ? -1 : 0;
-            data.RY = (restraint.YY.Type == DOFType.Fixed) ? -1 : 0;
-            data.RZ = (restraint.ZZ.Type == DOFType.Fixed) ? -1 : 0;
+            data.UX = (restraint.DoFType(AxisDirection.X) == DOFType.Fixed) ? -1 : 0;
+            data.UY = (restraint.DoFType(AxisDirection.Y) == DOFType.Fixed) ? -1 : 0;
+            data.UZ = (restraint.DoFType(AxisDirection.Z) == DOFType.Fixed) ? -1 : 0;
+            data.RX = (restraint.DoFType(AxisDirection.XX) == DOFType.Fixed) ? -1 : 0;
+            data.RY = (restraint.DoFType(AxisDirection.YY) == DOFType.Fixed) ? -1 : 0;
+            data.RZ = (restraint.DoFType(AxisDirection.ZZ) == DOFType.Fixed) ? -1 : 0;
 
-            if (restraint.X.Type == DOFType.Spring) data.KX = restraint.X.Value;
-            if (restraint.Y.Type == DOFType.Spring) data.KY = restraint.Y.Value;
-            if (restraint.Z.Type == DOFType.Spring) data.KZ = restraint.Z.Value;
-            if (restraint.XX.Type == DOFType.Spring) data.HX = restraint.XX.Value;
-            if (restraint.YY.Type == DOFType.Spring) data.HY = restraint.YY.Value;
-            if (restraint.ZZ.Type == DOFType.Spring) data.HZ = restraint.ZZ.Value;
+            if (restraint.DoFType(AxisDirection.X) == DOFType.Spring) data.KX = restraint.Value(AxisDirection.X);
+            if (restraint.DoFType(AxisDirection.Y) == DOFType.Spring) data.KY = restraint.Value(AxisDirection.Y);
+            if (restraint.DoFType(AxisDirection.Z) == DOFType.Spring) data.KZ = restraint.Value(AxisDirection.Z);
+            if (restraint.DoFType(AxisDirection.XX) == DOFType.Spring) data.HX = restraint.Value(AxisDirection.XX);
+            if (restraint.DoFType(AxisDirection.YY) == DOFType.Spring) data.HY = restraint.Value(AxisDirection.YY);
+            if (restraint.DoFType(AxisDirection.ZZ) == DOFType.Spring) data.HZ = restraint.Value(AxisDirection.ZZ);
 
             robot.Project.Structure.Labels.Store(robot_restraint);
 

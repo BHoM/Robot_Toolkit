@@ -1,5 +1,5 @@
 ﻿using System;
-using BHoM.Structural.SectionProperties;
+using BHoM.Structural.Sections;
 using RobotOM;
 
 namespace RobotToolkit.SectionProperties
@@ -12,25 +12,53 @@ namespace RobotToolkit.SectionProperties
     public class SectionProperty
     {
         /// <summary>Set the BHoM section shape type</summary>
-        public static BHoM.Structural.SectionProperties.SectionProperty Get(IRobotLabel sec_label)
+        public static BHoM.Structural.Sections.SectionProperty Get(BHoM.Global.Project project, IRobotLabel sec_label)
         {
-           IRobotBarSectionData sec_data = sec_label.Data;
+            IRobotBarSectionData sec_data = sec_label.Data;
+            BHoM.Structural.SectionFactory sec_factory = project.Structure.SectionProperties;
+            sec_factory.ForceUniqueByName();
+            BHoM.Structural.Sections.SectionProperty sec_prop;
 
-            ///<summary>Universal column</summary>
-            if (sec_data.ShapeType == IRobotBarSectionShapeType.I_BSST_HEA)
+            switch (sec_data.ShapeType)
             {
-                BHoM.Structural.SectionProperties.SectionFactory sec_factory = new BHoM.Structural.SectionProperties.SectionFactory();
-                BHoM.Structural.SectionProperties.SteelISection sec_prop = (SteelISection)sec_factory.Create(BHoM.Structural.SectionProperties.ShapeType.SteelI);
-                sec_prop.Name = "temporary name";
-                sec_prop.Depth = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
-                sec_prop.BottomFlangeWidth = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
-                sec_prop.BottomFlangeThickness = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);
-                sec_prop.TopFlangeWidth = sec_prop.BottomFlangeWidth;
-                sec_prop.TopFlangeThickness = sec_prop.BottomFlangeThickness;
-                sec_prop.WebThickness = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);
-                return sec_prop;
+                case (IRobotBarSectionShapeType.I_BSST_HEA): //Universal column
+                    sec_prop = sec_factory.Create(ShapeType.SteelI, sec_label.Name) as BHoM.Structural.Sections.SectionProperty;
+                    sec_prop.Depth = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+                    sec_prop.BottomFlangeWidth = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
+                    sec_prop.BottomFlangeThickness = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);
+                    sec_prop.TopFlangeWidth = sec_prop.BottomFlangeWidth;
+                    sec_prop.TopFlangeThickness = sec_prop.BottomFlangeThickness;
+                    sec_prop.WebThickness = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);
+                    return sec_prop;
+
+                case (IRobotBarSectionShapeType.I_BSST_IPE): //Universal beam
+                    sec_prop = sec_factory.Create(ShapeType.SteelI, sec_label.Name) as BHoM.Structural.Sections.SectionProperty;
+                    sec_prop.Depth = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+                    sec_prop.BottomFlangeWidth = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
+                    sec_prop.BottomFlangeThickness = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);
+                    sec_prop.TopFlangeWidth = sec_prop.BottomFlangeWidth;
+                    sec_prop.TopFlangeThickness = sec_prop.BottomFlangeThickness;
+                    sec_prop.WebThickness = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);
+                    return sec_prop;
+
+                case (IRobotBarSectionShapeType.I_BSST_BOX)://User defined fabricated box with bi symmetry (flanges and webs similar)
+                    sec_prop = sec_factory.Create(ShapeType.SteelBox, sec_label.Name) as BHoM.Structural.Sections.SectionProperty;
+                    sec_prop.Depth = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+                    sec_prop.BottomFlangeWidth = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
+                    sec_prop.BottomFlangeThickness = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);
+                    sec_prop.TopFlangeWidth = sec_prop.BottomFlangeWidth;
+                    sec_prop.TopFlangeThickness = sec_prop.BottomFlangeThickness;
+                    sec_prop.WebThickness = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);
+                    return sec_prop;
+
+                case (IRobotBarSectionShapeType.I_BSST_UNKNOWN):
+
+
+                default:
+                    sec_prop = sec_factory.Create(ShapeType.SteelI, sec_label.Name);
+                    return sec_prop;
             }
-            return null;
+
 
             //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_COL_R;
             //sec_shape_type = IRobotBarSectionShapeType.I_BSST_CONCR_COL_T;
@@ -85,8 +113,7 @@ namespace RobotToolkit.SectionProperties
             //sec_shape_type = IRobotBarSectionShapeType.I_BSST_HHEM;
             //sec_shape_type = IRobotBarSectionShapeType.I_BSST_IIPE;
 
-            ///<summary>Universal beam</summary>
-            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_IPE;
+
 
             //sec_shape_type = IRobotBarSectionShapeType.I_BSST_IPEA;
             //sec_shape_type = IRobotBarSectionShapeType.I_BSST_IPEO;
@@ -149,8 +176,7 @@ namespace RobotToolkit.SectionProperties
             //sec_shape_type = IRobotBarSectionShapeType.I_BSST_SPEC_IFBA;
             //sec_shape_type = IRobotBarSectionShapeType.I_BSST_SPEC_IFBB;
 
-            ///<summary>User defined fabricated box with bi symmetry (flanges and webs similar)</summary>
-            //sec_shape_type = IRobotBarSectionShapeType.I_BSST_BOX;
+
             //sec_shape_type = IRobotBarSectionShapeType.I_BSST_USER_BOX;
 
             ///<summary>Rectangular section (solid or hollow)</summary>

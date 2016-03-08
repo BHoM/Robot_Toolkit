@@ -11,7 +11,7 @@ namespace RobotToolkit
     /// <summary>
     /// Load objects and methods
     /// </summary>
-    public class Load
+    public class Load_Legacy
     {
         /// <summary>
         /// Create a panel load
@@ -57,40 +57,6 @@ namespace RobotToolkit
             loadRecord.Objects.FromText(selString);
 
             return true;
-        }
-
-        /// <summary>
-        /// Get Load Objects for uniform area loads
-        /// </summary>
-        /// <param name="robapp"></param>
-        /// <param name="loadcase"></param>
-        /// <param name="loads"></param>
-        public static void GetLoads(BHoM.Structural.Loads.Loadcase loadcase, out List<BHoM.Structural.Loads.AreaUniformalyDistributedLoad> loads)
-        {
-            RobotApplication robot = new RobotApplication();
-            IRobotCase lCase = robot.Project.Structure.Cases.Get(loadcase.Number);
-            loads = new List<BHoM.Structural.Loads.AreaUniformalyDistributedLoad>();
-            if (lCase.Type == IRobotCaseType.I_CT_SIMPLE || loadcase.Number < 0)
-            {
-                IRobotSimpleCase sCase = (lCase as IRobotSimpleCase);
-
-                for (int j = 1; j <= sCase.Records.Count; j++)
-                {
-                    IRobotLoadRecord loadRecord = sCase.Records.Get(j);
-
-                    switch (loadRecord.Type)
-                    {
-                        case IRobotLoadRecordType.I_LRT_UNIFORM:
-                            double Px = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PX);
-                            double Py = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PY);
-                            double Pz = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PZ);
-                            BHoM.Structural.Loads.AreaUniformalyDistributedLoad load = new BHoM.Structural.Loads.AreaUniformalyDistributedLoad(Px, Py, Pz);
-                            load.ObjectNumbers = RobotToolkit.Utilities.Utils.GetNumbersFromText(loadRecord.Objects.ToText());
-                            loads.Add(load);
-                            break;
-                    }
-                }
-            }
         }
 
         /// <summary>
@@ -515,5 +481,6 @@ namespace RobotToolkit
             return CreateNodalLoad(robot, loadCaseId, selString, fx, fy, fz, mx, my, mz);
         }
 
+    
     }
 }

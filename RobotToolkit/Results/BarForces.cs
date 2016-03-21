@@ -80,7 +80,7 @@ namespace RobotToolkit.Results.Bars
                         BHoM.Structural.Results.Bars.BarForce barForce = 
                             new BHoM.Structural.Results.Bars.BarForce(loadcases.Create(curr_cas, "Temp"), curr_bar, div_pnt);
 
-                        barForce.Divisions = div_count;
+                        barForce.BarDivisions = div_count;
                         barForce.RelativePosition = div_pnt / (div_count - 1);
                         if (result_row.IsAvailable((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FX))
                         {

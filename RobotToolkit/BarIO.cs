@@ -331,7 +331,7 @@ namespace RobotToolkit
         /// <param name="str_bars"></param>
         /// <param name="FilePath"></param>
         /// <returns></returns>
-        public static bool CreateBars(RobotApplication robot, List<Bar> str_bars)
+        public static bool CreateBars(RobotApplication robot, List<Bar> str_bars, out List<string> ids)
         {
             string key = Utils.NUM_KEY;
             robot.Project.Structure.Bars.BeginMultiOperation();
@@ -341,6 +341,8 @@ namespace RobotToolkit
             Dictionary<string, string> addedMaterials = new Dictionary<string, string>();
             RobotBarServer barServer = robot.Project.Structure.Bars;
             RobotBar robotBar = null;
+            List<string> nodeIds = new List<string>();
+            ids = new List<string>();
             foreach (BHoM.Structural.Bar bar in str_bars)
             {
                 int barNum =  barServer.FreeNumber;
@@ -357,7 +359,7 @@ namespace RobotToolkit
                     bar.CustomData.Add(key, barNum);
                 }
 
-                NodeIO.CreateNodes(robot, new List<Node>() { bar.StartNode, bar.EndNode });
+                NodeIO.CreateNodes(robot, new List<Node>() { bar.StartNode, bar.EndNode }, out nodeIds);
              
                 nodeNum1 = int.Parse(bar.StartNode[key].ToString());           
                 nodeNum2 = int.Parse(bar.EndNode[key].ToString());
@@ -412,6 +414,7 @@ namespace RobotToolkit
                 robotBar.SetLabel(IRobotLabelType.I_LT_BAR_RELEASE, currentRelease);
                 robotBar.SetLabel(IRobotLabelType.I_LT_BAR_ELASTIC_GROUND, elasticGround);
                 robotBar.SetLabel(IRobotLabelType.I_LT_MATERIAL, material);
+                ids.Add(barNum.ToString());
             }
             robot.Project.Structure.Bars.EndMultiOperation();
 

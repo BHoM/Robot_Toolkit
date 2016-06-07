@@ -200,11 +200,12 @@ namespace RobotToolkit
             return true;
         }
 
-        public static bool CreateNodes(RobotApplication robot, List<Node> nodes)
+        public static bool CreateNodes(RobotApplication robot, List<Node> nodes, out List<string> ids)
         {
             RobotNodeServer nodeServer = robot.Project.Structure.Nodes;
             RobotNode node = null;
             Dictionary<string, string> addedConstraints = new Dictionary<string, string>();
+            ids = new List<string>();
             int num = 0;
             for (int i = 0; i < nodes.Count; i++)
             {
@@ -226,7 +227,7 @@ namespace RobotToolkit
                 }
 
                 node = nodeServer.Get(num) as RobotNode;
-
+                ids.Add(num.ToString());
                 string nodeSupport = "";
                 if (nodes[i].Constraint != null)
                 {

@@ -40,9 +40,9 @@ namespace RobotToolkit
             return true;
         }
 
-        public bool CreateBars(List<Bar> bars)
+        public bool CreateBars(List<Bar> bars, out List<string> ids)
         {
-            BarIO.CreateBars(Robot, bars);
+            BarIO.CreateBars(Robot, bars, out ids);
             return true;
         }
 
@@ -78,27 +78,27 @@ namespace RobotToolkit
             throw new NotImplementedException();
         }
 
-        public bool SetNodes(List<Node> nodes, string option = "")
+        public bool SetNodes(List<Node> nodes, out List<string> ids, string option = "")
         {
-            return NodeIO.CreateNodes(Robot, nodes);
+            return NodeIO.CreateNodes(Robot, nodes, out ids);
         }
 
-        public bool SetBars(List<Bar> bars, string option = "")
+        public bool SetBars(List<Bar> bars, out List<string> ids, string option = "")
         {
-            return BarIO.CreateBars(Robot, bars);
+            return BarIO.CreateBars(Robot, bars, out ids);
         }
 
-        public bool SetPanels(List<Panel> panels, string option = "")
+        public bool SetPanels(List<Panel> panels, out List<string> ids, string option = "")
         {
-            return PanelIO.CreatePanels(Robot, panels);
+            return PanelIO.CreatePanels(Robot, panels, out ids);
         }
 
-        public bool SetOpenings(List<Opening> opening, string option = "")
+        public bool SetOpenings(List<Opening> opening, out List<string> ids, string option = "")
         {
             throw new NotImplementedException();
         }
 
-        public bool SetLevels(List<Storey> stores, string option = "")
+        public bool SetLevels(List<Storey> stores, out List<string> ids, string option = "")
         {
             throw new NotImplementedException();
         }

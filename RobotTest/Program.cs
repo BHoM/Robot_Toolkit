@@ -81,8 +81,8 @@ namespace RobotTest
                 fs.Close();
             }
             BHoM.Global.Project.FromJSON(json);
-
-            app.SetPanels(new BHoM.Global.ObjectFilter<Panel>().ToList());
+            List<string> ids = new List<string>();
+            app.SetPanels(new BHoM.Global.ObjectFilter<Panel>().ToList(), out ids);
         }
 
         private static void SetBars()
@@ -96,8 +96,9 @@ namespace RobotTest
                 fs.Close();
             }
             BHoM.Global.Project.FromJSON(json);
+            List<string> ids = new List<string>();
 
-            app.CreateBars(new BHoM.Global.ObjectFilter<Bar>().ToList());
+            app.CreateBars(new BHoM.Global.ObjectFilter<Bar>().ToList(), out ids);
         }
     }
 }

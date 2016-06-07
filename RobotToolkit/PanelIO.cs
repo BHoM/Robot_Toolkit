@@ -149,14 +149,14 @@ namespace RobotToolkit
         /// <param name="thicknessNames"></param>
         /// <param name="FilePath"></param>
         /// <returns></returns>
-        public static bool CreatePanels(RobotApplication robot, List<Panel> panels)
+        public static bool CreatePanels(RobotApplication robot, List<Panel> panels, out List<string> ids)
         {
             string key = Utils.NUM_KEY;
             robot.Project.Structure.Bars.BeginMultiOperation();
             Dictionary<string, string> addedThicknesses = new Dictionary<string, string>();
             Dictionary<string, string> addedMaterials = new Dictionary<string, string>();
             RobotObjObjectServer objServer = robot.Project.Structure.Objects;
-
+            ids = new List<string>();
             foreach (BHoM.Structural.Panel panel in panels)
             {
                 Group<Curve> c = panel.Edges;
@@ -184,7 +184,7 @@ namespace RobotToolkit
                     {
                         rpanel = objServer.Create(panelNum);
                     }
-
+                    ids.Add(panelNum.ToString());
                     rpanel.Main.Geometry = GeometryHelper.CreateContour(robot, c.ToList()) as RobotGeoObject;
 
                     rpanel.Initialize();

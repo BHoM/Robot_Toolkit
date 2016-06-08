@@ -301,6 +301,17 @@
             Application class for Robot application controls
             </summary>
         </member>
+        <member name="P:RobotToolkit.App.RobApp">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:RobotToolkit.App.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="filePath"></param>
+        </member>
         <member name="M:RobotToolkit.App.RunCalculations(System.String)">
             <summary>
             Runs the Robot calculations engine
@@ -312,6 +323,12 @@
             Stops the Robot calculation engine
             </summary>
             <param name="FilePath"></param>
+        </member>
+        <member name="M:RobotToolkit.App.BeginMultiCaseOperation(RobotOM.RobotApplication)">
+            <summary>
+            
+            </summary>
+            <param name="robot"></param>
         </member>
         <member name="T:RobotToolkit.Loadcase">
             <summary>
@@ -325,135 +342,6 @@
             <param name="loadcases"></param>
             <param name="FilePath"></param>
             <returns></returns>
-        </member>
-        <member name="T:RobotToolkit.NodalLoad">
-            <summary>
-            Nodal load objects
-            </summary>
-        </member>
-        <member name="M:RobotToolkit.NodalLoad.CreateNodalLoadDisplacement(BHoM.Structural.Loads.NodalLoad[],System.String)">
-            <summary>
-            Create a nodal load displacement
-            </summary>
-            <param name="nodalLoads"></param>
-            <param name="FilePath"></param>
-            <returns></returns>
-        </member>
-        <member name="T:RobotToolkit.Results.Bars.BarForces">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:RobotToolkit.Results.Bars.BarForces.GetBarForcesQuery(BHoM.Global.Project,System.String,System.String)">
-            <summary>
-            
-            </summary>
-            <param name="project"></param>
-            <param name="selection"></param>
-            <param name="filePath"></param>
-            <returns></returns>
-        </member>
-        <member name="T:RobotToolkit.SectionProperties.SectionProperty">
-            <summary>
-            Section property class, the parent abstract class for all structural 
-            sections (RC, steel, PT beams, columns, bracing). Properties defined in this 
-            parent class are those that would populate a multi category section database only
-            </summary>
-        </member>
-        <member name="M:RobotToolkit.SectionProperties.SectionProperty.Get(BHoM.Global.Project,RobotOM.IRobotLabel)">
-            <summary>Set the BHoM section shape type</summary>
-        </member>
-        <member name="T:RobotToolkit.Utilities.Utils">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:RobotToolkit.Utilities.Utils.GetNumbersFromText(System.String)">
-            <summary>
-            
-            </summary>
-            <param name="selection"></param>
-            <returns></returns>
-        </member>
-        <member name="T:RobotToolkit.WindCFD">
-            <summary>
-            Wind CFD controller object
-            </summary>
-        </member>
-        <member name="M:RobotToolkit.WindCFD.Generate(RobotToolkit.WindDirection,RobotToolkit.WindParams,System.String)">
-            <summary>
-            Generate wind CFD analysis
-            </summary>
-            <param name="windDir"></param>
-            <param name="windParams"></param>
-            <param name="FilePath"></param>
-            <returns></returns>
-        </member>
-        <member name="T:RobotToolkit.WindDirection">
-            <summary>
-            Wind directions
-            </summary>
-        </member>
-        <member name="P:RobotToolkit.WindDirection.x_positive">
-            <summary>Wind in positive X direction</summary>
-        </member>
-        <member name="P:RobotToolkit.WindDirection.y_positive">
-            <summary>Wind in positive Y direction</summary>
-        </member>
-        <member name="P:RobotToolkit.WindDirection.x_negative">
-            <summary>Wind in negative X direction</summary>
-        </member>
-        <member name="P:RobotToolkit.WindDirection.y_negative">
-            <summary>Wind in negative Y direction</summary>
-        </member>
-        <member name="P:RobotToolkit.WindDirection.quadrants">
-            <summary>Wind in quadrants direction</summary>
-        </member>
-        <member name="M:RobotToolkit.WindDirection.#ctor">
-            <summary>
-            Construct a wind directions object
-            </summary>
-        </member>
-        <member name="M:RobotToolkit.WindDirection.SetDirection(System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
-            <summary>
-            Set wind directions
-            </summary>
-            <param name="x_positive"></param>
-            <param name="y_positive"></param>
-            <param name="x_negative"></param>
-            <param name="y_negative"></param>
-            <param name="quadrants"></param>
-        </member>
-        <member name="T:RobotToolkit.WindParams">
-            <summary>
-            Wind parameters for CFD analysis
-            </summary>
-        </member>
-        <member name="P:RobotToolkit.WindParams.deviationPercent">
-            <summary>Deviation of the solution</summary>
-        </member>
-        <member name="P:RobotToolkit.WindParams.terrainLevel">
-            <summary>Terrain level for wind modelling</summary>
-        </member>
-        <member name="P:RobotToolkit.WindParams.velocity">
-            <summary>Wind velocity</summary>
-        </member>
-        <member name="P:RobotToolkit.WindParams.openingsClosed">
-            <summary>Panel openings assumed closed or open</summary>
-        </member>
-        <member name="M:RobotToolkit.WindParams.#ctor">
-            <summary>
-            Wind parameters constructor
-            </summary>
-        </member>
-        <member name="M:RobotToolkit.WindParams.SetParameters(System.Double,System.Double,System.Double,System.Boolean)">
-            <summary>
-            Set wind parameters
-            </summary>
-            <param name="deviationPercent"></param>
-            <param name="terrainLevel"></param>
-            <param name="velocity"></param>
-            <param name="openingsClosed"></param>
         </member>
         <member name="T:RobotToolkit.Load">
             <summary>
@@ -641,6 +529,324 @@
             <returns></returns>
         </member>
         <member name="M:RobotToolkit.Load.CreateNodalLoad(RobotOM.RobotApplication,System.Int32,System.String,BHoM.Structural.AxisDirection,System.Double)">
+            <summary>
+            Create a nodal load
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="axis"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="T:RobotToolkit.NodalLoad">
+            <summary>
+            Nodal load objects
+            </summary>
+        </member>
+        <member name="M:RobotToolkit.NodalLoad.CreateNodalLoadDisplacement(BHoM.Structural.Loads.NodalLoad[],System.String)">
+            <summary>
+            Create a nodal load displacement
+            </summary>
+            <param name="nodalLoads"></param>
+            <param name="FilePath"></param>
+            <returns></returns>
+        </member>
+        <member name="T:RobotToolkit.Results.Bars.BarForces">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:RobotToolkit.Results.Bars.BarForces.GetBarForcesQuery(BHoM.Global.Project,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="project"></param>
+            <param name="selection"></param>
+            <param name="filePath"></param>
+            <returns></returns>
+        </member>
+        <member name="T:RobotToolkit.SectionProperties.SectionProperty">
+            <summary>
+            Section property class, the parent abstract class for all structural 
+            sections (RC, steel, PT beams, columns, bracing). Properties defined in this 
+            parent class are those that would populate a multi category section database only
+            </summary>
+        </member>
+        <member name="M:RobotToolkit.SectionProperties.SectionProperty.Get(BHoM.Global.Project,RobotOM.IRobotLabel)">
+            <summary>Set the BHoM section shape type</summary>
+        </member>
+        <member name="T:RobotToolkit.Utilities.Utils">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:RobotToolkit.Utilities.Utils.GetNumbersFromText(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="selection"></param>
+            <returns></returns>
+        </member>
+        <member name="T:RobotToolkit.WindCFD">
+            <summary>
+            Wind CFD controller object
+            </summary>
+        </member>
+        <member name="M:RobotToolkit.WindCFD.Generate(RobotToolkit.WindDirection,RobotToolkit.WindParams,System.String)">
+            <summary>
+            Generate wind CFD analysis
+            </summary>
+            <param name="windDir"></param>
+            <param name="windParams"></param>
+            <param name="FilePath"></param>
+            <returns></returns>
+        </member>
+        <member name="T:RobotToolkit.WindDirection">
+            <summary>
+            Wind directions
+            </summary>
+        </member>
+        <member name="P:RobotToolkit.WindDirection.x_positive">
+            <summary>Wind in positive X direction</summary>
+        </member>
+        <member name="P:RobotToolkit.WindDirection.y_positive">
+            <summary>Wind in positive Y direction</summary>
+        </member>
+        <member name="P:RobotToolkit.WindDirection.x_negative">
+            <summary>Wind in negative X direction</summary>
+        </member>
+        <member name="P:RobotToolkit.WindDirection.y_negative">
+            <summary>Wind in negative Y direction</summary>
+        </member>
+        <member name="P:RobotToolkit.WindDirection.quadrants">
+            <summary>Wind in quadrants direction</summary>
+        </member>
+        <member name="M:RobotToolkit.WindDirection.#ctor">
+            <summary>
+            Construct a wind directions object
+            </summary>
+        </member>
+        <member name="M:RobotToolkit.WindDirection.SetDirection(System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Set wind directions
+            </summary>
+            <param name="x_positive"></param>
+            <param name="y_positive"></param>
+            <param name="x_negative"></param>
+            <param name="y_negative"></param>
+            <param name="quadrants"></param>
+        </member>
+        <member name="T:RobotToolkit.WindParams">
+            <summary>
+            Wind parameters for CFD analysis
+            </summary>
+        </member>
+        <member name="P:RobotToolkit.WindParams.deviationPercent">
+            <summary>Deviation of the solution</summary>
+        </member>
+        <member name="P:RobotToolkit.WindParams.terrainLevel">
+            <summary>Terrain level for wind modelling</summary>
+        </member>
+        <member name="P:RobotToolkit.WindParams.velocity">
+            <summary>Wind velocity</summary>
+        </member>
+        <member name="P:RobotToolkit.WindParams.openingsClosed">
+            <summary>Panel openings assumed closed or open</summary>
+        </member>
+        <member name="M:RobotToolkit.WindParams.#ctor">
+            <summary>
+            Wind parameters constructor
+            </summary>
+        </member>
+        <member name="M:RobotToolkit.WindParams.SetParameters(System.Double,System.Double,System.Double,System.Boolean)">
+            <summary>
+            Set wind parameters
+            </summary>
+            <param name="deviationPercent"></param>
+            <param name="terrainLevel"></param>
+            <param name="velocity"></param>
+            <param name="openingsClosed"></param>
+        </member>
+        <member name="T:RobotToolkit.Load_Legacy">
+            <summary>
+            Load objects and methods
+            </summary>
+        </member>
+        <member name="M:RobotToolkit.Load_Legacy.CreatePanelLoad(RobotOM.RobotApplication,System.Int32,RobotOM.IRobotLoadRecordType,System.String,BHoM.Structural.AxisDirection,System.Boolean,System.Boolean,System.Double)">
+            <summary>
+            Create a panel load
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="type"></param>
+            <param name="selString"></param>
+            <param name="axis"></param>
+            <param name="localAxis"></param>
+            <param name="projected"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+
+        <member name="M:RobotToolkit.Load_Legacy.CreateThermalBeamLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double)">
+            <summary>
+            Create a thermal load on a beam
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="val"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load_Legacy.CreateGravityLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double)">
+            <summary>
+            Create a gravity load
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="valX"></param>
+            <param name="valY"></param>
+            <param name="valZ"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load_Legacy.CreateBeamDistributedMomentLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double)">
+            <summary>
+            Create a distributed moment on a beam
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="mx"></param>
+            <param name="my"></param>
+            <param name="mz"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load_Legacy.CreateBeamDistributedMomentLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,BHoM.Structural.AxisDirection)">
+            <summary>
+            Create a beam distributed moment load
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="value"></param>
+            <param name="AxisDirection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load_Legacy.CreateBeamUDL(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double,System.Boolean,System.Boolean)">
+            <summary>
+            Create a uniformly distributed load on a beam
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="px"></param>
+            <param name="py"></param>
+            <param name="pz"></param>
+            <param name="projected"></param>
+            <param name="local"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load_Legacy.CreateBeamUDL(RobotOM.RobotApplication,System.Int32,System.String,System.Double,BHoM.Structural.AxisDirection,System.Boolean,System.Boolean)">
+            <summary>
+            Create a uniformly distributed load on a beam
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="value"></param>
+            <param name="AxisDirection"></param>
+            <param name="projected"></param>
+            <param name="local"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load_Legacy.CreateBeamPatchLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Create a patch load on a beam
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="px1"></param>
+            <param name="py1"></param>
+            <param name="pz1"></param>
+            <param name="pos1"></param>
+            <param name="px2"></param>
+            <param name="py2"></param>
+            <param name="pz2"></param>
+            <param name="pos2"></param>
+            <param name="normalised"></param>
+            <param name="projected"></param>
+            <param name="local"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load_Legacy.CreateBeamPatchLoad(RobotOM.RobotApplication,System.Int32,System.String,BHoM.Structural.AxisDirection,System.Double,System.Double,System.Double,System.Double,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Create a patch load on a beam
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="AxisDirection"></param>
+            <param name="value1"></param>
+            <param name="pos1"></param>
+            <param name="value2"></param>
+            <param name="pos2"></param>
+            <param name="normalised"></param>
+            <param name="projected"></param>
+            <param name="local"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load_Legacy.CreateBeamPointLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Create a point load on a beam
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="pos"></param>
+            <param name="fx"></param>
+            <param name="fy"></param>
+            <param name="fz"></param>
+            <param name="mx"></param>
+            <param name="my"></param>
+            <param name="mz"></param>
+            <param name="normalised"></param>
+            <param name="local"></param>
+            <param name="generateCalcNode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load_Legacy.CreateBeamPointLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,BHoM.Structural.AxisDirection,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Create a point load on a beam
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="pos"></param>
+            <param name="value"></param>
+            <param name="AxisDirection"></param>
+            <param name="normalised"></param>
+            <param name="local"></param>
+            <param name="generateCalcNode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load_Legacy.CreateNodalLoad(RobotOM.RobotApplication,System.Int32,System.String,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Create a nodal load
+            </summary>
+            <param name="robot"></param>
+            <param name="loadCaseId"></param>
+            <param name="selString"></param>
+            <param name="fx"></param>
+            <param name="fy"></param>
+            <param name="fz"></param>
+            <param name="mx"></param>
+            <param name="my"></param>
+            <param name="mz"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RobotToolkit.Load_Legacy.CreateNodalLoad(RobotOM.RobotApplication,System.Int32,System.String,BHoM.Structural.AxisDirection,System.Double)">
             <summary>
             Create a nodal load
             </summary>

@@ -29,9 +29,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\RobotToolkit.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BHoM">
+    <Reference Include="BHoM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM\Build\BHoM.dll</HintPath>
     </Reference>
     <Reference Include="Interop.RobotOM">
@@ -54,6 +56,7 @@
     <Compile Include="Labels\Label.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Loads\Loadcase.cs" />
+    <Compile Include="Loads\Load.cs" />
     <Compile Include="Loads\NodalLoad.cs" />
     <Compile Include="Results\BarForces.cs" />
     <Compile Include="Results\Global.cs" />
@@ -61,7 +64,7 @@
     <Compile Include="Section Properties\Robot_SectionProperty.cs" />
     <Compile Include="Utilities\Utils.cs" />
     <Compile Include="WindCFD.cs" />
-    <Compile Include="Loads\Load.cs" />
+    <Compile Include="Loads\Load_Legacy.cs" />
     <Compile Include="RobotEnums.cs" />
     <Compile Include="General.cs" />
     <Compile Include="Panel.cs" />

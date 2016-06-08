@@ -10,7 +10,7 @@ namespace RobotToolkit
     /// <summary>
     /// Robot bar class, for all bar objects and operations
     /// </summary>
-    public class Bar 
+    public class Bar
     {
         
         /// <summary>
@@ -20,16 +20,17 @@ namespace RobotToolkit
         /// <param name="project"></param>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static bool GetBarsQuery(Project project, string barNumbers = "all", string filePath = "")
+
+        public static bool GetBarsQuery(out Dictionary<int, BHoM.Structural.Bar> str_bars, string FilePath = "")
         {
-       
+
             RobotApplication robot = new RobotApplication();
             if (filePath != "")
             {
                 robot.Visible = 0;
                 robot.Project.Open(filePath);
             }
-            
+
 
             //Get Nodes
             RobotToolkit.Node.GetNodesQuery(project, filePath);
@@ -121,9 +122,12 @@ namespace RobotToolkit
             
             barSelection.FromText(barNumbers);
 
-            IRobotCollection barServer = robot.Project.Structure.Bars.GetMany(barSelection) as IRobotCollection;
-            RobotNodeServer nodeServer = robot.Project.Structure.Nodes as RobotNodeServer;
-           
+            Dictionary<int, BHoM.Structural.Node> str_nodes = new Dictionary<int, BHoM.Structural.Node>();
+            RobotToolkit.Node.GetNodes(out str_nodes, FilePath);
+
+            RobotBarCollection collection = (RobotBarCollection)robot.Project.Structure.Bars.GetAll();
+            str_bars = new Dictionary<int, BHoM.Structural.Bar>();
+
             robot.Project.Structure.Bars.BeginMultiOperation();
 
             Dictionary<int, int> nodeKeys = new Dictionary<int, int>();
@@ -149,7 +153,7 @@ namespace RobotToolkit
                 str_bar.OrientationAngle = rbar.Gamma;
                 IRobotLabel sec_label = rbar.GetLabel(IRobotLabelType.I_LT_BAR_SECTION);
                 BHoM.Collections.Dictionary<string, object> userInfo = new BHoM.Collections.Dictionary<string, object>();
-                
+
                 IRobotBarSectionData sec_data = sec_label.Data;
 
                 var values = IRobotBarSectionDataValue.GetValues(typeof(IRobotBarSectionDataValue));
@@ -178,6 +182,9 @@ namespace RobotToolkit
                         catch { }
                     }
                 }
+
+                str_bar.SetSectionProperty(SectionProperties.SectionProperty.Get(sec_label));
+
 
                 if (sec_data.IsSpecial)
                 {
@@ -227,11 +234,12 @@ namespace RobotToolkit
             }
 
             robot.Project.Structure.Bars.EndMultiOperation();
-            if (filePath != "")  { robot.Project.Close(); }
+
+            if (FilePath != "") { robot.Project.Close(); }
 
             return true;
         }
-   
+
         /// <summary>
         /// Creates bars using the fast cache method. 
         /// </summary>
@@ -253,7 +261,8 @@ namespace RobotToolkit
             RobotNamesArray mat_names = robot.Project.Structure.Labels.GetAvailableNames(IRobotLabelType.I_LT_MATERIAL);
             string defaultMaterialName = mat_names.Get(1).ToString();
 
-            for (int i = 0; i < str_bars.Length;i++)
+
+            for (int i = 0; i < str_bars.Length; i++)
             {
                 BHoM.Structural.Bar bar = str_bars[i];
                 BHoM.Structural.Node start_node = bar.StartNode;
@@ -267,9 +276,9 @@ namespace RobotToolkit
                 if (!node_dictionary.ContainsKey(end_node.Number))
                 {
                     node_dictionary.Add(end_node.Number, end_node);
-                   structureCache.AddNode(end_node.Number, end_node.X, end_node.Y, end_node.Z);
+                    structureCache.AddNode(end_node.Number, end_node.X, end_node.Y, end_node.Z);
                 }
-                
+
 
                 structureCache.AddBar(bar.Number, bar.StartNode.Number, bar.EndNode.Number, defaultSectionName, defaultMaterialName, 0);
                 //if (bar.SectionProperty.Name != "")
@@ -289,7 +298,9 @@ namespace RobotToolkit
             //    robot.Project.Structure.Labels.Store(mem_type_label);
             //}           
 
-           RobotStructureApplyInfo applyInfo = robot.Project.Structure.ApplyCache(structureCache);
+
+            RobotStructureApplyInfo applyInfo = robot.Project.Structure.ApplyCache(structureCache);
+
             return true;
         }
 
@@ -312,7 +323,7 @@ namespace RobotToolkit
             }
             robot.Project.Structure.Bars.EndMultiOperation();
 
-        return true;
+            return true;
         }
 
         /// <summary>
@@ -328,6 +339,6 @@ namespace RobotToolkit
             RobotSelection sel = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
             sel.AddText(selString);
         }
-        
+
     }
 }

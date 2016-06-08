@@ -93,6 +93,7 @@ namespace RobotToolkit
             }
         }
 
+
         /// <summary>
         /// Create a thermal load on a beam
         /// </summary>
@@ -412,7 +413,7 @@ namespace RobotToolkit
 
             return true;
         }
-        
+
         /// <summary>
         /// Create a point load on a beam
         /// </summary>

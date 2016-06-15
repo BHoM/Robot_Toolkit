@@ -11,7 +11,7 @@ namespace RobotToolkit.Labels
     /// <summary>
     /// Import/export/operate on Robot support labels
     /// </summary>
-    public class Support
+    public class SupportIO
     {
         /// <summary>
         /// Create a support label
@@ -19,7 +19,7 @@ namespace RobotToolkit.Labels
         /// <param name="robot"></param>
         /// <param name="restraint"></param>
         /// <returns></returns>
-        public static bool CreateSupportLabel(RobotApplication robot, BHoM.Structural.Constraint restraint)
+        public static bool CreateSupportLabel(RobotApplication robot, BHoM.Structural.NodeConstraint restraint)
         {
             IRobotLabel robot_restraint = robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_SUPPORT, restraint.Name);
             if (robot.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_SUPPORT, restraint.Name) == 1)
@@ -28,19 +28,19 @@ namespace RobotToolkit.Labels
             }
             IRobotNodeSupportData data = (IRobotNodeSupportData)robot_restraint.Data;
 
-            data.UX = (restraint.DoFType(AxisDirection.X) == DOFType.Fixed) ? -1 : 0;
-            data.UY = (restraint.DoFType(AxisDirection.Y) == DOFType.Fixed) ? -1 : 0;
-            data.UZ = (restraint.DoFType(AxisDirection.Z) == DOFType.Fixed) ? -1 : 0;
-            data.RX = (restraint.DoFType(AxisDirection.XX) == DOFType.Fixed) ? -1 : 0;
-            data.RY = (restraint.DoFType(AxisDirection.YY) == DOFType.Fixed) ? -1 : 0;
-            data.RZ = (restraint.DoFType(AxisDirection.ZZ) == DOFType.Fixed) ? -1 : 0;
+            data.UX = (restraint.UX.Type == DOFType.Fixed) ? -1 : 0;
+            data.UY = (restraint.UY.Type == DOFType.Fixed) ? -1 : 0;
+            data.UZ = (restraint.UZ.Type == DOFType.Fixed) ? -1 : 0;
+            data.RX = (restraint.RX.Type == DOFType.Fixed) ? -1 : 0;
+            data.RY = (restraint.RY.Type == DOFType.Fixed) ? -1 : 0;
+            data.RZ = (restraint.RZ.Type == DOFType.Fixed) ? -1 : 0;
 
-            if (restraint.DoFType(AxisDirection.X) == DOFType.Spring) data.KX = restraint.Value(AxisDirection.X);
-            if (restraint.DoFType(AxisDirection.Y) == DOFType.Spring) data.KY = restraint.Value(AxisDirection.Y);
-            if (restraint.DoFType(AxisDirection.Z) == DOFType.Spring) data.KZ = restraint.Value(AxisDirection.Z);
-            if (restraint.DoFType(AxisDirection.XX) == DOFType.Spring) data.HX = restraint.Value(AxisDirection.XX);
-            if (restraint.DoFType(AxisDirection.YY) == DOFType.Spring) data.HY = restraint.Value(AxisDirection.YY);
-            if (restraint.DoFType(AxisDirection.ZZ) == DOFType.Spring) data.HZ = restraint.Value(AxisDirection.ZZ);
+            if (restraint.UX.Type == DOFType.Spring) data.KX = restraint.UX.Value;
+            if (restraint.UY.Type == DOFType.Spring) data.KY = restraint.UY.Value;
+            if (restraint.UZ.Type == DOFType.Spring) data.KZ = restraint.UZ.Value;
+            if (restraint.RX.Type == DOFType.Spring) data.HX = restraint.RX.Value;
+            if (restraint.RY.Type == DOFType.Spring) data.HY = restraint.RY.Value;
+            if (restraint.RZ.Type == DOFType.Spring) data.HZ = restraint.RZ.Value;
 
             robot.Project.Structure.Labels.Store(robot_restraint);
 
@@ -53,15 +53,12 @@ namespace RobotToolkit.Labels
         /// <param name="robot"></param>
         /// <param name="support"></param>
         /// <returns></returns>
-        public static BHoM.Structural.Constraint CreateConstraintFromRobotSupport(RobotApplication robot, IRobotLabel support)
+        public static BHoM.Structural.NodeConstraint CreateConstraintFromRobotSupport(RobotApplication robot, IRobotLabel support)
         {
-            BHoM.Structural.Constraint constraint = new Constraint(support.Name);
+            BHoM.Structural.NodeConstraint constraint = new NodeConstraint(support.Name);
             IRobotNodeSupportData supportData = support.Data;
             
-
-
             return constraint;
         }
-
     }    
 }

@@ -5,15 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using RobotOM;
 using BHoM;
+using BHoM.Structural;
+using BHoM.Global;
 
 namespace RobotToolkit
 {
     /// <summary>
     /// Node objects
     /// </summary>
-    public class Node
+    public class NodeIO
     {
-        public static BHoM.Structural.Constraint GetConstraint(BHoM.Structural.ConstraintFactory factory, IRobotNode node)
+        public static BHoM.Structural.NodeConstraint GetConstraint(IRobotNode node)
         {
             if (node.HasLabel(IRobotLabelType.I_LT_SUPPORT) != 0)
             {
@@ -38,10 +40,38 @@ namespace RobotToolkit
                     spring[4] = nodeData.HY;
                     spring[5] = nodeData.HZ;
 
-                    return factory.Create(nodeSupport.Name, data, spring);
+                    return new NodeConstraint(nodeSupport.Name, data, spring);
                 }
             }
-            return factory.Create("Free", "ffffff");
+            return null;
+        }
+
+        public static void CreateConstraint(RobotApplication robot, BHoM.Structural.NodeConstraint constraint)
+        {
+            IRobotLabel constraintLabel = robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_SUPPORT, constraint.Name);
+
+            if (constraintLabel != null)
+            {
+                RobotNodeSupportData nodeData = constraintLabel.Data;
+
+                if (constraint != null)
+                {
+                    nodeData.UX = constraint.UX.Type == DOFType.Fixed ? -1 : 0;
+                    nodeData.UY = constraint.UY.Type == DOFType.Fixed ? -1 : 0;
+                    nodeData.UZ = constraint.UZ.Type == DOFType.Fixed ? -1 : 0;
+                    nodeData.RX = constraint.RX.Type == DOFType.Fixed ? -1 : 0;
+                    nodeData.RY = constraint.RY.Type == DOFType.Fixed ? -1 : 0;
+                    nodeData.RZ = constraint.RZ.Type == DOFType.Fixed ? -1 : 0;
+
+                    nodeData.KX = constraint.UX.Value;
+                    nodeData.KY = constraint.UY.Value;
+                    nodeData.KZ = constraint.UZ.Value;
+                    nodeData.HX = constraint.RX.Value;
+                    nodeData.HY = constraint.RY.Value;
+                    nodeData.HY = constraint.RZ.Value;
+                }
+                robot.Project.Structure.Labels.Store(constraintLabel);
+            }
         }
 
         /// <summary>
@@ -50,13 +80,11 @@ namespace RobotToolkit
         /// <param name="project"></param>
         /// <param name="selection"></param>
         /// <param name="filePath"></param>
-        public static void GetNodesQuery(BHoM.Global.Project project, string selection = "all", string filePath = "")
+        public static void GetNodesQuery(RobotApplication robot, out ObjectManager<int, Node> nodes, string selection = "all")
         {
-            RobotApplication robot = new RobotApplication();
-            if (filePath != "")
-            {
-                robot.Project.Open(filePath);
-            }
+            
+            nodes = new ObjectManager<int, Node>(Utils.NUM_KEY, FilterOption.UserData);
+
             RobotResultQueryParams result_params = robot.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
 
             RobotStructure rstructure = robot.Project.Structure;
@@ -79,9 +107,7 @@ namespace RobotToolkit
             RobotResultRow result_row = default(RobotResultRow);
             int nod_num = 0;
             int kounta = 0;
-
-            BHoM.Structural.NodeFactory factory = project.Structure.Nodes;
-
+            
             while (!(query_return == IRobotResultQueryReturnType.I_RQRT_DONE))
             {
                 query_return = robot.Project.Structure.Results.Query(result_params, row_set);
@@ -90,7 +116,9 @@ namespace RobotToolkit
                 {
                     result_row = row_set.CurrentRow;
                     nod_num = (int)result_row.GetParam(IRobotResultParamType.I_RPT_NODE);
-                    factory.Create(nod_num, (double)row_set.CurrentRow.GetValue(0), (double)row_set.CurrentRow.GetValue(1), (double)row_set.CurrentRow.GetValue(2));
+                    Node n = new Node((double)row_set.CurrentRow.GetValue(0), (double)row_set.CurrentRow.GetValue(1), (double)row_set.CurrentRow.GetValue(2));
+                    n.CustomData.Add(Utils.NUM_KEY, nod_num);
+                    nodes.Add(nod_num, n);
                     kounta++;
                     ok = row_set.MoveNext();
                 }
@@ -107,31 +135,42 @@ namespace RobotToolkit
         /// <param name="nodes"></param>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static bool GetNodes(BHoM.Global.Project project, string nodes = "all", string filePath = "")
-        {
-            RobotApplication robot = new RobotApplication();
-            if (filePath != "")
-            {
-                robot.Project.Open(filePath);
-            }
-            RobotSelection selection = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
-            selection.FromText(nodes);
+        public static bool GetNodes(RobotApplication robot, out List<Node> nodeOut, string nodeSelection = "all")
+        { 
+            RobotSelection selection = robot.Project.Structure.Selections.Get(IRobotObjectType.I_OT_NODE);
+            
+            ObjectManager<int, Node>  nodes = new ObjectManager<int, Node>(Utils.NUM_KEY, FilterOption.UserData);            
+
+            ObjectManager<NodeConstraint> constraints = new ObjectManager<NodeConstraint>();
+          
+            if (nodeSelection != "selected") selection.FromText(nodeSelection);
+            
             RobotNodeCollection collection = (RobotNodeCollection)robot.Project.Structure.Nodes.GetMany(selection);
-            BHoM.Structural.NodeFactory bHomNodes = project.Structure.Nodes;
-            BHoM.Structural.ConstraintFactory bHomConstraints = project.Structure.Constraints;
            
             for (int i = 0; i < collection.Count; i++)
-            {
-                
+            {               
                 RobotNode rnode = (RobotNode)collection.Get(i + 1);
 
-                BHoM.Structural.Node node = bHomNodes.Create(rnode.Number, rnode.X, rnode.Y, rnode.Z);
-                node.Constraint = GetConstraint(bHomConstraints, rnode);
+                BHoM.Structural.Node node = new Node(rnode.X, rnode.Y, rnode.Z);
+                nodes.Add(rnode.Number, node);
+
+                if (rnode.HasLabel(IRobotLabelType.I_LT_SUPPORT) != 0)
+                {
+                    IRobotLabel supportLabel = rnode.GetLabel(IRobotLabelType.I_LT_SUPPORT);
+                    NodeConstraint c = constraints.TryLookup(supportLabel.Name);
+                    if (c == null)
+                    {
+                        c = GetConstraint(rnode);
+                        constraints.Add(supportLabel.Name, c);
+                    }
+                    node.Constraint = c;
+                }
             }
+            nodeOut = nodes.ToList();
             return true;
         }
 
-       /// <summary>
+        /// <summary>
         /// Create nodes using the fast cache method
         /// </summary>
         /// <param name="str_nodes"></param>
@@ -145,12 +184,62 @@ namespace RobotToolkit
 
             foreach (BHoM.Structural.Node node in str_nodes)
             {
-                structureCache.AddNode(node.Number, node.X, node.Y, node.Z);
+                object number = 0;
+                if (node.CustomData.TryGetValue(Utils.NUM_KEY, out number))
+                {
+                    structureCache.AddNode((int)number, node.X, node.Y, node.Z);
+                }
+                else
+                {
+                    structureCache.AddNode(robot.Project.Structure.Nodes.FreeNumber, node.X, node.Y, node.Z);
+                }
             }
 
             RobotStructureApplyInfo applyInfo = robot.Project.Structure.ApplyCache(structureCache);
 
+            return true;
+        }
 
+        public static bool CreateNodes(RobotApplication robot, List<Node> nodes, out List<string> ids)
+        {
+            RobotNodeServer nodeServer = robot.Project.Structure.Nodes;
+            RobotNode node = null;
+            Dictionary<string, string> addedConstraints = new Dictionary<string, string>();
+            ids = new List<string>();
+            int num = 0;
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                object number = nodes[i][Utils.NUM_KEY];
+
+                if (number != null)
+                {
+                    int.TryParse(number.ToString(), out num);
+                }
+                else
+                {
+                    num = nodeServer.FreeNumber;
+                    nodes[i].CustomData.Add(Utils.NUM_KEY, num);
+                }
+
+                if (nodeServer.Exist(num) == 0)
+                { 
+                    nodeServer.Create(num, nodes[i].X, nodes[i].Y, nodes[i].Z);
+                }
+
+                node = nodeServer.Get(num) as RobotNode;
+                ids.Add(num.ToString());
+                string nodeSupport = "";
+                if (nodes[i].Constraint != null)
+                {
+                    if (!addedConstraints.TryGetValue(nodes[i].Constraint.Name, out nodeSupport))
+                    {
+                        CreateConstraint(robot, nodes[i].Constraint);
+                        nodeSupport = nodes[i].Constraint.Name;
+                        addedConstraints.Add(nodeSupport, nodeSupport);
+                    }
+                    node.SetLabel(IRobotLabelType.I_LT_SUPPORT, nodeSupport);              
+                }
+            }
             return true;
         }
 
@@ -189,21 +278,20 @@ namespace RobotToolkit
         /// <param name="str_nodes"></param>
         /// <param name="FilePath"></param>
         /// <returns></returns>
-        public static bool SetRestraints(List<BHoM.Structural.Node> str_nodes, string FilePath = "LiveLink")
-        {
-            RobotApplication robot = null;
-            if (FilePath == "LiveLink") robot = new RobotApplication();
-            
-
+        public static bool SetRestraints(RobotApplication robot, List<BHoM.Structural.Node> str_nodes)
+        {            
             RobotSelection nodeSelection = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
             foreach (BHoM.Structural.Node node in str_nodes)
             {
-                nodeSelection.FromText(node.Number.ToString());
-                robot.Project.Structure.Nodes.SetLabel(nodeSelection, IRobotLabelType.I_LT_SUPPORT, node.ConstraintName);
+                object nodeNum = node[Utils.NUM_KEY];
+                if (nodeNum != null)
+                {
+                    nodeSelection.FromText(nodeNum.ToString());
+                    robot.Project.Structure.Nodes.SetLabel(nodeSelection, IRobotLabelType.I_LT_SUPPORT, node.ConstraintName);
+                }
             }
 
-                
-            
+                    
             return true;
         }
    

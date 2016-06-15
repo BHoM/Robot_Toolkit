@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RobotOM;
 using BHoM.Structural;
-
+using BHoM.Global;
 namespace RobotToolkit
 {
     /// <summary>
@@ -70,6 +70,7 @@ namespace RobotToolkit
             RobotApplication robot = new RobotApplication();
             IRobotCase lCase = robot.Project.Structure.Cases.Get(loadcase.Number);
             loads = new List<BHoM.Structural.Loads.AreaUniformalyDistributedLoad>();
+            ObjectManager<int, Panel> panels = new ObjectManager<int, Panel>(Utils.NUM_KEY, FilterOption.UserData);
             if (lCase.Type == IRobotCaseType.I_CT_SIMPLE || loadcase.Number < 0)
             {
                 IRobotSimpleCase sCase = (lCase as IRobotSimpleCase);
@@ -85,7 +86,7 @@ namespace RobotToolkit
                             double Py = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PY);
                             double Pz = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PZ);
                             BHoM.Structural.Loads.AreaUniformalyDistributedLoad load = new BHoM.Structural.Loads.AreaUniformalyDistributedLoad(Px, Py, Pz);
-                            load.ObjectNumbers = RobotToolkit.Utilities.Utils.GetNumbersFromText(loadRecord.Objects.ToText());
+                            load.Objects = panels.GetRange(RobotToolkit.Utils.GetNumbersFromText(loadRecord.Objects.ToText()));
                             loads.Add(load);
                             break;
                     }

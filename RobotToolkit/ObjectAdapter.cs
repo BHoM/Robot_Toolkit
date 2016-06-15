@@ -40,6 +40,12 @@ namespace RobotToolkit
             return true;
         }
 
+        /// <summary>
+        /// Sets the bars in robot
+        /// </summary>
+        /// <param name="bars"></param>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         public bool CreateBars(List<Bar> bars, out List<string> ids)
         {
             BarIO.CreateBars(Robot, bars, out ids);

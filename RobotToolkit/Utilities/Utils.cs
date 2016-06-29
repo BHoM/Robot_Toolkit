@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RobotToolkit.Utilities
+namespace RobotToolkit
 {
     /// <summary>
     /// 
     /// </summary>
     public static class Utils
     {
+        public const string NUM_KEY = "Robot Number";
+
         /// <summary>
         /// 
         /// </summary>
@@ -51,6 +53,26 @@ namespace RobotToolkit.Utilities
                 }
             }
             return output;
+        }
+
+        internal static string GetSelectionString(List<int> numbers)
+        {
+            string selection = "";
+            for (int i = 0; i < numbers.Count; i++)
+            {
+                selection += numbers[i] + " ";
+            }
+            return selection.Trim();
+        }
+
+        internal static string GetSelectionString(List<string> ids)
+        {
+            string selection = "";
+            for (int i = 0; i < ids.Count; i++)
+            {
+                selection += ids[i] + " ";
+            }
+            return selection.Trim();
         }
     }
 }

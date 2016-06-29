@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\Build\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -35,6 +35,7 @@
     <Reference Include="BHoM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM\Build\BHoM.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Interop.RobotOM">
       <HintPath>..\External dlls\Interop.RobotOM.dll</HintPath>
@@ -52,6 +53,8 @@
   <ItemGroup>
     <Compile Include="FileIO.cs" />
     <Compile Include="FiniteElement.cs" />
+    <Compile Include="ResultAdpater.cs" />
+    <Compile Include="Utilities\GeometryHelper.cs" />
     <Compile Include="Labels\Support.cs" />
     <Compile Include="Labels\Label.cs" />
     <Compile Include="App.cs" />
@@ -61,15 +64,16 @@
     <Compile Include="Results\BarForces.cs" />
     <Compile Include="Results\Global.cs" />
     <Compile Include="Results\Storey.cs" />
-    <Compile Include="Section Properties\Robot_SectionProperty.cs" />
+    <Compile Include="ObjectAdapter.cs" />
+    <Compile Include="PropertyIO.cs" />
     <Compile Include="Utilities\Utils.cs" />
     <Compile Include="WindCFD.cs" />
     <Compile Include="Loads\Load_Legacy.cs" />
     <Compile Include="RobotEnums.cs" />
     <Compile Include="General.cs" />
-    <Compile Include="Panel.cs" />
-    <Compile Include="Node.cs" />
-    <Compile Include="Bar.cs" />
+    <Compile Include="PanelIO.cs" />
+    <Compile Include="NodeIO.cs" />
+    <Compile Include="BarIO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -78,10 +82,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)Build\$(ProjectName).dll"
-copy /Y "$(TargetDir)$(ProjectName).xml" "$(SolutionDir)Build\$(ProjectName).xml"
-copy /Y "$(TargetDir)$(ProjectName).dll" "C:\Users\$(Username)\AppData\Roaming\Dynamo\0.9\packages\BH Dynamo Tools\bin\$(ProjectName).dll"
-copy /Y "$(TargetDir)$(ProjectName).xml" "C:\Users\$(Username)\AppData\Roaming\Dynamo\0.9\packages\BH Dynamo Tools\bin\$(ProjectName).xml"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

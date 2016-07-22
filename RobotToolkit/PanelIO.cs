@@ -152,78 +152,110 @@ namespace RobotToolkit
         public static bool CreatePanels(RobotApplication robot, List<Panel> panels, out List<string> ids)
         {
             string key = Utils.NUM_KEY;
-            robot.Project.Structure.Bars.BeginMultiOperation();
+            robot.Interactive = 0;
+            robot.Project.Structure.Objects.BeginMultiOperation();
             Dictionary<string, string> addedThicknesses = new Dictionary<string, string>();
             Dictionary<string, string> addedMaterials = new Dictionary<string, string>();
             RobotObjObjectServer objServer = robot.Project.Structure.Objects;
             ids = new List<string>();
+            // List<Opening> openings = new List<Opening>();
             foreach (BHoM.Structural.Panel panel in panels)
             {
-                Group<Curve> c = panel.Edges;
-                if (c != null)
+                int edgeCount = panel.External_Contour.Count;
+                List<Curve> c = panel.External_Contour;
+                c.AddRange(panel.Internal_Contours);
+                try
                 {
-                    RobotObjObject rpanel = null;
-
-                    int panelNum = objServer.FreeNumber;
-                    object number = panel[key];
-
-                    if (number != null)
+                    if (c != null)
                     {
-                        int.TryParse(number.ToString(), out panelNum);
-                    }
-                    else
-                    {
-                        panel.CustomData.Add(key, panelNum);
-                    }
+                        string id = "";
+                        for (int i = 0; i < c.Count; i++)
+                        {
+                            RobotObjObject rpanel = null;
+                            int panelNum = objServer.FreeNumber;
+                            object number = panel[key];
 
-                    if (objServer.Exist(panelNum) == -1)
-                    {
-                        rpanel = objServer.Get(panelNum) as RobotObjObject;
-                    }
-                    else
-                    {
-                        rpanel = objServer.Create(panelNum);
-                    }
-                    ids.Add(panelNum.ToString());
-                    rpanel.Main.Geometry = GeometryHelper.CreateContour(robot, c.ToList()) as RobotGeoObject;
+                            id += " " + panelNum;
 
-                    rpanel.Initialize();
-                    rpanel.Update();
-                    string currentThickness = "";
-                    if (panel.ThicknessProperty != null && !addedThicknesses.TryGetValue(panel.ThicknessProperty.Name, out currentThickness))
-                    {
-                        PropertyIO.CreateThicknessProperty(robot, panel.ThicknessProperty);
-                        currentThickness = panel.ThicknessProperty.Name;
-                        addedThicknesses.Add(currentThickness, currentThickness);
-                    }
+                            if (number != null && int.TryParse(number.ToString(), out panelNum))
+                            {
+                                id = panelNum.ToString();
+                            }
+                            else
+                            {
+                                if (panel.CustomData.ContainsKey(key))
+                                {
+                                    panel.CustomData[key] = id.Trim();
+                                }
+                                else
+                                {
+                                    panel.CustomData.Add(key, id);
+                                }
+                            }
 
-                    string material = "";
-                    if (panel.Material != null && !addedMaterials.TryGetValue(panel.Material.Name, out material))
-                    {
-                        PropertyIO.CreateMaterial(robot, panel.Material);
-                        material = panel.Material.Name;
-                        addedMaterials.Add(material, material);
-                    }
+                            if (objServer.Exist(panelNum) == -1)
+                            {
+                                rpanel = objServer.Get(panelNum) as RobotObjObject;
+                            }
+                            else
+                            {
+                                rpanel = objServer.Create(panelNum);
+                            }
 
-                    if (!string.IsNullOrEmpty(currentThickness))
-                    {
-                        rpanel.Main.Attribs.Meshed = 1;
-                        rpanel.Mesh.Params.SurfaceParams.Generation.Type = IRobotMeshGenerationType.I_MGT_ELEMENT_SIZE;
-                        rpanel.Mesh.Params.SurfaceParams.Generation.ElementSize = 1;
-                        rpanel.Mesh.Params.SurfaceParams.Method.Method = IRobotMeshMethodType.I_MMT_DELAUNAY;
-                        rpanel.Mesh.Params.SurfaceParams.Delaunay.RegularMesh = true;
-                        rpanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, currentThickness);
-                    }
+                            ids.Add(panelNum.ToString());
 
-                    rpanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, currentThickness);
-                    rpanel.SetLabel(IRobotLabelType.I_LT_MATERIAL, material);
-                    
-                    rpanel.Update();
+                            rpanel.Main.Geometry = GeometryHelper.CreateContour(robot, c[i].Explode()) as RobotGeoObject;
+
+                            rpanel.Initialize();
+                            rpanel.Update();
+                            if (i < edgeCount)
+                            {
+                                string currentThickness = "";
+                                if (panel.ThicknessProperty != null && !addedThicknesses.TryGetValue(panel.ThicknessProperty.Name, out currentThickness))
+                                {
+                                    PropertyIO.CreateThicknessProperty(robot, panel.ThicknessProperty);
+                                    currentThickness = panel.ThicknessProperty.Name;
+                                    addedThicknesses.Add(currentThickness, currentThickness);
+                                }
+
+                                string material = "";
+                                if (panel.Material != null && !addedMaterials.TryGetValue(panel.Material.Name, out material))
+                                {
+                                    PropertyIO.CreateMaterial(robot, panel.Material);
+                                    material = panel.Material.Name;
+                                    addedMaterials.Add(material, material);
+                                }
+
+                                if (!string.IsNullOrEmpty(currentThickness))
+                                {
+                                    rpanel.Main.Attribs.Meshed = 1;
+                                    rpanel.Mesh.Params.SurfaceParams.Generation.Type = IRobotMeshGenerationType.I_MGT_ELEMENT_SIZE;
+                                    rpanel.Mesh.Params.SurfaceParams.Generation.ElementSize = 1;
+                                    rpanel.Mesh.Params.SurfaceParams.Method.Method = IRobotMeshMethodType.I_MMT_DELAUNAY;
+                                    rpanel.Mesh.Params.SurfaceParams.Delaunay.RegularMesh = true;
+                                    rpanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, currentThickness);
+                                }
+
+                                rpanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, currentThickness);
+                                rpanel.SetLabel(IRobotLabelType.I_LT_MATERIAL, material);
+
+                                rpanel.Update();
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
                 }
             }
+
+            List<string> openingIds = null;
+            robot.Project.Structure.Objects.EndMultiOperation();
+            robot.Interactive = 1;
+            //CreateOpenings(robot, openings, out openingIds);
             return true;
         }
-    
+
         /// <summary>
         /// Create Robot openings in panels
         /// </summary>

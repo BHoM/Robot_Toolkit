@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="FileIO.cs" />
     <Compile Include="FiniteElement.cs" />
+    <Compile Include="LoadIO.cs" />
     <Compile Include="ResultAdpater.cs" />
     <Compile Include="Utilities\GeometryHelper.cs" />
     <Compile Include="Labels\Support.cs" />

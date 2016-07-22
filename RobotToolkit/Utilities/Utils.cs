@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BHoM.Global;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -74,5 +75,16 @@ namespace RobotToolkit
             }
             return selection.Trim();
         }
+
+        internal static string GetSelectionString<T>(List<T> objects) where T : BHoMObject
+        {
+            string selection = "";
+            for (int i = 0; i < objects.Count; i++)
+            {
+                selection += objects[i][NUM_KEY] + " ";
+            }
+            return selection.Trim();
+        }
+
     }
 }

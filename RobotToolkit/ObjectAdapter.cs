@@ -86,7 +86,10 @@ namespace RobotToolkit
 
         public bool SetNodes(List<Node> nodes, out List<string> ids, string option = "")
         {
-            return NodeIO.CreateNodes(Robot, nodes, out ids);
+            Robot.Interactive = 0;
+            NodeIO.CreateNodes(Robot, nodes, out ids);
+            Robot.Interactive = 1;
+            return true;
         }
 
         public bool SetBars(List<Bar> bars, out List<string> ids, string option = "")
@@ -101,22 +104,121 @@ namespace RobotToolkit
 
         public bool SetOpenings(List<Opening> opening, out List<string> ids, string option = "")
         {
-            throw new NotImplementedException();
+            return PanelIO.CreateOpenings(Robot, opening, out ids);
         }
 
-        public bool SetLevels(List<Storey> stores, out List<string> ids, string option = "")
+        public bool SetLevels(List<Storey> stories, out List<string> ids, string option = "")
         {
-            throw new NotImplementedException();
+            ids = new List<string>();
+            if (stories.Count > 0)
+            {
+                stories.Sort(delegate (Storey s1, Storey s2)
+                {
+                    return s1.Elevation.CompareTo(s2.Elevation);
+                });
+
+                double height = stories[1].Elevation - stories[0].Elevation;
+
+                for (int i = 0; i < stories.Count; i++)
+                {
+                    Robot.Project.Structure.Storeys.Create2(stories[i].Name, stories[i].Elevation);
+                    ids.Add(stories[i].Name);
+                    // if (i < stories.Count - 1) height = stories[i + 1].Elevation - stories[i].Elevation;
+                }
+            }
+            return true;
         }
 
         public bool SetLoads(List<ILoad> loads, string option = "")
         {
-            throw new NotImplementedException();
+            return LoadIO.SetLoads(Robot, loads);
         }
 
         public bool SetLoadcases(List<ICase> cases)
         {
             throw new NotImplementedException();
+        }
+
+        public bool GetGrids(out List<Grid> grids, string options = "")
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SetGrids(List<Grid> grid, out List<string> ids, string option = "")
+        {
+            RobotStructuralAxisGridMngr gm;
+            IRobotStructuralAxisGrid sag;
+            RobotStructuralAxisGridCartesian cartesianGrid = null;
+
+            gm = Robot.Project.AxisMngr;
+
+            if (gm.Count == 0)
+            {
+                gm.Create(IRobotStructuralAxisGridType.I_SAGT_CARTESIAN, "Structural Cartesian Axis");
+            }
+
+            sag = gm.Get(1);
+            if (sag.Type == IRobotStructuralAxisGridType.I_SAGT_CARTESIAN)
+            {
+                cartesianGrid = gm.Get(1) as RobotStructuralAxisGridCartesian;
+            }
+            int xCounter = 1;
+            int yCounter = 1;
+            double xPrevious = 0;
+            double yPrevious = 0;
+            string xLabel = "";
+            string yLabel = "";
+            grid.Sort(delegate (Grid g1, Grid g2)
+            {
+                double d1 = g1.Plane.Normal.X * 1000 + g1.Plane.Origin.X + g1.Plane.Normal.Y + g1.Plane.Origin.Y;
+                double d2 = g2.Plane.Normal.X * 1000 + g2.Plane.Origin.X + g2.Plane.Normal.Y + g2.Plane.Origin.Y;
+                return d1.CompareTo(d2);
+            });
+            for (int i = 0; i < grid.Count; i++)
+            {
+                if (Math.Abs(grid[i].Plane.Normal.X) >= 0.99)
+                {
+                    if (xCounter == 1)
+                    {
+                        cartesianGrid.X.StartPosition = grid[i].Plane.Origin.X;
+                        xPrevious = grid[i].Plane.Origin.X;
+                        xCounter++;
+                        xLabel = grid[i].Name;
+                    }
+                    else
+                    {
+                        cartesianGrid.X.AddSequence(grid[i].Plane.Origin.X - xPrevious, 1);
+                        cartesianGrid.X.SetAxisLabel(xCounter++, grid[i].Name);
+                        xPrevious = grid[i].Plane.Origin.X;
+                    }
+                }
+                else if (Math.Abs(grid[i].Plane.Normal.Y) >= 0.99)
+                {
+                    if (yCounter == 1)
+                    {
+                        cartesianGrid.Y.StartPosition = grid[i].Plane.Origin.Y;
+                        yPrevious = grid[i].Plane.Origin.Y;
+                        yCounter++;
+                        yLabel = grid[i].Name;
+                    }
+                    else
+                    {
+                        cartesianGrid.Y.AddSequence(grid[i].Plane.Origin.Y - yPrevious, 1);
+                        cartesianGrid.Y.SetAxisLabel(yCounter++, grid[i].Name);
+                        yPrevious = grid[i].Plane.Origin.Y;
+                    }
+
+                }
+            }
+            if (grid.Count > 0)
+            {
+                cartesianGrid.X.SetAxisLabel(1, xLabel);
+                cartesianGrid.Y.SetAxisLabel(1, yLabel);
+                cartesianGrid.Save();
+            }
+
+            ids = null;
+            return true;
         }
     }
 }

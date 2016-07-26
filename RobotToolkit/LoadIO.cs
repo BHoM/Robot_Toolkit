@@ -1,4 +1,5 @@
-﻿using BHoM.Structural.Loads;
+﻿using BHoM.Geometry;
+using BHoM.Structural.Loads;
 using RobotOM;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace RobotToolkit
                 if (currentLoadcase != load.Loadcase.Name)
                 {
                     currentLoadcase = load.Loadcase.Name;
-                    lCase = robot.Project.Structure.Cases.Get(int.Parse(load.Loadcase.Name));
+                    lCase = robot.Project.Structure.Cases.Get(int.Parse(load.Loadcase[Utils.NUM_KEY].ToString()));
                     sCase = (lCase as IRobotSimpleCase);
                 }
 
@@ -112,7 +113,50 @@ namespace RobotToolkit
                             loadRecord.SetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UZ, pA.TranslationalAcceleration.Z);
                             break;
                         case LoadType.Geometrical:
-                            GeometricalLoad gL = load as GeometricalLoad;
+                            if (load is GeometricalAreaLoad)
+                            {
+                                GeometricalAreaLoad aL = load as GeometricalAreaLoad;
+                                List<Point> points = aL.Contour.ControlPoints.ToList();
+
+                                loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_IN_CONTOUR);
+                                loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PX1, aL.Force.X);
+                                loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PY1, aL.Force.Y);
+                                loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PZ1, aL.Force.Z);
+                                loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_NPOINTS, points.Count);
+                                loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_AUTO_DETECT_OBJECTS, -1);
+
+                                RobotLoadRecordInContour iContour = loadRecord as RobotLoadRecordInContour;
+                                for (int cp = 0; cp < points.Count; cp++)
+                                {
+                                    iContour.SetContourPoint(cp + 1, points[cp].X, points[cp].Y, points[cp].Z);
+                                }
+                            }
+                            else if (load is GeometricalLineLoad)
+                            {
+                                GeometricalLineLoad lineL = load as GeometricalLineLoad;
+                                loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_LINEAR_3D);
+                                RobotNodeServer objServer = robot.Project.Structure.Nodes;
+                                BHoM.Geometry.Point p1 = lineL.Location.StartPoint;
+                                BHoM.Geometry.Point p2 = lineL.Location.EndPoint;
+
+                                IRobotLoadRecordLinear3D l3D = loadRecord as IRobotLoadRecordLinear3D;
+                                l3D.SetPoint(1, p1.X, p1.Y, p1.Z);
+                                l3D.SetPoint(2, p2.X, p2.Y, p2.Z);
+                                
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PX1, lineL.ForceA.X);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PY1, lineL.ForceA.Y);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PZ1, lineL.ForceA.Z);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PX2, lineL.ForceB.X);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PY2, lineL.ForceB.Y);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PZ2, lineL.ForceB.Z);
+
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MX1, lineL.MomentA.X);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MY1, lineL.MomentA.Y);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MZ1, lineL.MomentA.Z);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MX2, lineL.MomentB.X);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MY2, lineL.MomentB.Y);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MZ2, lineL.MomentB.Z);
+                            }
                             break;
                         default:
                             break;

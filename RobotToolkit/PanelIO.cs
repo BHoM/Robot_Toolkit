@@ -180,6 +180,10 @@ namespace RobotToolkit
                             if (number != null && int.TryParse(number.ToString(), out panelNum))
                             {
                                 id = panelNum.ToString();
+                                if (objServer.Exist(panelNum) == -1)
+                                {
+                                    rpanel = objServer.Get(panelNum) as RobotObjObject;
+                                }
                             }
                             else
                             {
@@ -189,16 +193,12 @@ namespace RobotToolkit
                                 }
                                 else
                                 {
-                                    panel.CustomData.Add(key, id);
+                                    panel.CustomData.Add(key, id.Trim());
                                 }
                             }
 
-                            if (objServer.Exist(panelNum) == -1)
-                            {
-                                rpanel = objServer.Get(panelNum) as RobotObjObject;
-                            }
-                            else
-                            {
+                            if (rpanel == null)
+                            { 
                                 rpanel = objServer.Create(panelNum);
                             }
 

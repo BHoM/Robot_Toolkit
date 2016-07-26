@@ -694,18 +694,57 @@ namespace RobotToolkit
                 }
                 else if (sectionProperty.SectionMaterial == SectionType.Steel)
                 {
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_D, sectionData[(int)SectionTableColumn.Height]);
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_BF, sectionData[(int)SectionTableColumn.B1]);
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_BF2, sectionData[(int)SectionTableColumn.B2]);
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_TF, sectionData[(int)SectionTableColumn.TF1]);
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_TW, sectionData[(int)SectionTableColumn.TW]);
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_TF2, sectionData[(int)SectionTableColumn.TF2]);
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_RA, sectionData[(int)SectionTableColumn.r1]);
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_RI, sectionData[(int)SectionTableColumn.r2]);
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_S, sectionData[(int)SectionTableColumn.Spacing]);
-                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_GAMMA, sectionProperty.Orientation);
-                    data.Type = GetShapeType(sectionProperty.Shape);
-                    data.CalcNonstdGeometry();
+                    if (sectionData != null)
+                    {
+
+
+                        data.Type = GetShapeType(sectionProperty.Shape);
+                        RobotBarSectionNonstdData nonStandard = data.CreateNonstd(0);
+                        switch (data.Type)
+                        {
+                            case IRobotBarSectionType.I_BST_NS_I:
+                            case IRobotBarSectionType.I_BST_NS_BOX:
+                            case IRobotBarSectionType.I_BST_NS_L:
+                            case IRobotBarSectionType.I_BST_NS_C:
+                            case IRobotBarSectionType.I_BST_NS_Z:
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B, sectionData[(int)SectionTableColumn.Width - 3]);
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H, sectionData[(int)SectionTableColumn.Height - 3] - sectionData[(int)SectionTableColumn.TF1 - 3] - sectionData[(int)SectionTableColumn.TF1 - 3]);
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW, sectionData[(int)SectionTableColumn.TW - 3]);
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF, sectionData[(int)SectionTableColumn.TF1 - 3]);
+                                break;
+                            case IRobotBarSectionType.I_BST_NS_TUBE:
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D, sectionData[(int)SectionTableColumn.Height - 3]);
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_T, sectionData[(int)SectionTableColumn.TF1 - 3]);
+                                break;
+                            case IRobotBarSectionType.I_BST_NS_RECT:
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B, sectionData[(int)SectionTableColumn.Width - 3]);
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H, sectionData[(int)SectionTableColumn.Height - 3]);
+                                //nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_T, sectionData[(int)SectionTableColumn.TF1 - 3]);
+                                break;
+                        }
+
+                        //data.SetValue(IRobotBarSectionDataValue.I_BSDV_BF, sectionData[(int)SectionTableColumn.B1 - 3]);
+                        //data.SetValue(IRobotBarSectionDataValue.I_BSDV_BF2, sectionData[(int)SectionTableColumn.B2 - 3]);
+                        //data.SetValue(IRobotBarSectionDataValue.I_BSDV_TF, sectionData[(int)SectionTableColumn.TF1 - 3]);
+                        //data.SetValue(IRobotBarSectionDataValue.I_BSDV_TW, sectionData[(int)SectionTableColumn.TW - 3]);
+                        //data.SetValue(IRobotBarSectionDataValue.I_BSDV_TF2, sectionData[(int)SectionTableColumn.TF2 - 3]);
+                        //data.SetValue(IRobotBarSectionDataValue.I_BSDV_RA, sectionData[(int)SectionTableColumn.r1 - 3]);
+                        //data.SetValue(IRobotBarSectionDataValue.I_BSDV_RI, sectionData[(int)SectionTableColumn.r2 - 3]);
+                        //data.SetValue(IRobotBarSectionDataValue.I_BSDV_S, sectionData[(int)SectionTableColumn.Spacing - 3]);
+                        data.SetValue(IRobotBarSectionDataValue.I_BSDV_GAMMA, sectionProperty.Orientation);
+                        data.CalcNonstdGeometry();
+                    }
+                    else
+                    {
+                        data.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, sectionProperty.GrossArea);
+                        data.SetValue(IRobotBarSectionDataValue.I_BSDV_IX, sectionProperty.J);
+                        data.SetValue(IRobotBarSectionDataValue.I_BSDV_IY, sectionProperty.Ix);
+                        data.SetValue(IRobotBarSectionDataValue.I_BSDV_IZ, sectionProperty.Iy);
+                        data.SetValue(IRobotBarSectionDataValue.I_BSDV_VY, sectionProperty.Vx);
+                        data.SetValue(IRobotBarSectionDataValue.I_BSDV_VZ, sectionProperty.Vy);
+                        data.SetValue(IRobotBarSectionDataValue.I_BSDV_VPY, sectionProperty.Vpx);
+                        data.SetValue(IRobotBarSectionDataValue.I_BSDV_VPZ, sectionProperty.Vpy);
+                    }
 
                     labelServer.Store(sectionLabel);
                 }
@@ -717,8 +756,9 @@ namespace RobotToolkit
                         case ShapeType.Rectangle:
                             data.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_RECT;
                             concreteData = data.Concrete;
-                            concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_H, sectionData[(int)SectionTableColumn.Height]);
-                            concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_B, sectionData[(int)SectionTableColumn.Width]);
+                            concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_H, sectionProperty.TotalDepth);
+                            concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_B, sectionProperty.TotalWidth);
+                            concreteData.CalcGeometry();
                             break;
                         case ShapeType.ISection:
                             data.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_I;
@@ -729,6 +769,8 @@ namespace RobotToolkit
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF2, sectionData[(int)SectionTableColumn.TF2]);
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_H, sectionData[(int)SectionTableColumn.Height]);
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B, sectionData[(int)SectionTableColumn.TW]);
+                            concreteData.CalcGeometry();
+
                             break;
                         case ShapeType.Tee:
                             data.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_T;
@@ -737,6 +779,8 @@ namespace RobotToolkit
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B, sectionData[(int)SectionTableColumn.TW]);
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_HF, sectionData[(int)SectionTableColumn.TF1]);
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_BF, sectionData[(int)SectionTableColumn.Width]);
+
+                            concreteData.CalcGeometry();
                             break;
                     }
 
@@ -750,13 +794,13 @@ namespace RobotToolkit
                         case ShapeType.Circle:
                             data.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_COL_C;
                             concreteData = data.Concrete;
-                            concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_DE, sectionData[(int)SectionTableColumn.Height]);
+                            concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_DE, sectionProperty.TotalDepth);
                             break;
                         case ShapeType.Rectangle:
                             data.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_COL_R;
                             concreteData = data.Concrete;
-                            concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_B, sectionData[(int)SectionTableColumn.Width]);
-                            concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H, sectionData[(int)SectionTableColumn.Height]);
+                            concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_B, sectionProperty.TotalWidth);
+                            concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H, sectionProperty.TotalDepth);
                             break;
 
                         case ShapeType.Angle:
@@ -780,7 +824,16 @@ namespace RobotToolkit
                         case ShapeType.Zed:
                             break;
                     }
-
+                    labelServer.Store(sectionLabel);
+                }
+                else if (sectionProperty.SectionMaterial == SectionType.Timber)
+                {
+                    data.ShapeType = IRobotBarSectionShapeType.I_BSST_WOOD_RECT;
+                    data.Type = IRobotBarSectionType.I_BST_NS_RECT;
+                    RobotBarSectionNonstdData nonStandard = data.CreateNonstd(0);
+                    nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B, sectionProperty.TotalWidth);
+                    nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H, sectionProperty.TotalDepth);
+                    data.CalcNonstdGeometry();
                     labelServer.Store(sectionLabel);
                 }
             }

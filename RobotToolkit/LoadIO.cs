@@ -1,4 +1,5 @@
 ﻿using BHoM.Geometry;
+using BHoM.Global;
 using BHoM.Structural.Loads;
 using RobotOM;
 using System;
@@ -27,7 +28,7 @@ namespace RobotToolkit
                 if (currentLoadcase != load.Loadcase.Name)
                 {
                     currentLoadcase = load.Loadcase.Name;
-                    lCase = robot.Project.Structure.Cases.Get(int.Parse(load.Loadcase[Utils.NUM_KEY].ToString()));
+                    lCase = SetCase(robot, load.Loadcase, true);
                     sCase = (lCase as IRobotSimpleCase);
                 }
 
@@ -166,5 +167,130 @@ namespace RobotToolkit
             return true;
         }
 
+        internal static IRobotCaseNature GetLoadNature(LoadNature nature)
+        {
+            switch (nature)
+            {
+                case LoadNature.Dead:
+                    return IRobotCaseNature.I_CN_PERMANENT;
+                case LoadNature.Live:
+                    return IRobotCaseNature.I_CN_EXPLOATATION;
+                case LoadNature.Seismic:
+                    return IRobotCaseNature.I_CN_SEISMIC;
+                case LoadNature.Snow:
+                    return IRobotCaseNature.I_CN_SNOW;
+                case LoadNature.Temperature:
+                    return IRobotCaseNature.I_CN_TEMPERATURE;
+                case LoadNature.Wind:
+                    return IRobotCaseNature.I_CN_WIND;
+                default:
+                    return IRobotCaseNature.I_CN_PERMANENT;
+            }
+        }
+
+        public static int RobotCaseNumber(RobotApplication robot, string name)
+        {
+            RobotCaseCollection caseCollection = robot.Project.Structure.Cases.GetAll();
+            for (int i = 1; i <= caseCollection.Count; i++)
+            {
+                IRobotCase rCase = caseCollection.Get(i);
+                if (rCase.Name == name)
+                {
+                    return rCase.Number;
+                }
+            }
+            return -1;
+        }
+
+        public static IRobotCase SetCase(RobotApplication robot, ICase bhCase, bool checkExists = false)
+        {
+            RobotCaseServer caseServer = robot.Project.Structure.Cases;
+            BHoMObject loadcase = bhCase as BHoMObject;
+            int caseNum = 0;
+
+            if (checkExists && loadcase[Utils.NUM_KEY] == null)
+            {
+                caseNum = RobotCaseNumber(robot, loadcase.Name);               
+            }
+            else if (loadcase[Utils.NUM_KEY] != null)
+            {
+                IRobotCase rCase = caseServer.Get(int.Parse(loadcase[Utils.NUM_KEY].ToString()));
+                if (rCase != null) return rCase;
+            }
+
+            if (caseNum <= 0)
+            {
+                switch (bhCase.CaseType)
+                {
+                    case CaseType.Simple:
+                        BHoM.Structural.Loads.Loadcase simpleCase = bhCase as BHoM.Structural.Loads.Loadcase;
+                        if (simpleCase[Utils.NUM_KEY] == null)
+                        {
+                            caseNum = caseServer.FreeNumber;
+                            simpleCase.CustomData.Add(Utils.NUM_KEY, caseNum);
+                        }
+                        else
+                        {
+                            caseNum = int.Parse(simpleCase[Utils.NUM_KEY].ToString());
+                        }
+
+                        caseServer.CreateSimple(caseNum, loadcase.Name, GetLoadNature(simpleCase.Nature), IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
+                        break;
+                    case CaseType.Combination:
+                        //LoadCombination combo = loadcase as LoadCombination;
+                        //RobotCaseCombination cCase = RobotApp.Project.Structure.Cases.CreateCombination(loadcase.Id, loadcase.Name, IRobotCombinationType.I_CBT_ULS, IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_COMB);
+                        //RobotCaseCollection collection = RobotApp.Project.Structure.Cases.GetAll();
+
+                        //for (int i = 0; i < combo.LoadFactors.Count; i++)
+                        //{
+                        //    for (int j = 1; j <= collection.Count; j++)
+                        //    {
+                        //        IRobotCase c = (collection.Get(j) as IRobotCase);
+                        //        if (combo.LoadcaseNames[i] == c.Name)
+                        //        {
+                        //            cCase.CaseFactors.New(c.Number, combo.LoadFactors[i]);
+                        //        }
+                        //    }
+                        //}
+
+                        break;
+                }
+            }
+            return caseServer.Get(caseNum);
+        }
+
+        public static bool SetLoadcases(RobotApplication robot, List<ICase> cases)
+        {
+            IRobotCase lCase = null;
+            RobotCaseCollection caseCollection = robot.Project.Structure.Cases.GetAll();
+            Dictionary<string, int> addedCases = new Dictionary<string, int>();
+
+            for (int i = 1; i <= caseCollection.Count; i++)
+            {
+                IRobotCase rCase = caseCollection.Get(i);
+                addedCases.Add(rCase.Name, rCase.Number);
+            }
+
+            foreach (ICase bhCase in cases)
+            {
+                BHoMObject loadcase = bhCase as BHoMObject;
+                int robotNumber = 0;
+                if (!addedCases.TryGetValue(loadcase.Name, out robotNumber))
+                {
+                    lCase = SetCase(robot, bhCase);
+                    robotNumber = lCase.Number;
+                }
+                if (loadcase[Utils.NUM_KEY] == null)
+                {
+                    loadcase.CustomData.Add(Utils.NUM_KEY, robotNumber);
+                }
+                else
+                {
+                    loadcase.CustomData[Utils.NUM_KEY] = robotNumber;
+                }
+            }
+
+            return true;
+        }
     }
 }

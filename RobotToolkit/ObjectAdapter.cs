@@ -136,7 +136,7 @@ namespace RobotToolkit
 
         public bool SetLoadcases(List<ICase> cases)
         {
-            throw new NotImplementedException();
+            return LoadIO.SetLoadcases(Robot, cases);
         }
 
         public bool GetGrids(out List<Grid> grids, string options = "")

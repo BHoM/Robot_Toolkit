@@ -38,6 +38,10 @@
       <HintPath>..\..\BHoM\build\BHoM.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RobotToolkit, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Build\RobotToolkit.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -53,12 +57,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\RobotToolkit\RobotToolkit.csproj">
-      <Project>{a4fe6182-a985-44e0-a5bf-3e54c6ea30bf}</Project>
-      <Name>RobotToolkit</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

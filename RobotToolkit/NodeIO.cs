@@ -139,9 +139,9 @@ namespace RobotToolkit
         { 
             RobotSelection selection = robot.Project.Structure.Selections.Get(IRobotObjectType.I_OT_NODE);
             
-            ObjectManager<int, Node>  nodes = new ObjectManager<int, Node>(Utils.NUM_KEY, FilterOption.UserData);            
+            ObjectManager<int, Node>  nodes = new ObjectManager<int, Node>(Project.ActiveProject, Utils.NUM_KEY, FilterOption.UserData);            
 
-            ObjectManager<NodeConstraint> constraints = new ObjectManager<NodeConstraint>();
+            ObjectManager<NodeConstraint> constraints = new ObjectManager<NodeConstraint>(Project.ActiveProject);
           
             if (nodeSelection != "selected") selection.FromText(nodeSelection);
             

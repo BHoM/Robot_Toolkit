@@ -8,6 +8,7 @@ using BHoM.Structural;
 using System.Reflection;
 using System.IO;
 using BHoM.Structural.Results;
+using BHoM.Global;
 using BHoM.Structural.Results.Bars;
 
 namespace RobotTest
@@ -82,7 +83,7 @@ namespace RobotTest
             }
             BHoM.Global.Project.FromJSON(json);
             List<string> ids = new List<string>();
-            app.SetPanels(new BHoM.Global.ObjectFilter<Panel>().ToList(), out ids);
+            app.SetPanels(new BHoM.Global.ObjectFilter<Panel>(Project.ActiveProject).ToList(), out ids);
         }
 
         private static void SetBars()
@@ -98,7 +99,7 @@ namespace RobotTest
             BHoM.Global.Project.FromJSON(json);
             List<string> ids = new List<string>();
 
-            app.CreateBars(new BHoM.Global.ObjectFilter<Bar>().ToList(), out ids);
+            app.CreateBars(new BHoM.Global.ObjectFilter<Bar>(Project.ActiveProject).ToList(), out ids);
         }
     }
 }

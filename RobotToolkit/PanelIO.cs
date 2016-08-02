@@ -37,9 +37,9 @@ namespace RobotToolkit
         /// <returns></returns>
         public static bool GetPanels(RobotApplication robot, out List<Panel> outputBars, string barNumbers = "all")
         {
-            ObjectManager<int, Panel> panels = new ObjectManager<int, Panel>(Utils.NUM_KEY, FilterOption.UserData);
-            ObjectManager<ThicknessProperty> thicknesses = new ObjectManager<ThicknessProperty>();
-            ObjectManager<Material> materials = new ObjectManager<Material>();
+            ObjectManager<int, Panel> panels = new ObjectManager<int, Panel>(Project.ActiveProject, Utils.NUM_KEY, FilterOption.UserData);
+            ObjectManager<ThicknessProperty> thicknesses = new ObjectManager<ThicknessProperty>(Project.ActiveProject);
+            ObjectManager<Material> materials = new ObjectManager<Material>(Project.ActiveProject);
             RobotSelection panel_sel = robot.Project.Structure.Selections.CreateFull(IRobotObjectType.I_OT_PANEL);
             IRobotCollection panel_col = robot.Project.Structure.Objects.GetMany(panel_sel);
             IRobotLabel thickness = null;

@@ -70,7 +70,7 @@ namespace RobotToolkit
             RobotApplication robot = new RobotApplication();
             IRobotCase lCase = robot.Project.Structure.Cases.Get(loadcase.Number);
             loads = new List<BHoM.Structural.Loads.AreaUniformalyDistributedLoad>();
-            ObjectManager<int, Panel> panels = new ObjectManager<int, Panel>(Utils.NUM_KEY, FilterOption.UserData);
+            ObjectManager<int, Panel> panels = new ObjectManager<int, Panel>(Project.ActiveProject, Utils.NUM_KEY, FilterOption.UserData);
             if (lCase.Type == IRobotCaseType.I_CT_SIMPLE || loadcase.Number < 0)
             {
                 IRobotSimpleCase sCase = (lCase as IRobotSimpleCase);

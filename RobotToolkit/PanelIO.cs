@@ -161,8 +161,8 @@ namespace RobotToolkit
             // List<Opening> openings = new List<Opening>();
             foreach (BHoM.Structural.Panel panel in panels)
             {
-                int edgeCount = panel.External_Contour.Count;
-                List<Curve> c = panel.External_Contour;
+                int edgeCount = panel.External_Contours.Count;
+                Group<Curve> c = panel.External_Contours;
                 c.AddRange(panel.Internal_Contours);
                 try
                 {
@@ -180,6 +180,10 @@ namespace RobotToolkit
                             if (number != null && int.TryParse(number.ToString(), out panelNum))
                             {
                                 id = panelNum.ToString();
+                                if (objServer.Exist(panelNum) == -1)
+                                {
+                                    rpanel = objServer.Get(panelNum) as RobotObjObject;
+                                }
                             }
                             else
                             {
@@ -189,16 +193,12 @@ namespace RobotToolkit
                                 }
                                 else
                                 {
-                                    panel.CustomData.Add(key, id);
+                                    panel.CustomData.Add(key, id.Trim());
                                 }
                             }
 
-                            if (objServer.Exist(panelNum) == -1)
-                            {
-                                rpanel = objServer.Get(panelNum) as RobotObjObject;
-                            }
-                            else
-                            {
+                            if (rpanel == null)
+                            { 
                                 rpanel = objServer.Create(panelNum);
                             }
 
@@ -263,28 +263,57 @@ namespace RobotToolkit
         /// <param name="EdgePointCoords"></param>
         /// <param name="FilePath"></param>
         /// <returns></returns>
-        public static bool CreateOpenings(List<int> PanelNumbers, List<double[,]> EdgePointCoords, string FilePath = "LiveLink")
+        public static bool CreateOpenings(RobotApplication robot, List<Opening> panels, out List<string> ids)
         {
-            RobotApplication robot = null;
-            if (FilePath == "LiveLink") robot = new RobotApplication();
+            string key = Utils.NUM_KEY;
+
+
+            robot.Interactive = 0;
             robot.Project.Structure.Objects.BeginMultiOperation();
-            for (int i = 0; i < PanelNumbers.Count; i++)
+            RobotObjObjectServer objServer = robot.Project.Structure.Objects;
+            ids = new List<string>();
+            foreach (BHoM.Structural.Opening panel in panels)
             {
-                RobotPointsArray ptArray = new RobotPointsArray();
-                ptArray.SetSize(EdgePointCoords[i].GetLength(0));
-                for (int j = 0; j < EdgePointCoords[i].GetLength(0); j++)
-                    ptArray.Set(j + 1, EdgePointCoords[i][j, 0], EdgePointCoords[i][j, 1], EdgePointCoords[i][j, 2]);
+                try
+                {
+                    Group<Curve> c = panel.Edges;
+                    if (c != null)
+                    {
+                        RobotObjObject rpanel = null;
 
-                robot.Project.Structure.Objects.CreateContour(PanelNumbers[i], ptArray);
-                RobotSelection selection = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_OBJECT);
+                        int panelNum = objServer.FreeNumber;
+                        object number = panel[key];
 
-                selection.AddOne(PanelNumbers[i]);
-                RobotObjObject rcontour = (RobotObjObject)robot.Project.Structure.Objects.Get(PanelNumbers[i]);
+                        if (number != null)
+                        {
+                            int.TryParse(number.ToString(), out panelNum);
+                        }
+                        else
+                        {
+                            panel.CustomData.Add(key, panelNum);
+                        }
 
-                rcontour.Initialize();
+                        if (objServer.Exist(panelNum) == -1)
+                        {
+                            rpanel = objServer.Get(panelNum) as RobotObjObject;
+                        }
+                        else
+                        {
+                            rpanel = objServer.Create(panelNum);
+                        }
+                        ids.Add(panelNum.ToString());
+                        rpanel.Main.Geometry = GeometryHelper.CreateContour(robot, c.ToList()) as RobotGeoObject;
+
+                        rpanel.Initialize();
+                        rpanel.Update();
+                    }
+                }
+                catch (Exception ex)
+                { }
             }
             robot.Project.Structure.Objects.EndMultiOperation();
-            robot.Project.Structure.Objects.AutoRecalcHoles = true;
+
+            robot.Interactive = 1;
             return true;
         }
 

@@ -1,4 +1,6 @@
-﻿using BHoM.Structural.Loads;
+﻿using BHoM.Geometry;
+using BHoM.Global;
+using BHoM.Structural.Loads;
 using RobotOM;
 using System;
 using System.Collections.Generic;
@@ -26,7 +28,7 @@ namespace RobotToolkit
                 if (currentLoadcase != load.Loadcase.Name)
                 {
                     currentLoadcase = load.Loadcase.Name;
-                    lCase = robot.Project.Structure.Cases.Get(int.Parse(load.Loadcase.Name));
+                    lCase = SetCase(robot, load.Loadcase, true);
                     sCase = (lCase as IRobotSimpleCase);
                 }
 
@@ -112,7 +114,50 @@ namespace RobotToolkit
                             loadRecord.SetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UZ, pA.TranslationalAcceleration.Z);
                             break;
                         case LoadType.Geometrical:
-                            GeometricalLoad gL = load as GeometricalLoad;
+                            if (load is GeometricalAreaLoad)
+                            {
+                                GeometricalAreaLoad aL = load as GeometricalAreaLoad;
+                                List<Point> points = aL.Contour.ControlPoints.ToList();
+
+                                loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_IN_CONTOUR);
+                                loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PX1, aL.Force.X);
+                                loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PY1, aL.Force.Y);
+                                loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PZ1, aL.Force.Z);
+                                loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_NPOINTS, points.Count);
+                                loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_AUTO_DETECT_OBJECTS, -1);
+
+                                RobotLoadRecordInContour iContour = loadRecord as RobotLoadRecordInContour;
+                                for (int cp = 0; cp < points.Count; cp++)
+                                {
+                                    iContour.SetContourPoint(cp + 1, points[cp].X, points[cp].Y, points[cp].Z);
+                                }
+                            }
+                            else if (load is GeometricalLineLoad)
+                            {
+                                GeometricalLineLoad lineL = load as GeometricalLineLoad;
+                                loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_LINEAR_3D);
+                                RobotNodeServer objServer = robot.Project.Structure.Nodes;
+                                BHoM.Geometry.Point p1 = lineL.Location.StartPoint;
+                                BHoM.Geometry.Point p2 = lineL.Location.EndPoint;
+
+                                IRobotLoadRecordLinear3D l3D = loadRecord as IRobotLoadRecordLinear3D;
+                                l3D.SetPoint(1, p1.X, p1.Y, p1.Z);
+                                l3D.SetPoint(2, p2.X, p2.Y, p2.Z);
+                                
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PX1, lineL.ForceA.X);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PY1, lineL.ForceA.Y);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PZ1, lineL.ForceA.Z);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PX2, lineL.ForceB.X);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PY2, lineL.ForceB.Y);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PZ2, lineL.ForceB.Z);
+
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MX1, lineL.MomentA.X);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MY1, lineL.MomentA.Y);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MZ1, lineL.MomentA.Z);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MX2, lineL.MomentB.X);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MY2, lineL.MomentB.Y);
+                                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MZ2, lineL.MomentB.Z);
+                            }
                             break;
                         default:
                             break;
@@ -122,5 +167,130 @@ namespace RobotToolkit
             return true;
         }
 
+        internal static IRobotCaseNature GetLoadNature(LoadNature nature)
+        {
+            switch (nature)
+            {
+                case LoadNature.Dead:
+                    return IRobotCaseNature.I_CN_PERMANENT;
+                case LoadNature.Live:
+                    return IRobotCaseNature.I_CN_EXPLOATATION;
+                case LoadNature.Seismic:
+                    return IRobotCaseNature.I_CN_SEISMIC;
+                case LoadNature.Snow:
+                    return IRobotCaseNature.I_CN_SNOW;
+                case LoadNature.Temperature:
+                    return IRobotCaseNature.I_CN_TEMPERATURE;
+                case LoadNature.Wind:
+                    return IRobotCaseNature.I_CN_WIND;
+                default:
+                    return IRobotCaseNature.I_CN_PERMANENT;
+            }
+        }
+
+        public static int RobotCaseNumber(RobotApplication robot, string name)
+        {
+            RobotCaseCollection caseCollection = robot.Project.Structure.Cases.GetAll();
+            for (int i = 1; i <= caseCollection.Count; i++)
+            {
+                IRobotCase rCase = caseCollection.Get(i);
+                if (rCase.Name == name)
+                {
+                    return rCase.Number;
+                }
+            }
+            return -1;
+        }
+
+        public static IRobotCase SetCase(RobotApplication robot, ICase bhCase, bool checkExists = false)
+        {
+            RobotCaseServer caseServer = robot.Project.Structure.Cases;
+            BHoMObject loadcase = bhCase as BHoMObject;
+            int caseNum = 0;
+
+            if (checkExists && loadcase[Utils.NUM_KEY] == null)
+            {
+                caseNum = RobotCaseNumber(robot, loadcase.Name);               
+            }
+            else if (loadcase[Utils.NUM_KEY] != null)
+            {
+                IRobotCase rCase = caseServer.Get(int.Parse(loadcase[Utils.NUM_KEY].ToString()));
+                if (rCase != null) return rCase;
+            }
+
+            if (caseNum <= 0)
+            {
+                switch (bhCase.CaseType)
+                {
+                    case CaseType.Simple:
+                        BHoM.Structural.Loads.Loadcase simpleCase = bhCase as BHoM.Structural.Loads.Loadcase;
+                        if (simpleCase[Utils.NUM_KEY] == null)
+                        {
+                            caseNum = caseServer.FreeNumber;
+                            simpleCase.CustomData.Add(Utils.NUM_KEY, caseNum);
+                        }
+                        else
+                        {
+                            caseNum = int.Parse(simpleCase[Utils.NUM_KEY].ToString());
+                        }
+
+                        caseServer.CreateSimple(caseNum, loadcase.Name, GetLoadNature(simpleCase.Nature), IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
+                        break;
+                    case CaseType.Combination:
+                        //LoadCombination combo = loadcase as LoadCombination;
+                        //RobotCaseCombination cCase = RobotApp.Project.Structure.Cases.CreateCombination(loadcase.Id, loadcase.Name, IRobotCombinationType.I_CBT_ULS, IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_COMB);
+                        //RobotCaseCollection collection = RobotApp.Project.Structure.Cases.GetAll();
+
+                        //for (int i = 0; i < combo.LoadFactors.Count; i++)
+                        //{
+                        //    for (int j = 1; j <= collection.Count; j++)
+                        //    {
+                        //        IRobotCase c = (collection.Get(j) as IRobotCase);
+                        //        if (combo.LoadcaseNames[i] == c.Name)
+                        //        {
+                        //            cCase.CaseFactors.New(c.Number, combo.LoadFactors[i]);
+                        //        }
+                        //    }
+                        //}
+
+                        break;
+                }
+            }
+            return caseServer.Get(caseNum);
+        }
+
+        public static bool SetLoadcases(RobotApplication robot, List<ICase> cases)
+        {
+            IRobotCase lCase = null;
+            RobotCaseCollection caseCollection = robot.Project.Structure.Cases.GetAll();
+            Dictionary<string, int> addedCases = new Dictionary<string, int>();
+
+            for (int i = 1; i <= caseCollection.Count; i++)
+            {
+                IRobotCase rCase = caseCollection.Get(i);
+                addedCases.Add(rCase.Name, rCase.Number);
+            }
+
+            foreach (ICase bhCase in cases)
+            {
+                BHoMObject loadcase = bhCase as BHoMObject;
+                int robotNumber = 0;
+                if (!addedCases.TryGetValue(loadcase.Name, out robotNumber))
+                {
+                    lCase = SetCase(robot, bhCase);
+                    robotNumber = lCase.Number;
+                }
+                if (loadcase[Utils.NUM_KEY] == null)
+                {
+                    loadcase.CustomData.Add(Utils.NUM_KEY, robotNumber);
+                }
+                else
+                {
+                    loadcase.CustomData[Utils.NUM_KEY] = robotNumber;
+                }
+            }
+
+            return true;
+        }
     }
 }

@@ -14,6 +14,25 @@ namespace RobotToolkit
     public class App
     {
         /// <summary>
+        /// 
+        /// </summary>
+        public RobotApplication RobApp { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filePath"></param>
+        public App(string filePath)
+        {
+            RobotApplication robot = new RobotApplication();
+            if(filePath != "")
+            {
+                robot.Project.Open(filePath);
+            }
+        }
+
+
+        /// <summary>
         /// Runs the Robot calculations engine
         /// </summary>
         /// <param name="FilePath"></param>
@@ -40,5 +59,15 @@ namespace RobotToolkit
             if (FilePath == "LiveLink") robot = new RobotApplication();
             robot.Project.CalcEngine.StopCalculation();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="robot"></param>
+        public static void BeginMultiCaseOperation(RobotApplication robot)
+        {
+            robot.Project.Structure.Cases.BeginMultiOperation();
+        }
+        
     }
 }

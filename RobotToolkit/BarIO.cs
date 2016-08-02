@@ -26,7 +26,7 @@ namespace RobotToolkit
             //Get Nodes
             ObjectManager<int, Node> nodes = null;
             RobotToolkit.NodeIO.GetNodesQuery(robot, out nodes);
-            bars = new ObjectManager<int, Bar>(Utils.NUM_KEY, FilterOption.UserData);
+            bars = new ObjectManager<int, Bar>(Project.ActiveProject, Utils.NUM_KEY, FilterOption.UserData);
 
             RobotResultQueryParams result_params = default(RobotResultQueryParams);
             result_params = (RobotResultQueryParams)robot.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
@@ -98,11 +98,11 @@ namespace RobotToolkit
         /// <returns></returns>
         public static bool GetBars(RobotApplication robot, out List<Bar> outputBars, string barNumbers = "all")
         {
-            ObjectManager<int, Bar> bars = new ObjectManager<int, Bar>(Utils.NUM_KEY, FilterOption.UserData);
-            ObjectManager<SectionProperty> sections = new ObjectManager<SectionProperty>();
-            ObjectManager<BarRelease> releases = new ObjectManager<BarRelease>();
-            ObjectManager<BarConstraint> constraints = new ObjectManager<BarConstraint>();
-            ObjectManager<Material> materials = new ObjectManager<Material>();
+            ObjectManager<int, Bar> bars = new ObjectManager<int, Bar>(Project.ActiveProject, Utils.NUM_KEY, FilterOption.UserData);
+            ObjectManager<SectionProperty> sections = new ObjectManager<SectionProperty>(Project.ActiveProject);
+            ObjectManager<BarRelease> releases = new ObjectManager<BarRelease>(Project.ActiveProject);
+            ObjectManager<BarConstraint> constraints = new ObjectManager<BarConstraint>(Project.ActiveProject);
+            ObjectManager<Material> materials = new ObjectManager<Material>(Project.ActiveProject);
 
             RobotSelection barSelection = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
             
@@ -113,7 +113,7 @@ namespace RobotToolkit
            
             robot.Project.Structure.Bars.BeginMultiOperation();
 
-            ObjectManager<int, Node> nodes = new ObjectManager<int, Node>(Utils.NUM_KEY, FilterOption.UserData);
+            ObjectManager<int, Node> nodes = new ObjectManager<int, Node>(Project.ActiveProject, Utils.NUM_KEY, FilterOption.UserData);
 
             for (int i = 0; i < barServer.Count; i++)
             {
@@ -269,7 +269,7 @@ namespace RobotToolkit
             
             string[] avail_mem_type_names = RobotToolkit.Label.GetAllBarMemberTypeNames(robot);
 
-            ObjectManager<int, Node> nodes = new ObjectManager<int, Node>(Utils.NUM_KEY, FilterOption.UserData);
+            ObjectManager<int, Node> nodes = new ObjectManager<int, Node>(Project.ActiveProject, Utils.NUM_KEY, FilterOption.UserData);
 
             Dictionary<string, bool> added_Nodes = new Dictionary<string, bool>();
 

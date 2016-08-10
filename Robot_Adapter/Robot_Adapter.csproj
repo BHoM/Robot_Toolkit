@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A4FE6182-A985-44E0-A5BF-3E54C6EA30BF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Robot_Adapter</RootNamespace>
+    <AssemblyName>Robot_Adapter</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Build\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\Build\Robot_Adapter.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Build\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BHoM">
+      <HintPath>..\..\BHoM\Build\BHoM.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Interop.RobotOM">
+      <HintPath>..\..\..\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2015\System\Exe\Interop.RobotOM.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Utility\Label.cs" />
+    <Compile Include="Structural\Interface\ApplicationAdapter.cs" />
+    <Compile Include="Structural\Interface\FileIO.cs" />
+    <Compile Include="Structural\Elements\FiniteElement.cs" />
+    <Compile Include="Structural\Loads\LoadIO.cs" />
+    <Compile Include="Structural\Interface\ResultAdapter.cs" />
+    <Compile Include="Geometry\GeometryHelper.cs" />
+    <Compile Include="Structural\Properties\SupportIO.cs" />
+    <Compile Include="Structural\Interface\App.cs" />
+    <Compile Include="Structural\Results\BarForces.cs" />
+    <Compile Include="Structural\Results\Global.cs" />
+    <Compile Include="Structural\Results\Storey.cs" />
+    <Compile Include="Structural\Interface\ElementAdapter.cs" />
+    <Compile Include="Structural\Properties\PropertyIO.cs" />
+    <Compile Include="Utility\Utils.cs" />
+    <Compile Include="Structural\Wind\WindCFD.cs" />
+    <Compile Include="Utility\Enums.cs" />
+    <Compile Include="Structural\Interface\General.cs" />
+    <Compile Include="Structural\Elements\PanelIO.cs" />
+    <Compile Include="Structural\Elements\NodeIO.cs" />
+    <Compile Include="Structural\Elements\BarIO.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Structural\Properties\Section Properties\Reinforced Concrete\" />
+    <Folder Include="Structural\Properties\Section Properties\Steel\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

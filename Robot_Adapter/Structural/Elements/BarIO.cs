@@ -8,7 +8,7 @@ using BHoMB = BHoM.Base;
 using BHoME = BHoM.Structural.Elements;
 using BHoMP = BHoM.Structural.Properties;
 using BHoMM = BHoM.Materials;
-using Robot_Adapter.Utility;
+using Robot_Adapter.Base;
 
 
 namespace Robot_Adapter.Structural.Elements
@@ -39,7 +39,7 @@ namespace Robot_Adapter.Structural.Elements
             RobotSelection cas_sel = default(RobotSelection);
             RobotSelection bar_sel = default(RobotSelection);
             IRobotResultQueryReturnType query_return = default(IRobotResultQueryReturnType);
-
+           
             bool ok = false;
             RobotResultRow result_row = default(RobotResultRow);
             int bar_num = 0;
@@ -271,7 +271,7 @@ namespace Robot_Adapter.Structural.Elements
         {
             RobotStructureCache structureCache = robot.Project.Structure.CreateCache();
             
-            string[] avail_mem_type_names = Robot_Adapter.Utility.Label.GetAllBarMemberTypeNames(robot);
+            string[] avail_mem_type_names = Label.GetAllBarMemberTypeNames(robot);
 
             BHoMB.ObjectManager<int, BHoME.Node> nodes = new BHoMB.ObjectManager<int, BHoME.Node>(Utils.NUM_KEY, BHoMB.FilterOption.UserData);
 

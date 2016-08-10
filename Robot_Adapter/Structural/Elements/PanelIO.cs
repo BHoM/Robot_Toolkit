@@ -9,7 +9,7 @@ using BHoMG = BHoM.Geometry;
 using BHoME = BHoM.Structural.Elements;
 using BHoMP = BHoM.Structural.Properties;
 using BHoMM = BHoM.Materials;
-using Robot_Adapter.Utility;
+using Robot_Adapter.Base;
 
 namespace Robot_Adapter.Structural.Elements
 {

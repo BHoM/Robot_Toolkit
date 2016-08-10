@@ -7,7 +7,7 @@ using RobotOM;
 using BHoMG = BHoM.Geometry;
 using BHoML = BHoM.Structural.Loads;
 using BHoMB = BHoM.Base;
-using Robot_Adapter.Utility;
+using Robot_Adapter.Base;
 
 namespace Robot_Adapter.Structural.Loads
 {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using RobotOM;
 using BHoM.Structural;
 
-namespace Robot_Adapter.Utility
+namespace Robot_Adapter.Base
 {
     /// <summary>
     /// Robot label object - to manage all label objects to/from Robot

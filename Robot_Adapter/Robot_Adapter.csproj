@@ -36,7 +36,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Interop.RobotOM">
-      <HintPath>..\..\..\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2015\System\Exe\Interop.RobotOM.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2015\System\Exe\Interop.RobotOM.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
@@ -49,7 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Utility\Label.cs" />
+    <Compile Include="Structural\Results\NodeResults.cs" />
+    <Compile Include="Base\Label.cs" />
     <Compile Include="Structural\Interface\ApplicationAdapter.cs" />
     <Compile Include="Structural\Interface\FileIO.cs" />
     <Compile Include="Structural\Elements\FiniteElement.cs" />
@@ -58,14 +59,14 @@
     <Compile Include="Geometry\GeometryHelper.cs" />
     <Compile Include="Structural\Properties\SupportIO.cs" />
     <Compile Include="Structural\Interface\App.cs" />
-    <Compile Include="Structural\Results\BarForces.cs" />
+    <Compile Include="Structural\Results\BarResults.cs" />
     <Compile Include="Structural\Results\Global.cs" />
     <Compile Include="Structural\Results\Storey.cs" />
     <Compile Include="Structural\Interface\ElementAdapter.cs" />
     <Compile Include="Structural\Properties\PropertyIO.cs" />
-    <Compile Include="Utility\Utils.cs" />
+    <Compile Include="Base\Utils.cs" />
     <Compile Include="Structural\Wind\WindCFD.cs" />
-    <Compile Include="Utility\Enums.cs" />
+    <Compile Include="Base\Enums.cs" />
     <Compile Include="Structural\Interface\General.cs" />
     <Compile Include="Structural\Elements\PanelIO.cs" />
     <Compile Include="Structural\Elements\NodeIO.cs" />

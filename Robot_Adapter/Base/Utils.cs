@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BHoMB = BHoM.Base;
 
-namespace Robot_Adapter.Utility
+namespace Robot_Adapter.Base
 {
     /// <summary>
     /// 

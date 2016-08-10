@@ -52,7 +52,7 @@ namespace Robot_Test
         {
             RobotAdapter app = new RobotAdapter();
 
-            app.GetBarForces(null, null, 3);
+            //app.GetBarForces(null, null, 3, BHoM.Base.Results.ResultOrder.Name, out 
             BHoM.Base.Results.ResultServer<BarForce> resultServer = new BHoM.Base.Results.ResultServer<BarForce>(app.Filename);
 
             resultServer.LoadData();

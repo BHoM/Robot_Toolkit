@@ -86,6 +86,11 @@ namespace Robot_Adapter.Structural.Interface
             return true;
         }
 
+        public bool GetBarForces(List<string> bars, List<string> cases, int divisions, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.ResultSet<BHoMR.BarForce>> results)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool GetBarStresses()
         {
             throw new NotImplementedException();
@@ -107,6 +112,11 @@ namespace Robot_Adapter.Structural.Interface
         }
 
         public bool GetNodeReactions()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool GetNodeReactions(List<string> nodes, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.ResultSet<BHoMR.NodeReaction>> results)
         {
             throw new NotImplementedException();
         }

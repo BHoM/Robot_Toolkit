@@ -36,7 +36,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Interop.RobotOM">
-      <HintPath>..\..\..\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2015\System\Exe\Interop.RobotOM.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2016\System\Exe\Interop.RobotOM.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />

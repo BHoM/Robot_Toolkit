@@ -9,7 +9,7 @@ using BHoME = BHoM.Structural.Elements;
 using BHoMP = BHoM.Structural.Properties;
 using BHoMM = BHoM.Materials;
 using Robot_Adapter.Base;
-
+using BHoM.Structural.Interface;
 
 namespace Robot_Adapter.Structural.Elements
 {
@@ -100,17 +100,26 @@ namespace Robot_Adapter.Structural.Elements
         /// <param name="barNumbers"></param>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static bool GetBars(RobotApplication robot, out List<BHoME.Bar> outputBars, string barNumbers = "all")
+        public static List<string> GetBars(RobotApplication robot, out List<BHoME.Bar> outputBars, ObjectSelection selection, List<string> barNumbers = null)
         {
-            BHoMB.ObjectManager<int, BHoME.Bar> bars = new BHoMB.ObjectManager<int, BHoME.Bar>(Utils.NUM_KEY, BHoMB.FilterOption.UserData);
+            BHoMB.ObjectManager<string, BHoME.Bar> bars = new BHoMB.ObjectManager<string, BHoME.Bar>(Utils.NUM_KEY, BHoMB.FilterOption.UserData);
             BHoMB.ObjectManager<BHoMP.SectionProperty> sections = new BHoMB.ObjectManager<BHoMP.SectionProperty>();
             BHoMB.ObjectManager<BHoMP.BarRelease> releases = new BHoMB.ObjectManager<BHoMP.BarRelease>();
             BHoMB.ObjectManager<BHoMP.BarConstraint> constraints = new BHoMB.ObjectManager<BHoMP.BarConstraint>();
             BHoMB.ObjectManager<BHoMM.Material> materials = new BHoMB.ObjectManager<BHoMM.Material>();
 
-            RobotSelection barSelection = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
-            
-            barSelection.FromText(barNumbers);
+            RobotSelection barSelection = selection == ObjectSelection.Selected ?
+                robot.Project.Structure.Selections.Get(IRobotObjectType.I_OT_BAR) :
+                robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
+
+            if (selection == ObjectSelection.FromInput)
+            {
+                barSelection.FromText(Utils.GetSelectionString(barNumbers));
+            }
+            else if (selection == ObjectSelection.All)
+            {
+                barSelection.FromText("all");
+            }
 
             IRobotCollection barServer = robot.Project.Structure.Bars.GetMany(barSelection) as IRobotCollection;
             RobotNodeServer nodeServer = robot.Project.Structure.Nodes as RobotNodeServer;
@@ -119,9 +128,13 @@ namespace Robot_Adapter.Structural.Elements
 
             BHoMB.ObjectManager<int, BHoME.Node> nodes = new BHoMB.ObjectManager<int, BHoME.Node>(Utils.NUM_KEY, BHoMB.FilterOption.UserData);
 
+            List<string> outIds = new List<string>();
+
             for (int i = 0; i < barServer.Count; i++)
             {
                 RobotBar rbar = (RobotBar)barServer.Get(i + 1);
+
+                outIds.Add(rbar.Number.ToString());
 
                 BHoME.Node n1 = nodes[rbar.StartNode] as BHoME.Node;
                 BHoME.Node n2 = nodes[rbar.EndNode] as BHoME.Node;
@@ -135,7 +148,7 @@ namespace Robot_Adapter.Structural.Elements
                     RobotNode n = nodeServer.Get(rbar.EndNode) as RobotNode;
                     n2 = nodes.Add(n.Number, new BHoME.Node(n.X, n.Y, n.Z));
                 }
-                BHoME.Bar str_bar = bars.Add(rbar.Number, new BHoME.Bar(n1, n2));
+                BHoME.Bar str_bar = bars.Add(rbar.Number.ToString(), new BHoME.Bar(n1, n2));
                 str_bar.OrientationAngle = rbar.Gamma;
                 if (rbar.HasLabel(IRobotLabelType.I_LT_BAR_SECTION) == -1)
                 {
@@ -257,9 +270,9 @@ namespace Robot_Adapter.Structural.Elements
 
             robot.Project.Structure.Bars.EndMultiOperation();
 
-            outputBars = bars.ToList();
+            outputBars = bars.GetRange(outIds);
 
-            return true;
+            return outIds;
         }
    
         /// <summary>
@@ -504,19 +517,19 @@ namespace Robot_Adapter.Structural.Elements
         
         public static void CreateEndReleaseData(IRobotBarEndReleaseData robotData, BHoMP.NodeConstraint bhomData)
         {
-            robotData.UX = GetReleaseType(bhomData.UX.Type);
-            robotData.UY = GetReleaseType(bhomData.UY.Type);
-            robotData.UZ = GetReleaseType(bhomData.UZ.Type);
-            robotData.RX = GetReleaseType(bhomData.RX.Type);
-            robotData.RY = GetReleaseType(bhomData.RY.Type);
-            robotData.RZ = GetReleaseType(bhomData.RZ.Type);
+            robotData.UX = GetReleaseType(bhomData.UX);
+            robotData.UY = GetReleaseType(bhomData.UY);
+            robotData.UZ = GetReleaseType(bhomData.UZ);
+            robotData.RX = GetReleaseType(bhomData.RX);
+            robotData.RY = GetReleaseType(bhomData.RY);
+            robotData.RZ = GetReleaseType(bhomData.RZ);
 
-            robotData.KX = bhomData.UX.Value;
-            robotData.KY = bhomData.UY.Value;
-            robotData.KZ = bhomData.UZ.Value;
-            robotData.HX = bhomData.RX.Value;
-            robotData.HY = bhomData.RY.Value;
-            robotData.HZ = bhomData.RZ.Value;
+            robotData.KX = bhomData.KX;
+            robotData.KY = bhomData.KY;
+            robotData.KZ = bhomData.KZ;
+            robotData.HX = bhomData.HX;
+            robotData.HY = bhomData.HY;
+            robotData.HZ = bhomData.HZ;
         }
 
 
@@ -613,14 +626,14 @@ namespace Robot_Adapter.Structural.Elements
         public static BHoMP.NodeConstraint GetEndRelease(IRobotBarEndReleaseData nodeData)
         {
             BHoMP.NodeConstraint constraint = new BHoMP.NodeConstraint();
-            constraint.UX = new BHoMP.DOF(GetReleaseType(nodeData.UX), nodeData.KX);
-            constraint.UY = new BHoMP.DOF(GetReleaseType(nodeData.UY), nodeData.KY);
-            constraint.UZ = new BHoMP.DOF(GetReleaseType(nodeData.UZ), nodeData.KZ);
-            constraint.RX = new BHoMP.DOF(GetReleaseType(nodeData.RX), nodeData.HX);
-            constraint.RY = new BHoMP.DOF(GetReleaseType(nodeData.RY), nodeData.HY);
-            constraint.RZ = new BHoMP.DOF(GetReleaseType(nodeData.RZ), nodeData.HZ);
+            constraint.UX = GetReleaseType(nodeData.UX); constraint.KX = nodeData.KX;
+            constraint.UY = GetReleaseType(nodeData.UY); constraint.KY = nodeData.KY;
+            constraint.UZ = GetReleaseType(nodeData.UZ); constraint.KZ = nodeData.KZ;
+            constraint.RX = GetReleaseType(nodeData.RX); constraint.HX = nodeData.HX;
+            constraint.RY = GetReleaseType(nodeData.RY); constraint.HY = nodeData.HY;
+            constraint.RZ = GetReleaseType(nodeData.RZ); constraint.HZ = nodeData.HZ;
 
-            return constraint;            
+            return constraint;
         }
     }
 }

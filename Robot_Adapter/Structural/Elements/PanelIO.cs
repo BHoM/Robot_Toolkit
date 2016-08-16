@@ -10,6 +10,7 @@ using BHoME = BHoM.Structural.Elements;
 using BHoMP = BHoM.Structural.Properties;
 using BHoMM = BHoM.Materials;
 using Robot_Adapter.Base;
+using BHoM.Structural.Interface;
 
 namespace Robot_Adapter.Structural.Elements
 {
@@ -37,18 +38,33 @@ namespace Robot_Adapter.Structural.Elements
         /// <param name="coords"></param>
         /// <param name="FilePath"></param>
         /// <returns></returns>
-        public static bool GetPanels(RobotApplication robot, out List<BHoME.Panel> outputBars, string barNumbers = "all")
+        public static List<string> GetPanels(RobotApplication robot, out List<BHoME.Panel> outputBars, ObjectSelection selection, List<string> barNumbers = null)
         {
-            BHoMB.ObjectManager<int, BHoME.Panel> panels = new BHoMB.ObjectManager<int, BHoME.Panel>(Utils.NUM_KEY, BHoMB.FilterOption.UserData);
+            BHoMB.ObjectManager<string, BHoME.Panel> panels = new BHoMB.ObjectManager<string, BHoME.Panel>(Utils.NUM_KEY, BHoMB.FilterOption.UserData);
             BHoMB.ObjectManager<BHoMP.PanelProperty> thicknesses = new BHoMB.ObjectManager<BHoMP.PanelProperty>();
             BHoMB.ObjectManager<BHoMM.Material> materials = new BHoMB.ObjectManager<BHoMM.Material>();
-            RobotSelection panel_sel = robot.Project.Structure.Selections.CreateFull(IRobotObjectType.I_OT_PANEL);
+
+            RobotSelection panel_sel = selection == ObjectSelection.Selected ?
+                robot.Project.Structure.Selections.Get(IRobotObjectType.I_OT_PANEL) :
+                robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_PANEL);
+
+            if (selection == ObjectSelection.FromInput)
+            {
+                panel_sel.FromText(Utils.GetSelectionString(barNumbers));
+            }
+            else if (selection == ObjectSelection.All)
+            {
+                panel_sel.FromText("all");
+            }
+
             IRobotCollection panel_col = robot.Project.Structure.Objects.GetMany(panel_sel);
             IRobotLabel thickness = null;
             IRobotLabel material = null;
+
             panel_sel = null;
             outputBars = new List<BHoME.Panel>();
             robot.Project.Structure.Objects.BeginMultiOperation();
+            List<string> outIds = new List<string>();
 
             for (int i = 1; i <= panel_col.Count; i++)
             {
@@ -58,12 +74,13 @@ namespace Robot_Adapter.Structural.Elements
 
                 if (rpanel.Main.GetGeometry().Type == IRobotGeoObjectType.I_GOT_CONTOUR && rpanel.Main.Attribs.Meshed == 1)
                 {
+                    outIds.Add(rpanel.Number.ToString());
                     BHoMG.Group<BHoMG.Curve> c = Geometry.GeometryHelper.CGeoObject(rpanel) as BHoMG.Group<BHoMG.Curve>;
                     if (c != null)
                     {
                         BHoME.Panel panel = new BHoME.Panel(c);
                         int panelNum = rpanel.Number;
-                        panels.Add(panelNum, panel);
+                        panels.Add(panelNum.ToString(), panel);
 
                         if (rpanel.HasLabel(IRobotLabelType.I_LT_PANEL_THICKNESS) != 0)
                         {
@@ -90,8 +107,9 @@ namespace Robot_Adapter.Structural.Elements
                     }
                 }
             }
-            outputBars = panels.ToList();
-            return true;
+
+            outputBars = panels.GetRange(outIds);
+            return outIds;
         }
 
 

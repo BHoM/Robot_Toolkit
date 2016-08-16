@@ -12,6 +12,7 @@ using BHoM.Geometry;
 using BHoM.Structural.Loads;
 
 using Robot_Adapter.Structural.Interface;
+using BHoM.Base.Results;
 
 namespace Robot_Test
 {
@@ -19,7 +20,9 @@ namespace Robot_Test
     {
         static void Main(string[] args)
         {
-            SetAreaLoad();
+            RobotAdapter app = new RobotAdapter();
+            Dictionary<string, ResultSet<BarForce>> data = null;
+            app.GetBarForces(new List<string>() { "1", "2", "3" }, new List<string>() { "1", "2", "3" }, 3, ResultOrder.Name, out data);
         }
         
         private static void CreateLoadcase()

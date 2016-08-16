@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Robot_Adapter.Structural.Interface
 {
-    class ApplicationAdapter
+    public class ApplicationAdapter
     {
     }
 }

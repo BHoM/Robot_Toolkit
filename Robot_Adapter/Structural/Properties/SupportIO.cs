@@ -28,19 +28,19 @@ namespace Robot_Adapter.Labels
             }
             IRobotNodeSupportData data = (IRobotNodeSupportData)robot_restraint.Data;
 
-            data.UX = (restraint.UX.Type == BHoMP.DOFType.Fixed) ? -1 : 0;
-            data.UY = (restraint.UY.Type == BHoMP.DOFType.Fixed) ? -1 : 0;
-            data.UZ = (restraint.UZ.Type == BHoMP.DOFType.Fixed) ? -1 : 0;
-            data.RX = (restraint.RX.Type == BHoMP.DOFType.Fixed) ? -1 : 0;
-            data.RY = (restraint.RY.Type == BHoMP.DOFType.Fixed) ? -1 : 0;
-            data.RZ = (restraint.RZ.Type == BHoMP.DOFType.Fixed) ? -1 : 0;
+            data.UX = (restraint.UX == BHoMP.DOFType.Fixed) ? -1 : 0;
+            data.UY = (restraint.UY == BHoMP.DOFType.Fixed) ? -1 : 0;
+            data.UZ = (restraint.UZ == BHoMP.DOFType.Fixed) ? -1 : 0;
+            data.RX = (restraint.RX == BHoMP.DOFType.Fixed) ? -1 : 0;
+            data.RY = (restraint.RY == BHoMP.DOFType.Fixed) ? -1 : 0;
+            data.RZ = (restraint.RZ == BHoMP.DOFType.Fixed) ? -1 : 0;
 
-            if (restraint.UX.Type == BHoMP.DOFType.Spring) data.KX = restraint.UX.Value;
-            if (restraint.UY.Type == BHoMP.DOFType.Spring) data.KY = restraint.UY.Value;
-            if (restraint.UZ.Type == BHoMP.DOFType.Spring) data.KZ = restraint.UZ.Value;
-            if (restraint.RX.Type == BHoMP.DOFType.Spring) data.HX = restraint.RX.Value;
-            if (restraint.RY.Type == BHoMP.DOFType.Spring) data.HY = restraint.RY.Value;
-            if (restraint.RZ.Type == BHoMP.DOFType.Spring) data.HZ = restraint.RZ.Value;
+            if (restraint.UX == BHoMP.DOFType.Spring) data.KX = restraint.KX;
+            if (restraint.UY == BHoMP.DOFType.Spring) data.KY = restraint.KY;
+            if (restraint.UZ == BHoMP.DOFType.Spring) data.KZ = restraint.KZ;
+            if (restraint.RX == BHoMP.DOFType.Spring) data.HX = restraint.HX;
+            if (restraint.RY == BHoMP.DOFType.Spring) data.HY = restraint.HY;
+            if (restraint.RZ == BHoMP.DOFType.Spring) data.HZ = restraint.HZ;
 
             robot.Project.Structure.Labels.Store(robot_restraint);
 

@@ -9,7 +9,7 @@ using BHoM.Base.Results;
 using BHoM.Structural.Results;
 using Robot_Adapter.Base;
 
-namespace Robot_Adapter.Results
+namespace Robot_Adapter.Structural.Results
 {
     /// <summary>
     /// 
@@ -25,11 +25,12 @@ namespace Robot_Adapter.Results
         /// <param name="cases"></param>
         /// <param name="divisions"></param>
         /// <returns></returns>
-        public static bool LoadBarForces(RobotApplication RobotApp, ResultServer<BarForce> resultServer, List<string> bars, List<string> cases, int divisions)
+        public static bool GetBarForces(RobotApplication RobotApp, ResultServer<BarForce> resultServer, List<string> bars, List<string> cases, int divisions)
         {           
             RobotResultQueryParams queryParams = (RobotResultQueryParams)RobotApp.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
 
             List<int> results = new List<int>();
+
             results.Add((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FX);
             results.Add((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FY);
             results.Add((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FZ);
@@ -48,8 +49,8 @@ namespace Robot_Adapter.Results
             RobotSelection barSelection = RobotApp.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
             RobotSelection caseSelection = RobotApp.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
 
-            if (bars == null) barSelection.FromText("all"); else barSelection.FromText(Utils.GetSelectionString(bars));
-            if (cases == null) caseSelection.FromText("all"); else caseSelection.FromText(Utils.GetSelectionString(cases));
+            if (bars == null || bars.Count == 0) barSelection.FromText("all"); else barSelection.FromText(Utils.GetSelectionString(bars));
+            if (cases == null || cases.Count == 0) caseSelection.FromText("all"); else caseSelection.FromText(Utils.GetSelectionString(cases));
 
             queryParams.Selection.Set(IRobotObjectType.I_OT_CASE, caseSelection);
             queryParams.Selection.Set(IRobotObjectType.I_OT_BAR, barSelection);
@@ -57,14 +58,13 @@ namespace Robot_Adapter.Results
             RobotResultRowSet rowSet = new RobotResultRowSet();
 
             IRobotResultQueryReturnType ret = IRobotResultQueryReturnType.I_RQRT_MORE_AVAILABLE;
-            bool anythingCalculated = false;
-
+           
             int counter = 0;
             List<BarForce> barForces = new List<BarForce>();
             while (ret != IRobotResultQueryReturnType.I_RQRT_DONE)
             {
                 ret = RobotApp.Kernel.Structure.Results.Query(queryParams, rowSet);
-                bool isOk = anythingCalculated = rowSet.MoveFirst();
+                bool isOk = rowSet.MoveFirst();
                 while (isOk)
                 {
                     RobotResultRow row = rowSet.CurrentRow;
@@ -83,7 +83,7 @@ namespace Robot_Adapter.Results
                     isOk = rowSet.MoveNext();
                     counter++;
 
-                    if (counter % 1000000 == 0)
+                    if (counter % 1000000 == 0 && resultServer.CanStore)
                     {
                         resultServer.StoreData(barForces);
                         barForces.Clear();

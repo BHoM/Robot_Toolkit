@@ -8,6 +8,7 @@ using BHoMB = BHoM.Base;
 using BHoME = BHoM.Structural.Elements;
 using BHoMP = BHoM.Structural.Properties;
 using Robot_Adapter.Base;
+using BHoM.Structural.Interface;
 
 namespace Robot_Adapter.Structural.Elements
 {
@@ -57,19 +58,19 @@ namespace Robot_Adapter.Structural.Elements
 
                 if (constraint != null)
                 {
-                    nodeData.UX = constraint.UX.Type == BHoMP.DOFType.Fixed ? -1 : 0;
-                    nodeData.UY = constraint.UY.Type == BHoMP.DOFType.Fixed ? -1 : 0;
-                    nodeData.UZ = constraint.UZ.Type == BHoMP.DOFType.Fixed ? -1 : 0;
-                    nodeData.RX = constraint.RX.Type == BHoMP.DOFType.Fixed ? -1 : 0;
-                    nodeData.RY = constraint.RY.Type == BHoMP.DOFType.Fixed ? -1 : 0;
-                    nodeData.RZ = constraint.RZ.Type == BHoMP.DOFType.Fixed ? -1 : 0;
+                    nodeData.UX = constraint.UX == BHoMP.DOFType.Fixed ? -1 : 0;
+                    nodeData.UY = constraint.UY == BHoMP.DOFType.Fixed ? -1 : 0;
+                    nodeData.UZ = constraint.UZ == BHoMP.DOFType.Fixed ? -1 : 0;
+                    nodeData.RX = constraint.RX == BHoMP.DOFType.Fixed ? -1 : 0;
+                    nodeData.RY = constraint.RY == BHoMP.DOFType.Fixed ? -1 : 0;
+                    nodeData.RZ = constraint.RZ == BHoMP.DOFType.Fixed ? -1 : 0;
 
-                    nodeData.KX = constraint.UX.Value;
-                    nodeData.KY = constraint.UY.Value;
-                    nodeData.KZ = constraint.UZ.Value;
-                    nodeData.HX = constraint.RX.Value;
-                    nodeData.HY = constraint.RY.Value;
-                    nodeData.HY = constraint.RZ.Value;
+                    nodeData.KX = constraint.KX;
+                    nodeData.KY = constraint.KY;
+                    nodeData.KZ = constraint.KZ;
+                    nodeData.HX = constraint.HX;
+                    nodeData.HY = constraint.HY;
+                    nodeData.HZ = constraint.HZ;
                 }
                 robot.Project.Structure.Labels.Store(constraintLabel);
             }
@@ -127,7 +128,6 @@ namespace Robot_Adapter.Structural.Elements
             }
             result_params.Reset();
         }
-
        
         /// <summary>
         /// 
@@ -136,24 +136,34 @@ namespace Robot_Adapter.Structural.Elements
         /// <param name="nodes"></param>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static bool GetNodes(RobotApplication robot, out List<BHoME.Node> nodeOut, string nodeSelection = "all")
-        { 
-            RobotSelection selection = robot.Project.Structure.Selections.Get(IRobotObjectType.I_OT_NODE);
-
-            BHoMB.ObjectManager<int, BHoME.Node>  nodes = new BHoMB.ObjectManager<int, BHoME.Node>(Utils.NUM_KEY, BHoMB.FilterOption.UserData);
+        public static List<string> GetNodes(RobotApplication robot, out List<BHoME.Node> nodeOut, ObjectSelection selectionType, List<string> nodeNumbers = null)
+        {          
+            BHoMB.ObjectManager<string, BHoME.Node>  nodes = new BHoMB.ObjectManager<string, BHoME.Node>(Utils.NUM_KEY, BHoMB.FilterOption.UserData);
 
             BHoMB.ObjectManager<BHoMP.NodeConstraint> constraints = new BHoMB.ObjectManager<BHoMP.NodeConstraint>();
-          
-            if (nodeSelection != "selected") selection.FromText(nodeSelection);
+
+            RobotSelection selection = selectionType == ObjectSelection.Selected ? 
+                robot.Project.Structure.Selections.Get(IRobotObjectType.I_OT_NODE) :
+                robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
+
+            if (selectionType == ObjectSelection.FromInput)
+            {
+                selection.FromText(Utils.GetSelectionString(nodeNumbers));
+            }
+            else if (selectionType == ObjectSelection.All)
+            {
+                selection.FromText("all");
+            }
             
             RobotNodeCollection collection = (RobotNodeCollection)robot.Project.Structure.Nodes.GetMany(selection);
-           
+
+            List<string> outIds = new List<string>();
             for (int i = 0; i < collection.Count; i++)
             {               
                 RobotNode rnode = (RobotNode)collection.Get(i + 1);
-
+                outIds.Add(rnode.Number.ToString());
                 BHoME.Node node = new BHoME.Node(rnode.X, rnode.Y, rnode.Z);
-                nodes.Add(rnode.Number, node);
+                nodes.Add(rnode.Number.ToString(), node);
 
                 if (rnode.HasLabel(IRobotLabelType.I_LT_SUPPORT) != 0)
                 {
@@ -167,8 +177,9 @@ namespace Robot_Adapter.Structural.Elements
                     node.Constraint = c;
                 }
             }
-            nodeOut = nodes.ToList();
-            return true;
+            nodeOut = nodes.GetRange(outIds);
+
+            return outIds;
         }
 
         /// <summary>

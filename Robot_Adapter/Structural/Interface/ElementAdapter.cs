@@ -9,6 +9,7 @@ using RobotOM;
 using BHoME = BHoM.Structural.Elements;
 using BHoMP = BHoM.Structural.Properties;
 using BHoML = BHoM.Structural.Loads;
+using BHoM.Structural.Interface;
 
 namespace Robot_Adapter.Structural.Interface
 {
@@ -25,6 +26,11 @@ namespace Robot_Adapter.Structural.Interface
             }
         }
 
+        public ObjectSelection Selection
+        {
+            get; set;        
+        }
+
         public RobotAdapter()
         {
             Robot = new RobotApplication();
@@ -36,10 +42,9 @@ namespace Robot_Adapter.Structural.Interface
         /// <param name="bars">output bar list</param>
         /// <param name="option"></param>
         /// <returns>true is successful</returns>
-        public bool GetBars(out List<BHoME.Bar> bars, string option = "all")
+        public List<string> GetBars(out List<BHoME.Bar> bars, List<string> ids = null)
         {
-            Structural.Elements.BarIO.GetBars(Robot, out bars);
-            return true;
+            return Structural.Elements.BarIO.GetBars(Robot, out bars, Selection, ids);
         }
 
         /// <summary>
@@ -54,39 +59,38 @@ namespace Robot_Adapter.Structural.Interface
             return true;
         }
 
-        public bool GetLoadcases(out List<BHoML.ICase> cases)
+        public List<string> GetLoadcases(out List<BHoML.ICase> cases)
         {
             throw new NotImplementedException();
         }
 
-        public bool GetLoads(out List<BHoML.ILoad> loads, string option = "")
+        public bool GetLoads(out List<BHoML.ILoad> loads, List<string> ids = null)
         {
             throw new NotImplementedException();
         }
 
-        public bool GetNodes(out List<BHoME.Node> nodes, string option = "all")
+        public List<string> GetNodes(out List<BHoME.Node> nodes, List<string> ids = null)
         {
-            Structural.Elements.NodeIO.GetNodes(Robot, out nodes, option);
-            return true;
+            return Structural.Elements.NodeIO.GetNodes(Robot, out nodes, Selection, ids);
         }
 
-        public bool GetPanels(out List<BHoME.Panel> panels, string option = "all")
+        public List<string> GetPanels(out List<BHoME.Panel> panels, List<string> ids = null)
         {
-            return Structural.Elements.PanelIO.GetPanels(Robot, out panels);
+            return Structural.Elements.PanelIO.GetPanels(Robot, out panels, Selection, ids);
         }
 
 
-        public bool GetLevels(out List<BHoME.Storey> levels, string options = "")
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool GetOpenings(out List<BHoME.Opening> opening, string option = "")
+        public List<string> GetLevels(out List<BHoME.Storey> levels, List<string> ids = null)
         {
             throw new NotImplementedException();
         }
 
-        public bool SetNodes(List<BHoME.Node> nodes, out List<string> ids, string option = "")
+        public List<string> GetOpenings(out List<BHoME.Opening> opening, List<string> ids = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SetNodes(List<BHoME.Node> nodes, out List<string> ids)
         {
             Robot.Interactive = 0;
             Structural.Elements.NodeIO.CreateNodes(Robot, nodes, out ids);
@@ -94,22 +98,22 @@ namespace Robot_Adapter.Structural.Interface
             return true;
         }
 
-        public bool SetBars(List<BHoME.Bar> bars, out List<string> ids, string option = "")
+        public bool SetBars(List<BHoME.Bar> bars, out List<string> ids)
         {
             return Structural.Elements.BarIO.CreateBars(Robot, bars, out ids);
         }
 
-        public bool SetPanels(List<BHoME.Panel> panels, out List<string> ids, string option = "")
+        public bool SetPanels(List<BHoME.Panel> panels, out List<string> ids)
         {
             return Structural.Elements.PanelIO.CreatePanels(Robot, panels, out ids);
         }
 
-        public bool SetOpenings(List<BHoME.Opening> opening, out List<string> ids, string option = "")
+        public bool SetOpenings(List<BHoME.Opening> opening, out List<string> ids)
         {
             return Structural.Elements.PanelIO.CreateOpenings(Robot, opening, out ids);
         }
 
-        public bool SetLevels(List<BHoME.Storey> stories, out List<string> ids, string option = "")
+        public bool SetLevels(List<BHoME.Storey> stories, out List<string> ids)
         {
             ids = new List<string>();
             if (stories.Count > 0)
@@ -131,7 +135,7 @@ namespace Robot_Adapter.Structural.Interface
             return true;
         }
 
-        public bool SetLoads(List<BHoML.ILoad> loads, string option = "")
+        public bool SetLoads(List<BHoML.ILoad> loads)
         {
             return Loads.LoadIO.SetLoads(Robot, loads);
         }
@@ -141,12 +145,12 @@ namespace Robot_Adapter.Structural.Interface
             return Loads.LoadIO.SetLoadcases(Robot, cases);
         }
 
-        public bool GetGrids(out List<BHoME.Grid> grids, string options = "")
+        public List<string> GetGrids(out List<BHoME.Grid> grids, List<string> ids = null)
         {
             throw new NotImplementedException();
         }
 
-        public bool SetGrids(List<BHoME.Grid> grid, out List<string> ids, string option = "")
+        public bool SetGrids(List<BHoME.Grid> grid, out List<string> ids)
         {
             RobotStructuralAxisGridMngr gm;
             IRobotStructuralAxisGrid sag;

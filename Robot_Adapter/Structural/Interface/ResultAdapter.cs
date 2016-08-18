@@ -15,7 +15,7 @@ namespace Robot_Adapter.Structural.Interface
 {
     public partial class RobotAdapter : IResultAdapter
     {
-        public bool GetBarForces(List<string> bars, List<string> cases, int divisions, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.ResultSet<BHoMR.BarForce>> results)
+        public bool GetBarForces(List<string> bars, List<string> cases, int divisions, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
         {
             BHoMBR.ResultServer<BHoMR.BarForce> resultServer = new BHoMBR.ResultServer<BHoMR.BarForce>();
             resultServer.OrderBy = orderBy;
@@ -35,12 +35,12 @@ namespace Robot_Adapter.Structural.Interface
             throw new NotImplementedException();
         }
 
-        public bool GetNodeAccelerations(List<string> nodes, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.ResultSet<BHoMR.NodeAcceleration>> results)
+        public bool GetNodeAccelerations(List<string> nodes, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
         {
             throw new NotImplementedException();
         }
 
-        public bool GetNodeDisplacements(List<string> nodes, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.ResultSet<BHoMR.NodeDisplacement>> results)
+        public bool GetNodeDisplacements(List<string> nodes, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
         {
             BHoMBR.ResultServer<BHoMR.NodeDisplacement> resultServer = new BHoMBR.ResultServer<BHoMR.NodeDisplacement>();
             resultServer.OrderBy = orderBy;
@@ -50,7 +50,7 @@ namespace Robot_Adapter.Structural.Interface
             return true;
         }
 
-        public bool GetNodeReactions(List<string> nodes, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.ResultSet<BHoMR.NodeReaction>> results)
+        public bool GetNodeReactions(List<string> nodes, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
         {
             BHoMBR.ResultServer<BHoMR.NodeReaction> resultServer = new BHoMBR.ResultServer<BHoMR.NodeReaction>();
             resultServer.OrderBy = orderBy;
@@ -60,12 +60,12 @@ namespace Robot_Adapter.Structural.Interface
             return true;
         }
        
-        public bool GetNodeVelocities(List<string> nodes, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.ResultSet<BHoMR.NodeVelocity>> results)
+        public bool GetNodeVelocities(List<string> nodes, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
         {
             throw new NotImplementedException();
         }
 
-        public bool GetPanelForces(List<string> panels, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.ResultSet<BHoMR.PanelForce>> results)
+        public bool GetPanelForces(List<string> panels, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
         {
             BHoMBR.ResultServer<BHoMR.PanelForce> resultServer = new BHoMBR.ResultServer<BHoMR.PanelForce>();
             resultServer.OrderBy = orderBy;
@@ -75,9 +75,14 @@ namespace Robot_Adapter.Structural.Interface
             return true;
         }
 
-        public bool GetPanelStress(List<string> panels, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.ResultSet<BHoMR.PanelStress>> results)
+        public bool GetPanelStress(List<string> panels, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
         {
-            throw new NotImplementedException();
+            BHoMBR.ResultServer<BHoMR.PanelStress> resultServer = new BHoMBR.ResultServer<BHoMR.PanelStress>();
+            resultServer.OrderBy = orderBy;
+            PanelResults.GetPanelStress(Robot, resultServer, panels, cases);
+            results = resultServer.LoadData();
+
+            return true;
         }
 
         public bool StoreResults(string filename, List<BHoMBR.ResultType> resultTypes, List<string> loadcases, bool append = false)
@@ -102,7 +107,7 @@ namespace Robot_Adapter.Structural.Interface
                         PanelResults.GetPanelForces(Robot, new BHoMBR.ResultServer<BHoMR.PanelForce>(filename, append), null, loadcases);
                         break;
                     case BHoMBR.ResultType.PanelStress:
-                        //PanelResults.GetPanelStress(Robot, new BHoMBR.ResultServer<BHoMR.PanelStress>(filename), null, loadcases);
+                        PanelResults.GetPanelStress(Robot, new BHoMBR.ResultServer<BHoMR.PanelStress>(filename), null, loadcases);
                         break;
 
                 }

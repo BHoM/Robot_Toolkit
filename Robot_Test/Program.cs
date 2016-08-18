@@ -21,8 +21,6 @@ namespace Robot_Test
         static void Main(string[] args)
         {
             RobotAdapter app = new RobotAdapter();
-            Dictionary<string, ResultSet<BarForce>> data = null;
-            app.GetBarForces(new List<string>() { "1", "2", "3" }, new List<string>() { "1", "2", "3" }, 3, ResultOrder.Name, out data);
         }
         
         private static void CreateLoadcase()

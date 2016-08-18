@@ -21,11 +21,11 @@ namespace Robot_Adapter.Results
             RobotResultServer robotResult = robot.Project.Structure.Results;
             RobotMassSumServer robotMass = robotResult.Advanced.MassSum;
             RobotStructureValues robotValues = robotResult.Total;
-            RobotReactionData robotReactions = robotResult.Nodes.Reactions.Sum(loadcase.Number);
+            //RobotReactionData robotReactions = robotResult.Nodes.Reactions.Sum(loadcase.Number);
 
-            globalResult.SetReactions(robotReactions.FX, robotReactions.FY, robotReactions.FZ, robotReactions.MX, robotReactions.MY, robotReactions.MZ);
-            globalResult.SetSumOfMass(robotValues.GetMass(loadcase.Number));
-            globalResult.SetBaseShear(robotReactions.FX * 9.81 / globalResult.SumOfMass, robotReactions.FY * 9.81 / globalResult.SumOfMass);
+           // globalResult.SetReactions(robotReactions.FX, robotReactions.FY, robotReactions.FZ, robotReactions.MX, robotReactions.MY, robotReactions.MZ);
+            //globalResult.SetSumOfMass(robotValues.GetMass(loadcase.Number));
+           // globalResult.SetBaseShear(robotReactions.FX * 9.81 / globalResult.SumOfMass, robotReactions.FY * 9.81 / globalResult.SumOfMass);
         }
     }
 }

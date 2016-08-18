@@ -697,8 +697,6 @@ namespace Robot_Adapter
                 {
                     if (sectionData != null)
                     {
-
-
                         data.Type = GetShapeType(sectionProperty.Shape);
                         RobotBarSectionNonstdData nonStandard = data.CreateNonstd(0);
                         switch (data.Type)
@@ -835,6 +833,10 @@ namespace Robot_Adapter
                     nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B, sectionProperty.TotalWidth);
                     nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H, sectionProperty.TotalDepth);
                     data.CalcNonstdGeometry();
+                    labelServer.Store(sectionLabel);
+                }
+                else
+                {
                     labelServer.Store(sectionLabel);
                 }
             }

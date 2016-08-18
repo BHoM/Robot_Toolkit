@@ -25,13 +25,7 @@ namespace Robot_Test
         
         private static void CreateLoadcase()
         {
-            List<ICase> l1 = new List<ICase>() {
-                new BHoM.Structural.Loads.Loadcase(1, "Test", LoadNature.Dead),
-                new BHoM.Structural.Loads.Loadcase(1, "DL1", LoadNature.Dead),
-                new BHoM.Structural.Loads.Loadcase(1, "LL1", LoadNature.Live)
-            };
-            RobotAdapter app = new RobotAdapter();
-            app.SetLoadcases(l1);
+          
         }
 
         private static void SetAreaLoad()
@@ -39,7 +33,7 @@ namespace Robot_Test
             RobotAdapter app = new RobotAdapter();
             Polyline p = new Polyline(new List<Point>() { new Point(0, 0, 0), new Point(0, 5, 0), new Point(5, 5, 0), new Point(5, 0, 0), new Point(0, 0, 0) });
 
-            BHoM.Structural.Loads.Loadcase lC = new BHoM.Structural.Loads.Loadcase(1, "DL2", LoadNature.Dead, 1);
+            BHoM.Structural.Loads.Loadcase lC = new BHoM.Structural.Loads.Loadcase("DL2", LoadNature.Dead, 1);
             //lC.CustomData[Utils.NUM_KEY] = "1";
             GeometricalAreaLoad aL = new GeometricalAreaLoad(p, new Vector(0, 0, -5000));
             aL.Loadcase = lC;

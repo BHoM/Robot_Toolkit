@@ -49,6 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Structural\Elements\GridIO.cs" />
+    <Compile Include="Structural\Elements\LevelIO.cs" />
     <Compile Include="Structural\Results\NodeResults.cs" />
     <Compile Include="Base\Label.cs" />
     <Compile Include="Structural\Interface\ApplicationAdapter.cs" />

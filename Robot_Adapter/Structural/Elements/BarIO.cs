@@ -445,23 +445,23 @@ namespace Robot_Adapter.Structural.Elements
             {
                 IRobotLabel barLabel = labels.Create(IRobotLabelType.I_LT_BAR_ELASTIC_GROUND, spring.Name);
                 IRobotBarElasticGroundData groundData = barLabel.Data;
-                groundData.HX = spring.Rotational.Value;
-                groundData.KY = spring.Horizontal.Value;
-                groundData.KZ = spring.Vertical.Value;
+                groundData.HX = spring.HX;
+                groundData.KY = spring.KY;
+                groundData.KZ = spring.KZ;
 
-                if (spring.Horizontal.Type == BHoMP.DOFType.SpringNegative)
+                if (spring.UY == BHoMP.DOFType.SpringNegative)
                 {
                     groundData.SetOneDir(IRobotUpliftDirection.I_UD_UY, IRobotUpliftSense.I_US_MINUS);
                 }
-                else if (spring.Horizontal.Type == BHoMP.DOFType.SpringPositive)
+                else if (spring.UY == BHoMP.DOFType.SpringPositive)
                 {
                     groundData.SetOneDir(IRobotUpliftDirection.I_UD_UY, IRobotUpliftSense.I_US_PLUS);
                 }
-                if (spring.Vertical.Type == BHoMP.DOFType.SpringNegative)
+                if (spring.UZ == BHoMP.DOFType.SpringNegative)
                 {
                     groundData.SetOneDir(IRobotUpliftDirection.I_UD_UZ, IRobotUpliftSense.I_US_MINUS);
                 }
-                else if (spring.Vertical.Type == BHoMP.DOFType.SpringPositive)
+                else if (spring.UZ == BHoMP.DOFType.SpringPositive)
                 {
                     groundData.SetOneDir(IRobotUpliftDirection.I_UD_UZ, IRobotUpliftSense.I_US_PLUS);
                 }
@@ -481,9 +481,9 @@ namespace Robot_Adapter.Structural.Elements
             BHoMP.DOFType horizontalType = upliftH == IRobotUpliftSense.I_US_MINUS ? BHoMP.DOFType.SpringNegative : upliftH == IRobotUpliftSense.I_US_PLUS ? BHoMP.DOFType.SpringPositive : BHoMP.DOFType.Spring;
             BHoMP.DOFType verticalType = upliftV == IRobotUpliftSense.I_US_MINUS ? BHoMP.DOFType.SpringNegative : upliftH == IRobotUpliftSense.I_US_PLUS ? BHoMP.DOFType.SpringPositive : BHoMP.DOFType.Spring;
 
-            barSpring.Rotational = new BHoMP.DOF(BHoMP.DOFType.Spring, groundData.HX);
-            barSpring.Horizontal = new BHoMP.DOF(horizontalType, groundData.KY);
-            barSpring.Vertical = new BHoMP.DOF(verticalType, groundData.KZ);
+            barSpring.HX = groundData.HX; barSpring.RX = BHoMP.DOFType.Free;
+            barSpring.KY =  groundData.KY; barSpring.UY = horizontalType;
+            barSpring.KZ = groundData.KZ; barSpring.UZ = verticalType;
 
             return barSpring;
         }
@@ -535,15 +535,10 @@ namespace Robot_Adapter.Structural.Elements
 
         public static BHoMP.BarRelease GetRelease(IRobotLabel release)
         {
-            //if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_RELEASE) == 0)
-            //{
-            //    IRobotLabel release = robotBar.GetLabel(IRobotLabelType.I_LT_BAR_RELEASE);
-                IRobotBarReleaseData releaseData = release.Data as IRobotBarReleaseData;
-                BHoMP.NodeConstraint startNode = GetEndRelease(releaseData.StartNode);
-                BHoMP.NodeConstraint endNode = GetEndRelease(releaseData.EndNode);
-                return new BHoMP.BarRelease(startNode, endNode, release.Name);
-            //}
-            //return null;
+            IRobotBarReleaseData releaseData = release.Data as IRobotBarReleaseData;
+            BHoMP.NodeConstraint startNode = GetEndRelease(releaseData.StartNode);
+            BHoMP.NodeConstraint endNode = GetEndRelease(releaseData.EndNode);
+            return new BHoMP.BarRelease(startNode, endNode, release.Name);
         }
 
         /// <summary>

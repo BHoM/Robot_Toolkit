@@ -168,6 +168,11 @@ namespace Robot_Adapter.Structural.Loads
             return true;
         }
 
+        internal static bool GetLoads(RobotApplication robot, out List<BHoML.ILoad> loads)
+        {
+            throw new NotImplementedException();
+        }
+
         internal static IRobotCaseNature GetLoadNature(BHoML.LoadNature nature)
         {
             switch (nature)
@@ -186,6 +191,26 @@ namespace Robot_Adapter.Structural.Loads
                     return IRobotCaseNature.I_CN_WIND;
                 default:
                     return IRobotCaseNature.I_CN_PERMANENT;
+            }
+        }
+        internal static BHoML.LoadNature GetLoadNature(IRobotCaseNature nature)
+        {
+            switch (nature)
+            {
+                case IRobotCaseNature.I_CN_PERMANENT:
+                    return BHoML.LoadNature.Dead;
+                case IRobotCaseNature.I_CN_EXPLOATATION:
+                    return BHoML.LoadNature.Live;
+                case IRobotCaseNature.I_CN_SEISMIC:
+                    return BHoML.LoadNature.Seismic;
+                case IRobotCaseNature.I_CN_SNOW:
+                    return BHoML.LoadNature.Snow;
+                case IRobotCaseNature.I_CN_TEMPERATURE:
+                    return BHoML.LoadNature.Temperature;
+                case IRobotCaseNature.I_CN_WIND:
+                    return BHoML.LoadNature.Wind;
+                default:
+                    return BHoML.LoadNature.Other;
             }
         }
 
@@ -292,6 +317,76 @@ namespace Robot_Adapter.Structural.Loads
             }
 
             return true;
+        }
+
+
+        public static BHoML.LoadCombination GetLoadCombination(RobotApplication robot, IRobotCase robotCase, BHoMB.ObjectManager<string, BHoML.ICase> caseManager)
+        {
+            if (robotCase.Type == IRobotCaseType.I_CT_COMBINATION)
+            {
+                IRobotCaseCombination combo = (robotCase as IRobotCaseCombination);
+                List<double> factors = new List<double>();
+                List<BHoML.ICase> caseNames = new List<BHoML.ICase>();
+                for (int i = 1; i <= combo.CaseFactors.Count; i++)
+                {
+                    RobotCaseFactor cF = combo.CaseFactors.Get(i);
+                    IRobotCase rCase = robot.Project.Structure.Cases.Get(cF.CaseNumber);
+                    if (caseManager[rCase.Number.ToString()] == null)
+                    {
+                        caseManager.Add(rCase.Number.ToString(), GetLoadcase(robot, rCase.Number));
+                    }
+                    caseNames.Add(caseManager[rCase.Number.ToString()]);
+                    factors.Add(cF.Factor);
+                }
+
+                return new BHoML.LoadCombination(robotCase.Name, caseNames, factors);
+            }
+            return null;
+        }
+
+        public static BHoML.ICase GetSimpleCase(IRobotCase robotCase)
+        {
+            return new BHoML.Loadcase(robotCase.Name, GetLoadNature(robotCase.Nature));
+        }
+
+        public static BHoML.ICase GetLoadcase(RobotApplication RobotApp, int robotCase)
+        {
+            IRobotCase currentCase = RobotApp.Project.Structure.Cases.Get(robotCase);
+            return GetSimpleCase(currentCase);
+        }
+
+        public static List<string> GetLoadcases(RobotApplication RobotApp, out List<BHoML.ICase> cases)
+        {
+            BHoMB.ObjectManager<string, BHoML.ICase> caseManager = new BHoM.Base.ObjectManager<string, BHoML.ICase>(Utils.NUM_KEY, BHoMB.FilterOption.UserData);
+            RobotApp.Interactive = 0;
+            RobotApp.Project.Structure.Cases.BeginMultiOperation();
+            RobotCaseCollection collection = RobotApp.Project.Structure.Cases.GetAll();
+            IRobotCase currentCase;
+            cases = new List<BHoM.Structural.Loads.ICase>();
+            List<string> outIds = new List<string>();
+            for (int i = 1; i <= collection.Count; i++)
+            {
+                BHoML.ICase newCase = null;
+                currentCase = collection.Get(i) as IRobotCase;
+                switch (currentCase.Type)
+                {
+                    case IRobotCaseType.I_CT_COMBINATION:
+                    case IRobotCaseType.I_CT_CODE_COMBINATION:
+                        caseManager.Add(currentCase.Number.ToString(), GetLoadCombination(RobotApp, currentCase, caseManager));
+                        break;
+                    case IRobotCaseType.I_CT_MOBILE:
+                        continue;
+                    case IRobotCaseType.I_CT_SIMPLE:
+                        caseManager.Add(currentCase.Number.ToString(), GetSimpleCase(currentCase));
+                        break;
+                }
+                outIds.Add(currentCase.Number.ToString());
+            }
+            RobotApp.Project.Structure.Cases.EndMultiOperation();
+            RobotApp.Interactive = 1;
+
+            cases = caseManager.GetRange(outIds);
+            return outIds;
         }
     }
 }

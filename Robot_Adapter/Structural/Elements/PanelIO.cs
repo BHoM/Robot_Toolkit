@@ -184,6 +184,7 @@ namespace Robot_Adapter.Structural.Elements
                 int edgeCount = panel.External_Contours.Count;
                 BHoMG.Group<BHoMG.Curve> c = panel.External_Contours;
                 c.AddRange(panel.Internal_Contours);
+
                 try
                 {
                     if (c != null)

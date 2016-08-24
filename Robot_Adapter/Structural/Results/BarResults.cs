@@ -79,7 +79,7 @@ namespace Robot_Adapter.Structural.Results
                     double my = row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MY);
                     double mz = row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MZ);
 
-                    barForces.Add(new BarForce(idBar, idCase, idPoint, 1, fx, fy, fz, mx, my, mz));
+                    barForces.Add(new BarForce(idBar, idCase, idPoint, divisions, 1, fx, fy, fz, mx, my, mz));
                     isOk = rowSet.MoveNext();
                     counter++;
 

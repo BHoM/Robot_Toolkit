@@ -104,7 +104,21 @@ namespace Robot_Adapter
             }
         }
 
-        internal static BHoMP.PanelProperty GetThickness(IRobotLabel rLabel)
+        public static BHoMP.PanelType GetPanelType(IRobotObjectStructuralType robotSType)
+        {
+            switch (robotSType)
+            {
+                case IRobotObjectStructuralType.I_OST_SLAB:
+                    return BHoMP.PanelType.Slab;
+                case IRobotObjectStructuralType.I_OST_WALL:
+                    return BHoM.Structural.Properties.PanelType.Wall;
+                default:
+                    return BHoM.Structural.Properties.PanelType.Undefined;
+            }
+
+        }
+
+        internal static BHoMP.PanelProperty GetThickness(IRobotLabel rLabel, BHoMP.PanelType type)
         {
             IRobotThicknessData data = rLabel.Data;
             BHoMP.PanelProperty thicknessProp = null;
@@ -119,6 +133,7 @@ namespace Robot_Adapter
                         case IRobotThicknessHomoType.I_THT_VARIABLE_ALONG_LINE:
                             thicknessProp = new BHoMP.ConstantThickness(rLabel.Name);
                             thicknessProp.Thickness = homoData.ThickConst;
+                            thicknessProp.Type = type;
                             break;
                     }
                     break;
@@ -135,7 +150,7 @@ namespace Robot_Adapter
                             thicknessProp = new BHoMP.Waffle(rLabel.Name, orthoData.H, orthoData.HA, orthoData.HB, orthoData.A1, orthoData.B1, orthoData.A, orthoData.B);
                             break;
                         case IRobotThicknessOrthoType.I_TOT_MATERIAL:
-                            thicknessProp = new BHoMP.ConstantThickness(rLabel.Name, orthoData.H);
+                            thicknessProp = new BHoMP.ConstantThickness(rLabel.Name, orthoData.H, type);
                             double n1 = orthoData.N1;
                             double n2 = orthoData.N2;
                             modifiers = thicknessProp.Modifiers;
@@ -156,7 +171,7 @@ namespace Robot_Adapter
                         case IRobotThicknessOrthoType.I_TOT_USER:
                             break;
                         default:
-                            thicknessProp = new BHoMP.ConstantThickness(rLabel.Name, orthoData.H);
+                            thicknessProp = new BHoMP.ConstantThickness(rLabel.Name, orthoData.H, type);
                             modifiers = thicknessProp.Modifiers;
                             modifiers[(int)BHoMP.PanelModifier.f11] = orthoData.HA;
                             modifiers[(int)BHoMP.PanelModifier.f12] = orthoData.H0;
@@ -260,7 +275,7 @@ namespace Robot_Adapter
                     case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_RECT:
                         h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_H);
                         b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_B);
-                        property = BHoMP.SectionProperty.CreateRectangularSection(BHoMP.SectionType.ConcreteBeam, h, b);
+                        property = BHoMP.SectionProperty.CreateRectangularSection(h, b);
                         break;
                     case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_I:
                         b1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B1);
@@ -269,26 +284,26 @@ namespace Robot_Adapter
                         T3 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF2);
                         h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_H);
                         b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B);
-                        property = BHoMP.SectionProperty.CreateISection(BHoMP.SectionType.ConcreteBeam, b1, b2, h, T2, T3, b, 0, 0);
+                        property = BHoMP.SectionProperty.CreateISection(b1, b2, h, T2, T3, b, 0, 0);
                         break;
                     case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_T:
                         h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_H);
                         b1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_B);
                         T2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_HF);
                         b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_BF);
-                        property = BHoMP.SectionProperty.CreateTee(BHoMP.SectionType.ConcreteBeam, h, b, T2, b1);
+                        property = BHoMP.SectionProperty.CreateTee(h, b, T2, b1);
                         break;
                     case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM:
                         return null;
                     case IRobotBarSectionShapeType.I_BSST_CONCR_COL_C:
                         b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_DE);
                         h = b;
-                        property = BHoMP.SectionProperty.CreateCircularSection(BHoMP.SectionType.ConcreteColumn, b);
+                        property = BHoMP.SectionProperty.CreateCircularSection(b);
                         break;
                     case IRobotBarSectionShapeType.I_BSST_CONCR_COL_R:
                         b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_B);
                         h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H);
-                        property = BHoMP.SectionProperty.CreateRectangularSection(BHoMP.SectionType.ConcreteColumn, h, b);
+                        property = BHoMP.SectionProperty.CreateRectangularSection(h, b);
                         break;
                     case IRobotBarSectionShapeType.I_BSST_CONCR_COL_CQ:
                         //quarter Cirlce de dimeter
@@ -301,7 +316,7 @@ namespace Robot_Adapter
                         h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H);
                         T1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_L1);
                         T2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H1);
-                        property = BHoMP.SectionProperty.CreateAngleSection(BHoMP.SectionType.ConcreteColumn, h, b, h - T2, b - T1, 0, 0);
+                        property = BHoMP.SectionProperty.CreateAngleSection(h, b, h - T2, b - T1, 0, 0);
                         break;
                     case IRobotBarSectionShapeType.I_BSST_CONCR_COL_P:
                         //equal sided polygon de total height n angle
@@ -311,7 +326,7 @@ namespace Robot_Adapter
                         h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H);
                         T1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_L1);
                         T2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H1);
-                        property = BHoMP.SectionProperty.CreateTee(BHoMP.SectionType.ConcreteColumn, h, b, h - T2, b - 2 * T1);
+                        property = BHoMP.SectionProperty.CreateTee(h, b, h - T2, b - 2 * T1);
                         property.Orientation = 180;
                         break;
                     case IRobotBarSectionShapeType.I_BSST_CONCR_COL_Z:
@@ -328,7 +343,7 @@ namespace Robot_Adapter
                 double ri = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_RI);
                 double s = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_S);
                 double mass = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_WEIGHT);
-                property = new BHoMP.SectionProperty(GetShapeType(sec_data.ShapeType), BHoMP.SectionType.Steel, d, b, Tw, Tf, r, ri, mass, s);
+                property = new BHoMP.SectionProperty(GetShapeType(sec_data.ShapeType), d, b, Tw, Tf, r, ri, mass, s);
             }
 
             property.Orientation += sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_GAMMA);
@@ -681,9 +696,22 @@ namespace Robot_Adapter
         /// </summary>
         /// <param name="robot"></param>
         /// <param name="sectionProperty"></param>
-        public static void CreateBarProperty(RobotApplication robot, BHoMP.SectionProperty sectionProperty)
+        public static void CreateBarProperty(RobotApplication robot, BHoMP.SectionProperty sectionProperty, Material material, bool isColumn)
         {
             RobotLabelServer labelServer = robot.Project.Structure.Labels;
+            MaterialType matType = MaterialType.Steel;
+            if (material == null)
+            {
+                if (sectionProperty.Shape == BHoMP.ShapeType.Rectangle || sectionProperty.Shape == BHoMP.ShapeType.Circle)
+                {
+                    matType = MaterialType.Concrete;
+                }
+            }
+            else
+            {
+                matType = material.Type;
+            }
+
             if (!labelServer.IsUsed(IRobotLabelType.I_LT_BAR_SECTION, sectionProperty.Name))
             {
                 RobotLabel sectionLabel = labelServer.Create(IRobotLabelType.I_LT_BAR_SECTION, sectionProperty.Name) as RobotLabel;
@@ -693,7 +721,7 @@ namespace Robot_Adapter
                 {
                     labelServer.Store(sectionLabel);
                 }
-                else if (sectionProperty.SectionMaterial == BHoMP.SectionType.Steel)
+                else if (matType == MaterialType.Steel)
                 {
                     if (sectionData != null)
                     {
@@ -747,7 +775,7 @@ namespace Robot_Adapter
 
                     labelServer.Store(sectionLabel);
                 }
-                else if (sectionProperty.SectionMaterial == BHoMP.SectionType.ConcreteBeam)
+                else if (matType == MaterialType.Concrete && !isColumn)
                 {
                     RobotBarSectionConcreteData concreteData;//= data.Concrete;
                     switch (sectionProperty.Shape)
@@ -769,7 +797,6 @@ namespace Robot_Adapter
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_H, sectionData[(int)BHD.SteelSectionData.Height]);
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B, sectionData[(int)BHD.SteelSectionData.TW]);
                             concreteData.CalcGeometry();
-
                             break;
                         case BHoMP.ShapeType.Tee:
                             data.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_T;
@@ -778,14 +805,13 @@ namespace Robot_Adapter
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B, sectionData[(int)BHD.SteelSectionData.TW]);
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_HF, sectionData[(int)BHD.SteelSectionData.TF1]);
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_BF, sectionData[(int)BHD.SteelSectionData.Width]);
-
                             concreteData.CalcGeometry();
                             break;
                     }
 
                     labelServer.Store(sectionLabel);
                 }
-                else if (sectionProperty.SectionMaterial == BHoMP.SectionType.ConcreteColumn)
+                else if (matType == MaterialType.Concrete && isColumn)
                 {
                     RobotBarSectionConcreteData concreteData;
                     switch (sectionProperty.Shape)
@@ -794,12 +820,14 @@ namespace Robot_Adapter
                             data.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_COL_C;
                             concreteData = data.Concrete;
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_DE, sectionProperty.TotalDepth);
+                            concreteData.CalcGeometry();
                             break;
                         case BHoMP.ShapeType.Rectangle:
                             data.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_COL_R;
                             concreteData = data.Concrete;
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_B, sectionProperty.TotalWidth);
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H, sectionProperty.TotalDepth);
+                            concreteData.CalcGeometry();
                             break;
 
                         case BHoMP.ShapeType.Angle:
@@ -809,6 +837,7 @@ namespace Robot_Adapter
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H, sectionData[(int)BHD.SteelSectionData.Height]);
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_L1, sectionData[(int)BHD.SteelSectionData.Width] - sectionData[(int)BHD.SteelSectionData.TW]);
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H1, sectionData[(int)BHD.SteelSectionData.Height] - sectionData[(int)BHD.SteelSectionData.TF1]);
+                            concreteData.CalcGeometry();
                             break;
                         case BHoMP.ShapeType.Tee:
                             data.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_COL_T;
@@ -819,13 +848,14 @@ namespace Robot_Adapter
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H1, sectionData[(int)BHD.SteelSectionData.Height] - sectionData[(int)BHD.SteelSectionData.TF1]);
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_L2, (sectionData[(int)BHD.SteelSectionData.Width] - sectionData[(int)BHD.SteelSectionData.TW]) / 2);
                             concreteData.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H2, sectionData[(int)BHD.SteelSectionData.Height] - sectionData[(int)BHD.SteelSectionData.TF1]);
+                            concreteData.CalcGeometry();
                             break;
                         case BHoMP.ShapeType.Zed:
                             break;
                     }
                     labelServer.Store(sectionLabel);
                 }
-                else if (sectionProperty.SectionMaterial == BHoMP.SectionType.Timber)
+                else if (matType == MaterialType.Timber)
                 {
                     data.ShapeType = IRobotBarSectionShapeType.I_BSST_WOOD_RECT;
                     data.Type = IRobotBarSectionType.I_BST_NS_RECT;

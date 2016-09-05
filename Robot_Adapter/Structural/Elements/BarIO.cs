@@ -17,7 +17,7 @@ namespace Robot_Adapter.Structural.Elements
     /// Robot bar class, for all bar objects and operations
     /// </summary>
     public class BarIO
-    {       
+    {
         /// <summary>
         /// Gets Robot bars using the faster 'query' method. This does not return all Robot bar data
         /// as the only information returned is in double format. To get all bar data use 'GetBars' method.
@@ -39,7 +39,7 @@ namespace Robot_Adapter.Structural.Elements
             RobotSelection cas_sel = default(RobotSelection);
             RobotSelection bar_sel = default(RobotSelection);
             IRobotResultQueryReturnType query_return = default(IRobotResultQueryReturnType);
-           
+
             bool ok = false;
             RobotResultRow result_row = default(RobotResultRow);
             int bar_num = 0;
@@ -81,7 +81,7 @@ namespace Robot_Adapter.Structural.Elements
                     nod1 = (int)result_row.GetValue(nod1_id);
                     nod2 = (int)result_row.GetValue(nod2_id);
                     BHoME.Bar b = new BHoME.Bar(nodes[nod1], nodes[nod2]);
-                    bars.Add(bar_num,b);
+                    bars.Add(bar_num, b);
 
                     ok = row_set.MoveNext();
                 }
@@ -91,7 +91,7 @@ namespace Robot_Adapter.Structural.Elements
 
             return false;
         }
-        
+
         /// <summary>
         /// Get bars method, gets bars from a Robot model and all associated data. Much slower than
         /// the get bars query as it uses the COM interface. 
@@ -123,7 +123,7 @@ namespace Robot_Adapter.Structural.Elements
 
             IRobotCollection barServer = robot.Project.Structure.Bars.GetMany(barSelection) as IRobotCollection;
             RobotNodeServer nodeServer = robot.Project.Structure.Nodes as RobotNodeServer;
-           
+
             robot.Project.Structure.Bars.BeginMultiOperation();
 
             BHoMB.ObjectManager<int, BHoME.Node> nodes = new BHoMB.ObjectManager<int, BHoME.Node>(Utils.NUM_KEY, BHoMB.FilterOption.UserData);
@@ -133,7 +133,6 @@ namespace Robot_Adapter.Structural.Elements
             for (int i = 0; i < barServer.Count; i++)
             {
                 RobotBar rbar = (RobotBar)barServer.Get(i + 1);
-
                 outIds.Add(rbar.Number.ToString());
 
                 BHoME.Node n1 = nodes[rbar.StartNode] as BHoME.Node;
@@ -149,7 +148,9 @@ namespace Robot_Adapter.Structural.Elements
                     n2 = nodes.Add(n.Number, new BHoME.Node(n.X, n.Y, n.Z));
                 }
                 BHoME.Bar str_bar = bars.Add(rbar.Number.ToString(), new BHoME.Bar(n1, n2));
-                str_bar.OrientationAngle = rbar.Gamma;
+                str_bar.OrientationAngle = rbar.Gamma * Math.PI / 180;
+                str_bar.StructuralUsage = GetStructuralType(rbar.StructuralType);
+
                 if (rbar.HasLabel(IRobotLabelType.I_LT_BAR_SECTION) == -1)
                 {
                     IRobotLabel rLabel = rbar.GetLabel(IRobotLabelType.I_LT_BAR_SECTION);
@@ -274,7 +275,33 @@ namespace Robot_Adapter.Structural.Elements
 
             return outIds;
         }
-   
+
+        public static BHoME.BarStructuralUsage GetStructuralType(IRobotObjectStructuralType rtype)
+        {
+            switch (rtype)
+            {
+                case IRobotObjectStructuralType.I_OST_BEAM:
+                    return BHoM.Structural.Elements.BarStructuralUsage.Beam;
+                case IRobotObjectStructuralType.I_OST_COLUMN:
+                    return BHoM.Structural.Elements.BarStructuralUsage.Column;
+                default:
+                    return BHoME.BarStructuralUsage.Undefined;
+            }
+        }
+
+
+        public static IRobotObjectStructuralType GetStructuralType(BHoME.BarStructuralUsage bhType)
+        {
+            switch (bhType)
+            {
+                case BHoM.Structural.Elements.BarStructuralUsage.Beam:
+                    return IRobotObjectStructuralType.I_OST_BEAM;
+                case BHoM.Structural.Elements.BarStructuralUsage.Column:
+                    return IRobotObjectStructuralType.I_OST_COLUMN;
+                default:
+                    return IRobotObjectStructuralType.I_OST_UNDEFINED;
+            }
+        }
         /// <summary>
         /// Creates bars using the fast cache method. 
         /// </summary>
@@ -312,11 +339,13 @@ namespace Robot_Adapter.Structural.Elements
                     start_node.CustomData.Add(key, nodeNum);
                     structureCache.AddNode(nodeNum++, start_node.X, start_node.Y, start_node.Z);
                 }
+
                 if (!end_node.CustomData.TryGetValue(key, out checkValue))
                 {
                     end_node.CustomData.Add(key, nodeNum);
                     structureCache.AddNode(nodeNum++, end_node.X, end_node.Y, end_node.Z);
                 }
+
                 bar.CustomData.Add(key, barNum);
                 structureCache.AddBar(barNum++, (int)start_node.CustomData[key], (int)end_node.CustomData[key], defaultSectionName, defaultMaterialName, 0);
 
@@ -393,12 +422,21 @@ namespace Robot_Adapter.Structural.Elements
                     robotBar = barServer.Get(barNum) as RobotBar;
                 }
 
-                robotBar.Gamma = bar.OrientationAngle;
+                robotBar.Gamma = bar.OrientationAngle * 180 / Math.PI;
+                robotBar.StructuralType = GetStructuralType(bar.StructuralUsage);
+
+                string material = "";
+                if (bar.Material != null && !addedMaterials.TryGetValue(bar.Material.Name, out material))
+                {
+                    PropertyIO.CreateMaterial(robot, bar.Material);
+                    material = bar.Material.Name;
+                    addedMaterials.Add(material, material);
+                }
 
                 string currentSection = "";
                 if (bar.SectionProperty != null && !addedSections.TryGetValue(bar.SectionProperty.Name, out currentSection))
                 {
-                    PropertyIO.CreateBarProperty(robot, bar.SectionProperty);
+                    PropertyIO.CreateBarProperty(robot, bar.SectionProperty, bar.Material, bar.Line.Direction.IsParallel(BHoM.Geometry.Vector.ZAxis(), Math.PI/18));
                     currentSection = bar.SectionProperty.Name;
                     addedSections.Add(currentSection, currentSection);
                 }
@@ -419,14 +457,7 @@ namespace Robot_Adapter.Structural.Elements
                     addedSprings.Add(elasticGround, elasticGround);
                 }
 
-                string material = "";
-                if (bar.Material != null && !addedMaterials.TryGetValue(bar.Material.Name, out material))
-                {
-                    PropertyIO.CreateMaterial(robot, bar.Material);
-                    material = bar.Material.Name;
-                    addedMaterials.Add(material, material);
-                }
-
+              
                 robotBar.SetLabel(IRobotLabelType.I_LT_BAR_SECTION, currentSection);
                 robotBar.SetLabel(IRobotLabelType.I_LT_BAR_RELEASE, currentRelease);
                 robotBar.SetLabel(IRobotLabelType.I_LT_BAR_ELASTIC_GROUND, elasticGround);

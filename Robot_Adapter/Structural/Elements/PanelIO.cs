@@ -89,7 +89,7 @@ namespace Robot_Adapter.Structural.Elements
                             BHoMP.PanelProperty property = thicknesses[thickness.Name];
                             if (property == null)
                             {
-                                property = thicknesses.Add(thickness.Name, PropertyIO.GetThickness(thickness));
+                                property = thicknesses.Add(thickness.Name, PropertyIO.GetThickness(thickness, PropertyIO.GetPanelType(rpanel.StructuralType)));
                             }
                             panel.PanelProperty= property;
                         }

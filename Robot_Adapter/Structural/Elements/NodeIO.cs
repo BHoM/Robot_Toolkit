@@ -50,7 +50,16 @@ namespace Robot_Adapter.Structural.Elements
 
         public static void CreateConstraint(RobotApplication robot, BHoMP.NodeConstraint constraint)
         {
-            IRobotLabel constraintLabel = robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_SUPPORT, constraint.Name);
+            IRobotLabel constraintLabel = null;
+            if (robot.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_SUPPORT, constraint.Name) == 0)
+            {
+                constraintLabel = robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_SUPPORT, constraint.Name);
+            }
+            else
+            {
+                constraintLabel = robot.Project.Structure.Labels.Get(IRobotLabelType.I_LT_SUPPORT, constraint.Name);
+            }
+            
 
             if (constraintLabel != null)
             {
@@ -236,9 +245,16 @@ namespace Robot_Adapter.Structural.Elements
                 if (nodeServer.Exist(num) == 0)
                 { 
                     nodeServer.Create(num, nodes[i].X, nodes[i].Y, nodes[i].Z);
+                    node = nodeServer.Get(num) as RobotNode;
+                }
+                else
+                {
+                    node = nodeServer.Get(num) as RobotNode;
+                    node.X = nodes[i].X;
+                    node.Y = nodes[i].Y;
+                    node.Z = nodes[i].Z;
                 }
 
-                node = nodeServer.Get(num) as RobotNode;
                 ids.Add(num.ToString());
                 string nodeSupport = "";
                 if (nodes[i].Constraint != null)

@@ -20,12 +20,19 @@ namespace Robot_Test
     {
         static void Main(string[] args)
         {
-            RobotAdapter app = new RobotAdapter();
+            CreateLoadcase();
         }
         
         private static void CreateLoadcase()
         {
-          
+            Node n = new Node(60.086, 3.392, 38.5);
+            n.CustomData.Add("Robot Number", 62828);
+            n.Constraint = new BHoM.Structural.Properties.NodeConstraint("Test", new double[] {  200,200,556300,0,0,0});
+
+            List<string> ids = null;
+            RobotAdapter app = new RobotAdapter();
+            app.SetNodes(new List<Node>() { n }, out ids);
+
         }
 
         private static void SetAreaLoad()

@@ -389,6 +389,23 @@ namespace Robot_Adapter.Structural.Elements
             RobotBar robotBar = null;
             List<string> nodeIds = new List<string>();
             ids = new List<string>();
+
+            Dictionary<Guid,BHoME.Node> nodes = new Dictionary<Guid, BHoME.Node>();
+            foreach (BHoME.Bar bar in str_bars)
+            {
+                BHoME.Node node = null;
+                if (!nodes.TryGetValue(bar.StartNode.BHoM_Guid, out node))
+                {
+                    nodes.Add(bar.StartNode.BHoM_Guid, bar.StartNode);
+                }   
+                if (!nodes.TryGetValue(bar.EndNode.BHoM_Guid, out node))
+                {
+                    nodes.Add(bar.EndNode.BHoM_Guid, bar.EndNode);
+                }
+            }
+
+            NodeIO.CreateNodes(robot, nodes.Values.ToList(), out nodeIds);
+
             foreach (BHoME.Bar bar in str_bars)
             {
                 int barNum =  barServer.FreeNumber;
@@ -404,9 +421,7 @@ namespace Robot_Adapter.Structural.Elements
                 {
                     bar.CustomData.Add(key, barNum);
                 }
-
-                NodeIO.CreateNodes(robot, new List<BHoME.Node>() { bar.StartNode, bar.EndNode }, out nodeIds);
-             
+           
                 nodeNum1 = int.Parse(bar.StartNode[key].ToString());           
                 nodeNum2 = int.Parse(bar.EndNode[key].ToString());
                              

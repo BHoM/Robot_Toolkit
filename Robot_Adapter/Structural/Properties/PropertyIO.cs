@@ -189,13 +189,14 @@ namespace Robot_Adapter
             return thicknessProp;
         }
 
-        internal static void CreateThicknessProperty(RobotApplication robot, BHoMP.PanelProperty thicknessProperty)
+        internal static void CreateThicknessProperty(RobotApplication robot, BHoMP.PanelProperty thicknessProperty, string materialName)
         {
             RobotLabelServer labelServer = robot.Project.Structure.Labels;
             if (!labelServer.IsUsed(IRobotLabelType.I_LT_PANEL_THICKNESS, thicknessProperty.Name))
             {
                 RobotLabel sectionLabel = labelServer.Create(IRobotLabelType.I_LT_PANEL_THICKNESS, thicknessProperty.Name) as RobotLabel;
                 RobotThicknessData data = sectionLabel.Data;
+                data.MaterialName = materialName;
                 RobotThicknessOrthoData orthoData = null;
                 if (thicknessProperty is BHoMP.ConstantThickness)
                 {

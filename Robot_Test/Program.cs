@@ -30,8 +30,9 @@ namespace Robot_Test
             n.Constraint = new BHoM.Structural.Properties.NodeConstraint("Test", new double[] {  200,200,556300,0,0,0});
 
             List<string> ids = null;
+            List<Bar> bars = null;
             RobotAdapter app = new RobotAdapter();
-            app.SetNodes(new List<Node>() { n }, out ids);
+            app.GetBars(out bars);
 
         }
 

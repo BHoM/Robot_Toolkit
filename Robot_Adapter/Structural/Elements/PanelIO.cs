@@ -206,17 +206,6 @@ namespace Robot_Adapter.Structural.Elements
                                     rpanel = objServer.Get(panelNum) as RobotObjObject;
                                 }
                             }
-                            else
-                            {
-                                if (panel.CustomData.ContainsKey(key))
-                                {
-                                    panel.CustomData[key] = id.Trim();
-                                }
-                                else
-                                {
-                                    panel.CustomData.Add(key, id.Trim());
-                                }
-                            }
 
                             if (rpanel == null)
                             { 
@@ -231,20 +220,20 @@ namespace Robot_Adapter.Structural.Elements
                             rpanel.Update();
                             if (i < edgeCount)
                             {
-                                string currentThickness = "";
-                                if (panel.PanelProperty != null && !addedThicknesses.TryGetValue(panel.PanelProperty.Name, out currentThickness))
-                                {
-                                    PropertyIO.CreateThicknessProperty(robot, panel.PanelProperty);
-                                    currentThickness = panel.PanelProperty.Name;
-                                    addedThicknesses.Add(currentThickness, currentThickness);
-                                }
-
                                 string material = "";
                                 if (panel.Material != null && !addedMaterials.TryGetValue(panel.Material.Name, out material))
                                 {
                                     PropertyIO.CreateMaterial(robot, panel.Material);
                                     material = panel.Material.Name;
                                     addedMaterials.Add(material, material);
+                                }
+
+                                string currentThickness = "";
+                                if (panel.PanelProperty != null && !addedThicknesses.TryGetValue(panel.PanelProperty.Name, out currentThickness))
+                                {
+                                    PropertyIO.CreateThicknessProperty(robot, panel.PanelProperty, panel.Material.Name);
+                                    currentThickness = panel.PanelProperty.Name;
+                                    addedThicknesses.Add(currentThickness, currentThickness);
                                 }
 
                                 if (!string.IsNullOrEmpty(currentThickness))
@@ -261,6 +250,18 @@ namespace Robot_Adapter.Structural.Elements
                                 rpanel.SetLabel(IRobotLabelType.I_LT_MATERIAL, material);
 
                                 rpanel.Update();
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(id))
+                        {
+                            if (panel.CustomData.ContainsKey(key))
+                            {
+                                panel.CustomData[key] = id.Trim();
+                            }
+                            else
+                            {
+                                panel.CustomData.Add(key, id.Trim());
                             }
                         }
                     }

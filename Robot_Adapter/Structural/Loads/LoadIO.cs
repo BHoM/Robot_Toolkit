@@ -40,7 +40,7 @@ namespace Robot_Adapter.Structural.Loads
                         case BHoML.LoadType.PointForce:
                             BHoML.PointForce pL = load as BHoML.PointForce;
                             loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_FORCE);
-                            loadRecord.Objects.FromText(Utils.GetSelectionString(pL.Objects));
+                            loadRecord.Objects.FromText(Utils.GetSelectionString(pL.Objects.Data));
                             loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_FX, pL.Force.X);
                             loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_FY, pL.Force.Y);
                             loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_FZ, pL.Force.Z);
@@ -51,7 +51,7 @@ namespace Robot_Adapter.Structural.Loads
                         case BHoML.LoadType.BarUniformLoad:
                             BHoML.BarUniformlyDistributedLoad lL = load as BHoML.BarUniformlyDistributedLoad;
                             loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_UNIFORM);
-                            loadRecord.Objects.FromText(Utils.GetSelectionString(lL.Objects));
+                            loadRecord.Objects.FromText(Utils.GetSelectionString(lL.Objects.Data));
                             loadRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PX, lL.ForceVector.X);
                             loadRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PY, lL.ForceVector.Y);
                             loadRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PZ, lL.ForceVector.Z);
@@ -59,7 +59,7 @@ namespace Robot_Adapter.Structural.Loads
                         case BHoML.LoadType.AreaUniformLoad:
                             BHoML.AreaUniformalyDistributedLoad lA = load as BHoML.AreaUniformalyDistributedLoad;
                             loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_UNIFORM);
-                            loadRecord.Objects.FromText(Utils.GetSelectionString(lA.Objects));
+                            loadRecord.Objects.FromText(Utils.GetSelectionString(lA.Objects.Data));
                             loadRecord.SetValue((short)IRobotUniformRecordValues.I_URV_PX, lA.Pressure.X);
                             loadRecord.SetValue((short)IRobotUniformRecordValues.I_URV_PY, lA.Pressure.Y);
                             loadRecord.SetValue((short)IRobotUniformRecordValues.I_URV_PZ, lA.Pressure.Z);
@@ -69,7 +69,7 @@ namespace Robot_Adapter.Structural.Loads
                         case BHoML.LoadType.BarTemperature:
                             BHoML.BarTemperatureLoad tL = load as BHoML.BarTemperatureLoad;
                             loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_THERMAL);
-                            loadRecord.Objects.FromText(Utils.GetSelectionString(tL.Objects));
+                            loadRecord.Objects.FromText(Utils.GetSelectionString(tL.Objects.Data));
                             loadRecord.SetValue((short)IRobotThermalRecordValues.I_TRV_T_1, tL.TemperatureChange.X);
                             loadRecord.SetValue((short)IRobotThermalRecordValues.I_TRV_T_2, tL.TemperatureChange.Y);
                             loadRecord.SetValue((short)IRobotThermalRecordValues.I_TRV_T_3, tL.TemperatureChange.Z);
@@ -77,7 +77,7 @@ namespace Robot_Adapter.Structural.Loads
                         case BHoML.LoadType.BarPointLoad:
                             BHoML.BarPointLoad bPL = load as BHoML.BarPointLoad;
                             loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_FORCE_CONCENTRATED);
-                            loadRecord.Objects.FromText(Utils.GetSelectionString(bPL.Objects));
+                            loadRecord.Objects.FromText(Utils.GetSelectionString(bPL.Objects.Data));
                             loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FX, bPL.ForceVector.X);
                             loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FY, bPL.ForceVector.Y);
                             loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FZ, bPL.ForceVector.Z);
@@ -90,7 +90,7 @@ namespace Robot_Adapter.Structural.Loads
                         case BHoML.LoadType.PointDisplacement:
                             BHoML.PointDisplacement pD = load as BHoML.PointDisplacement;
                             loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_VELOCITY);
-                            loadRecord.Objects.FromText(Utils.GetSelectionString(pD.Objects));
+                            loadRecord.Objects.FromText(Utils.GetSelectionString(pD.Objects.Data));
                             loadRecord.SetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_UX, pD.Translation.X);
                             loadRecord.SetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_UY, pD.Translation.Y);
                             loadRecord.SetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_UZ, pD.Translation.Z);
@@ -101,7 +101,7 @@ namespace Robot_Adapter.Structural.Loads
                         case BHoML.LoadType.PointVelocity:
                             BHoML.PointVelocity pV = load as BHoML.PointVelocity;
                             loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_VELOCITY);
-                            loadRecord.Objects.FromText(Utils.GetSelectionString(pV.Objects));
+                            loadRecord.Objects.FromText(Utils.GetSelectionString(pV.Objects.Data));
                             loadRecord.SetValue((short)IRobotNodeVelocityRecordValues.I_NVRV_UX, pV.TranslationalVelocity.X);
                             loadRecord.SetValue((short)IRobotNodeVelocityRecordValues.I_NVRV_UY, pV.TranslationalVelocity.Y);
                             loadRecord.SetValue((short)IRobotNodeVelocityRecordValues.I_NVRV_UZ, pV.TranslationalVelocity.Z);
@@ -109,7 +109,7 @@ namespace Robot_Adapter.Structural.Loads
                         case BHoML.LoadType.PointAcceleration:
                             BHoML.PointAcceleration pA = load as BHoML.PointAcceleration;
                             loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_ACCELERATION);
-                            loadRecord.Objects.FromText(Utils.GetSelectionString(pA.Objects));
+                            loadRecord.Objects.FromText(Utils.GetSelectionString(pA.Objects.Data));
                             loadRecord.SetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UX, pA.TranslationalAcceleration.X);
                             loadRecord.SetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UY, pA.TranslationalAcceleration.Y);
                             loadRecord.SetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UZ, pA.TranslationalAcceleration.Z);

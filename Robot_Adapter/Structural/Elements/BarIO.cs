@@ -161,6 +161,16 @@ namespace Robot_Adapter.Structural.Elements
                         property = sections.Add(rLabel.Name, PropertyIO.GetSection(rLabel));
                     }
                     str_bar.SectionProperty = property;
+                    if (rbar.HasLabel(IRobotLabelType.I_LT_MATERIAL) != 0)
+                    {
+                        IRobotLabel material = rbar.GetLabel(IRobotLabelType.I_LT_MATERIAL);
+                        BHoMM.Material m = materials[material.Name];
+                        if (m == null)
+                        {
+                            m = materials.Add(material.Name, PropertyIO.GetMaterial(material));
+                        }
+                        str_bar.SectionProperty.Material = m;
+                    }
                 }
 
                 if (rbar.HasLabel(IRobotLabelType.I_LT_BAR_RELEASE) == -1)
@@ -186,16 +196,7 @@ namespace Robot_Adapter.Structural.Elements
                     }
                     str_bar.Spring = spring;
                 }
-                if (rbar.HasLabel(IRobotLabelType.I_LT_MATERIAL) != 0)
-                {
-                    IRobotLabel material = rbar.GetLabel(IRobotLabelType.I_LT_MATERIAL);
-                    BHoMM.Material m = materials[material.Name];
-                    if (material == null)
-                    {
-                        m = materials.Add(material.Name, PropertyIO.GetMaterial(material));
-                    }
-                    str_bar.Material = m;
-                }
+              
 
                 #region Section data
                 //IRobotLabel sec_label = rbar.GetLabel(IRobotLabelType.I_LT_BAR_SECTION);                

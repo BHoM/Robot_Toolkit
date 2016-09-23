@@ -323,37 +323,6 @@ namespace Robot_Adapter.Structural.Elements
             return true;
         }
    
-        /// <summary>
-        /// Set rigid links by master and slave nodes
-        /// </summary>
-        /// <param name="masterNodeNumber"></param>
-        /// <param name="slaveNodeNumbers"></param>
-        /// <param name="FilePath"></param>
-        /// <returns></returns>
-        public static bool SetRigidLinks(int masterNodeNumber, List<int> slaveNodeNumbers, string FilePath = "LiveLink")
-        {
-            RobotApplication robot = null;
-            if (FilePath == "LiveLink") robot = new RobotApplication();
-
-            RobotSelection slaveNodeSel = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
-            foreach (int slaveNodeNumber in slaveNodeNumbers)
-            {
-                slaveNodeSel.AddOne(slaveNodeNumber);
-            }
-            
-            if (robot.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_NODE_RIGID_LINK, "Rigid") != 1)
-            {
-                IRobotLabel rigidLink = robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_NODE_RIGID_LINK, "Rigid");
-                IRobotNodeRigidLinkData rlinkData = rigidLink.Data;
-                robot.Project.Structure.Labels.Store(rigidLink);
-                rlinkData.RX = true; rlinkData.RY = true; rlinkData.RZ = true; rlinkData.UX = true; rlinkData.UY = true; rlinkData.UZ = true;
-             }
-            robot.Project.Structure.Nodes.RigidLinks.Set(masterNodeNumber, slaveNodeSel.ToText(), "Rigid");
-
-
-
-            return true;
-        }
-
+    
     }
 }

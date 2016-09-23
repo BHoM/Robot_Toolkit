@@ -10,6 +10,7 @@ using BHoME = BHoM.Structural.Elements;
 using BHoMP = BHoM.Structural.Properties;
 using BHoML = BHoM.Structural.Loads;
 using BHoM.Structural.Interface;
+using BHoM.Base;
 
 namespace Robot_Adapter.Structural.Interface
 {
@@ -135,6 +136,26 @@ namespace Robot_Adapter.Structural.Interface
         public bool SetGrids(List<BHoME.Grid> grid, out List<string> ids)
         {
             return Elements.GridIO.SetGrids(Robot, grid, out ids);
+        }
+
+        public List<string> GetRigidLinks(out List<BHoME.RigidLink> links, List<string> ids = null)
+        {
+            return Elements.RigidLinkIO.GetRigidLinks(Robot, out links, Selection, ids);
+        }
+
+        public List<string> GetGroups(out List<IGroup> groups, List<string> ids = null)
+        {
+            return Elements.GroupIO.GetGroups(Robot, out groups);
+        }
+
+        public bool SetRigidLinks(List<BHoME.RigidLink> rigidLinks, out List<string> ids)
+        {
+            return Elements.RigidLinkIO.SetRigidLinks(Robot, rigidLinks, out ids);
+        }
+
+        public bool SetGroups(List<IGroup> groups, out List<string> ids)
+        {
+            return Elements.GroupIO.CreateGroups(Robot, groups, out ids);
         }
     }
 }

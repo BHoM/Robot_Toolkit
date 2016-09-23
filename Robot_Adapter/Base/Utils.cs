@@ -15,6 +15,11 @@ namespace Robot_Adapter.Base
     {
         public const string NUM_KEY = "Robot Number";
 
+        public static string GetName(BHoM.Base.BHoMObject obj)
+        {
+            return string.IsNullOrEmpty(obj.Name) ? obj.ToString() : obj.Name;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -57,6 +62,48 @@ namespace Robot_Adapter.Base
             return output;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="selection"></param>
+        /// <returns></returns>
+        public static List<string> GetIdsAsTextFromText(string selection)
+        {
+            List<string> output = new List<string>();
+            string[] numbers = selection.Split(' ');
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                if (numbers[i].Length > 0)
+                {
+                    if (numbers[i].Contains("to"))
+                    {
+                        int increment = 1;
+                        if (numbers[i].Contains("By"))
+                        {
+                            string[] inc = numbers[i].Replace("By", ",").Split(',');
+                            numbers[i] = numbers[i].Replace("By" + inc[1], "");
+
+                            increment = int.Parse(inc[1]);
+                        }
+
+                        string[] range = numbers[i].Replace("to", ",").Split(',');
+                        int startNum = int.Parse(range[0]);
+                        int endNum = int.Parse(range[1]);
+
+                        for (int j = startNum; j <= endNum; j += increment)
+                        {
+                            output.Add(j.ToString());
+                        }
+                    }
+                    else
+                    {
+                        output.Add(numbers[i]);
+                    }
+                }
+            }
+            return output;
+        }
+
         internal static string GetSelectionString(List<int> numbers)
         {
             string selection = "";
@@ -77,15 +124,14 @@ namespace Robot_Adapter.Base
             return selection.Trim();
         }
 
-        internal static string GetSelectionString<T>(List<T> objects) where T : BHoMB.BHoMObject
+        internal static string GetSelectionString<T>(IEnumerable<T> objects) where T : BHoMB.BHoMObject
         {
             string selection = "";
-            for (int i = 0; i < objects.Count; i++)
+            foreach (T obj in objects)
             {
-                selection += objects[i][NUM_KEY] + " ";
+                selection += obj[NUM_KEY] + " ";
             }
             return selection.Trim();
-        }
-
+        }       
     }
 }

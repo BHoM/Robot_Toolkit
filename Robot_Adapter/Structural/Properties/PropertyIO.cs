@@ -344,7 +344,7 @@ namespace Robot_Adapter
                 double ri = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_RI);
                 double s = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_S);
                 double mass = sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_WEIGHT);
-                property = new BHoMP.SectionProperty(GetShapeType(sec_data.ShapeType), d, b, Tw, Tf, r, ri, mass, s);
+                property = new BHoMP.SteelSection(GetShapeType(sec_data.ShapeType), d, b, Tw, Tf, r, ri, mass, s);
             }
 
             property.Orientation += sec_data.GetValue(IRobotBarSectionDataValue.I_BSDV_GAMMA);

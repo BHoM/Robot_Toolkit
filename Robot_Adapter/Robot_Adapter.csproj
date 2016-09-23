@@ -31,9 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BHoM">
-      <HintPath>..\..\BHoM\Build\BHoM.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="BHoM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BHoM\build\BHoM.dll</HintPath>
     </Reference>
     <Reference Include="Interop.RobotOM">
       <HintPath>..\..\..\..\..\..\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2016\System\Exe\Interop.RobotOM.dll</HintPath>
@@ -50,7 +50,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Structural\Elements\GridIO.cs" />
+    <Compile Include="Structural\Elements\GroupIO.cs" />
     <Compile Include="Structural\Elements\LevelIO.cs" />
+    <Compile Include="Structural\Elements\RigidLinkIO.cs" />
     <Compile Include="Structural\Results\NodeResults.cs" />
     <Compile Include="Base\Label.cs" />
     <Compile Include="Structural\Interface\ApplicationAdapter.cs" />

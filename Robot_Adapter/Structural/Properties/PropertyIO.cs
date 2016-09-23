@@ -735,18 +735,18 @@ namespace Robot_Adapter
                             case IRobotBarSectionType.I_BST_NS_L:
                             case IRobotBarSectionType.I_BST_NS_C:
                             case IRobotBarSectionType.I_BST_NS_Z:
-                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B, sectionData[(int)BHD.SteelSectionData.Width - 3]);
-                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H, sectionData[(int)BHD.SteelSectionData.Height - 3] - sectionData[(int)BHD.SteelSectionData.TF1 - 3] - sectionData[(int)BHD.SteelSectionData.TF1 - 3]);
-                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW, sectionData[(int)BHD.SteelSectionData.TW - 3]);
-                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF, sectionData[(int)BHD.SteelSectionData.TF1 - 3]);
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B, sectionData[(int)BHD.SteelSectionData.Width]);
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H, sectionData[(int)BHD.SteelSectionData.Height] - sectionData[(int)BHD.SteelSectionData.TF1] - sectionData[(int)BHD.SteelSectionData.TF1]);
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW, sectionData[(int)BHD.SteelSectionData.TW]);
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF, sectionData[(int)BHD.SteelSectionData.TF1]);
                                 break;
                             case IRobotBarSectionType.I_BST_NS_TUBE:
-                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D, sectionData[(int)BHD.SteelSectionData.Height - 3]);
-                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_T, sectionData[(int)BHD.SteelSectionData.TF1 - 3]);
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D, sectionData[(int)BHD.SteelSectionData.Height]);
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_T, sectionData[(int)BHD.SteelSectionData.TF1]);
                                 break;
                             case IRobotBarSectionType.I_BST_NS_RECT:
-                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B, sectionData[(int)BHD.SteelSectionData.Width - 3]);
-                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H, sectionData[(int)BHD.SteelSectionData.Height - 3]);
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B, sectionData[(int)BHD.SteelSectionData.Width]);
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H, sectionData[(int)BHD.SteelSectionData.Height]);
                                 //nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_T, sectionData[(int)SectionTableColumn.TF1 - 3]);
                                 break;
                         }

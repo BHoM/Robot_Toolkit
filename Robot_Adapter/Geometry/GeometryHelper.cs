@@ -139,14 +139,18 @@ namespace Robot_Adapter.Geometry
                         arc.P1.Set(segments[j].StartPoint.X, segments[j].StartPoint.Y, segments[j].StartPoint.Z);
                         arc.P2.Set(bhomArc.MiddlePoint.X, bhomArc.MiddlePoint.Y, bhomArc.MiddlePoint.Z);
                         arc.P3.Set(segments[j].EndPoint.X, segments[j].EndPoint.Y, segments[j].EndPoint.Z);
+                        contour.Add(segment);
                     }
                     else
                     {
-                        segment = robot.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_SEGMENT_LINE);
-                        segment.P1.Set(segments[j].StartPoint.X, segments[j].StartPoint.Y, segments[j].StartPoint.Z);                        
-                    }
-                    contour.Add(segment);            
-                   
+                        List<Point> pts = segments[j].ControlPoints;
+                        for (int k = 0; k < pts.Count - 1; k++)
+                        {
+                            segment = robot.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_SEGMENT_LINE);
+                            segment.P1.Set(pts[k].X, pts[k].Y, pts[k].Z);
+                            contour.Add(segment);
+                        }
+                    }                          
                 }
                 int counter = segments.Count;            
             }

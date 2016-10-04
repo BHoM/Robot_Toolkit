@@ -193,18 +193,21 @@ namespace Robot_Adapter.Structural.Elements
                         for (int i = 0; i < c.Count; i++)
                         {
                             RobotObjObject rpanel = null;
-                            int panelNum = objServer.FreeNumber;
                             object number = panel[key];
+                            int panelNum = 0;
 
-                            id += " " + panelNum;
-
-                            if (number != null && int.TryParse(number.ToString(), out panelNum))
+                            if (number != null && int.TryParse(number.ToString(), out panelNum) && (int)number > 0)
                             {
                                 id = panelNum.ToString();
                                 if (objServer.Exist(panelNum) == -1)
                                 {
                                     rpanel = objServer.Get(panelNum) as RobotObjObject;
                                 }
+                            }
+                            else
+                            {
+                                panelNum = objServer.FreeNumber;
+                                id += " " + panelNum;
                             }
 
                             if (rpanel == null)

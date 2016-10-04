@@ -196,7 +196,7 @@ namespace Robot_Adapter.Structural.Elements
                             object number = panel[key];
                             int panelNum = 0;
 
-                            if (number != null && int.TryParse(number.ToString(), out panelNum) && (int)number > 0)
+                            if (number != null && int.TryParse(number.ToString(), out panelNum) && panelNum > 0)
                             {
                                 id = panelNum.ToString();
                                 if (objServer.Exist(panelNum) == -1)
@@ -271,6 +271,7 @@ namespace Robot_Adapter.Structural.Elements
                 }
                 catch (Exception ex)
                 {
+                    //string message = ex.Message;
                 }
             }
 

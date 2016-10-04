@@ -146,7 +146,7 @@ namespace Robot_Adapter.Structural.Elements
         /// <param name="filePath"></param>
         /// <returns></returns>
         public static List<string> GetNodes(RobotApplication robot, out List<BHoME.Node> nodeOut, ObjectSelection selectionType, List<string> nodeNumbers = null)
-        {          
+        {
             BHoMB.ObjectManager<string, BHoME.Node>  nodes = new BHoMB.ObjectManager<string, BHoME.Node>(Utils.NUM_KEY, BHoMB.FilterOption.UserData);
 
             BHoMB.ObjectManager<BHoMP.NodeConstraint> constraints = new BHoMB.ObjectManager<BHoMP.NodeConstraint>();
@@ -168,12 +168,21 @@ namespace Robot_Adapter.Structural.Elements
 
             List<string> outIds = new List<string>();
             for (int i = 0; i < collection.Count; i++)
-            {               
+            {
                 RobotNode rnode = (RobotNode)collection.Get(i + 1);
                 outIds.Add(rnode.Number.ToString());
                 BHoME.Node node = new BHoME.Node(rnode.X, rnode.Y, rnode.Z);
-                nodes.Add(rnode.Number.ToString(), node);
+                BHoME.Node existingNode = nodes.TryLookup(rnode.Number.ToString());
 
+                if (existingNode != null)
+                {
+                    existingNode.Point = node.Point;
+                }
+                else
+                {
+                    nodes.Add(rnode.Number.ToString(), node);
+                }
+            
                 if (rnode.HasLabel(IRobotLabelType.I_LT_SUPPORT) != 0)
                 {
                     IRobotLabel supportLabel = rnode.GetLabel(IRobotLabelType.I_LT_SUPPORT);

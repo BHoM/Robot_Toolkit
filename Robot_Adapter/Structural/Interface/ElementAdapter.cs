@@ -157,5 +157,15 @@ namespace Robot_Adapter.Structural.Interface
         {
             return Elements.GroupIO.CreateGroups(Robot, groups, out ids);
         }
+
+        public List<string> GetFEMeshes(out List<BHoME.FEMesh> meshes, List<string> ids = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SetFEMeshes(List<BHoME.FEMesh> meshes, out List<string> ids)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

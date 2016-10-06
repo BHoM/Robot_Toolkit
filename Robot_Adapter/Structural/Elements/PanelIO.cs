@@ -92,18 +92,18 @@ namespace Robot_Adapter.Structural.Elements
                                 property = thicknesses.Add(thickness.Name, PropertyIO.GetThickness(thickness, PropertyIO.GetPanelType(rpanel.StructuralType)));
                             }
                             panel.PanelProperty= property;
-                        }
 
-                        if (rpanel.HasLabel(IRobotLabelType.I_LT_MATERIAL) != 0)
-                        {
-                            material = rpanel.GetLabel(IRobotLabelType.I_LT_MATERIAL);
-                            BHoMM.Material m = materials[material.Name];
-                            if (material == null)
+                            if (panel.PanelProperty != null && rpanel.HasLabel(IRobotLabelType.I_LT_MATERIAL) != 0)
                             {
-                                m = materials.Add(material.Name, PropertyIO.GetMaterial(material));
+                                material = rpanel.GetLabel(IRobotLabelType.I_LT_MATERIAL);
+                                BHoMM.Material m = materials[material.Name];
+                                if (material == null)
+                                {
+                                    m = materials.Add(material.Name, PropertyIO.GetMaterial(material));
+                                }
+                                panel.PanelProperty.Material = m;
                             }
-                            panel.Material = m;
-                        }
+                        }                     
                     }
                 }
             }

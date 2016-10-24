@@ -17,7 +17,7 @@ namespace Robot_Adapter.Structural.Interface
     {
         public bool GetBarForces(List<string> bars, List<string> cases, int divisions, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
         {
-            BHoMBR.ResultServer<BHoMR.BarForce> resultServer = new BHoMBR.ResultServer<BHoMR.BarForce>();
+            BHoMBR.ResultServer<BHoMR.BarForce<int, int, int>> resultServer = new BHoMBR.ResultServer<BHoMR.BarForce<int, int, int>>();
             resultServer.OrderBy = orderBy;
             BarResults.GetBarForces(Robot, resultServer, bars, cases, divisions);
             results = resultServer.LoadData();
@@ -92,7 +92,7 @@ namespace Robot_Adapter.Structural.Interface
                 switch (t)
                 {
                     case BHoM.Base.Results.ResultType.BarForce:
-                        BarResults.GetBarForces(Robot, new BHoMBR.ResultServer<BHoMR.BarForce>(filename, append), null, loadcases, 3);
+                        BarResults.GetBarForces(Robot, new BHoMBR.ResultServer<BHoMR.BarForce<int, int, int>>(filename, append), null, loadcases, 3);
                         break;
                     case BHoM.Base.Results.ResultType.BarStress:
                        // BarResults.GetBarStress(Robot, new BHoMBR.ResultServer<BHoMR.BarStress>(filename), null, loadcases, 3);

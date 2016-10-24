@@ -57,9 +57,10 @@ namespace Robot_Adapter.Structural.Elements
             groups = new List<IGroup>();
             for (int i = (int)IRobotObjectType.I_OT_NODE; i <= (int)IRobotObjectType.I_OT_PANEL; i++)
             {
-                for (int j = 1; j < server.GetCount((IRobotObjectType)i); j++)
+                for (int j = 1; j <= server.GetCount((IRobotObjectType)i); j++)
                 {
                     RobotGroup robotGroup = server.Get((IRobotObjectType)i, j);
+                    
                     string list = robotGroup.SelList;
                     List<string> groupObjectIds = Robot_Adapter.Base.Utils.GetIdsAsTextFromText(list);
 

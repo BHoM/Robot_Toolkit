@@ -25,7 +25,7 @@ namespace Robot_Adapter.Structural.Results
         /// <param name="cases"></param>
         /// <param name="divisions"></param>
         /// <returns></returns>
-        public static bool GetBarForces(RobotApplication RobotApp, ResultServer<BarForce> resultServer, List<string> bars, List<string> cases, int divisions)
+        public static bool GetBarForces(RobotApplication RobotApp, ResultServer<BarForce<int, int, int>> resultServer, List<string> bars, List<string> cases, int divisions)
         {           
             RobotResultQueryParams queryParams = (RobotResultQueryParams)RobotApp.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
 
@@ -60,7 +60,7 @@ namespace Robot_Adapter.Structural.Results
             IRobotResultQueryReturnType ret = IRobotResultQueryReturnType.I_RQRT_MORE_AVAILABLE;
            
             int counter = 0;
-            List<BarForce> barForces = new List<BarForce>();
+            List<BarForce<int, int, int>> barForces = new List<BarForce<int, int, int>>();
             while (ret != IRobotResultQueryReturnType.I_RQRT_DONE)
             {
                 ret = RobotApp.Kernel.Structure.Results.Query(queryParams, rowSet);
@@ -79,7 +79,7 @@ namespace Robot_Adapter.Structural.Results
                     double my = row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MY);
                     double mz = row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MZ);
 
-                    barForces.Add(new BarForce(idBar, idCase, idPoint, divisions, 1, fx, fy, fz, mx, my, mz));
+                    barForces.Add(new BarForce<int, int, int>(idBar, idCase, idPoint, divisions, 1, fx, fy, fz, mx, my, mz));
                     isOk = rowSet.MoveNext();
                     counter++;
 

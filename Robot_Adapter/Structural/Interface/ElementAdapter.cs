@@ -160,12 +160,12 @@ namespace Robot_Adapter.Structural.Interface
 
         public List<string> GetFEMeshes(out List<BHoME.FEMesh> meshes, List<string> ids = null)
         {
-            throw new NotImplementedException();
+            return Structural.Elements.MeshIO.GetMeshes(Robot, out meshes, Selection, ids);
         }
 
         public bool SetFEMeshes(List<BHoME.FEMesh> meshes, out List<string> ids)
         {
-            throw new NotImplementedException();
+            return Elements.MeshIO.CreateMesh(Robot, meshes, out ids);
         }
     }
 }

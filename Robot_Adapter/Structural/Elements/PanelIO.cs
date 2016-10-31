@@ -69,7 +69,7 @@ namespace Robot_Adapter.Structural.Elements
             for (int i = 1; i <= panel_col.Count; i++)
             {
                 RobotObjObject rpanel = (RobotObjObject)panel_col.Get(i);
-
+                
                 IRobotCollection edge_pnt_col = rpanel.Main.DefPoints;
 
                 if (rpanel.Main.GetGeometry().Type == IRobotGeoObjectType.I_GOT_CONTOUR && rpanel.Main.Attribs.Meshed == 1)
@@ -223,18 +223,10 @@ namespace Robot_Adapter.Structural.Elements
                             rpanel.Update();
                             if (i < edgeCount)
                             {
-                                string material = "";
-                                if (panel.Material != null && !addedMaterials.TryGetValue(panel.Material.Name, out material))
-                                {
-                                    PropertyIO.CreateMaterial(robot, panel.Material);
-                                    material = panel.Material.Name;
-                                    addedMaterials.Add(material, material);
-                                }
-
                                 string currentThickness = "";
                                 if (panel.PanelProperty != null && !addedThicknesses.TryGetValue(panel.PanelProperty.Name, out currentThickness))
                                 {
-                                    PropertyIO.CreateThicknessProperty(robot, panel.PanelProperty, panel.Material.Name);
+                                    PropertyIO.CreateThicknessProperty(robot, panel.PanelProperty);
                                     currentThickness = panel.PanelProperty.Name;
                                     addedThicknesses.Add(currentThickness, currentThickness);
                                 }
@@ -246,11 +238,12 @@ namespace Robot_Adapter.Structural.Elements
                                     rpanel.Mesh.Params.SurfaceParams.Generation.ElementSize = 1;
                                     rpanel.Mesh.Params.SurfaceParams.Method.Method = IRobotMeshMethodType.I_MMT_DELAUNAY;
                                     rpanel.Mesh.Params.SurfaceParams.Delaunay.RegularMesh = true;
+                                    
                                     rpanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, currentThickness);
                                 }
 
                                 rpanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, currentThickness);
-                                rpanel.SetLabel(IRobotLabelType.I_LT_MATERIAL, material);
+                                if (panel.Material != null) rpanel.SetLabel(IRobotLabelType.I_LT_MATERIAL, panel.Material.Name);
 
                                 rpanel.Update();
                             }
@@ -280,6 +273,29 @@ namespace Robot_Adapter.Structural.Elements
             robot.Interactive = 1;
             //CreateOpenings(robot, openings, out openingIds);
             return true;
+        }
+
+        public void CreateEmittersOnPanel(int panelNum, int nodeNum)
+        {
+            RobotApplication robot = new RobotApplication();
+
+            RobotObjObject rpanel = robot.Project.Structure.Objects.Get(panelNum) as RobotObjObject;
+
+            rpanel.Main.Attribs.Meshed = 1;
+            rpanel.Mesh.Params.SurfaceParams.Generation.Type = IRobotMeshGenerationType.I_MGT_ELEMENT_SIZE;
+            rpanel.Mesh.Params.SurfaceParams.Generation.ElementSize = 1;
+            rpanel.Mesh.Params.SurfaceParams.Method.Method = IRobotMeshMethodType.I_MMT_DELAUNAY;
+            rpanel.Mesh.Params.SurfaceParams.Delaunay.EmittersUser = true;
+            rpanel.Mesh.Params.SurfaceParams.Delaunay.H0 = 0.3;
+            rpanel.Mesh.Params.SurfaceParams.Delaunay.Q = 1.2;
+
+
+            RobotEmitter emitter = robot.CmpntFactory.Create(IRobotComponentType.I_CT_EMITTER);
+            emitter.H0 = 0.3;
+
+            RobotNode emitterNode = robot.Project.Structure.Objects.Get(nodeNum) as RobotNode;
+            emitterNode.SetEmitter(emitter);
+
         }
 
         /// <summary>

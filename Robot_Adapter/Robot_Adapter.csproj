@@ -52,6 +52,7 @@
     <Compile Include="Structural\Elements\GridIO.cs" />
     <Compile Include="Structural\Elements\GroupIO.cs" />
     <Compile Include="Structural\Elements\LevelIO.cs" />
+    <Compile Include="Structural\Elements\MeshIO.cs" />
     <Compile Include="Structural\Elements\RigidLinkIO.cs" />
     <Compile Include="Structural\Results\NodeResults.cs" />
     <Compile Include="Base\Label.cs" />

@@ -196,7 +196,23 @@ namespace Robot_Adapter.Structural.Elements
                     }
                     str_bar.Spring = spring;
                 }
-              
+
+                if (rbar.TensionCompression == IRobotBarTensionCompression.I_BTC_COMPRESSION_ONLY)
+                {
+                    str_bar.FEAType = BHoME.BarFEAType.CompressionOnly;
+                }
+                else if (rbar.TensionCompression == IRobotBarTensionCompression.I_BTC_TENSION_ONLY)
+                {
+                    str_bar.FEAType = BHoME.BarFEAType.TensionOnly;
+                }
+                else if (rbar.TrussBar)
+                {
+                    str_bar.FEAType = BHoME.BarFEAType.Axial;
+                }      
+                else
+                {
+                    str_bar.FEAType = BHoME.BarFEAType.Flexural;
+                }       
 
                 #region Section data
                 //IRobotLabel sec_label = rbar.GetLabel(IRobotLabelType.I_LT_BAR_SECTION);                
@@ -440,6 +456,19 @@ namespace Robot_Adapter.Structural.Elements
 
                 robotBar.Gamma = bar.OrientationAngle * 180 / Math.PI;
                 robotBar.StructuralType = GetStructuralType(bar.StructuralUsage);
+
+                switch (bar.FEAType)
+                {
+                    case BHoME.BarFEAType.CompressionOnly:
+                        robotBar.TensionCompression = IRobotBarTensionCompression.I_BTC_COMPRESSION_ONLY;
+                        break;
+                    case BHoM.Structural.Elements.BarFEAType.TensionOnly:
+                        robotBar.TensionCompression = IRobotBarTensionCompression.I_BTC_TENSION_ONLY;
+                        break;
+                    case BHoM.Structural.Elements.BarFEAType.Axial:
+                        robotBar.TrussBar = true;
+                        break;
+                }
 
                 string material = "";
                 if (bar.Material != null && !addedMaterials.TryGetValue(bar.Material.Name, out material))

@@ -112,7 +112,6 @@ namespace Robot_Adapter.Structural.Elements
             return outIds;
         }
 
-
         /// <summary>
         /// Get contour geometry from Robot using the COM interface
         /// </summary>
@@ -289,13 +288,11 @@ namespace Robot_Adapter.Structural.Elements
             rpanel.Mesh.Params.SurfaceParams.Delaunay.H0 = 0.3;
             rpanel.Mesh.Params.SurfaceParams.Delaunay.Q = 1.2;
 
-
             RobotEmitter emitter = robot.CmpntFactory.Create(IRobotComponentType.I_CT_EMITTER);
             emitter.H0 = 0.3;
 
             RobotNode emitterNode = robot.Project.Structure.Objects.Get(nodeNum) as RobotNode;
             emitterNode.SetEmitter(emitter);
-
         }
 
         /// <summary>
@@ -308,7 +305,6 @@ namespace Robot_Adapter.Structural.Elements
         public static bool CreateOpenings(RobotApplication robot, List<BHoME.Opening> panels, out List<string> ids)
         {
             string key = Utils.NUM_KEY;
-
 
             robot.Interactive = 0;
             robot.Project.Structure.Objects.BeginMultiOperation();
@@ -374,24 +370,24 @@ namespace Robot_Adapter.Structural.Elements
             for (int i = 0; i < PanelNumbers.Count; i++)
             {
                 RobotSelection selection = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_OBJECT);
-                 selection.AddOne(PanelNumbers[i]);
+                selection.AddOne(PanelNumbers[i]);
                 RobotObjObject rpanel = (RobotObjObject)robot.Project.Structure.Objects.Get(PanelNumbers[i]);
 
-               // if (rpanel.Main.GetGeometry().Type == IRobotGeoObjectType.I_GOT_CONTOUR)
+                // if (rpanel.Main.GetGeometry().Type == IRobotGeoObjectType.I_GOT_CONTOUR)
                 //{
-                    IRobotGeoContour contourGeometry = (IRobotGeoContour)rpanel.Main.GetGeometry();
-                    contourGeometry.Clear();
-                    
-                    for (int j = 0; j < EdgePointCoords[i].GetLength(0); j++)
-                    {
-                        RobotGeoSegment segment = new RobotGeoSegment();
-                        segment.P1.Set(EdgePointCoords[i][j, 0], EdgePointCoords[i][j, 1], EdgePointCoords[i][j, 2]);
-                        contourGeometry.Add(segment);
-                    }
-                    contourGeometry.Initialize();
-                    rpanel.Initialize();
-               // }
-         
+                IRobotGeoContour contourGeometry = (IRobotGeoContour)rpanel.Main.GetGeometry();
+                contourGeometry.Clear();
+
+                for (int j = 0; j < EdgePointCoords[i].GetLength(0); j++)
+                {
+                    RobotGeoSegment segment = new RobotGeoSegment();
+                    segment.P1.Set(EdgePointCoords[i][j, 0], EdgePointCoords[i][j, 1], EdgePointCoords[i][j, 2]);
+                    contourGeometry.Add(segment);
+                }
+                contourGeometry.Initialize();
+                rpanel.Initialize();
+                // }
+
             }
             robot.Project.Structure.Objects.EndMultiOperation();
             return true;
@@ -411,7 +407,5 @@ namespace Robot_Adapter.Structural.Elements
 
             robot.Project.Structure.Bars.DeleteMany(sel);
         }
-
-
     }
 }

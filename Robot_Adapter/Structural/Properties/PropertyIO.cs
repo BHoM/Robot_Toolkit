@@ -280,7 +280,7 @@ namespace Robot_Adapter
                     case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_RECT:
                         h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_H);
                         b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_B);
-                        property = BHoMP.SectionProperty.CreateRectangularSection(h, b);
+                        property = BHoMP.SectionProperty.CreateRectangularSection(MaterialType.Concrete, h, b);
                         break;
                     case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_I:
                         b1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B1);
@@ -289,26 +289,26 @@ namespace Robot_Adapter
                         T3 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF2);
                         h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_H);
                         b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B);
-                        property = BHoMP.SectionProperty.CreateISection(b1, b2, h, T2, T3, b, 0, 0);
+                        property = BHoMP.SectionProperty.CreateISection(MaterialType.Concrete, b1, b2, h, T2, T3, b, 0, 0);
                         break;
                     case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_T:
                         h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_H);
                         b1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_B);
                         T2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_HF);
                         b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_BF);
-                        property = BHoMP.SectionProperty.CreateTee(h, b, T2, b1);
+                        property = BHoMP.SectionProperty.CreateTeeSection(MaterialType.Concrete, h, b, T2, b1);
                         break;
                     case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM:
                         return null;
                     case IRobotBarSectionShapeType.I_BSST_CONCR_COL_C:
                         b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_DE);
                         h = b;
-                        property = BHoMP.SectionProperty.CreateCircularSection(b);
+                        property = BHoMP.SectionProperty.CreateCircularSection(MaterialType.Concrete, b);
                         break;
                     case IRobotBarSectionShapeType.I_BSST_CONCR_COL_R:
                         b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_B);
                         h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H);
-                        property = BHoMP.SectionProperty.CreateRectangularSection(h, b);
+                        property = BHoMP.SectionProperty.CreateRectangularSection(MaterialType.Concrete, h, b);
                         break;
                     case IRobotBarSectionShapeType.I_BSST_CONCR_COL_CQ:
                         //quarter Cirlce de dimeter
@@ -321,7 +321,7 @@ namespace Robot_Adapter
                         h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H);
                         T1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_L1);
                         T2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H1);
-                        property = BHoMP.SectionProperty.CreateAngleSection(h, b, h - T2, b - T1, 0, 0);
+                        property = BHoMP.SectionProperty.CreateAngleSection(MaterialType.Concrete, h, b, h - T2, b - T1, 0, 0);
                         break;
                     case IRobotBarSectionShapeType.I_BSST_CONCR_COL_P:
                         //equal sided polygon de total height n angle
@@ -331,7 +331,7 @@ namespace Robot_Adapter
                         h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H);
                         T1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_L1);
                         T2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H1);
-                        property = BHoMP.SectionProperty.CreateTee(h, b, h - T2, b - 2 * T1);
+                        property = BHoMP.SectionProperty.CreateTeeSection(MaterialType.Concrete, h, b, h - T2, b - 2 * T1);
                         property.Orientation = 180;
                         break;
                     case IRobotBarSectionShapeType.I_BSST_CONCR_COL_Z:
@@ -696,6 +696,7 @@ namespace Robot_Adapter
             #endregion
         }
 
+        /// 
         /// <summary>
         /// Creates a robot bar property from a BHoM section property
         /// </summary>
@@ -970,6 +971,5 @@ namespace Robot_Adapter
                 robot.Project.Structure.Labels.Store(material);
             }
         }
-
     }
 }

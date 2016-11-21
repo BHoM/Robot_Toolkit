@@ -13,6 +13,8 @@ using BHoM.Structural.Loads;
 
 using Robot_Adapter.Structural.Interface;
 using BHoM.Base.Results;
+using Robot_Adapter;
+using RobotOM;
 
 namespace Robot_Test
 {
@@ -20,7 +22,7 @@ namespace Robot_Test
     {
         static void Main(string[] args)
         {
-            CreateLoadcase();
+            PropertyIO.BarPropertiesExample(new RobotApplication(), 5);
         }
         
         private static void CreateLoadcase()

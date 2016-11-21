@@ -30,6 +30,11 @@ namespace Robot_Adapter.Structural.Interface
             throw new NotImplementedException();
         }
 
+        public bool GetBarUtilisation(List<string> bars, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool GetModalResults()
         {
             throw new NotImplementedException();

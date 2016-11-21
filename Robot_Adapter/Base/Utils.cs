@@ -124,12 +124,12 @@ namespace Robot_Adapter.Base
             return selection.Trim();
         }
 
-        internal static string GetSelectionString<T>(IEnumerable<T> objects) where T : BHoMB.BHoMObject
+        internal static string GetSelectionString<T>(IEnumerable<T> objects) where T : BHoMB.IBase
         {
             string selection = "";
             foreach (T obj in objects)
             {
-                selection += obj[NUM_KEY] + " ";
+                selection += obj.CustomData[NUM_KEY] + " ";
             }
             return selection.Trim();
         }       

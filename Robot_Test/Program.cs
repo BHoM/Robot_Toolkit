@@ -22,7 +22,7 @@ namespace Robot_Test
     {
         static void Main(string[] args)
         {
-            PropertyIO.BarPropertiesExample(new RobotApplication(), 5);
+           // PropertyIO.BarPropertiesExample(new RobotApplication(), 5);
         }
         
         private static void CreateLoadcase()

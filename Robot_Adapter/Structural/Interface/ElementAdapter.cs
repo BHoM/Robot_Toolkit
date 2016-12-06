@@ -67,7 +67,7 @@ namespace Robot_Adapter.Structural.Interface
 
         public bool GetLoads(out List<BHoML.ILoad> loads, List<string> ids = null)
         {
-            return Loads.LoadIO.GetLoads(Robot, out loads);
+            return Loads.LoadIO.GetLoads(Robot, null, out loads);
         }
 
         public List<string> GetNodes(out List<BHoME.Node> nodes, List<string> ids = null)

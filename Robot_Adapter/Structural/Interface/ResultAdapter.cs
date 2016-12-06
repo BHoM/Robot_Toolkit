@@ -90,6 +90,16 @@ namespace Robot_Adapter.Structural.Interface
             return true;
         }
 
+        public bool GetSlabReinforcement(List<string> panels, List<string> cases, BHoMBR.ResultOrder orderby, out Dictionary<string, BHoMBR.IResultSet> results)
+        {
+            BHoMBR.ResultServer<BHoMR.SlabReinforcement> resultServer = new BHoMBR.ResultServer<BHoMR.SlabReinforcement>();
+            resultServer.OrderBy = orderby;
+            SlabReinforcementResults.GetSlabReinforcement(Robot, resultServer, panels, cases);
+            results = resultServer.LoadData();
+
+            return true;
+        }
+
         public bool StoreResults(string filename, List<BHoMBR.ResultType> resultTypes, List<string> loadcases, bool append = false)
         {
             foreach (BHoMBR.ResultType t in resultTypes)

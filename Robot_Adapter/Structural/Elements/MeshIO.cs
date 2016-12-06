@@ -24,35 +24,86 @@ namespace Robot_Adapter.Structural.Elements
             RobotObjObjectServer objServer = robot.Project.Structure.Objects;
             RobotFiniteElementServer feServer = robot.Project.Structure.FiniteElems;
             IRobotNumbersArray array = null;
+            IRobotPointsArray ptarray = null;
 
             foreach (BHoME.FEMesh mesh in meshes)
-            {
+            {               
                 RobotObjObject rpanel = null;
                 object number = mesh[key];
                 int panelNum = 0;
 
-                if (NodeIO.CreateNodes(robot, mesh.Nodes, out nodeIds))
+                if (mesh.PanelProperty != null && mesh.PanelProperty is BHoMP.LoadingPanelProperty)
                 {
                     foreach (BHoME.FEFace face in mesh.Faces)
                     {
-                        array = new RobotNumbersArray();
+                        ptarray = new RobotPointsArray();
                         if (face.IsQuad)
                         {
-                            array.SetSize(4);
-                            array.Set(1, int.Parse(mesh.Nodes[face.NodeIndices[0]][key].ToString()));
-                            array.Set(2, int.Parse(mesh.Nodes[face.NodeIndices[1]][key].ToString()));
-                            array.Set(3, int.Parse(mesh.Nodes[face.NodeIndices[2]][key].ToString()));
-                            array.Set(4, int.Parse(mesh.Nodes[face.NodeIndices[3]][key].ToString()));
+                            // Robot Points Array
+                            ptarray.SetSize(4);
+                            ptarray.Set(1, mesh.Nodes[face.NodeIndices[0]].X, mesh.Nodes[face.NodeIndices[0]].Y, mesh.Nodes[face.NodeIndices[0]].Z);
+                            ptarray.Set(2, mesh.Nodes[face.NodeIndices[1]].X, mesh.Nodes[face.NodeIndices[1]].Y, mesh.Nodes[face.NodeIndices[1]].Z);
+                            ptarray.Set(3, mesh.Nodes[face.NodeIndices[2]].X, mesh.Nodes[face.NodeIndices[2]].Y, mesh.Nodes[face.NodeIndices[2]].Z);
+                            ptarray.Set(4, mesh.Nodes[face.NodeIndices[3]].X, mesh.Nodes[face.NodeIndices[3]].Y, mesh.Nodes[face.NodeIndices[3]].Z);
                         }
                         else
                         {
-                            array.SetSize(3);
-                            array.Set(1, int.Parse(mesh.Nodes[face.NodeIndices[0]][key].ToString()));
-                            array.Set(2, int.Parse(mesh.Nodes[face.NodeIndices[1]][key].ToString()));
-                            array.Set(3, int.Parse(mesh.Nodes[face.NodeIndices[2]][key].ToString()));
+                            ptarray.SetSize(3);
+                            ptarray.Set(1, mesh.Nodes[face.NodeIndices[0]].X, mesh.Nodes[face.NodeIndices[0]].Y, mesh.Nodes[face.NodeIndices[0]].Z);
+                            ptarray.Set(1, mesh.Nodes[face.NodeIndices[1]].X, mesh.Nodes[face.NodeIndices[1]].Y, mesh.Nodes[face.NodeIndices[1]].Z);
+                            ptarray.Set(3, mesh.Nodes[face.NodeIndices[2]].X, mesh.Nodes[face.NodeIndices[2]].Y, mesh.Nodes[face.NodeIndices[2]].Z);
                         }
-                        feIds.Add(feServer.FreeNumber);
-                        feServer.Create(feIds[feIds.Count - 1], array);
+
+                        RobotPointsArray ptArray = ptarray as RobotPointsArray;
+                        panelNum = objServer.FreeNumber;
+                        objServer.CreateContour(panelNum, ptArray);
+                        rpanel = objServer.Get(panelNum) as RobotObjObject;
+
+                        BHoMP.LoadingPanelProperty loadProp = mesh.PanelProperty as BHoMP.LoadingPanelProperty;
+
+                        if (loadProp.LoadApplication == BHoMP.LoadPanelSupportConditions.AllSides)
+                        {
+                            rpanel.SetLabel(IRobotLabelType.I_LT_CLADDING, "Two-way");
+                        }
+                        if (loadProp.LoadApplication == BHoMP.LoadPanelSupportConditions.TwoSides && loadProp.ReferenceEdge % 2 == 1)
+                        {
+                            rpanel.SetLabel(IRobotLabelType.I_LT_CLADDING, "One-way X");
+                        }
+                        if (loadProp.LoadApplication == BHoMP.LoadPanelSupportConditions.TwoSides && loadProp.ReferenceEdge % 2 == 0)
+                        {
+                            rpanel.SetLabel(IRobotLabelType.I_LT_CLADDING, "One-way Y");
+                        }
+                        rpanel.Update();
+                    }
+                }
+
+                else
+                {
+                    if (NodeIO.CreateNodes(robot, mesh.Nodes, out nodeIds))
+                    {
+                        foreach (BHoME.FEFace face in mesh.Faces)
+                        {
+                            array = new RobotNumbersArray();
+                            if (face.IsQuad)
+                            {
+                                // Robot Numbers Array
+                                array.SetSize(4);
+                                array.Set(1, int.Parse(mesh.Nodes[face.NodeIndices[0]][key].ToString()));
+                                array.Set(2, int.Parse(mesh.Nodes[face.NodeIndices[1]][key].ToString()));
+                                array.Set(3, int.Parse(mesh.Nodes[face.NodeIndices[2]][key].ToString()));
+                                array.Set(4, int.Parse(mesh.Nodes[face.NodeIndices[3]][key].ToString()));
+                            }
+                            else
+                            {
+                                array.SetSize(3);
+                                array.Set(1, int.Parse(mesh.Nodes[face.NodeIndices[0]][key].ToString()));
+                                array.Set(2, int.Parse(mesh.Nodes[face.NodeIndices[1]][key].ToString()));
+                                array.Set(3, int.Parse(mesh.Nodes[face.NodeIndices[2]][key].ToString()));
+                            }
+
+                            feIds.Add(feServer.FreeNumber);
+                            feServer.Create(feIds[feIds.Count - 1], array);
+                        }
                     }
 
                     if (number != null && int.TryParse(number.ToString(), out panelNum) && panelNum > 0)
@@ -82,18 +133,32 @@ namespace Robot_Adapter.Structural.Elements
                             if (!string.IsNullOrEmpty(calcModel)) rpanel.SetLabel(IRobotLabelType.I_LT_PANEL_CALC_MODEL, calcModel);
                         }
                     }
-                    else
-                    {
-                        panelNum = objServer.FreeNumber;
+                    else if (mesh.PanelProperty != null && mesh.PanelProperty is BHoMP.ConstantThickness)
+                    {                        
+                            panelNum = objServer.FreeNumber;
+                            objServer.CreateOnFiniteElems(Utils.GetSelectionString(feIds), panelNum);
+                            rpanel = objServer.Get(panelNum) as RobotObjObject;
 
-                        objServer.CreateOnFiniteElems(Utils.GetSelectionString(feIds), panelNum);
-                        rpanel = objServer.Get(panelNum) as RobotObjObject;
-                        PropertyIO.CreateThicknessProperty(robot, mesh.PanelProperty);
-                        rpanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, mesh.PanelProperty.Name);
+                            PropertyIO.CreateThicknessProperty(robot, mesh.PanelProperty);
+                            rpanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, mesh.PanelProperty.Name);                     
                     }
-                    ids.Add(panelNum.ToString());                                       
-                }
+                    string id = panelNum.ToString();
 
+                    ids.Add(id);
+
+
+                    if (!string.IsNullOrEmpty(id))
+                    {
+                        if (mesh.CustomData.ContainsKey(key))
+                        {
+                            mesh.CustomData[key] = id.Trim();
+                        }
+                        else
+                        {
+                            mesh.CustomData.Add(key, id.Trim());
+                        }
+                    }
+                }
             }
             return true;
         }

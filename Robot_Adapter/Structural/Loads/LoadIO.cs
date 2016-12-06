@@ -63,6 +63,14 @@ namespace Robot_Adapter.Structural.Loads
                             loadRecord.SetValue((short)IRobotUniformRecordValues.I_URV_PX, lA.Pressure.X);
                             loadRecord.SetValue((short)IRobotUniformRecordValues.I_URV_PY, lA.Pressure.Y);
                             loadRecord.SetValue((short)IRobotUniformRecordValues.I_URV_PZ, lA.Pressure.Z);
+                            if (lA.Axis == BHoML.LoadAxis.Local)
+                            {
+                                loadRecord.SetValue((short)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM, 1);
+                            }
+                            if (lA.Projected)
+                            {
+                                loadRecord.SetValue((short)IRobotUniformRecordValues.I_URV_PROJECTED, 1);
+                            }                            
                             break;
                         case BHoML.LoadType.AreaTemperature:
                             break;

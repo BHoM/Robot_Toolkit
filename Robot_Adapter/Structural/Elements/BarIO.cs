@@ -490,7 +490,7 @@ namespace Robot_Adapter.Structural.Elements
                 if (bar.Release != null && !addedReleases.TryGetValue(bar.Release.Name, out currentRelease))
                 {
                     CreateRelease(robot, bar.Release);
-                    currentRelease = bar.SectionProperty.Name;
+                    currentRelease = bar.Release.Name;
                     addedReleases.Add(currentRelease, currentRelease);
                 }
 

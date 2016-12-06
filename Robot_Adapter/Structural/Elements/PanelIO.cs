@@ -223,27 +223,49 @@ namespace Robot_Adapter.Structural.Elements
                             if (i < edgeCount)
                             {
                                 string currentThickness = "";
-                                if (panel.PanelProperty != null && !addedThicknesses.TryGetValue(panel.PanelProperty.Name, out currentThickness))
+                                // Claddings
+                                if (panel.PanelProperty != null && panel.PanelProperty is BHoMP.LoadingPanelProperty)
                                 {
-                                    PropertyIO.CreateThicknessProperty(robot, panel.PanelProperty);
-                                    currentThickness = panel.PanelProperty.Name;
-                                    addedThicknesses.Add(currentThickness, currentThickness);
-                                }
+                                    BHoMP.LoadingPanelProperty loadProp = panel.PanelProperty as BHoMP.LoadingPanelProperty;
 
-                                if (!string.IsNullOrEmpty(currentThickness))
+                                    if (loadProp.LoadApplication == BHoMP.LoadPanelSupportConditions.AllSides)
+                                    {
+                                        rpanel.SetLabel(IRobotLabelType.I_LT_CLADDING, "Two-way");             
+                                    }
+                                    if (loadProp.LoadApplication == BHoMP.LoadPanelSupportConditions.TwoSides && loadProp.ReferenceEdge%2 == 0)
+                                    {
+                                        rpanel.SetLabel(IRobotLabelType.I_LT_CLADDING, "One-way X");
+                                    }
+                                    if (loadProp.LoadApplication == BHoMP.LoadPanelSupportConditions.TwoSides && loadProp.ReferenceEdge % 2 == 1)
+                                    {
+                                        rpanel.SetLabel(IRobotLabelType.I_LT_CLADDING, "One-way Y");
+                                    }
+                                }
+                                // Panels
+                                else
                                 {
-                                    rpanel.Main.Attribs.Meshed = 1;
-                                    rpanel.Mesh.Params.SurfaceParams.Generation.Type = IRobotMeshGenerationType.I_MGT_ELEMENT_SIZE;
-                                    rpanel.Mesh.Params.SurfaceParams.Generation.ElementSize = 1;
-                                    rpanel.Mesh.Params.SurfaceParams.Method.Method = IRobotMeshMethodType.I_MMT_DELAUNAY;
-                                    rpanel.Mesh.Params.SurfaceParams.Delaunay.RegularMesh = true;
-                                    
+                                    if (panel.PanelProperty != null && !addedThicknesses.TryGetValue(panel.PanelProperty.Name, out currentThickness))
+                                    {
+                                        PropertyIO.CreateThicknessProperty(robot, panel.PanelProperty);
+                                        currentThickness = panel.PanelProperty.Name;
+                                        addedThicknesses.Add(currentThickness, currentThickness);
+                                    }
+
+                                    if (!string.IsNullOrEmpty(currentThickness))
+                                    {
+                                        rpanel.Main.Attribs.Meshed = 1;
+                                        rpanel.Mesh.Params.SurfaceParams.Generation.Type = IRobotMeshGenerationType.I_MGT_ELEMENT_SIZE;
+                                        rpanel.Mesh.Params.SurfaceParams.Generation.ElementSize = 1;
+                                        rpanel.Mesh.Params.SurfaceParams.Method.Method = IRobotMeshMethodType.I_MMT_DELAUNAY;
+                                        rpanel.Mesh.Params.SurfaceParams.Delaunay.RegularMesh = true;
+
+                                        rpanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, currentThickness);
+                                    }
+
                                     rpanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, currentThickness);
+                                    if (panel.Material != null) rpanel.SetLabel(IRobotLabelType.I_LT_MATERIAL, panel.Material.Name);
+
                                 }
-
-                                rpanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, currentThickness);
-                                if (panel.Material != null) rpanel.SetLabel(IRobotLabelType.I_LT_MATERIAL, panel.Material.Name);
-
                                 rpanel.Update();
                             }
                         }

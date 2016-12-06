@@ -167,5 +167,10 @@ namespace Robot_Adapter.Structural.Interface
         {
             return Elements.MeshIO.CreateMesh(Robot, meshes, out ids);
         }
+        public bool Run()
+        {
+            App.RunCalculations();
+            return true;
+        }
     }
 }

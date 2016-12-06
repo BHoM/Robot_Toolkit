@@ -34,7 +34,7 @@ namespace Robot_Adapter
         /// Stops the Robot calculation engine
         /// </summary>
         /// <param name="FilePath"></param>
-        public static void StopCalculations(string FilePath = "LiveLing")
+        public static void StopCalculations(string FilePath = "LiveLink")
         {
             RobotApplication robot = null;
             if (FilePath == "LiveLink") robot = new RobotApplication();

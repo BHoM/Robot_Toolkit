@@ -308,13 +308,22 @@ namespace Robot_Adapter.Structural.Loads
             BHoMB.BHoMObject loadcase = bhCase as BHoMB.BHoMObject;
             int caseNum = 0;
 
-            if (checkExists && loadcase[Utils.NUM_KEY] == null)
+            if (checkExists && (loadcase[Utils.NUM_KEY] == null && bhCase.Number == 0))
             {
-                caseNum = RobotCaseNumber(robot, loadcase.Name);               
+                caseNum = RobotCaseNumber(robot, loadcase.Name);
+                bhCase.Number = caseNum;
+                loadcase.CustomData.Add(Utils.NUM_KEY, caseNum);
             }
             else if (loadcase[Utils.NUM_KEY] != null)
             {
                 IRobotCase rCase = caseServer.Get(int.Parse(loadcase[Utils.NUM_KEY].ToString()));
+                bhCase.Number = int.Parse(loadcase[Utils.NUM_KEY].ToString());
+                if (rCase != null) return rCase;
+            }
+            else if (bhCase.Number > 0)
+            {
+                IRobotCase rCase = caseServer.Get(bhCase.Number);
+                loadcase.CustomData.Add(Utils.NUM_KEY, bhCase.Number);
                 if (rCase != null) return rCase;
             }
 
@@ -341,6 +350,8 @@ namespace Robot_Adapter.Structural.Loads
                         BHoM.Structural.Loads.LoadCombination combo = loadcase as BHoM.Structural.Loads.LoadCombination;
                         caseNum = combo.Number != 0 ? combo.Number : robot.Project.Structure.Cases.FreeNumber;
 
+                        combo.Number = caseNum;
+
                         RobotCaseCombination cCase = robot.Project.Structure.Cases.CreateCombination(caseNum, loadcase.Name, IRobotCombinationType.I_CBT_ULS, IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_COMB);
                         RobotCaseCollection collection = robot.Project.Structure.Cases.GetAll();
 
@@ -349,8 +360,7 @@ namespace Robot_Adapter.Structural.Loads
                             for (int j = 0; j < combo.LoadFactors.Count; j++)
                             {
                                 IRobotCase c = (collection.Get(combo.Loadcases[j].Number) as IRobotCase);
-                                cCase.CaseFactors.New(c.Number, combo.LoadFactors[j]);
-                                
+                                cCase.CaseFactors.New(c.Number, combo.LoadFactors[j]);                                
                             }
                         }                      
                         
@@ -372,6 +382,11 @@ namespace Robot_Adapter.Structural.Loads
                 addedCases.Add(rCase.Name, rCase.Number);
             }
 
+            cases.Sort(delegate (BHoML.ICase c1, BHoML.ICase c2)
+            {
+                return c1.CaseType.CompareTo(c2.CaseType);
+            });
+
             foreach (BHoML.ICase bhCase in cases)
             {
                 BHoMB.BHoMObject loadcase = bhCase as BHoMB.BHoMObject;
@@ -389,6 +404,7 @@ namespace Robot_Adapter.Structural.Loads
                 {
                     loadcase.CustomData[Utils.NUM_KEY] = robotNumber;
                 }
+                bhCase.Number = robotNumber;
             }
 
             return true;

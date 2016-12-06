@@ -382,7 +382,7 @@ namespace Robot_Adapter.Structural.Loads
         }
 
 
-        public static BHoML.LoadCombination GetLoadCombination(RobotApplication robot, IRobotCase robotCase, BHoMB.ObjectManager<string, BHoML.ICase> caseManager)
+        public static BHoML.LoadCombination GetLoadCombination(RobotApplication robot, IRobotCase robotCase, BHoMB.ObjectManager<int, BHoML.ICase> caseManager)
         {
             if (robotCase.Type == IRobotCaseType.I_CT_COMBINATION)
             {
@@ -393,11 +393,11 @@ namespace Robot_Adapter.Structural.Loads
                 {
                     RobotCaseFactor cF = combo.CaseFactors.Get(i);
                     IRobotCase rCase = robot.Project.Structure.Cases.Get(cF.CaseNumber);
-                    if (caseManager[rCase.Number.ToString()] == null)
+                    if (caseManager[rCase.Number] == null)
                     {
-                        caseManager.Add(rCase.Number.ToString(), GetLoadcase(robot, rCase.Number));
+                        caseManager.Add(rCase.Number, GetLoadcase(robot, rCase.Number));
                     }
-                    caseNames.Add(caseManager[rCase.Number.ToString()]);
+                    caseNames.Add(caseManager[rCase.Number]);
                     factors.Add(cF.Factor);
                 }
 
@@ -419,13 +419,14 @@ namespace Robot_Adapter.Structural.Loads
 
         public static List<string> GetLoadcases(RobotApplication RobotApp, out List<BHoML.ICase> cases)
         {
-            BHoMB.ObjectManager<string, BHoML.ICase> caseManager = new BHoM.Base.ObjectManager<string, BHoML.ICase>(Utils.NUM_KEY, BHoMB.FilterOption.UserData);
+            BHoMB.ObjectManager<int, BHoML.ICase> caseManager = new BHoM.Base.ObjectManager<int, BHoML.ICase>("Number", BHoMB.FilterOption.Property);
             RobotApp.Interactive = 0;
             RobotApp.Project.Structure.Cases.BeginMultiOperation();
             RobotCaseCollection collection = RobotApp.Project.Structure.Cases.GetAll();
             IRobotCase currentCase;
             cases = new List<BHoM.Structural.Loads.ICase>();
             List<string> outIds = new List<string>();
+            List<int> nums = new List<int>();
             for (int i = 1; i <= collection.Count; i++)
             {
                 BHoML.ICase newCase = null;
@@ -434,20 +435,21 @@ namespace Robot_Adapter.Structural.Loads
                 {
                     case IRobotCaseType.I_CT_COMBINATION:
                     case IRobotCaseType.I_CT_CODE_COMBINATION:
-                        caseManager.Add(currentCase.Number.ToString(), GetLoadCombination(RobotApp, currentCase, caseManager));
+                        caseManager.Add(currentCase.Number, GetLoadCombination(RobotApp, currentCase, caseManager));
                         break;
                     case IRobotCaseType.I_CT_MOBILE:
                         continue;
                     case IRobotCaseType.I_CT_SIMPLE:
-                        caseManager.Add(currentCase.Number.ToString(), GetSimpleCase(currentCase));
+                        caseManager.Add(currentCase.Number, GetSimpleCase(currentCase));
                         break;
                 }
                 outIds.Add(currentCase.Number.ToString());
+                nums.Add(currentCase.Number);
             }
             RobotApp.Project.Structure.Cases.EndMultiOperation();
             RobotApp.Interactive = 1;
 
-            cases = caseManager.GetRange(outIds);
+            cases = caseManager.GetRange(nums);
             return outIds;
         }
     }

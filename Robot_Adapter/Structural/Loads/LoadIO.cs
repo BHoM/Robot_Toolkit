@@ -240,8 +240,8 @@ namespace Robot_Adapter.Structural.Loads
                     }
 
                 }
-
             }
+            return true;
         }
 
         internal static IRobotCaseNature GetLoadNature(BHoML.LoadNature nature)
@@ -331,25 +331,26 @@ namespace Robot_Adapter.Structural.Loads
                             caseNum = int.Parse(simpleCase[Utils.NUM_KEY].ToString());
                         }
 
+                        simpleCase.Number = caseNum;
                         caseServer.CreateSimple(caseNum, loadcase.Name, GetLoadNature(simpleCase.Nature), IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
                         break;
                     case BHoML.CaseType.Combination:
-                        //LoadCombination combo = loadcase as LoadCombination;
-                        //RobotCaseCombination cCase = RobotApp.Project.Structure.Cases.CreateCombination(loadcase.Id, loadcase.Name, IRobotCombinationType.I_CBT_ULS, IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_COMB);
-                        //RobotCaseCollection collection = RobotApp.Project.Structure.Cases.GetAll();
+                        BHoM.Structural.Loads.LoadCombination combo = loadcase as BHoM.Structural.Loads.LoadCombination;
+                        caseNum = combo.Number != 0 ? combo.Number : robot.Project.Structure.Cases.FreeNumber;
 
-                        //for (int i = 0; i < combo.LoadFactors.Count; i++)
-                        //{
-                        //    for (int j = 1; j <= collection.Count; j++)
-                        //    {
-                        //        IRobotCase c = (collection.Get(j) as IRobotCase);
-                        //        if (combo.LoadcaseNames[i] == c.Name)
-                        //        {
-                        //            cCase.CaseFactors.New(c.Number, combo.LoadFactors[i]);
-                        //        }
-                        //    }
-                        //}
+                        RobotCaseCombination cCase = robot.Project.Structure.Cases.CreateCombination(caseNum, loadcase.Name, IRobotCombinationType.I_CBT_ULS, IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_COMB);
+                        RobotCaseCollection collection = robot.Project.Structure.Cases.GetAll();
 
+                        if (combo.Loadcases.Count == combo.LoadFactors.Count)
+                        {
+                            for (int j = 0; j < combo.LoadFactors.Count; j++)
+                            {
+                                IRobotCase c = (collection.Get(combo.Loadcases[j].Number) as IRobotCase);
+                                cCase.CaseFactors.New(c.Number, combo.LoadFactors[j]);
+                                
+                            }
+                        }                      
+                        
                         break;
                 }
             }

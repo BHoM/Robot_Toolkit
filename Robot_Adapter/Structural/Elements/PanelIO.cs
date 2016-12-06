@@ -11,6 +11,8 @@ using BHoMP = BHoM.Structural.Properties;
 using BHoMM = BHoM.Materials;
 using Robot_Adapter.Base;
 using BHoM.Structural.Interface;
+using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Robot_Adapter.Structural.Elements
 {
@@ -48,6 +50,7 @@ namespace Robot_Adapter.Structural.Elements
                 robot.Project.Structure.Selections.Get(IRobotObjectType.I_OT_PANEL) :
                 robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_PANEL);
 
+
             if (selection == ObjectSelection.FromInput)
             {
                 panel_sel.FromText(Utils.GetSelectionString(barNumbers));
@@ -69,7 +72,13 @@ namespace Robot_Adapter.Structural.Elements
             for (int i = 1; i <= panel_col.Count; i++)
             {
                 RobotObjObject rpanel = (RobotObjObject)panel_col.Get(i);
-                
+
+                double x = 0;
+                double y = 0;
+                double z = 0;
+
+                rpanel.Main.Attribs.GetDirX(out x, out y, out z);
+
                 IRobotCollection edge_pnt_col = rpanel.Main.DefPoints;
 
                 if (rpanel.Main.GetGeometry().Type == IRobotGeoObjectType.I_GOT_CONTOUR && rpanel.Main.Attribs.Meshed == 1)

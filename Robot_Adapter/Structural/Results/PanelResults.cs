@@ -148,7 +148,7 @@ namespace Robot_Adapter.Structural.Results
                 queryParams.SetParam(IRobotResultParamType.I_RPT_THREAD_COUNT, 4);
                 queryParams.SetParam(IRobotResultParamType.I_RPT_SMOOTHING, IRobotFeResultSmoothing.I_FRS_SMOOTHING_WITHIN_A_PANEL);
                 queryParams.SetParam(IRobotResultParamType.I_RPT_DIR_X_DEFTYPE, IRobotObjLocalXDirDefinitionType.I_OLXDDT_CARTESIAN);
-                queryParams.SetParam(IRobotResultParamType.I_RPT_DIR_X, new double[] { 0, 0, 0 });
+                queryParams.SetParam(IRobotResultParamType.I_RPT_DIR_X, new double[] { 1, 0, 0 });
                 RobotResultRowSet rowSet = new RobotResultRowSet();
                 IRobotResultQueryReturnType ret = IRobotResultQueryReturnType.I_RQRT_MORE_AVAILABLE;           
                 queryParams.SetParam(IRobotResultParamType.I_RPT_LAYER, i);

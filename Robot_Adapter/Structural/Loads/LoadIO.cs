@@ -308,49 +308,29 @@ namespace Robot_Adapter.Structural.Loads
             BHoMB.BHoMObject loadcase = bhCase as BHoMB.BHoMObject;
             int caseNum = 0;
 
-            if (checkExists && (loadcase[Utils.NUM_KEY] == null && bhCase.Number == 0))
+            if (checkExists && bhCase.Number == 0)
             {
                 caseNum = RobotCaseNumber(robot, loadcase.Name);
                 bhCase.Number = caseNum;
-                loadcase.CustomData.Add(Utils.NUM_KEY, caseNum);
-            }
-            else if (loadcase[Utils.NUM_KEY] != null)
-            {
-                IRobotCase rCase = caseServer.Get(int.Parse(loadcase[Utils.NUM_KEY].ToString()));
-                bhCase.Number = int.Parse(loadcase[Utils.NUM_KEY].ToString());
-                if (rCase != null) return rCase;
             }
             else if (bhCase.Number > 0)
             {
                 IRobotCase rCase = caseServer.Get(bhCase.Number);
-                loadcase.CustomData.Add(Utils.NUM_KEY, bhCase.Number);
                 if (rCase != null) return rCase;
             }
 
             if (caseNum <= 0)
             {
+                caseNum = bhCase.Number > 0 ? bhCase.Number : robot.Project.Structure.Cases.FreeNumber;
+                bhCase.Number = caseNum;
                 switch (bhCase.CaseType)
                 {
                     case BHoML.CaseType.Simple:
-                        BHoM.Structural.Loads.Loadcase simpleCase = bhCase as BHoM.Structural.Loads.Loadcase;
-                        if (simpleCase[Utils.NUM_KEY] == null)
-                        {
-                            caseNum = caseServer.FreeNumber;
-                            simpleCase.CustomData.Add(Utils.NUM_KEY, caseNum);
-                        }
-                        else
-                        {
-                            caseNum = int.Parse(simpleCase[Utils.NUM_KEY].ToString());
-                        }
-
-                        simpleCase.Number = caseNum;
+                        BHoM.Structural.Loads.Loadcase simpleCase = bhCase as BHoM.Structural.Loads.Loadcase;                   
                         caseServer.CreateSimple(caseNum, loadcase.Name, GetLoadNature(simpleCase.Nature), IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
                         break;
                     case BHoML.CaseType.Combination:
                         BHoM.Structural.Loads.LoadCombination combo = loadcase as BHoM.Structural.Loads.LoadCombination;
-                        caseNum = combo.Number != 0 ? combo.Number : robot.Project.Structure.Cases.FreeNumber;
-
-                        combo.Number = caseNum;
 
                         RobotCaseCombination cCase = robot.Project.Structure.Cases.CreateCombination(caseNum, loadcase.Name, IRobotCombinationType.I_CBT_ULS, IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_COMB);
                         RobotCaseCollection collection = robot.Project.Structure.Cases.GetAll();
@@ -359,8 +339,7 @@ namespace Robot_Adapter.Structural.Loads
                         {
                             for (int j = 0; j < combo.LoadFactors.Count; j++)
                             {
-                                IRobotCase c = (collection.Get(combo.Loadcases[j].Number) as IRobotCase);
-                                cCase.CaseFactors.New(c.Number, combo.LoadFactors[j]);                                
+                                cCase.CaseFactors.New(combo.Loadcases[j].Number, combo.LoadFactors[j]);                                
                             }
                         }                      
                         
@@ -395,14 +374,6 @@ namespace Robot_Adapter.Structural.Loads
                 {
                     lCase = SetCase(robot, bhCase);
                     robotNumber = lCase.Number;
-                }
-                if (loadcase[Utils.NUM_KEY] == null)
-                {
-                    loadcase.CustomData.Add(Utils.NUM_KEY, robotNumber);
-                }
-                else
-                {
-                    loadcase.CustomData[Utils.NUM_KEY] = robotNumber;
                 }
                 bhCase.Number = robotNumber;
             }

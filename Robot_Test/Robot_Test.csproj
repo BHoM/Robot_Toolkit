@@ -34,9 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BHoM">
+    <Reference Include="BHoM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM\build\BHoM.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Interop.RobotOM">
       <HintPath>..\..\..\..\..\..\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2016\System\Exe\Interop.RobotOM.dll</HintPath>

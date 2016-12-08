@@ -134,6 +134,9 @@ namespace Robot_Adapter.Structural.Interface
                     case BHoMBR.ResultType.PanelStress:
                         PanelResults.GetPanelStress(Robot, new BHoMBR.ResultServer<BHoMR.PanelStress>(filename), null, loadcases);
                         break;
+                    case BHoMBR.ResultType.NodeCoordinates:
+                        NodeResults.GetNodeCoordinates(Robot, new BHoMBR.ResultServer<BHoMR.NodeCoordinates>(filename), null);
+                        break;
 
                 }
             }

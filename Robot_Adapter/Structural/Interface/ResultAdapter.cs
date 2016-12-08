@@ -45,6 +45,16 @@ namespace Robot_Adapter.Structural.Interface
             throw new NotImplementedException();
         }
 
+        public bool GetNodeCoordinates(List<string> nodes, out Dictionary<string, BHoMBR.IResultSet> results)
+        {
+            BHoMBR.ResultServer<BHoMR.NodeCoordinates> resultServer = new BHoMBR.ResultServer<BHoMR.NodeCoordinates>();
+            resultServer.OrderBy = BHoM.Base.Results.ResultOrder.None;
+            NodeResults.GetNodeCoordinates(Robot, resultServer, nodes);
+            results = resultServer.LoadData();
+
+            return true;
+        }
+
         public bool GetNodeDisplacements(List<string> nodes, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
         {
             BHoMBR.ResultServer<BHoMR.NodeDisplacement> resultServer = new BHoMBR.ResultServer<BHoMR.NodeDisplacement>();

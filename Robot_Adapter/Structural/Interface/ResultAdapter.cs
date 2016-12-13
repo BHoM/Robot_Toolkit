@@ -35,6 +35,16 @@ namespace Robot_Adapter.Structural.Interface
             throw new NotImplementedException();
         }
 
+        public bool GetBarCoordinates(List<string> bars, out Dictionary<string, BHoMBR.IResultSet> results)
+        {
+            BHoMBR.ResultServer<BHoMR.BarCoordinates> resultServer = new BHoMBR.ResultServer<BHoMR.BarCoordinates>();
+            resultServer.OrderBy = BHoM.Base.Results.ResultOrder.None;
+            BarResults.GetBarCoordinates(Robot, resultServer, bars);
+            results = resultServer.LoadData();
+
+            return true;
+        }
+
         public bool GetModalResults()
         {
             throw new NotImplementedException();
@@ -137,7 +147,9 @@ namespace Robot_Adapter.Structural.Interface
                     case BHoMBR.ResultType.NodeCoordinates:
                         NodeResults.GetNodeCoordinates(Robot, new BHoMBR.ResultServer<BHoMR.NodeCoordinates>(filename), null);
                         break;
-
+                    case BHoMBR.ResultType.BarCoordinates:
+                        BarResults.GetBarCoordinates(Robot, new BHoMBR.ResultServer<BHoMR.BarCoordinates>(filename), null);
+                        break;
                 }
             }
             return true;

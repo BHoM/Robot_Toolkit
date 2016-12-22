@@ -86,10 +86,10 @@ namespace Robot_Adapter.Structural.Elements
                     outIds.Add(rpanel.Number.ToString());
                     BHoMG.Group<BHoMG.Curve> c = Geometry.GeometryHelper.CGeoObject(rpanel) as BHoMG.Group<BHoMG.Curve>;
                     if (c != null)
-                    {
-                        BHoME.Panel panel = new BHoME.Panel(c);
+                    {                       
                         int panelNum = rpanel.Number;
-                        panels.Add(panelNum.ToString(), panel);
+                        BHoME.Panel panel = panels.Add(panelNum.ToString(), new BHoME.Panel());
+                        panel.External_Contours.AddRange(BHoMG.Curve.Join(c));
 
                         if (rpanel.HasLabel(IRobotLabelType.I_LT_PANEL_THICKNESS) != 0)
                         {

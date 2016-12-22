@@ -127,9 +127,10 @@ namespace Robot_Adapter.Structural.Elements
                 {
                     result_row = row_set.CurrentRow;
                     nod_num = (int)result_row.GetParam(IRobotResultParamType.I_RPT_NODE);
-                    BHoME.Node n = new BHoME.Node((double)row_set.CurrentRow.GetValue(0), (double)row_set.CurrentRow.GetValue(1), (double)row_set.CurrentRow.GetValue(2));
+                    BHoME.Node n = nodes.Add(nod_num, new BHoME.Node());
+                    n.Point = new BHoM.Geometry.Point((double)row_set.CurrentRow.GetValue(0), (double)row_set.CurrentRow.GetValue(1), (double)row_set.CurrentRow.GetValue(2));
                     n.CustomData.Add(Utils.NUM_KEY, nod_num);
-                    nodes.Add(nod_num, n);
+                    
                     kounta++;
                     ok = row_set.MoveNext();
                 }

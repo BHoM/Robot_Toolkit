@@ -178,6 +178,7 @@ namespace Robot_Adapter.Structural.Interface
             Robot.Project.CalcEngine.StopCalculation();
         }
 
+
         public bool GetLoads(out List<BHoML.ILoad> loads, List<BHoML.Loadcase> ids = null)
         {
             return Loads.LoadIO.GetLoads(Robot, ids, out loads);

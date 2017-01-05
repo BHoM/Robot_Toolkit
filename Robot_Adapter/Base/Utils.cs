@@ -27,6 +27,7 @@ namespace Robot_Adapter.Base
         /// <returns></returns>
         public static List<int> GetNumbersFromText(string selection)
         {
+            if (selection.Contains("EDGE")) return null;
             List<int> output = new List<int>();
             string[] numbers = selection.Split(' ');
             for (int i = 0; i < numbers.Length; i++)
@@ -69,6 +70,7 @@ namespace Robot_Adapter.Base
         /// <returns></returns>
         public static List<string> GetIdsAsTextFromText(string selection)
         {
+            if (selection.Contains("EDGE")) return null;
             List<string> output = new List<string>();
             string[] numbers = selection.Split(' ');
             for (int i = 0; i < numbers.Length; i++)

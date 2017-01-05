@@ -35,6 +35,16 @@ namespace Robot_Adapter.Structural.Interface
             throw new NotImplementedException();
         }
 
+        public bool GetBarCoordinates(List<string> bars, out Dictionary<string, BHoMBR.IResultSet> results)
+        {
+            BHoMBR.ResultServer<BHoMR.BarCoordinates> resultServer = new BHoMBR.ResultServer<BHoMR.BarCoordinates>();
+            resultServer.OrderBy = BHoM.Base.Results.ResultOrder.None;
+            BarResults.GetBarCoordinates(Robot, resultServer, bars);
+            results = resultServer.LoadData();
+
+            return true;
+        }
+
         public bool GetModalResults()
         {
             throw new NotImplementedException();
@@ -43,6 +53,16 @@ namespace Robot_Adapter.Structural.Interface
         public bool GetNodeAccelerations(List<string> nodes, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
         {
             throw new NotImplementedException();
+        }
+
+        public bool GetNodeCoordinates(List<string> nodes, out Dictionary<string, BHoMBR.IResultSet> results)
+        {
+            BHoMBR.ResultServer<BHoMR.NodeCoordinates> resultServer = new BHoMBR.ResultServer<BHoMR.NodeCoordinates>();
+            resultServer.OrderBy = BHoM.Base.Results.ResultOrder.None;
+            NodeResults.GetNodeCoordinates(Robot, resultServer, nodes);
+            results = resultServer.LoadData();
+
+            return true;
         }
 
         public bool GetNodeDisplacements(List<string> nodes, List<string> cases, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
@@ -124,7 +144,12 @@ namespace Robot_Adapter.Structural.Interface
                     case BHoMBR.ResultType.PanelStress:
                         PanelResults.GetPanelStress(Robot, new BHoMBR.ResultServer<BHoMR.PanelStress>(filename), null, loadcases);
                         break;
-
+                    case BHoMBR.ResultType.NodeCoordinates:
+                        NodeResults.GetNodeCoordinates(Robot, new BHoMBR.ResultServer<BHoMR.NodeCoordinates>(filename), null);
+                        break;
+                    case BHoMBR.ResultType.BarCoordinates:
+                        BarResults.GetBarCoordinates(Robot, new BHoMBR.ResultServer<BHoMR.BarCoordinates>(filename), null);
+                        break;
                 }
             }
             return true;

@@ -147,7 +147,11 @@ namespace Robot_Adapter.Structural.Elements
                     RobotNode n = nodeServer.Get(rbar.EndNode) as RobotNode;
                     n2 = nodes.Add(n.Number, new BHoME.Node(n.X, n.Y, n.Z));
                 }
-                BHoME.Bar str_bar = bars.Add(rbar.Number.ToString(), new BHoME.Bar(n1, n2));
+                BHoME.Bar str_bar = bars.Add(rbar.Number.ToString(), new BHoME.Bar());
+
+                str_bar.StartNode = n1;
+                str_bar.EndNode = n2;
+
                 str_bar.OrientationAngle = rbar.Gamma * Math.PI / 180;
                 str_bar.StructuralUsage = GetStructuralType(rbar.StructuralType);
 

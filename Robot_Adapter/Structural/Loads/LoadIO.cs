@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RobotOM;
 using BHoMG = BHoM.Geometry;
+using BHoME = BHoM.Structural.Elements;
 using BHoML = BHoM.Structural.Loads;
 using BHoMB = BHoM.Base;
 using Robot_Adapter.Base;
@@ -188,7 +189,9 @@ namespace Robot_Adapter.Structural.Loads
 
             RobotCaseCollection collection = robot.Project.Structure.Cases.GetAll();
             Dictionary<string, BHoML.Loadcase> cases = new BHoMB.ObjectFilter<BHoML.Loadcase>(loadcases).ToDictionary<string>("", BHoMB.FilterOption.Name);
-
+            BHoMB.ObjectManager<string, BHoME.Node> nodes = new BHoM.Base.ObjectManager<string, BHoM.Structural.Elements.Node>(Utils.NUM_KEY, BHoM.Base.FilterOption.UserData);
+            BHoMB.ObjectManager<string, BHoME.Bar> bars = new BHoM.Base.ObjectManager<string, BHoM.Structural.Elements.Bar>(Utils.NUM_KEY, BHoM.Base.FilterOption.UserData);
+            BHoMB.ObjectManager<string, BHoME.IAreaElement> panels = new BHoM.Base.ObjectManager<string, BHoM.Structural.Elements.IAreaElement>(Utils.NUM_KEY, BHoM.Base.FilterOption.UserData);
             for (int i = 1; i <= collection.Count; i++)
             {
                 IRobotCase lCase = collection.Get(i) as IRobotCase;
@@ -199,47 +202,77 @@ namespace Robot_Adapter.Structural.Loads
                     {
                         for (int j = 1; j <= sCase.Records.Count; j++)
                         {
-                            IRobotLoadRecord loadRecord = sCase.Records.Get(j);
-                            List<string> objects = loadRecord.Objects != null ? Utils.GetIdsAsTextFromText(loadRecord.Objects.ToText()) : new List<string>();
-                            switch (loadRecord.Type)
+                            try
                             {
-                                case IRobotLoadRecordType.I_LRT_DEAD:
-                                    double dx = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_X);
-                                    double dy = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_Y);
-                                    double dz = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_Z);
-                                    double wS = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_ENTIRE_STRUCTURE);
-                                    double coef = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_COEFF);
-                                    loads.Add(new BHoML.GravityLoad(bhCase, dx * coef, dy * coef, dz * coef));
-                                    break;
-                                case IRobotLoadRecordType.I_LRT_NODE_FORCE:
-                                    double fx = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_FX);
-                                    double fy = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_FY);
-                                    double fz = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_FZ);
-                                    double mx = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_CX);
-                                    double my = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_CY);
-                                    double mz = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_CZ);
-                                    loads.Add(new BHoML.PointForce(bhCase, fx, fy, fz, mx, my, mz));
-                                    break;
-                                case IRobotLoadRecordType.I_LRT_BAR_UNIFORM:
-                                    double px = loadRecord.GetValue((short)IRobotBarUniformRecordValues.I_BURV_PX);
-                                    double py = loadRecord.GetValue((short)IRobotBarUniformRecordValues.I_BURV_PY);
-                                    double pz = loadRecord.GetValue((short)IRobotBarUniformRecordValues.I_BURV_PZ);
-                                    loads.Add(new BHoML.BarUniformlyDistributedLoad(bhCase, px, py, pz));
-                                    break;
-                                case IRobotLoadRecordType.I_LRT_UNIFORM:
-                                    double Px = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PX);
-                                    double Py = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PY);
-                                    double Pz = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PZ);
-                                    loads.Add(new BHoML.AreaUniformalyDistributedLoad(bhCase, Px, Py, Pz));
-                                    break;
-                                case IRobotLoadRecordType.I_LRT_THERMAL:
-                                    double Tx = loadRecord.GetValue((short)IRobotThermalRecordValues.I_TRV_T_1);
-                                    double Ty = loadRecord.GetValue((short)IRobotThermalRecordValues.I_TRV_T_2);
-                                    double Tz = loadRecord.GetValue((short)IRobotThermalRecordValues.I_TRV_T_3);
-                                    loads.Add(new BHoML.BarTemperatureLoad(bhCase, Tx, Ty, Tz));
-                                    break;
+                                IRobotLoadRecord loadRecord = sCase.Records.Get(j);
+                                List<string> objects = loadRecord.Objects != null ? Utils.GetIdsAsTextFromText(loadRecord.Objects.ToText()) : new List<string>();
+                                switch (loadRecord.Type)
+                                {
+                                    case IRobotLoadRecordType.I_LRT_DEAD:
+                                        double dx = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_X);
+                                        double dy = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_Y);
+                                        double dz = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_Z);
+                                        double wS = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_ENTIRE_STRUCTURE);
+                                        double coef = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_COEFF);
+                                        BHoML.Load<BHoMB.BHoMObject> gLoad = new BHoML.GravityLoad(bhCase, dx * coef, dy * coef, dz * coef);
+
+                                        if (wS == 1)
+                                        {
+                                            if (loadRecord.Type == IRobotLoadRecordType.I_LRT_DEAD)
+                                            {
+                                                gLoad.Objects = panels.GetRange(objects).Cast<BHoMB.BHoMObject>().ToList();
+                                            }
+                                            else
+                                            {
+                                                gLoad.Objects = bars.GetRange(objects).Cast<BHoMB.BHoMObject>().ToList();
+                                            }
+                                        }
+
+                                        loads.Add(gLoad);
+                                        break;
+                                    case IRobotLoadRecordType.I_LRT_NODE_FORCE:
+                                        double fx = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_FX);
+                                        double fy = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_FY);
+                                        double fz = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_FZ);
+                                        double mx = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_CX);
+                                        double my = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_CY);
+                                        double mz = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_CZ);
+                                        BHoML.Load<BHoME.Node> nodeForce = new BHoML.PointForce(bhCase, fx, fy, fz, mx, my, mz);
+                                        nodeForce.Objects = nodes.GetRange(objects);
+                                        loads.Add(nodeForce);
+                                        break;
+                                    case IRobotLoadRecordType.I_LRT_BAR_UNIFORM:
+                                        double px = loadRecord.GetValue((short)IRobotBarUniformRecordValues.I_BURV_PX);
+                                        double py = loadRecord.GetValue((short)IRobotBarUniformRecordValues.I_BURV_PY);
+                                        double pz = loadRecord.GetValue((short)IRobotBarUniformRecordValues.I_BURV_PZ);
+
+                                        BHoML.Load<BHoME.Bar> barUDL = new BHoML.BarUniformlyDistributedLoad(bhCase, px, py, pz);
+                                        barUDL.Objects = bars.GetRange(objects);
+                                        loads.Add(barUDL);
+                                        break;
+                                    case IRobotLoadRecordType.I_LRT_UNIFORM:
+                                        double Px = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PX);
+                                        double Py = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PY);
+                                        double Pz = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PZ);
+                                        BHoML.Load<BHoME.IAreaElement> areaUDL = new BHoML.AreaUniformalyDistributedLoad(bhCase, Px, Py, Pz);
+                                        areaUDL.Objects = panels.GetRange(objects);
+                                        loads.Add(areaUDL);
+                                        break;
+                                    case IRobotLoadRecordType.I_LRT_THERMAL:
+                                        double Tx = loadRecord.GetValue((short)IRobotThermalRecordValues.I_TRV_T_1);
+                                        double Ty = loadRecord.GetValue((short)IRobotThermalRecordValues.I_TRV_T_2);
+                                        double Tz = loadRecord.GetValue((short)IRobotThermalRecordValues.I_TRV_T_3);
+                                        BHoML.Load<BHoME.Bar> barTemp = new BHoML.BarTemperatureLoad(bhCase, Tx, Ty, Tz);
+                                        barTemp.Objects = bars.GetRange(objects);
+                                        loads.Add(barTemp);
+                                        break;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
                             }
                         }
+                    
                     }
 
                 }
@@ -382,7 +415,7 @@ namespace Robot_Adapter.Structural.Loads
         }
 
 
-        public static BHoML.LoadCombination GetLoadCombination(RobotApplication robot, IRobotCase robotCase, BHoMB.ObjectManager<string, BHoML.ICase> caseManager)
+        public static BHoML.LoadCombination GetLoadCombination(RobotApplication robot, IRobotCase robotCase, BHoMB.ObjectManager<int, BHoML.ICase> caseManager)
         {
             if (robotCase.Type == IRobotCaseType.I_CT_COMBINATION)
             {
@@ -393,11 +426,11 @@ namespace Robot_Adapter.Structural.Loads
                 {
                     RobotCaseFactor cF = combo.CaseFactors.Get(i);
                     IRobotCase rCase = robot.Project.Structure.Cases.Get(cF.CaseNumber);
-                    if (caseManager[rCase.Number.ToString()] == null)
+                    if (caseManager[rCase.Number] == null)
                     {
-                        caseManager.Add(rCase.Number.ToString(), GetLoadcase(robot, rCase.Number));
+                        caseManager.Add(rCase.Number, GetLoadcase(robot, rCase.Number));
                     }
-                    caseNames.Add(caseManager[rCase.Number.ToString()]);
+                    caseNames.Add(caseManager[rCase.Number]);
                     factors.Add(cF.Factor);
                 }
 
@@ -419,13 +452,14 @@ namespace Robot_Adapter.Structural.Loads
 
         public static List<string> GetLoadcases(RobotApplication RobotApp, out List<BHoML.ICase> cases)
         {
-            BHoMB.ObjectManager<string, BHoML.ICase> caseManager = new BHoM.Base.ObjectManager<string, BHoML.ICase>(Utils.NUM_KEY, BHoMB.FilterOption.UserData);
+            BHoMB.ObjectManager<int, BHoML.ICase> caseManager = new BHoM.Base.ObjectManager<int, BHoML.ICase>("Number", BHoMB.FilterOption.Property);
             RobotApp.Interactive = 0;
             RobotApp.Project.Structure.Cases.BeginMultiOperation();
             RobotCaseCollection collection = RobotApp.Project.Structure.Cases.GetAll();
             IRobotCase currentCase;
             cases = new List<BHoM.Structural.Loads.ICase>();
             List<string> outIds = new List<string>();
+            List<int> nums = new List<int>();
             for (int i = 1; i <= collection.Count; i++)
             {
                 BHoML.ICase newCase = null;
@@ -434,20 +468,21 @@ namespace Robot_Adapter.Structural.Loads
                 {
                     case IRobotCaseType.I_CT_COMBINATION:
                     case IRobotCaseType.I_CT_CODE_COMBINATION:
-                        caseManager.Add(currentCase.Number.ToString(), GetLoadCombination(RobotApp, currentCase, caseManager));
+                        caseManager.Add(currentCase.Number, GetLoadCombination(RobotApp, currentCase, caseManager));
                         break;
                     case IRobotCaseType.I_CT_MOBILE:
                         continue;
                     case IRobotCaseType.I_CT_SIMPLE:
-                        caseManager.Add(currentCase.Number.ToString(), GetSimpleCase(currentCase));
+                        caseManager.Add(currentCase.Number, GetSimpleCase(currentCase));
                         break;
                 }
                 outIds.Add(currentCase.Number.ToString());
+                nums.Add(currentCase.Number);
             }
             RobotApp.Project.Structure.Cases.EndMultiOperation();
             RobotApp.Interactive = 1;
 
-            cases = caseManager.GetRange(outIds);
+            cases = caseManager.GetRange(nums);
             return outIds;
         }
     }

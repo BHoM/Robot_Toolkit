@@ -81,6 +81,54 @@ namespace Robot_Adapter.Structural.Results
 
         }
 
+        internal static void GetNodeCoordinates(RobotApplication robot, ResultServer<NodeCoordinates> resultServer, List<string> nodes)
+        {
+            RobotResultQueryParams result_params = robot.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
+
+            RobotStructure rstructure = robot.Project.Structure;
+            RobotSelection nod_sel = rstructure.Selections.Create(IRobotObjectType.I_OT_NODE);
+            IRobotResultQueryReturnType query_return = default(IRobotResultQueryReturnType);
+
+            if (nodes != null && nodes.Count > 0)
+                nod_sel.FromText(Utils.GetSelectionString(nodes));
+            else
+                nod_sel.FromText("all");
+            result_params.ResultIds.SetSize(3);
+            result_params.ResultIds.Set(1, 0);
+            result_params.ResultIds.Set(2, 1);
+            result_params.ResultIds.Set(3, 2);
+
+            result_params.Selection.Set(IRobotObjectType.I_OT_NODE, nod_sel);
+            result_params.SetParam(IRobotResultParamType.I_RPT_MULTI_THREADS, true);
+            result_params.SetParam(IRobotResultParamType.I_RPT_THREAD_COUNT, 4);
+            query_return = IRobotResultQueryReturnType.I_RQRT_MORE_AVAILABLE;
+            RobotResultRowSet row_set = new RobotResultRowSet();
+            bool ok = false;
+
+            RobotResultRow result_row = default(RobotResultRow);
+            int nod_num = 0;
+            int kounta = 0;
+
+            List<NodeCoordinates> nodeCoords = new List<NodeCoordinates>();
+
+            while (!(query_return == IRobotResultQueryReturnType.I_RQRT_DONE))
+            {
+                query_return = robot.Project.Structure.Results.Query(result_params, row_set);
+                ok = row_set.MoveFirst();
+                while (ok)
+                {
+                    result_row = row_set.CurrentRow;
+                    nod_num = (int)result_row.GetParam(IRobotResultParamType.I_RPT_NODE);
+                    nodeCoords.Add(new NodeCoordinates(nod_num.ToString(), (double)row_set.CurrentRow.GetValue(0), (double)row_set.CurrentRow.GetValue(1), (double)row_set.CurrentRow.GetValue(2)));                  
+                    kounta++;
+                    ok = row_set.MoveNext();
+                }
+                row_set.Clear();
+            }
+            result_params.Reset();
+            resultServer.StoreData(nodeCoords);
+        }  
+
         public static bool GetNodeDisplacements(RobotApplication RobotApp, ResultServer<NodeDisplacement> resultServer, List<string> nodeNumbers, List<string> loadcaseNumber)
         {
             RobotResultQueryParams queryParams = (RobotResultQueryParams)RobotApp.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);

@@ -65,11 +65,6 @@ namespace Robot_Adapter.Structural.Interface
             return Loads.LoadIO.GetLoadcases(Robot, out cases);
         }
 
-        public bool GetLoads(out List<BHoML.ILoad> loads, List<string> ids = null)
-        {
-            return Loads.LoadIO.GetLoads(Robot, null, out loads);
-        }
-
         public List<string> GetNodes(out List<BHoME.Node> nodes, List<string> ids = null)
         {
             return Structural.Elements.NodeIO.GetNodes(Robot, out nodes, Selection, ids);
@@ -169,8 +164,24 @@ namespace Robot_Adapter.Structural.Interface
         }
         public bool Run()
         {
-            App.RunCalculations();
+            Robot.UserControl = true;
+            Robot.Interactive = 1;
+            Robot.Project.CalcEngine.AnalysisParams.IgnoreWarnings = true;
+            Robot.Project.CalcEngine.AnalysisParams.AutoVerification = IRobotStructureAutoVerificationType.I_SAVT_NONE;
+            Robot.Project.CalcEngine.Calculate();
+            Robot.Project.CalcEngine.AutoFreezeResults = false;
             return true;
+        }
+
+        public void StopCalculations()
+        {
+            Robot.Project.CalcEngine.StopCalculation();
+        }
+
+
+        public bool GetLoads(out List<BHoML.ILoad> loads, List<BHoML.Loadcase> ids = null)
+        {
+            return Loads.LoadIO.GetLoads(Robot, ids, out loads);
         }
     }
 }

@@ -456,7 +456,7 @@ namespace Robot_Adapter.Structural.Elements
 
                 robotBar.Gamma = bar.OrientationAngle * 180 / Math.PI;
                 robotBar.StructuralType = GetStructuralType(bar.StructuralUsage);
-
+                
                 switch (bar.FEAType)
                 {
                     case BHoME.BarFEAType.CompressionOnly:
@@ -502,11 +502,20 @@ namespace Robot_Adapter.Structural.Elements
                     addedSprings.Add(elasticGround, elasticGround);
                 }
 
-              
-                robotBar.SetLabel(IRobotLabelType.I_LT_BAR_SECTION, currentSection);
-                robotBar.SetLabel(IRobotLabelType.I_LT_BAR_RELEASE, currentRelease);
-                robotBar.SetLabel(IRobotLabelType.I_LT_BAR_ELASTIC_GROUND, elasticGround);
-                robotBar.SetLabel(IRobotLabelType.I_LT_MATERIAL, material);
+                if (bar.FEAType == BHoME.BarFEAType.TensionOnly)
+                {
+                    robotBar.SetLabel(IRobotLabelType.I_LT_BAR_CABLE, currentSection);
+                    robotBar.SetLabel(IRobotLabelType.I_LT_BAR_RELEASE, currentRelease);
+                    robotBar.SetLabel(IRobotLabelType.I_LT_BAR_ELASTIC_GROUND, elasticGround);
+                    robotBar.SetLabel(IRobotLabelType.I_LT_MATERIAL, material);
+                }
+                else
+                {
+                    robotBar.SetLabel(IRobotLabelType.I_LT_BAR_SECTION, currentSection);
+                    robotBar.SetLabel(IRobotLabelType.I_LT_BAR_RELEASE, currentRelease);
+                    robotBar.SetLabel(IRobotLabelType.I_LT_BAR_ELASTIC_GROUND, elasticGround);
+                    robotBar.SetLabel(IRobotLabelType.I_LT_MATERIAL, material);
+                }
                 ids.Add(barNum.ToString());
             }
             robot.Project.Structure.Bars.EndMultiOperation();

@@ -24,7 +24,8 @@ namespace Robot_Adapter.Structural.Elements
                 IRobotLabel nodeSupport = node.GetLabel(IRobotLabelType.I_LT_SUPPORT);
                 RobotNodeSupportData nodeData = nodeSupport.Data;
 
-                if (!string.IsNullOrEmpty(nodeSupport.Name))
+                //if (!string.IsNullOrEmpty(nodeSupport.Name))
+                if (!nodeSupport.Name.Equals(null))
                 {
                     bool[] data = new bool[6];
                     data[0] = nodeData.UX == -1;
@@ -194,6 +195,11 @@ namespace Robot_Adapter.Structural.Elements
                     }
                     node.Constraint = c;
                 }
+                //else
+                //{
+                //    IRobotLabel suppLabel = rnode.GetLabel(IRobotLabelType.I_LT_SUPPORT);
+                //    e
+                //}
             }
             nodeOut = nodes.GetRange(outIds);
 

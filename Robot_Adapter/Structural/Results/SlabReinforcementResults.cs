@@ -17,7 +17,7 @@ namespace Robot_Adapter.Structural.Results
         {
             IRobotObjObjectServer server = Robot.Project.Structure.Objects;
             
-            RConcrSlabRequiredReinfCalcParams FEParams = new RConcrSlabRequiredReinfCalcParams();
+            //RConcrSlabRequiredReinfCalcParams FEParams = new RConcrSlabRequiredReinfCalcParams();
             RobotFeResultServer feserver = Robot.Project.Structure.Results.FiniteElems;
             //RobotFeResultParams FEParams = new RobotFeResultParams();
             

@@ -88,8 +88,8 @@ namespace Robot_Adapter.Structural.Elements
                     if (c != null)
                     {                       
                         int panelNum = rpanel.Number;
-                        BHoME.Panel panel = panels.Add(panelNum.ToString(), new BHoME.Panel());
-                        panel.External_Contours.AddRange(BHoMG.Curve.Join(c));
+                        BHoME.Panel panel = panels.Add(panelNum.ToString(), new BHoME.Panel(BHoMG.Curve.Join(c)));
+                        //panel.External_Contours.AddRange(BHoMG.Curve.Join(c));
 
                         if (rpanel.HasLabel(IRobotLabelType.I_LT_PANEL_THICKNESS) != 0)
                         {
@@ -112,7 +112,8 @@ namespace Robot_Adapter.Structural.Elements
                                 }
                                 panel.PanelProperty.Material = m;
                             }
-                        }                     
+                        }
+                        panel.CustomData["dirX"] = new BHoMG.Vector(x, y, z);      
                     }
                 }
             }

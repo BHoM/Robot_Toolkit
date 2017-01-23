@@ -53,7 +53,9 @@ namespace Robot_Adapter.Structural.Results
                 RobotObjObject rpanel = (RobotObjObject)panelCollection.Get(i);
                 nodeSelection.FromText(rpanel.Nodes);
                 RobotNodeCollection nodeCollection = (RobotNodeCollection)Robot.Project.Structure.Nodes.GetMany(nodeSelection);
-                
+
+                List<int> coll = Utils.GetNumbersFromText(rpanel.Nodes);
+
                 double x = 0;
                 double y = 0;
                 double z = 0;
@@ -63,29 +65,34 @@ namespace Robot_Adapter.Structural.Results
                 
                 rpanel.Main.Attribs.GetDirX(out x, out y, out z);
                 BHoM.Geometry.Vector dirX = new BHoM.Geometry.Vector(x, y, z);
-                Parallel.For(1, nodeSelection.Count, j =>
-                     {
+
+                for (int j = 0; j < coll.Count; j++)
+                {
+
+                    //Parallel.For(1, nodeSelection.Count, j =>
+                    //{
 
 
-                        //for (int j = 1; j <= nodeSelection.Count; j++)
-                        //{
-                        RobotNode rnode = (RobotNode)nodeCollection.Get(j);
+                    //for (int j = 1; j <= nodeSelection.Count; j++)
+                    //{
+                    //RobotNode rnode = (RobotNode)nodeCollection.Get(j);
 
-                         RobotFeResultReinforcement reinfor = feserver.Reinforcement(rpanel.Number, j);
+                    RobotFeResultReinforcement reinfor = feserver.Reinforcement(rpanel.Number, coll[j]);
 
-                         double axP = reinfor.AX_TOP;
-                         double axM = reinfor.AX_BOTTOM;
-                         double ayP = reinfor.AY_TOP;
-                         double ayM = reinfor.AY_BOTTOM;
-                         
-                         //double axP = Robot.Project.Structure.Results.FiniteElems.Reinforcement(rpanel.Number, j).AX_TOP;
-                         //double axM = Robot.Project.Structure.Results.FiniteElems.Reinforcement(rpanel.Number, j).AX_BOTTOM;
-                         //double ayP = Robot.Project.Structure.Results.FiniteElems.Reinforcement(rpanel.Number, j).AY_TOP;
-                         //double ayM = Robot.Project.Structure.Results.FiniteElems.Reinforcement(rpanel.Number, j).AY_BOTTOM;
+                    double axP = reinfor.AX_TOP;
+                    double axM = reinfor.AX_BOTTOM;
+                    double ayP = reinfor.AY_TOP;
+                    double ayM = reinfor.AY_BOTTOM;
 
-                         reinforcementLevel.Add(new SlabReinforcement(rpanel.Number, rnode.Number, loadcase, timeStep, axP, axM, ayP, ayM));
-                        //}
-                    });
+                    //double axP = Robot.Project.Structure.Results.FiniteElems.Reinforcement(rpanel.Number, j).AX_TOP;
+                    //double axM = Robot.Project.Structure.Results.FiniteElems.Reinforcement(rpanel.Number, j).AX_BOTTOM;
+                    //double ayP = Robot.Project.Structure.Results.FiniteElems.Reinforcement(rpanel.Number, j).AY_TOP;
+                    //double ayM = Robot.Project.Structure.Results.FiniteElems.Reinforcement(rpanel.Number, j).AY_BOTTOM;
+
+                    reinforcementLevel.Add(new SlabReinforcement(rpanel.Number, coll[j], loadcase, timeStep, axP, axM, ayP, ayM));
+                    //}
+                }
+                // });
             }
             Robot.Project.Structure.Objects.EndMultiOperation();
             resultServer.StoreData(reinforcementLevel);

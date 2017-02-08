@@ -79,10 +79,10 @@ namespace Robot_Adapter.Structural.Results
 
                     RobotFeResultReinforcement reinfor = feserver.Reinforcement(rpanel.Number, coll[j]);
 
-                    double axP = reinfor.AX_TOP;
-                    double axM = reinfor.AX_BOTTOM;
-                    double ayP = reinfor.AY_TOP;
-                    double ayM = reinfor.AY_BOTTOM;
+                    double axP = reinfor.AX_TOP * 10000;
+                    double axM = reinfor.AX_BOTTOM * 10000;
+                    double ayP = reinfor.AY_TOP * 10000;
+                    double ayM = reinfor.AY_BOTTOM * 10000;
 
                     //double axP = Robot.Project.Structure.Results.FiniteElems.Reinforcement(rpanel.Number, j).AX_TOP;
                     //double axM = Robot.Project.Structure.Results.FiniteElems.Reinforcement(rpanel.Number, j).AX_BOTTOM;

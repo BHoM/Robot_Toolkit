@@ -95,6 +95,7 @@ namespace Robot_Adapter
                 case BHoMP.ShapeType.Tee:
                     return IRobotBarSectionType.I_BST_NS_T;
                 case BHoMP.ShapeType.Tube:
+                case BHoMP.ShapeType.Cable:
                     return IRobotBarSectionType.I_BST_NS_TUBE;
                 case BHoMP.ShapeType.Polygon:
                     return IRobotBarSectionType.I_BST_NS_POLYGONAL;
@@ -721,10 +722,12 @@ namespace Robot_Adapter
             if (!labelServer.IsUsed(IRobotLabelType.I_LT_BAR_SECTION, sectionProperty.Name))
             {
                 RobotLabel sectionLabel = labelServer.Create(IRobotLabelType.I_LT_BAR_SECTION, sectionProperty.Name) as RobotLabel;
+                RobotLabel cableLabel = labelServer.Create(IRobotLabelType.I_LT_BAR_CABLE, sectionProperty.Name) as RobotLabel;
                 RobotBarSectionData data = sectionLabel.Data;
-                double[] sectionData = null;
 
-                sectionData = sectionProperty.SectionData;
+
+                RobotBarCableData cdata = cableLabel.Data;
+                double[] sectionData = sectionProperty.SectionData;
 
                 if (data.LoadFromDBase(sectionProperty.Name) == 1)
                 {
@@ -763,9 +766,9 @@ namespace Robot_Adapter
                                 nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW, sectionData[(int)BHD.SteelSectionData.TW]);
                                 nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF, sectionData[(int)BHD.SteelSectionData.TF1]);
                                 break;
-                            case IRobotBarSectionType.I_BST_NS_TUBE:
-                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D, sectionData[(int)BHD.SteelSectionData.Height]);
-                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_T, sectionData[(int)BHD.SteelSectionData.TF1]);
+                            case IRobotBarSectionType.I_BST_NS_TUBE:                                                  
+                                    nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D, sectionData[(int)BHD.SteelSectionData.Height]);
+                                    nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_T, sectionData[(int)BHD.SteelSectionData.TF1]);                               
                                 break;
                             case IRobotBarSectionType.I_BST_NS_RECT:
                                 nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B, sectionData[(int)BHD.SteelSectionData.Width]);
@@ -877,6 +880,25 @@ namespace Robot_Adapter
                     nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H, sectionProperty.TotalDepth);
                     data.CalcNonstdGeometry();
                     labelServer.Store(sectionLabel);
+                }
+                else if (matType == MaterialType.Cable)
+                {
+                    if (sectionProperty.Shape == BHoMP.ShapeType.Cable)
+                    {
+                        cdata.MaterialName = matType.ToString();
+                        //data.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, sectionData[(int)BHD.CableSectionData.A]);
+                        //data.SetValue(IRobotBarSectionDataValue.I_BSDV_VPY, 1);
+                        //data.SetValue(IRobotBarSectionDataValue.I_BSDV_VPZ, 1);
+                        //data.SetValue(IRobotBarSectionDataValue.I_BSDV_VY, 1);
+                        //data.SetValue(IRobotBarSectionDataValue.I_BSDV_VZ, 1);
+                        //data.SetValue(IRobotBarSectionDataValue.)
+                        //data.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, 21);
+                        //IRobotBarCableData cabledata;
+                        cdata.SectionAX = sectionData[(int)BHD.CableSectionData.A];
+                        //cabledata.SectionAX
+                        //cabledata.AssemblingParamValue(IRobotBarCableAssemblingParamType.I_BCAPT_FORCE_FO
+                    }
+                    labelServer.Store(cableLabel);
                 }
                 else
                 {

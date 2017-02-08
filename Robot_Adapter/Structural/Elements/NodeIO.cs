@@ -24,7 +24,8 @@ namespace Robot_Adapter.Structural.Elements
                 IRobotLabel nodeSupport = node.GetLabel(IRobotLabelType.I_LT_SUPPORT);
                 RobotNodeSupportData nodeData = nodeSupport.Data;
 
-                if (!string.IsNullOrEmpty(nodeSupport.Name))
+                //if (!string.IsNullOrEmpty(nodeSupport.Name))
+                if (!nodeSupport.Name.Equals(null))
                 {
                     bool[] data = new bool[6];
                     data[0] = nodeData.UX == -1;
@@ -127,8 +128,8 @@ namespace Robot_Adapter.Structural.Elements
                 {
                     result_row = row_set.CurrentRow;
                     nod_num = (int)result_row.GetParam(IRobotResultParamType.I_RPT_NODE);
-                    BHoME.Node n = nodes.Add(nod_num, new BHoME.Node());
-                    n.Point = new BHoM.Geometry.Point((double)row_set.CurrentRow.GetValue(0), (double)row_set.CurrentRow.GetValue(1), (double)row_set.CurrentRow.GetValue(2));
+                    BHoME.Node n = nodes.Add(nod_num, new BHoME.Node((double)row_set.CurrentRow.GetValue(0), (double)row_set.CurrentRow.GetValue(1), (double)row_set.CurrentRow.GetValue(2)));
+                    //n.Point = new BHoM.Geometry.Point((double)row_set.CurrentRow.GetValue(0), (double)row_set.CurrentRow.GetValue(1), (double)row_set.CurrentRow.GetValue(2));
                     n.CustomData.Add(Utils.NUM_KEY, nod_num);
                     
                     kounta++;
@@ -195,6 +196,11 @@ namespace Robot_Adapter.Structural.Elements
                     }
                     node.Constraint = c;
                 }
+                //else
+                //{
+                //    IRobotLabel suppLabel = rnode.GetLabel(IRobotLabelType.I_LT_SUPPORT);
+                //    e
+                //}
             }
             nodeOut = nodes.GetRange(outIds);
 

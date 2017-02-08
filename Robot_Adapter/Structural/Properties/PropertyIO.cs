@@ -722,9 +722,27 @@ namespace Robot_Adapter
             {
                 RobotLabel sectionLabel = labelServer.Create(IRobotLabelType.I_LT_BAR_SECTION, sectionProperty.Name) as RobotLabel;
                 RobotBarSectionData data = sectionLabel.Data;
-                double[] sectionData = sectionProperty.SectionData;
+                double[] sectionData = null;
+
+                sectionData = sectionProperty.SectionData;
+
                 if (data.LoadFromDBase(sectionProperty.Name) == 1)
                 {
+                    labelServer.Store(sectionLabel);
+                }
+                else if (sectionProperty is BHoMP.ExplicitSectionProperty)
+                {
+                    BHoMP.ExplicitSectionProperty explicitSection = sectionProperty as BHoMP.ExplicitSectionProperty;
+                    if (material != null) data.MaterialName = material.Name;
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, explicitSection.GrossArea);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_IX, explicitSection.J);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_IY, explicitSection.Iy);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_IZ, explicitSection.Iz);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_VY, explicitSection.Vy);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_VZ, explicitSection.Vz);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_VPY, explicitSection.Vpy);
+                    data.SetValue(IRobotBarSectionDataValue.I_BSDV_VPZ, explicitSection.Vpz);
+                    
                     labelServer.Store(sectionLabel);
                 }
                 else if (matType == MaterialType.Steel)
@@ -767,18 +785,7 @@ namespace Robot_Adapter
                         data.SetValue(IRobotBarSectionDataValue.I_BSDV_GAMMA, sectionProperty.Orientation);
                         data.CalcNonstdGeometry();
                     }
-                    else
-                    {
-                        data.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, sectionProperty.GrossArea);
-                        data.SetValue(IRobotBarSectionDataValue.I_BSDV_IX, sectionProperty.J);
-                        data.SetValue(IRobotBarSectionDataValue.I_BSDV_IY, sectionProperty.Ix);
-                        data.SetValue(IRobotBarSectionDataValue.I_BSDV_IZ, sectionProperty.Iy);
-                        data.SetValue(IRobotBarSectionDataValue.I_BSDV_VY, sectionProperty.Vx);
-                        data.SetValue(IRobotBarSectionDataValue.I_BSDV_VZ, sectionProperty.Vy);
-                        data.SetValue(IRobotBarSectionDataValue.I_BSDV_VPY, sectionProperty.Vpx);
-                        data.SetValue(IRobotBarSectionDataValue.I_BSDV_VPZ, sectionProperty.Vpy);
-                    }
-
+                   
                     labelServer.Store(sectionLabel);
                 }
                 else if (matType == MaterialType.Concrete && !isColumn)

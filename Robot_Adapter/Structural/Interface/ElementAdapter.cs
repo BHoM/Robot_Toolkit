@@ -82,7 +82,7 @@ namespace Robot_Adapter.Structural.Interface
 
         public List<string> GetOpenings(out List<BHoME.Opening> opening, List<string> ids = null)
         {
-            throw new NotImplementedException();
+            return Structural.Elements.PanelIO.GetOpenings(Robot, out opening, Selection, ids);
         }
 
         public bool SetNodes(List<BHoME.Node> nodes, out List<string> ids)

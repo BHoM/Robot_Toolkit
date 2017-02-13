@@ -123,6 +123,66 @@ namespace Robot_Adapter.Structural.Elements
         }
 
         /// <summary>
+        /// Get panel objects from Robot using the COM interface
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="coords"></param>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
+        public static List<string> GetOpenings(RobotApplication robot, out List<BHoME.Opening> outputBars, ObjectSelection selection, List<string> barNumbers = null)
+        {
+            BHoMB.ObjectManager<string, BHoME.Opening> panels = new BHoMB.ObjectManager<string, BHoME.Opening>(Utils.NUM_KEY, BHoMB.FilterOption.UserData);
+         
+            RobotSelection panel_sel = selection == ObjectSelection.Selected ?
+                robot.Project.Structure.Selections.Get(IRobotObjectType.I_OT_GEOMETRY) :
+                robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_GEOMETRY);
+
+
+            if (selection == ObjectSelection.FromInput)
+            {
+                panel_sel.FromText(Utils.GetSelectionString(barNumbers));
+            }
+            else if (selection == ObjectSelection.All)
+            {
+                panel_sel.FromText("all");
+            }
+
+            IRobotCollection panel_col = robot.Project.Structure.Objects.GetMany(panel_sel);
+
+            panel_sel = null;
+            outputBars = new List<BHoME.Opening>();
+            robot.Project.Structure.Objects.BeginMultiOperation();
+            List<string> outIds = new List<string>();
+
+            for (int i = 1; i <= panel_col.Count; i++)
+            {
+                RobotObjObject rpanel = (RobotObjObject)panel_col.Get(i);
+
+                double x = 0;
+                double y = 0;
+                double z = 0;
+
+                rpanel.Main.Attribs.GetDirX(out x, out y, out z);
+                
+                if (rpanel.Main.GetGeometry().Type == IRobotGeoObjectType.I_GOT_CONTOUR && rpanel.Main.Attribs.Meshed != 1)
+                {
+                    outIds.Add(rpanel.Number.ToString());
+                    BHoMG.Group<BHoMG.Curve> c = Geometry.GeometryHelper.CGeoObject(rpanel) as BHoMG.Group<BHoMG.Curve>;
+                    if (c != null)
+                    {
+                        int panelNum = rpanel.Number;
+                        BHoME.Opening panel = panels.Add(panelNum.ToString(), new BHoME.Opening(new BHoMG.Group<BHoMG.Curve>(BHoMG.Curve.Join(c))));
+                        //panel.External_Contours.AddRange(BHoMG.Curve.Join(c));                        
+                    }
+                }
+            }
+
+            outputBars = panels.GetRange(outIds);
+            return outIds;
+        }
+
+
+        /// <summary>
         /// Get contour geometry from Robot using the COM interface
         /// </summary>
         /// <param name="ids"></param>

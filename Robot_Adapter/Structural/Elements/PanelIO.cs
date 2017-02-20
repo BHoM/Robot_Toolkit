@@ -137,7 +137,6 @@ namespace Robot_Adapter.Structural.Elements
                 robot.Project.Structure.Selections.Get(IRobotObjectType.I_OT_GEOMETRY) :
                 robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_GEOMETRY);
 
-
             if (selection == ObjectSelection.FromInput)
             {
                 panel_sel.FromText(Utils.GetSelectionString(barNumbers));

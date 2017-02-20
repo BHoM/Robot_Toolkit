@@ -10,6 +10,7 @@ using BHoMBR = BHoM.Base.Results;
 using Robot_Adapter.Base;
 using Robot_Adapter.Structural.Results;
 using BHoM.Structural.Interface;
+using BHoM.Databases;
 
 namespace Robot_Adapter.Structural.Interface
 {
@@ -153,6 +154,16 @@ namespace Robot_Adapter.Structural.Interface
                 }
             }
             return true;
+        }
+
+        public bool GetBarStresses(List<string> bars, List<string> cases, int divisions, BHoMBR.ResultOrder orderBy, out Dictionary<string, BHoMBR.IResultSet> results)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool PushToDataBase(IDatabaseAdapter dbAdapter, List<BHoMBR.ResultType> resultTypes, List<string> loadcases, string key, bool append = false)
+        {
+            throw new NotImplementedException();
         }
     }
 }

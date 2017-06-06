@@ -208,7 +208,7 @@ namespace Robot_Adapter.Structural.Results
             foreach (object[] data in panelStress.Values)
             {
                 PanelStress pS = new PanelStress();
-                pS.Data = data;
+                pS.SetData(data);
                 stress.Add(pS);
             }
 

@@ -994,7 +994,7 @@ namespace Robot_Adapter
                 materialData.E = m.YoungsModulus;
                 materialData.Kirchoff = m.ShearModulus;
                 materialData.LX = m.CoeffThermalExpansion;
-                materialData.RO = m.Density;
+                materialData.RO = m.Weight * 1000;
                 materialData.NU = m.PoissonsRatio;
                 materialData.Type = GetMaterialType(m.Type);
                 robot.Project.Structure.Labels.Store(material);

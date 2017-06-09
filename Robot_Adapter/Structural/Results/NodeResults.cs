@@ -65,7 +65,7 @@ namespace Robot_Adapter.Structural.Results
                     double my = row.GetValue((int)IRobotExtremeValueType.I_EVT_REACTION_MY);
                     double mz = row.GetValue((int)IRobotExtremeValueType.I_EVT_REACTION_MZ);
 
-                    nodeForces.Add(new NodeReaction(idnode, idCase, 1, fx, fy, fz, mx, my, mz));
+                    nodeForces.Add(new NodeReaction(idnode.ToString(), idCase.ToString(),""+ 1, fx, fy, fz, mx, my, mz));
                     isOk = rowSet.MoveNext();
                     counter++;
 
@@ -181,7 +181,7 @@ namespace Robot_Adapter.Structural.Results
                     double my = row.GetValue((int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_RY);
                     double mz = row.GetValue((int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_RZ);
 
-                    nodeForces.Add(new NodeDisplacement(idnode, idCase, 1, fx, fy, fz, mx, my, mz));
+                    nodeForces.Add(new NodeDisplacement(idnode.ToString(), idCase.ToString(), "" + 1, fx, fy, fz, mx, my, mz));
                     isOk = rowSet.MoveNext();
                     counter++;
 

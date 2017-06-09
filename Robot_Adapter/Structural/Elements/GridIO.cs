@@ -42,37 +42,44 @@ namespace Robot_Adapter.Structural.Elements
             });
             for (int i = 0; i < grid.Count; i++)
             {
-                if (Math.Abs(grid[i].Plane.Normal.X) >= 0.99)
+                try
                 {
-                    if (xCounter == 1)
+                    if (Math.Abs(grid[i].Plane.Normal.X) >= 0.99)
                     {
-                        cartesianGrid.X.StartPosition = grid[i].Plane.Origin.X;
-                        xPrevious = grid[i].Plane.Origin.X;
-                        xCounter++;
-                        xLabel = grid[i].Name;
+                        if (xCounter == 1)
+                        {
+                            cartesianGrid.X.StartPosition = grid[i].Plane.Origin.X;
+                            xPrevious = grid[i].Plane.Origin.X;
+                            xCounter++;
+                            xLabel = grid[i].Name;
+                        }
+                        else
+                        {
+                            cartesianGrid.X.AddSequence(grid[i].Plane.Origin.X - xPrevious, 1);
+                            cartesianGrid.X.SetAxisLabel(xCounter++, grid[i].Name);
+                            xPrevious = grid[i].Plane.Origin.X;
+                        }
                     }
-                    else
+                    else if (Math.Abs(grid[i].Plane.Normal.Y) >= 0.99)
                     {
-                        cartesianGrid.X.AddSequence(grid[i].Plane.Origin.X - xPrevious, 1);
-                        cartesianGrid.X.SetAxisLabel(xCounter++, grid[i].Name);
-                        xPrevious = grid[i].Plane.Origin.X;
+                        if (yCounter == 1)
+                        {
+                            cartesianGrid.Y.StartPosition = grid[i].Plane.Origin.Y;
+                            yPrevious = grid[i].Plane.Origin.Y;
+                            yCounter++;
+                            yLabel = grid[i].Name;
+                        }
+                        else
+                        {
+                            cartesianGrid.Y.AddSequence(grid[i].Plane.Origin.Y - yPrevious, 1);
+                            cartesianGrid.Y.SetAxisLabel(yCounter++, grid[i].Name);
+                            yPrevious = grid[i].Plane.Origin.Y;
+                        }
+
                     }
                 }
-                else if (Math.Abs(grid[i].Plane.Normal.Y) >= 0.99)
+                catch
                 {
-                    if (yCounter == 1)
-                    {
-                        cartesianGrid.Y.StartPosition = grid[i].Plane.Origin.Y;
-                        yPrevious = grid[i].Plane.Origin.Y;
-                        yCounter++;
-                        yLabel = grid[i].Name;
-                    }
-                    else
-                    {
-                        cartesianGrid.Y.AddSequence(grid[i].Plane.Origin.Y - yPrevious, 1);
-                        cartesianGrid.Y.SetAxisLabel(yCounter++, grid[i].Name);
-                        yPrevious = grid[i].Plane.Origin.Y;
-                    }
 
                 }
             }

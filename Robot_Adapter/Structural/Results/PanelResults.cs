@@ -103,6 +103,7 @@ namespace Robot_Adapter.Structural.Results
 
         public static bool GetPanelStress(RobotApplication Robot, ResultServer<PanelStress> resultServer, List<string> panelNumbers, List<string> loadcaseNumbers)
         {
+            
             IRobotObjObjectServer server = Robot.Project.Structure.Objects;
 
             RobotFeResultParams FEParams = new RobotFeResultParams();
@@ -208,7 +209,7 @@ namespace Robot_Adapter.Structural.Results
             foreach (object[] data in panelStress.Values)
             {
                 PanelStress pS = new PanelStress();
-                pS.Data = data;
+                pS.SetData(data);
                 stress.Add(pS);
             }
 

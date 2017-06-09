@@ -122,39 +122,59 @@ namespace Robot_Adapter.Geometry
             }
         }
 
-        internal static RobotGeoContour CreateContour(RobotApplication robot, List<Curve> segments)
+        internal static RobotPointsArray CreatePointArray(Polyline segments)
+        {
+            RobotPointsArray contour = new RobotPointsArray();
+            List<Point> pts = segments.ControlPoints;
+            contour.SetSize(pts.Count);
+            for (int i = 1; i <= pts.Count; i++)
+            {
+                contour.Set(i, pts[i - 1].X, pts[i - 1].Y, pts[i - 1].Z);
+            }    
+            return contour;
+        }
+        internal static RobotGeoContour CreateContour(RobotApplication robot, Curve perimeter)
         {           
             RobotGeoContour contour = robot.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_CONTOUR);
                          
             if (contour != null)
             {
                 RobotGeoSegment segment = null;
-                for (int j = 0; j < segments.Count; j++)
+                if (perimeter is PolyCurve)
                 {
-                    if (segments[j] is Arc)
+                    List<Curve> segments = perimeter.Explode();
+                    for (int j = 0; j < segments.Count; j++)
                     {
-                        Arc bhomArc = segments[j] as Arc;
-                        segment = robot.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_ARC);
-                        RobotGeoArc arc = segment as RobotGeoArc;
-                        arc.P1.Set(segments[j].StartPoint.X, segments[j].StartPoint.Y, segments[j].StartPoint.Z);
-                        arc.P2.Set(bhomArc.MiddlePoint.X, bhomArc.MiddlePoint.Y, bhomArc.MiddlePoint.Z);
-                        arc.P3.Set(segments[j].EndPoint.X, segments[j].EndPoint.Y, segments[j].EndPoint.Z);
-                        contour.Add(segment);
-                    }
-                    else
-                    {
-                        List<Point> pts = segments[j].ControlPoints;
-                        for (int k = 0; k < pts.Count - 1; k++)
+                        if (segments[j] is Arc)
                         {
-                            segment = robot.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_SEGMENT_LINE);
-                            segment.P1.Set(pts[k].X, pts[k].Y, pts[k].Z);
+                            Arc bhomArc = segments[j] as Arc;
+                            segment = robot.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_ARC);
+                            RobotGeoArc arc = segment as RobotGeoArc;
+                            arc.P1.Set(segments[j].StartPoint.X, segments[j].StartPoint.Y, segments[j].StartPoint.Z);
+                            arc.P2.Set(bhomArc.MiddlePoint.X, bhomArc.MiddlePoint.Y, bhomArc.MiddlePoint.Z);
+                            arc.P3.Set(segments[j].EndPoint.X, segments[j].EndPoint.Y, segments[j].EndPoint.Z);
                             contour.Add(segment);
                         }
-                    }                          
+                        else
+                        {
+                            segment = robot.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_SEGMENT_LINE);
+                            segment.P1.Set(segments[j].StartPoint.X, segments[j].StartPoint.Y, segments[j].StartPoint.Z);
+                            contour.Add(segment);
+                        }
+                    }
                 }
-                int counter = segments.Count;            
+                else
+                {
+                    List<Point> pts = perimeter.ControlPoints;
+                    for (int k = 0; k < pts.Count - 1; k++)
+                    {
+                        segment = robot.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_SEGMENT_LINE);
+                        segment.P1.Set(pts[k].X, pts[k].Y, pts[k].Z);
+                        contour.Add(segment);
+                    }
+                }                                                    
             }
-            contour.Initialize();
+           // contour.Initialize();
             return contour;
         }    
     }

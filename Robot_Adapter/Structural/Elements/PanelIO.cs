@@ -280,15 +280,27 @@ namespace Robot_Adapter.Structural.Elements
 
                             if (rpanel == null)
                             { 
-                                rpanel = objServer.Create(panelNum);
+                                if (c[i] is BHoMG.Polyline)
+                                {
+                                    objServer.CreateContour(panelNum, Geometry.GeometryHelper.CreatePointArray(c[i] as BHoMG.Polyline));
+                                    rpanel = objServer.Get(panelNum) as RobotObjObject;
+
+                                }
+                                else
+                                {
+                                    rpanel = objServer.Create(panelNum);
+                                    rpanel.Main.Geometry = Geometry.GeometryHelper.CreateContour(robot, c[i]) as RobotGeoObject;
+                                    rpanel.Initialize();
+                                }
+                            }
+                            else
+                            {
+                                rpanel.Main.Geometry = Geometry.GeometryHelper.CreateContour(robot, c[i]) as RobotGeoObject;
+                                rpanel.Initialize();
                             }
 
                             ids.Add(panelNum.ToString());
 
-                            rpanel.Main.Geometry = Geometry.GeometryHelper.CreateContour(robot, c[i].Explode()) as RobotGeoObject;
-
-                            rpanel.Initialize();
-                            rpanel.Update();
                             if (i < edgeCount)
                             {
                                 string currentThickness = "";
@@ -301,7 +313,7 @@ namespace Robot_Adapter.Structural.Elements
                                     {
                                         rpanel.SetLabel(IRobotLabelType.I_LT_CLADDING, "Two-way");             
                                     }
-                                    if (loadProp.LoadApplication == BHoMP.LoadPanelSupportConditions.TwoSides && loadProp.ReferenceEdge%2 == 0)
+                                    if (loadProp.LoadApplication == BHoMP.LoadPanelSupportConditions.TwoSides && loadProp.ReferenceEdge % 2 == 0)
                                     {
                                         rpanel.SetLabel(IRobotLabelType.I_LT_CLADDING, "One-way X");
                                     }
@@ -331,12 +343,12 @@ namespace Robot_Adapter.Structural.Elements
                                         rpanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, currentThickness);
                                     }
 
-                                    rpanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, currentThickness);
+                                    //rpanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, currentThickness);
                                     if (panel.Material != null) rpanel.SetLabel(IRobotLabelType.I_LT_MATERIAL, panel.Material.Name);
 
                                 }
-                                rpanel.Update();
                             }
+                            rpanel.Update();
                         }
 
                         if (!string.IsNullOrEmpty(id))
@@ -431,7 +443,7 @@ namespace Robot_Adapter.Structural.Elements
                             rpanel = objServer.Create(panelNum);
                         }
                         ids.Add(panelNum.ToString());
-                        rpanel.Main.Geometry = Geometry.GeometryHelper.CreateContour(robot, c.ToList()) as RobotGeoObject;
+                        rpanel.Main.Geometry = Geometry.GeometryHelper.CreateContour(robot, c[0]) as RobotGeoObject;
 
                         rpanel.Initialize();
                         rpanel.Update();

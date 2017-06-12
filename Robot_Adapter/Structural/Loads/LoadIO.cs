@@ -38,6 +38,15 @@ namespace Robot_Adapter.Structural.Loads
                 {
                     switch (load.LoadType)
                     {
+                        case BHoML.LoadType.Selfweight:
+                            BHoML.GravityLoad gL = load as BHoML.GravityLoad;
+                            loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_DEAD);
+                            loadRecord.Objects.FromText(Utils.GetSelectionString(gL.Objects.Data));
+                            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_X, gL.GravityDirection.X);
+                            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Y, gL.GravityDirection.Y);
+                            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Z, gL.GravityDirection.Z);
+                            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_ENTIRE_STRUCTURE,1);
+                            break;
                         case BHoML.LoadType.PointForce:
                             BHoML.PointForce pL = load as BHoML.PointForce;
                             loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_FORCE);

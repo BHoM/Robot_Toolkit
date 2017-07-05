@@ -33,11 +33,11 @@ namespace Robot_Adapter.Structural.Elements
 
                 if (robot.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_NODE_RIGID_LINK, Utils.GetName(link)) != 0)
                 {
-                    robot.Project.Structure.Labels.Get(IRobotLabelType.I_LT_NODE_RIGID_LINK, Utils.GetName(link));
+                    rigidLink = robot.Project.Structure.Labels.Get(IRobotLabelType.I_LT_NODE_RIGID_LINK, Utils.GetName(link));
                 }
                 else
                 {
-                    robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_NODE_RIGID_LINK, Utils.GetName(link));
+                    rigidLink = robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_NODE_RIGID_LINK, Utils.GetName(link));
                 }
                 RobotSelection slaveNodeSel = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
 

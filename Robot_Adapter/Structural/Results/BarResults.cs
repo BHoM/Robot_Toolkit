@@ -72,12 +72,12 @@ namespace Robot_Adapter.Structural.Results
                     int idBar = (int)row.GetParam(IRobotResultParamType.I_RPT_BAR);
                     int idPoint = (int)row.GetParam(IRobotResultParamType.I_RPT_BAR_DIV_POINT);
 
-                    double fx = row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FX);
-                    double fy = row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FY);
-                    double fz = row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FZ);
-                    double mx = row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MX);
-                    double my = row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MY);
-                    double mz = row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MZ);
+                    double fx = row.IsAvailable((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FX) ? row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FX) : 0;
+                    double fy = row.IsAvailable((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FY) ? row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FY) : 0;
+                    double fz = row.IsAvailable((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FZ) ? row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FZ) : 0;
+                    double mx = row.IsAvailable((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MX) ? row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MX) : 0;
+                    double my = row.IsAvailable((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MY) ? row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MY) : 0;
+                    double mz = row.IsAvailable((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MZ) ? row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MZ) : 0;
 
                     barForces.Add(new BarForce<int, int, int>(idBar, idCase, idPoint, divisions, 1, fx, fy, fz, mx, my, mz));
                     isOk = rowSet.MoveNext();

@@ -775,6 +775,12 @@ namespace Robot_Adapter
                                 nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H, sectionData[(int)BHD.SteelSectionData.Height]);
                                 //nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_T, sectionData[(int)SectionTableColumn.TF1 - 3]);
                                 break;
+                            case IRobotBarSectionType.I_BST_NS_T:
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_B, sectionData[(int)BHD.SteelSectionData.Width]);
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_H, sectionData[(int)BHD.SteelSectionData.Height]);
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_TF, sectionData[(int)BHD.SteelSectionData.TF1]);
+                                nonStandard.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_TW, sectionData[(int)BHD.SteelSectionData.TW]);
+                                break;
                         }
 
                         //data.SetValue(IRobotBarSectionDataValue.I_BSDV_BF, sectionData[(int)SectionTableColumn.B1 - 3]);

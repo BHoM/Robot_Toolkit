@@ -16,6 +16,8 @@ namespace Robot_Adapter.Structural.Loads
     {
         public static bool SetLoads(RobotApplication robot, List<BHoML.ILoad> loads)
         {
+            
+
             loads.Sort(delegate (BHoML.ILoad l1, BHoML.ILoad l2)
             {
                 return l1.Loadcase.Name.CompareTo(l2.Loadcase.Name);
@@ -140,18 +142,27 @@ namespace Robot_Adapter.Structural.Loads
                             {
                                 BHoML.GeometricalAreaLoad aL = load as BHoML.GeometricalAreaLoad;
                                 List<BHoMG.Point> points = aL.Contour.ControlPoints.ToList();
-
+                                
                                 loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_IN_CONTOUR);
                                 loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PX1, aL.Force.X);
                                 loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PY1, aL.Force.Y);
                                 loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PZ1, aL.Force.Z);
                                 loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_NPOINTS, points.Count);
+                                loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PROJECTION, points.Count);
                                 loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_AUTO_DETECT_OBJECTS, -1);
 
                                 RobotLoadRecordInContour iContour = loadRecord as RobotLoadRecordInContour;
                                 for (int cp = 0; cp < points.Count; cp++)
                                 {
                                     iContour.SetContourPoint(cp + 1, points[cp].X, points[cp].Y, points[cp].Z);
+                                }
+                                if (aL.Axis == BHoML.LoadAxis.Local)
+                                {
+                                    loadRecord.SetValue((short)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM, 1);
+                                }
+                                if (aL.Projected)
+                                {
+                                    loadRecord.SetValue((short)IRobotUniformRecordValues.I_URV_PROJECTED, 1);
                                 }
                             }
                             else if (load is BHoML.GeometricalLineLoad)

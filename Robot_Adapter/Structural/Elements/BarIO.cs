@@ -216,7 +216,12 @@ namespace Robot_Adapter.Structural.Elements
                 else
                 {
                     str_bar.FEAType = BHoME.BarFEAType.Flexural;
-                }       
+                }           
+                
+                if (rbar.HasLabel(IRobotLabelType.I_LT_MEMBER_TYPE) == -1)
+                {
+                    str_bar.SetDesignGroupName(rbar.GetLabel(IRobotLabelType.I_LT_MEMBER_TYPE).Name);
+                }
 
                 #region Section data
                 //IRobotLabel sec_label = rbar.GetLabel(IRobotLabelType.I_LT_BAR_SECTION);                

@@ -218,6 +218,11 @@ namespace Robot_Adapter.Structural.Elements
                     str_bar.FEAType = BHoME.BarFEAType.Flexural;
                 }       
 
+                if (rbar.HasLabel(IRobotLabelType.I_LT_MEMBER_TYPE) == -1)
+                {
+                    str_bar.SetDesignGroupName(rbar.GetLabelName(IRobotLabelType.I_LT_MEMBER_TYPE));
+                }
+
                 #region Section data
                 //IRobotLabel sec_label = rbar.GetLabel(IRobotLabelType.I_LT_BAR_SECTION);                
                 //IRobotBarSectionData sec_data = sec_label.Data;
@@ -370,6 +375,11 @@ namespace Robot_Adapter.Structural.Elements
                 bar.CustomData.Add(key, barNum);
                 structureCache.AddBar(barNum++, (int)start_node.CustomData[key], (int)end_node.CustomData[key], defaultSectionName, defaultMaterialName, 0);
 
+                if (robot.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, bar.DesignGroupName) != 0)
+                {
+                   structureCache.SetBarLabel(barNum++, IRobotLabelType.I_LT_MEMBER_TYPE, bar.DesignGroupName);
+                }
+
                 //if (bar.SectionProperty.Name != "")
                 //{
                 //    structureCache.SetBarLabel(bar.Number, IRobotLabelType.I_LT_BAR_SECTION, bar.SectionProperty.Name);
@@ -519,6 +529,11 @@ namespace Robot_Adapter.Structural.Elements
                     robotBar.SetLabel(IRobotLabelType.I_LT_BAR_RELEASE, currentRelease);
                     robotBar.SetLabel(IRobotLabelType.I_LT_BAR_ELASTIC_GROUND, elasticGround);
                     robotBar.SetLabel(IRobotLabelType.I_LT_MATERIAL, material);
+                }
+
+                if (robot.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, bar.DesignGroupName) !=0)
+                {
+                    robotBar.SetLabel(IRobotLabelType.I_LT_MEMBER_TYPE, bar.DesignGroupName);
                 }
                 ids.Add(barNum.ToString());
             }

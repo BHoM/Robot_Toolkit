@@ -530,11 +530,11 @@ namespace Robot_Adapter.Structural.Elements
                     robotBar.SetLabel(IRobotLabelType.I_LT_BAR_ELASTIC_GROUND, elasticGround);
                     robotBar.SetLabel(IRobotLabelType.I_LT_MATERIAL, material);
                 }
-
-                if (robot.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, bar.DesignGroupName) !=0)
+                try
                 {
                     robotBar.SetLabel(IRobotLabelType.I_LT_MEMBER_TYPE, bar.DesignGroupName);
                 }
+                catch { }
                 ids.Add(barNum.ToString());
             }
             robot.Project.Structure.Bars.EndMultiOperation();

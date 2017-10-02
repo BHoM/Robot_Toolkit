@@ -7,10 +7,11 @@
     <ProjectGuid>{A4FE6182-A985-44E0-A5BF-3E54C6EA30BF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Robot_Adapter</RootNamespace>
+    <RootNamespace>BH.Adapter.Robot</RootNamespace>
     <AssemblyName>Robot_Adapter</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,7 +21,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Build\Robot_Adapter.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,9 +37,21 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM\build\BHoM.dll</HintPath>
     </Reference>
+    <Reference Include="BHoM_Adapter">
+      <HintPath>..\..\BHoM_Adapter\Build\BHoM_Adapter.dll</HintPath>
+    </Reference>
+    <Reference Include="Geometry_Engine">
+      <HintPath>..\..\BHoM_Engine\Geometry_Engine\obj\Debug\Geometry_Engine.dll</HintPath>
+    </Reference>
     <Reference Include="Interop.RobotOM">
       <HintPath>..\..\..\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2017\System\Exe\Interop.RobotOM.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Structural_Adapter">
+      <HintPath>..\..\BHoM_Adapter\Build\Structural_Adapter.dll</HintPath>
+    </Reference>
+    <Reference Include="Structure_Engine">
+      <HintPath>..\..\BHoM_Engine\Structure_Engine\obj\Debug\Structure_Engine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -50,6 +64,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Read\Read.cs" />
+    <Compile Include="Convert\ToRobot.cs" />
+    <Compile Include="Convert\Private Helpers\Bar.cs" />
+    <Compile Include="RobotAdapter.cs" />
     <Compile Include="Structural\Elements\GridIO.cs" />
     <Compile Include="Structural\Elements\GroupIO.cs" />
     <Compile Include="Structural\Elements\LevelIO.cs" />
@@ -60,7 +78,7 @@
     <Compile Include="Structural\Elements\FiniteElement.cs" />
     <Compile Include="Structural\Loads\LoadIO.cs" />
     <Compile Include="Structural\Interface\ResultAdapter.cs" />
-    <Compile Include="Geometry\GeometryHelper.cs" />
+    <Compile Include="Convert\FromRobot.cs" />
     <Compile Include="Structural\Properties\SupportIO.cs" />
     <Compile Include="Structural\Results\BarResults.cs" />
     <Compile Include="Structural\Results\Global.cs" />
@@ -78,6 +96,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Adapters\" />
     <Folder Include="Structural\Properties\Section Properties\Reinforced Concrete\" />
     <Folder Include="Structural\Properties\Section Properties\Steel\" />
   </ItemGroup>

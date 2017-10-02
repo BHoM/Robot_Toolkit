@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RobotOM;
-using BHoM.Structural;
+using BH.oM.Structural;
 
 namespace Robot_Adapter.Base
 {

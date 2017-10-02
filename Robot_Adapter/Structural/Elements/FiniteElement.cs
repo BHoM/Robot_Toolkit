@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RobotOM;
-using BHoM.Structural;
+using BH.oM.Structural;
 
 namespace Robot_Adapter.Structural.Elements
 {
@@ -22,7 +22,7 @@ namespace Robot_Adapter.Structural.Elements
         /// <param name="str_nodes"></param>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        //public static bool GetFEMeshQuery(BHoM.Global.Project project, out int[] panel_ids, out double[][] coords, out Dictionary<int, int[]> vertex_indices, out Dictionary<int, BHoM.Structural.Node> str_nodes, string filePath = "LiveLink")
+        //public static bool GetFEMeshQuery(BHoM.Global.Project project, out int[] panel_ids, out double[][] coords, out Dictionary<int, int[]> vertex_indices, out Dictionary<int, BH.oM.Structural.Node> str_nodes, string filePath = "LiveLink")
         //{
         //    RobotApplication robot = null;
         //    if (filePath == "LiveLink") robot = new RobotApplication();
@@ -30,7 +30,7 @@ namespace Robot_Adapter.Structural.Elements
         //    //First call getnodesquery to get node points
         //    double[][] nodeCoords = null;
 
-        //    Dictionary<int, BHoM.Structural.Node> _str_nodes = new Dictionary<int, BHoM.Structural.Node>();
+        //    Dictionary<int, BH.oM.Structural.Node> _str_nodes = new Dictionary<int, BH.oM.Structural.Node>();
         //    Robot_Adapter.Node.GetNodesQuery(project, filePath);
         //    Dictionary<int, int> _nodeIds = new Dictionary<int, int>();
         //    for (int i = 0; i < _str_nodes.Count; i++)

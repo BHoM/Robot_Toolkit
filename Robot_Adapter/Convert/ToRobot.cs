@@ -40,7 +40,7 @@ namespace BH.Adapter.Robot
             {
                 RobotGeoSegment segment = null;
                 {
-                    List<IBHoMGeometry> segments = (List<IBHoMGeometry>)perimeter.GetExploded();
+                    List<ICurve> segments = (List<ICurve>)perimeter.IGetExploded();
                     for (int j = 0; j < segments.Count; j++)
                     {
                         if (segments[j] is Arc)

@@ -27,7 +27,7 @@ namespace BH.Adapter.Robot
 
         public static Circle ToBHoMGeometry(RobotGeoCircle circle)
         {
-            return (GeometryEngine.Create.CreateCircle(ToBHoMGeometry(circle.P1 as dynamic), ToBHoMGeometry(circle.P2 as dynamic), ToBHoMGeometry(circle.P3 as dynamic)));
+            return (GeometryEngine.Create.Circle(ToBHoMGeometry(circle.P1 as dynamic), ToBHoMGeometry(circle.P2 as dynamic), ToBHoMGeometry(circle.P3 as dynamic)));
         }
 
         public static Arc ToBHoMGeometry(this RobotGeoArc arc)

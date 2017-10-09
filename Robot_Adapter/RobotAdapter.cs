@@ -16,9 +16,12 @@ namespace BH.Adapter.Robot
     public partial class RobotAdapter : BHoMAdapter
     {
         /***************************************************/
-        /**** Public static fields                      ****/
+        /**** Public fields                       ****/
         /***************************************************/
 
+        public bool UseBarQueryMethod = false;
+        public bool UseNodeQueryMethod = false;
+        
         /***************************************************/
         /**** Constructors                              ****/
         /***************************************************/
@@ -74,5 +77,14 @@ namespace BH.Adapter.Robot
         /***************************************************/
 
         public RobotApplication RobotApplication;
+
+        /***************************************************/
+        /**** Public  Methods                           ****/
+        /***************************************************/
+
+        public static void SetConfig(bool barQuery)
+        {
+            
+        }
     }
 }

@@ -8,7 +8,6 @@ using BH.Adapter.Queries;
 using BH.oM.Materials;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
-using BH.Adapter.Structural;
 using RobotOM;
 
 namespace BH.Adapter.Robot

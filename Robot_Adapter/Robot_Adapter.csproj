@@ -45,11 +45,8 @@
       <HintPath>..\..\BHoM_Engine\Geometry_Engine\obj\Debug\Geometry_Engine.dll</HintPath>
     </Reference>
     <Reference Include="Interop.RobotOM">
-      <HintPath>..\..\..\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2017\System\Exe\Interop.RobotOM.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2017\System\Exe\Interop.RobotOM.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="Structural_Adapter">
-      <HintPath>..\..\BHoM_Adapter\Build\Structural_Adapter.dll</HintPath>
     </Reference>
     <Reference Include="Structure_Engine">
       <HintPath>..\..\BHoM_Engine\Structure_Engine\obj\Debug\Structure_Engine.dll</HintPath>

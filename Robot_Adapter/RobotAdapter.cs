@@ -10,6 +10,7 @@ using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
 using BH.Adapter.Structural;
 using RobotOM;
+using System.Diagnostics;
 
 namespace BH.Adapter.Robot
 {
@@ -19,6 +20,7 @@ namespace BH.Adapter.Robot
         /**** Public fields                       ****/
         /***************************************************/
 
+        public const string ID = "Robot_id";
         public bool UseBarQueryMethod = false;
         public bool UseNodeQueryMethod = false;
         
@@ -27,8 +29,13 @@ namespace BH.Adapter.Robot
         /***************************************************/
 
         public RobotAdapter()
-        {          
-            RobotApplication = new RobotApplication();
+        {
+            bool robot_active = (Process.GetProcessesByName("robot").Length >0)? true: false;
+            if (robot_active)
+            {
+               RobotApplication = new RobotApplication();
+                AdapterId = ID;
+           }
         }
 
         /***************************************************/
@@ -39,16 +46,7 @@ namespace BH.Adapter.Robot
                 RobotApplication.Project.Open(filePath);
             else
                 RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
-        }
-               
-        public IEnumerable<object> Pull(IEnumerable<IQuery> query, Dictionary<string, string> config = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Push(IEnumerable<object> objects, string tag = "", Dictionary<string, string> config = null)
-        {
-            throw new NotImplementedException();
+            AdapterId = ID;
         }
 
         public int Update(FilterQuery filter, string property, object newValue, Dictionary<string, string> config = null)
@@ -56,9 +54,22 @@ namespace BH.Adapter.Robot
             throw new NotImplementedException();
         }
 
-        public object GetNextIndex(Type objectType, bool refresh = false)
+        protected override object GetNextId(Type type, bool refresh)
         {
-            throw new NotImplementedException();
+            if (type == typeof(BH.oM.Structural.Design.DesignGroup))
+            {
+                List<int> groupNumbers = new List<int>();
+                foreach(BH.oM.Structural.Design.DesignGroup designGroup in ReadDesignGroups())
+                {
+                    groupNumbers.Add(designGroup.Number);
+                }
+                groupNumbers.Sort();
+                return groupNumbers.Count > 0? groupNumbers.Last() + 1 : 1;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public bool Create(IEnumerable<object> objects)

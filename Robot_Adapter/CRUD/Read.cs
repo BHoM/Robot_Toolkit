@@ -11,6 +11,7 @@ using BH.Adapter;
 using BH.oM.Base;
 using BH.oM.Materials;
 using BH.Adapter.Queries;
+using BH.oM.Structural.Design;
 
 namespace BH.Adapter.Robot
 {
@@ -27,6 +28,8 @@ namespace BH.Adapter.Robot
                return  (this.UseNodeQueryMethod)? ReadNodesQuery() : ReadNodes();
             if (type == typeof(Bar))
                 return (this.UseBarQueryMethod) ? ReadBarsQuery() : ReadBars();
+            if (type == typeof(DesignGroup))
+                return ReadDesignGroups();
             else
                 return null;         
         }
@@ -124,7 +127,8 @@ namespace BH.Adapter.Robot
                     bhomBar.SectionProperty = null;
                     //bhomBar.OrientationAngle = robotBar.Gamma * 180 / Math.PI;
                     bhomBar.Name = bar_num.ToString();
-                    
+
+                    bhomBar.CustomData.Add("Robot Number", bar_num.ToString());
                     bhomBar.CustomData.Add("Robot Name", bhomBar.Name);
                     bhomBars.Add(bhomBar);
 
@@ -134,11 +138,6 @@ namespace BH.Adapter.Robot
             }
             result_params.Reset();   
             return bhomBars;
-        }
-
-        protected override bool Create<T>(IEnumerable<T> objects, bool replaceAll = false)
-        {
-            throw new NotImplementedException();
         }
 
         /***************************************************/
@@ -219,12 +218,40 @@ namespace BH.Adapter.Robot
             return null;
         }
 
+        /***************************************************/
+
+        public List<DesignGroup> ReadDesignGroups()
+        {
+            RobotApplication robot = this.RobotApplication;
+            RDimServer RDServer = this.RobotApplication.Kernel.GetExtension("RDimServer");
+            RDServer.Mode = RobotOM.IRDimServerMode.I_DSM_STEEL;
+            RDimStream RDStream = RDServer.Connection.GetStream();
+            RDimGroups RDGroups = RDServer.GroupsService;
+            RDimGrpProfs RDGroupProfs = RDServer.Connection.GetGrpProfs();
+            List<DesignGroup> designGroupList = new List<DesignGroup>();
+
+            for (int i = 0; i <= RDGroups.Count - 1; i++)
+            {
+                int designGroupNumber = RDGroups.GetUserNo(i);
+                RDimGroup designGroup = RDGroups.New(0, designGroupNumber);
+                DesignGroup bhomDesignGroup = new DesignGroup();
+                bhomDesignGroup.Name = designGroup.Name;
+                bhomDesignGroup.Number = designGroup.UsrNo;
+                bhomDesignGroup.CustomData[AdapterId] = designGroup.UsrNo;
+                bhomDesignGroup.MaterialName = designGroup.Material;
+                designGroup.GetMembList(RDStream);
+                bhomDesignGroup.MemberIds = Convert.ToSelectionList(RDStream.ReadText());
+                designGroupList.Add(bhomDesignGroup);
+            }
+            return designGroupList;
+    }
+
 
         /***************************************************/
         /**** Private Fields                            ****/
         /***************************************************/
 
-        }
+    }
 
 }
 

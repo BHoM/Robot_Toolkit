@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BH.oM.Base;
 
 namespace BH.Adapter.Robot
 {    
@@ -14,11 +15,13 @@ namespace BH.Adapter.Robot
     {
         /***************************************/
 
+        #region Object Converters
+
         public static RobotGeoPoint3D FromBHoMGeometry(RobotApplication robotapp, Point point)
         {
             RobotGeoPoint3D robotPoint = robotapp.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_POINT_3D);
             robotPoint.Set(point.X, point.Y, point.Z);
-            return robotPoint;            
+            return robotPoint;                        
         }
         
         public static RobotPointsArray FromBHoMGeometry(Polyline segments)
@@ -68,6 +71,8 @@ namespace BH.Adapter.Robot
             return contour;
         }
 
+        #endregion 
+
         #region Property Converters
 
         public static IRobotBarSectionType FromBHoMEnum(ShapeType type)
@@ -101,6 +106,45 @@ namespace BH.Adapter.Robot
             }
         }
         #endregion
+
+        #region List Converters
+
+        internal static string FromSelectionList(List<int> numbers)
+        {
+            string selection = "";
+            for (int i = 0; i < numbers.Count; i++)
+            {
+                selection += numbers[i] + " ";
+            }
+            return selection.Trim();
+            
+        }
+
+        internal static string FromSelectionList(List<string> ids)
+        {
+            string selection = "";
+            for (int i = 0; i < ids.Count; i++)
+            {
+                selection += ids[i] + " ";
+            }
+            return selection.Trim();
+        }
+
+        internal static string FromSelectionList<T>(IEnumerable<T> objects) where T : IObject
+        {
+            string selection = "";
+            foreach (T obj in objects)
+            {
+                object objNumber = null;
+                obj.CustomData.TryGetValue("Robot Number", out objNumber);                
+                selection += objNumber.ToString() + " ";
+            }
+            return selection.Trim();
+        }
+
+        #endregion
+
+
     }
 
 }

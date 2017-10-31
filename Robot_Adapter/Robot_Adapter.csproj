@@ -39,6 +39,7 @@
     </Reference>
     <Reference Include="BHoM_Adapter">
       <HintPath>..\..\BHoM_Adapter\Build\BHoM_Adapter.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Geometry_Engine">
       <HintPath>..\..\BHoM_Engine\Geometry_Engine\obj\Debug\Geometry_Engine.dll</HintPath>
@@ -61,7 +62,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Read\Read.cs" />
+    <Compile Include="CRUD\Delete.cs" />
+    <Compile Include="CRUD\Create.cs" />
+    <Compile Include="CRUD\Read.cs" />
     <Compile Include="Convert\ToRobot.cs" />
     <Compile Include="Convert\Private Helpers\Bar.cs" />
     <Compile Include="RobotAdapter.cs" />
@@ -93,7 +96,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Adapters\" />
     <Folder Include="Structural\Properties\Section Properties\Reinforced Concrete\" />
     <Folder Include="Structural\Properties\Section Properties\Steel\" />
   </ItemGroup>

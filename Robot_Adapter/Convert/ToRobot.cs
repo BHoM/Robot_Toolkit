@@ -1,6 +1,7 @@
 ﻿using BH.oM.Geometry;
 using BH.Engine.Geometry;
 using BH.oM.Structural.Properties;
+using BH.oM.Structural.Elements;
 using RobotOM;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,33 @@ namespace BH.Adapter.Robot
         /***************************************/
 
         #region Object Converters
+            
+        public static List<RobotNode> FromBHoMObject(RobotAdapter robotAdapter, List<Node> bhomNodes)
+        {
+            List<RobotNode> robotNodes = new List<RobotNode>();
+            RobotApplication robot = robotAdapter.RobotApplication;
+            RobotStructureCache rcache = robot.Project.Structure.CreateCache();
+            int nodeNum = robot.Project.Structure.Nodes.FreeNumber;
+            RobotSelection nodeSel = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
+            foreach (Node bhomNode in bhomNodes)
+            {
+                rcache.AddNode(nodeNum, bhomNode.Point.X, bhomNode.Point.Y, bhomNode.Point.Z);
+                bhomNode.CustomData[robotAdapter.AdapterId] = nodeNum;
+                nodeSel.AddText(nodeNum.ToString());
+                nodeNum++;
+            }
+            robot.Project.Structure.ApplyCache(rcache);
+            IRobotCollection robotNodeCol = robot.Project.Structure.Nodes.GetMany(nodeSel);
+            for(int i = 1; i <= robotNodeCol.Count; i++)
+            {
+                robotNodes.Add(robotNodeCol.Get(i));
+            }
+            return robotNodes;
+         }
+
+        #endregion
+
+        #region Geometry Converters
 
         public static RobotGeoPoint3D FromBHoMGeometry(RobotApplication robotapp, Point point)
         {

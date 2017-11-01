@@ -98,9 +98,6 @@ namespace BH.Adapter.Robot
             {
                 bhomBar.FEAType = BarFEAType.Axial;
             }
-
-            bhomBar.CustomData.Add("Robot Name", robotBar.Name);
-            bhomBar.CustomData.Add("Robot Guid", robotBar.UniqueId);
             return bhomBar;       
         }
 

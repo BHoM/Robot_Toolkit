@@ -36,7 +36,36 @@ namespace BH.Adapter.Robot
                     CreateSteelDesignGroup(obj as BH.oM.Structural.Design.DesignGroup);
                 }
             }
+            if (typeof(BH.oM.Structural.Elements.Bar).IsAssignableFrom(typeof(T)))
+            {
+                Create(objects.ToList() as List<BH.oM.Structural.Elements.Bar>, replaceAll);
+            }
             return success;
+        }
+
+        public void Create(List<Node> bhomNodes, bool replaceAll = false)
+        {
+            Convert.FromBHoMObject(this, bhomNodes);
+        }
+
+        public void Create(List<Bar> bhomBars )
+        {
+            //List<BH.oM.Structural.Elements.Node> bhomNodes = new List<Node>();
+            //foreach(Bar bhomBar in bhomBars)
+            //{                
+            //    bhomNodes.Add(bhomBar.StartNode);
+            //    bhomNodes.Add(bhomBar.EndNode);
+            //}
+            //Create(bhomNodes);
+
+            //RobotApplication robot = this.RobotApplication;
+            //RobotStructureCache rcache = robot.Project.Structure.CreateCache();
+            
+            //foreach (Bar bhomBar in bhomBars)
+            //{
+                
+            //    rcache.AddBar(bhomBar.Name, bh)
+            // }
         }
 
         public void CreateSteelDesignGroup(BH.oM.Structural.Design.DesignGroup bhomdesignGroup)

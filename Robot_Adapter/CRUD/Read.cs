@@ -49,9 +49,12 @@ namespace BH.Adapter.Robot
             this.RobotApplication.Project.Structure.Bars.BeginMultiOperation();
             for (int i = 1; i <= robotBars.Count; i++)
             {
-                bhomBars.Add(Robot.Convert.ToBHoMObject(robotBars.Get(i) as dynamic, bhomNodes as dynamic));
-            }
-           
+                RobotBar robotBar = robotBars.Get(i);
+                Bar bhomBar = Robot.Convert.ToBHoMObject(robotBar as dynamic, bhomNodes as dynamic);
+                bhomBar.CustomData[AdapterId] = robotBar.Number;
+                bhomBar.CustomData[AdapterName] = robotBar.Name;
+                bhomBars.Add(bhomBar);
+            }           
             this.RobotApplication.Project.Structure.Bars.EndMultiOperation();
 
             return bhomBars;
@@ -128,8 +131,7 @@ namespace BH.Adapter.Robot
                     //bhomBar.OrientationAngle = robotBar.Gamma * 180 / Math.PI;
                     bhomBar.Name = bar_num.ToString();
 
-                    bhomBar.CustomData.Add("Robot Number", bar_num.ToString());
-                    bhomBar.CustomData.Add("Robot Name", bhomBar.Name);
+                    bhomBar.CustomData[AdapterId] = bar_num.ToString();
                     bhomBars.Add(bhomBar);
 
                     ok = row_set.MoveNext();
@@ -156,7 +158,10 @@ namespace BH.Adapter.Robot
 
             for (int i = 1;i<= robotNodes.Count; i++)
             {
-                bhomNodes.Add(Robot.Convert.ToBHoMObject(robotNodes.Get(i)));
+                RobotNode robotNode = robotNodes.Get(i);
+                Node bhomNode = Robot.Convert.ToBHoMObject(robotNode);
+                bhomNode.CustomData[AdapterId] = robotNode.Number;
+                bhomNodes.Add(bhomNode);
             }
             return bhomNodes;
         }
@@ -199,8 +204,9 @@ namespace BH.Adapter.Robot
                     BH.oM.Geometry.Point point = new BH.oM.Geometry.Point((double)row_set.CurrentRow.GetValue(0),
                                                                           (double)row_set.CurrentRow.GetValue(1),
                                                                           (double)row_set.CurrentRow.GetValue(0));
-
-                    bhomNodes.Add(new Node(point, nod_num.ToString()));
+                    Node bhomNode = new Node(point, nod_num.ToString());
+                    bhomNode.CustomData[AdapterId] = nod_num.ToString();
+                    bhomNodes.Add(bhomNode);
                     point = null;
                     kounta++;
                     ok = row_set.MoveNext();
@@ -238,6 +244,7 @@ namespace BH.Adapter.Robot
                 bhomDesignGroup.Name = designGroup.Name;
                 bhomDesignGroup.Number = designGroup.UsrNo;
                 bhomDesignGroup.CustomData[AdapterId] = designGroup.UsrNo;
+                bhomDesignGroup.CustomData[AdapterName] = designGroup.Name;
                 bhomDesignGroup.MaterialName = designGroup.Material;
                 designGroup.GetMembList(RDStream);
                 bhomDesignGroup.MemberIds = Convert.ToSelectionList(RDStream.ReadText());

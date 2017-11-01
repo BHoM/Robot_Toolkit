@@ -20,6 +20,7 @@ namespace BH.Adapter.Robot
         /***************************************************/
 
         public const string ID = "Robot_id";
+        public string AdapterName = "Robot_name";
         public bool UseBarQueryMethod = false;
         public bool UseNodeQueryMethod = false;
         

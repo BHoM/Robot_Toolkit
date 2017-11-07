@@ -1,6 +1,7 @@
 ﻿using BH.oM.Materials;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
+using BH.Engine.Structure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
         /**** Private Fields                            ****/
-        /***************************************************/
+        /***************************************************/ 
 
         private static Dictionary<Type, object> m_Comparers = new Dictionary<Type, object>
         {

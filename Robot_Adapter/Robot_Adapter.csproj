@@ -41,6 +41,10 @@
       <HintPath>..\..\BHoM_Adapter\Build\BHoM_Adapter.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="BHoM_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BHoM_Engine\Build\BHoM_Engine.dll</HintPath>
+    </Reference>
     <Reference Include="Geometry_Engine">
       <HintPath>..\..\BHoM_Engine\Geometry_Engine\obj\Debug\Geometry_Engine.dll</HintPath>
     </Reference>
@@ -67,6 +71,8 @@
     <Compile Include="CRUD\Read.cs" />
     <Compile Include="Convert\ToRobot.cs" />
     <Compile Include="Convert\Private Helpers\Bar.cs" />
+    <Compile Include="Queries\Comparer.cs" />
+    <Compile Include="Queries\DependencyTypes.cs" />
     <Compile Include="RobotAdapter.cs" />
     <Compile Include="Structural\Elements\GridIO.cs" />
     <Compile Include="Structural\Elements\GroupIO.cs" />

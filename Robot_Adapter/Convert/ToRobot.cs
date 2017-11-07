@@ -2,6 +2,7 @@
 using BH.Engine.Geometry;
 using BH.oM.Structural.Properties;
 using BH.oM.Structural.Elements;
+using BH.oM.Structural.Design;
 using RobotOM;
 using System;
 using System.Collections.Generic;
@@ -18,19 +19,19 @@ namespace BH.Adapter.Robot
 
         #region Object Converters
             
-        public static List<RobotNode> FromBHoMObject(RobotAdapter robotAdapter, List<Node> bhomNodes)
+        public static List<RobotNode> FromBHoMObjects(RobotAdapter robotAdapter, List<Node> bhomNodes)
         {
             List<RobotNode> robotNodes = new List<RobotNode>();
             RobotApplication robot = robotAdapter.RobotApplication;
             RobotStructureCache rcache = robot.Project.Structure.CreateCache();
-            int nodeNum = robot.Project.Structure.Nodes.FreeNumber;
             RobotSelection nodeSel = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
             foreach (Node bhomNode in bhomNodes)
             {
+                int nodeNum = 0;
+                int.TryParse(bhomNode.CustomData[robotAdapter.AdapterId].ToString(), out nodeNum);
                 rcache.AddNode(nodeNum, bhomNode.Point.X, bhomNode.Point.Y, bhomNode.Point.Z);
                 bhomNode.CustomData[robotAdapter.AdapterId] = nodeNum;
                 nodeSel.AddText(nodeNum.ToString());
-                nodeNum++;
             }
             robot.Project.Structure.ApplyCache(rcache);
             IRobotCollection robotNodeCol = robot.Project.Structure.Nodes.GetMany(nodeSel);
@@ -40,6 +41,63 @@ namespace BH.Adapter.Robot
             }
             return robotNodes;
          }
+
+        public static List<RobotBar> FromBHoMObjects(RobotAdapter robotAdapter, List<Bar> bhomBars)
+        {
+            List<RobotBar> robotBars = new List<RobotBar>();
+            RobotApplication robot = robotAdapter.RobotApplication;
+            RobotStructureCache rcache = robot.Project.Structure.CreateCache();
+            RobotSelection barSel = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
+            string key = robotAdapter.AdapterId;
+            foreach (Bar bhomBar in bhomBars)
+            {
+                
+                int barNum = 0;
+                int.TryParse(bhomBar.CustomData[key].ToString(), out barNum);
+                rcache.AddBar(barNum, 
+                              System.Convert.ToInt32(bhomBar.StartNode.CustomData[key]), 
+                              System.Convert.ToInt32(bhomBar.EndNode.CustomData[key]),
+                              "UC 305x305x97",
+                              //bhomBar.SectionProperty.Name, 
+                              "STEEL",
+                              //bhomBar.SectionProperty.Material.Name, 
+                              bhomBar.OrientationAngle);
+                bhomBar.CustomData[robotAdapter.AdapterId] = barNum;
+                barSel.AddText(barNum.ToString());
+            }
+            robot.Project.Structure.ApplyCache(rcache);
+            IRobotCollection robotBarCol = robot.Project.Structure.Bars.GetMany(barSel);
+            for (int i = 1; i <= robotBarCol.Count; i++)
+            {
+                robotBars.Add(robotBarCol.Get(i));
+            }
+
+            return robotBars;
+        }
+
+        public static List<RDimGroup> FromBHoMObjects(RobotAdapter robotAdapter, List<DesignGroup> bhomdesignGroups)
+        {
+            List<RDimGroup> robotSteelDesignGroups = new List<RDimGroup>();
+            foreach (DesignGroup bhomdesignGroup in bhomdesignGroups)
+            {
+                RobotApplication robot = robotAdapter.RobotApplication;
+                RDimServer RDServer = robotAdapter.RobotApplication.Kernel.GetExtension("RDimServer");
+                RDServer.Mode = RobotOM.IRDimServerMode.I_DSM_STEEL;
+                RDimStream RDStream = RDServer.Connection.GetStream();
+                RDimGroups RDGroups = RDServer.GroupsService;
+                RDimGrpProfs RDGroupProfs = RDServer.Connection.GetGrpProfs();
+                RDimGroup designGroup = RDGroups.New(0, bhomdesignGroup.Number);
+                designGroup.Name = bhomdesignGroup.Name;
+                designGroup.Material = bhomdesignGroup.MaterialName;
+                RDStream.Clear();
+                RDStream.WriteText(Convert.FromSelectionList(bhomdesignGroup.MemberIds));
+                designGroup.SetMembList(RDStream);
+                designGroup.SetProfs(RDGroupProfs);
+                RDGroups.Save(designGroup);
+                robotSteelDesignGroups.Add(designGroup);
+            }
+            return robotSteelDesignGroups;
+        }
 
         #endregion
 

@@ -239,7 +239,7 @@ namespace BH.Adapter.Robot
             for (int i = 0; i <= RDGroups.Count - 1; i++)
             {
                 int designGroupNumber = RDGroups.GetUserNo(i);
-                RDimGroup designGroup = RDGroups.New(0, designGroupNumber);
+                RDimGroup designGroup = RDGroups.Get(designGroupNumber);                
                 DesignGroup bhomDesignGroup = new DesignGroup();
                 bhomDesignGroup.Name = designGroup.Name;
                 bhomDesignGroup.Number = designGroup.UsrNo;
@@ -247,7 +247,9 @@ namespace BH.Adapter.Robot
                 bhomDesignGroup.CustomData[AdapterName] = designGroup.Name;
                 bhomDesignGroup.MaterialName = designGroup.Material;
                 designGroup.GetMembList(RDStream);
-                bhomDesignGroup.MemberIds = Convert.ToSelectionList(RDStream.ReadText());
+                string test = RDStream.ReadText();
+                if(RDStream.Size(IRDimStreamType.I_DST_TEXT)>0)
+                    bhomDesignGroup.MemberIds = Convert.ToSelectionList(RDStream.ReadText());
                 designGroupList.Add(bhomDesignGroup);
             }
             return designGroupList;

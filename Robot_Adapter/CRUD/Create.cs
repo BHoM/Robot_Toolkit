@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BH.oM.Structural.Elements;
+using BH.oM.Structural.Design;
 using RobotOM;
 using BH.oM.Structural.Properties;
 using BH.Adapter;
@@ -28,64 +29,14 @@ namespace BH.Adapter.Robot
 
         protected override bool Create<T>(IEnumerable<T> objects, bool replaceAll = false)
         {
-            bool success = true;
-            if (typeof(BH.oM.Structural.Design.DesignGroup).IsAssignableFrom(typeof(T)))
+            if (typeof(BHoMObject).IsAssignableFrom(typeof(T)))
             {
-                foreach (T obj in objects)
-                {
-                    CreateSteelDesignGroup(obj as BH.oM.Structural.Design.DesignGroup);
-                }
+                Convert.FromBHoMObjects(this, objects.ToList() as dynamic);
             }
-            if (typeof(BH.oM.Structural.Elements.Bar).IsAssignableFrom(typeof(T)))
-            {
-                Create(objects.ToList() as List<BH.oM.Structural.Elements.Bar>, replaceAll);
-            }
-            return success;
+            this.RobotApplication.Project.ViewMngr.Refresh();
+            return true;
         }
-
-        public void Create(List<Node> bhomNodes, bool replaceAll = false)
-        {
-            Convert.FromBHoMObject(this, bhomNodes);
-        }
-
-        public void Create(List<Bar> bhomBars )
-        {
-            //List<BH.oM.Structural.Elements.Node> bhomNodes = new List<Node>();
-            //foreach(Bar bhomBar in bhomBars)
-            //{                
-            //    bhomNodes.Add(bhomBar.StartNode);
-            //    bhomNodes.Add(bhomBar.EndNode);
-            //}
-            //Create(bhomNodes);
-
-            //RobotApplication robot = this.RobotApplication;
-            //RobotStructureCache rcache = robot.Project.Structure.CreateCache();
-            
-            //foreach (Bar bhomBar in bhomBars)
-            //{
-                
-            //    rcache.AddBar(bhomBar.Name, bh)
-            // }
-        }
-
-        public void CreateSteelDesignGroup(BH.oM.Structural.Design.DesignGroup bhomdesignGroup)
-        {
-            RobotApplication robot = this.RobotApplication;
-            RDimServer RDServer = this.RobotApplication.Kernel.GetExtension("RDimServer");
-            RDServer.Mode = RobotOM.IRDimServerMode.I_DSM_STEEL;
-            RDimStream RDStream = RDServer.Connection.GetStream();
-            RDimGroups RDGroups = RDServer.GroupsService;
-            RDimGrpProfs RDGroupProfs = RDServer.Connection.GetGrpProfs();
-            RDimGroup designGroup =  RDGroups.New(0, bhomdesignGroup.Number);
-            designGroup.Name = bhomdesignGroup.Name;
-            designGroup.Material = bhomdesignGroup.MaterialName;
-            RDStream.Clear();
-            RDStream.WriteText(Convert.FromSelectionList(bhomdesignGroup.MemberIds));
-            designGroup.SetMembList(RDStream);      
-            designGroup.SetProfs(RDGroupProfs);
-            RDGroups.Save(designGroup);        
-        }
-     
+             
         /***************************************************/
         /**** Private Fields                            ****/
         /***************************************************/

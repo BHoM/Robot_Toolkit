@@ -30,7 +30,7 @@ namespace BH.Adapter.Robot
                 int nodeNum = 0;
                 int.TryParse(bhomNode.CustomData[robotAdapter.AdapterId].ToString(), out nodeNum);
                 rcache.AddNode(nodeNum, bhomNode.Point.X, bhomNode.Point.Y, bhomNode.Point.Z);
-                bhomNode.CustomData[robotAdapter.AdapterId] = nodeNum;
+                bhomNode.CustomData[RobotAdapter.ID] = nodeNum;
                 nodeSel.AddText(nodeNum.ToString());
             }
             robot.Project.Structure.ApplyCache(rcache);
@@ -48,21 +48,18 @@ namespace BH.Adapter.Robot
             RobotApplication robot = robotAdapter.RobotApplication;
             RobotStructureCache rcache = robot.Project.Structure.CreateCache();
             RobotSelection barSel = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
-            string key = robotAdapter.AdapterId;
             foreach (Bar bhomBar in bhomBars)
             {
-                
-                int barNum = 0;
-                int.TryParse(bhomBar.CustomData[key].ToString(), out barNum);
+                int barNum = System.Convert.ToInt32(bhomBar.CustomData[RobotAdapter.ID]);
                 rcache.AddBar(barNum, 
-                              System.Convert.ToInt32(bhomBar.StartNode.CustomData[key]), 
-                              System.Convert.ToInt32(bhomBar.EndNode.CustomData[key]),
+                              System.Convert.ToInt32(bhomBar.StartNode.CustomData[RobotAdapter.ID]), 
+                              System.Convert.ToInt32(bhomBar.EndNode.CustomData[RobotAdapter.ID]),
                               "UC 305x305x97",
                               //bhomBar.SectionProperty.Name, 
                               "STEEL",
                               //bhomBar.SectionProperty.Material.Name, 
                               bhomBar.OrientationAngle);
-                bhomBar.CustomData[robotAdapter.AdapterId] = barNum;
+                bhomBar.CustomData[RobotAdapter.ID] = barNum;
                 barSel.AddText(barNum.ToString());
             }
             robot.Project.Structure.ApplyCache(rcache);

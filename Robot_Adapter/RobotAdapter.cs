@@ -34,7 +34,7 @@ namespace BH.Adapter.Robot
         {
             if (IsApplicationRunning())
             {
-               RobotApplication = new RobotApplication();
+               this.RobotApplication = new RobotApplication();
                AdapterId = ID;
                 Config.SeparateProperties = true;
                 Config.MergeWithComparer = true;
@@ -43,7 +43,10 @@ namespace BH.Adapter.Robot
             {
                 try
                 {
-                    RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
+                    this.RobotApplication = new RobotApplication();
+                    this.RobotApplication.Visible = 1;
+                    this.RobotApplication.Interactive = 1; 
+                    this.RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
                     AdapterId = ID;
                     Config.SeparateProperties = true;
                     Config.MergeWithComparer = true;
@@ -58,7 +61,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        public RobotAdapter(string filePath) : this()
+        public RobotAdapter(string filePath = "") : this()
         {
             if (!string.IsNullOrWhiteSpace(filePath))
             {
@@ -71,6 +74,9 @@ namespace BH.Adapter.Robot
             }
             else
             {
+                this.RobotApplication = new RobotApplication();
+                this.RobotApplication.Visible = 1;
+                this.RobotApplication.Interactive = 1;
                 RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
                 AdapterId = ID;
             }
@@ -116,11 +122,6 @@ namespace BH.Adapter.Robot
                 m_indexDict[type] = index;
             }
             return index;
-        }
-
-        public bool Create(IEnumerable<object> objects)
-        {
-            throw new NotImplementedException();
         }
 
         public bool UpdateTags(IEnumerable<object> objects)

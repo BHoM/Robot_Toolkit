@@ -32,11 +32,12 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
         /**** Private Fields                            ****/
-        /***************************************************/ 
+        /***************************************************/
 
         private static Dictionary<Type, object> m_Comparers = new Dictionary<Type, object>
         {
             {typeof(Node), new BH.Engine.Structure.NodeDistanceComparer(3) },
+            {typeof(Bar), new BH.Engine.Structure.BarEndNodesDistanceComparer(3) },
             {typeof(SectionProperty), new BH.Engine.Base.BHoMObjectNameOrToStringComparer() },
             {typeof(Material), new BH.Engine.Base.BHoMObjectNameComparer() },
         };

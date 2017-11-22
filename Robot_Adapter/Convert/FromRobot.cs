@@ -85,7 +85,7 @@ namespace BH.Adapter.Robot
             bhomBar.OrientationAngle = robotBar.Gamma * 180 / Math.PI;
             bhomBar.Name = robotBar.Number.ToString();
             bhomBar.Tags.Add(robotBar.Name);
-
+            bhomBar.CustomData[RobotAdapter.ID] = robotBar.Number;
             if (robotBar.TensionCompression == IRobotBarTensionCompression.I_BTC_COMPRESSION_ONLY)
             {
                 bhomBar.FEAType = BarFEAType.CompressionOnly;
@@ -103,7 +103,9 @@ namespace BH.Adapter.Robot
 
         public static Node ToBHoMObject(this RobotNode robotNode)
         {
-           return new Node(new Point(robotNode.X, robotNode.Y, robotNode.Z), robotNode.Number.ToString());
+            Node bhomNode = new Node(new Point(robotNode.X, robotNode.Y, robotNode.Z), robotNode.Number.ToString());
+            bhomNode.CustomData[RobotAdapter.ID] = robotNode.Number;
+            return bhomNode;
         }
 
         //public static SectionProperty ToBHoMSectionProperty(IRobotLabel sec_label)

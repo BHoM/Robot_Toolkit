@@ -82,11 +82,6 @@ namespace BH.Adapter.Robot
             }
         }
 
-        public int Update(FilterQuery filter, string property, object newValue, Dictionary<string, string> config = null)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override object GetNextId(Type type, bool refresh)
         {
             int index = 1;
@@ -115,7 +110,7 @@ namespace BH.Adapter.Robot
                 {
                     index = this.RobotApplication.Project.Structure.Nodes.FreeNumber;
                 }
-                if (type == typeof(Panel))
+                if (type == typeof(PanelPlanar))
                 {
                     index = this.RobotApplication.Project.Structure.Objects.FreeNumber;
                 }

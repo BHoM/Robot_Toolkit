@@ -13,6 +13,7 @@ using BH.oM.Materials;
 using BH.Adapter.Queries;
 using BH.oM.Structural.Design;
 
+
 namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter : BHoMAdapter
@@ -31,7 +32,7 @@ namespace BH.Adapter.Robot
             if (type == typeof(DesignGroup))
                 return ReadDesignGroups();
             else
-                return null;         
+                return null;     
         }
 
         /***************************************************/
@@ -217,7 +218,7 @@ namespace BH.Adapter.Robot
 
         /***************************************/
 
-        public List<SectionProperty> ReadSectionProperties(List<string> ids = null)
+        public List<ICrossSection> ReadSectionProperties(List<string> ids = null)
         {
             return null;
         }

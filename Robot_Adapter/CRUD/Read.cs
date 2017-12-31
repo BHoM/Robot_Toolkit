@@ -2,15 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BH.oM.Structural.Elements;
 using RobotOM;
 using BH.oM.Structural.Properties;
-using BH.Adapter;
 using BH.oM.Base;
-using BH.oM.Materials;
-using BH.Adapter.Queries;
+using BH.oM.Common.Materials;
 using BH.oM.Structural.Design;
 
 namespace BH.Adapter.Robot
@@ -50,8 +46,8 @@ namespace BH.Adapter.Robot
             for (int i = 1; i <= robotBars.Count; i++)
             {
                 RobotBar robotBar = robotBars.Get(i);
-                Bar bhomBar = Robot.Convert.ToBHoMObject(robotBar as dynamic, bhomNodes as dynamic);
-                bhomBar.CustomData[AdapterName] = robotBar.Name;
+                Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar as dynamic, bhomNodes as dynamic);
+                bhomBar.CustomData[Engine.Robot.Convert.AdapterName] = robotBar.Name;
                 bhomBars.Add(bhomBar);
             }           
             this.RobotApplication.Project.Structure.Bars.EndMultiOperation();
@@ -124,13 +120,13 @@ namespace BH.Adapter.Robot
 
                     Node startNode = null; bhomNodes.TryGetValue(nod1.ToString(), out startNode);
                     Node endNode = null; bhomNodes.TryGetValue(nod2.ToString(), out endNode);
-                    Bar bhomBar = new Bar(startNode, endNode, bar_num.ToString());
+                    Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode, Name = bar_num.ToString() };
 
                     bhomBar.SectionProperty = null;
                     //bhomBar.OrientationAngle = robotBar.Gamma * 180 / Math.PI;
                     bhomBar.Name = bar_num.ToString();
 
-                    bhomBar.CustomData[RobotAdapter.ID] = bar_num.ToString();
+                    bhomBar.CustomData[Engine.Robot.Convert.AdapterID] = bar_num.ToString();
                     bhomBars.Add(bhomBar);
 
                     ok = row_set.MoveNext();
@@ -158,7 +154,7 @@ namespace BH.Adapter.Robot
             for (int i = 1;i<= robotNodes.Count; i++)
             {
                 RobotNode robotNode = robotNodes.Get(i);
-                Node bhomNode = Robot.Convert.ToBHoMObject(robotNode);
+                Node bhomNode = BH.Engine.Robot.Convert.ToBHoMObject(robotNode);
                 bhomNodes.Add(bhomNode);
             }
             return bhomNodes;
@@ -199,11 +195,14 @@ namespace BH.Adapter.Robot
                 {
                     result_row = row_set.CurrentRow;
                     nod_num = (int)result_row.GetParam(IRobotResultParamType.I_RPT_NODE);
-                    BH.oM.Geometry.Point point = new BH.oM.Geometry.Point((double)row_set.CurrentRow.GetValue(0),
-                                                                          (double)row_set.CurrentRow.GetValue(1),
-                                                                          (double)row_set.CurrentRow.GetValue(2));
-                    Node bhomNode = new Node(point, nod_num.ToString());
-                    bhomNode.CustomData[RobotAdapter.ID] = nod_num.ToString();
+                    BH.oM.Geometry.Point point = new BH.oM.Geometry.Point
+                    {
+                        X = (double)row_set.CurrentRow.GetValue(0),
+                        Y = (double)row_set.CurrentRow.GetValue(1),
+                        Z = (double)row_set.CurrentRow.GetValue(2)
+                    };
+                    Node bhomNode = new Node { Position = point, Name = nod_num.ToString() };
+                    bhomNode.CustomData[Engine.Robot.Convert.AdapterID] = nod_num.ToString();
                     bhomNodes.Add(bhomNode);
                     point = null;
                     kounta++;
@@ -217,7 +216,7 @@ namespace BH.Adapter.Robot
 
         /***************************************/
 
-        public List<SectionProperty> ReadSectionProperties(List<string> ids = null)
+        public List<ISectionProperty> ReadSectionProperties(List<string> ids = null)
         {
             return null;
         }
@@ -241,13 +240,13 @@ namespace BH.Adapter.Robot
                 DesignGroup bhomDesignGroup = new DesignGroup();
                 bhomDesignGroup.Name = designGroup.Name;
                 bhomDesignGroup.Number = designGroup.UsrNo;
-                bhomDesignGroup.CustomData[RobotAdapter.ID] = designGroup.UsrNo;
-                bhomDesignGroup.CustomData[AdapterName] = designGroup.Name;
+                bhomDesignGroup.CustomData[Engine.Robot.Convert.AdapterID] = designGroup.UsrNo;
+                bhomDesignGroup.CustomData[Engine.Robot.Convert.AdapterName] = designGroup.Name;
                 bhomDesignGroup.MaterialName = designGroup.Material;
                 designGroup.GetMembList(RDStream);
                 string test = RDStream.ReadText();
                 if(RDStream.Size(IRDimStreamType.I_DST_TEXT)>0)
-                    bhomDesignGroup.MemberIds = Convert.ToSelectionList(RDStream.ReadText());
+                    bhomDesignGroup.MemberIds = Engine.Robot.Convert.ToSelectionList(RDStream.ReadText());
                 designGroupList.Add(bhomDesignGroup);
             }
             return designGroupList;

@@ -51,6 +51,7 @@
     <Reference Include="Interop.RobotOM">
       <HintPath>C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2017\System\Exe\Interop.RobotOM.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Structure_Engine">
       <HintPath>..\..\BHoM_Engine\Structure_Engine\obj\Debug\Structure_Engine.dll</HintPath>
@@ -69,41 +70,44 @@
     <Compile Include="CRUD\Delete.cs" />
     <Compile Include="CRUD\Create.cs" />
     <Compile Include="CRUD\Read.cs" />
-    <Compile Include="Convert\ToRobot.cs" />
-    <Compile Include="Convert\Private Helpers\Bar.cs" />
-    <Compile Include="Queries\Comparer.cs" />
-    <Compile Include="Queries\DependencyTypes.cs" />
+    <Compile Include="Types\Comparer.cs" />
+    <Compile Include="Types\DependencyTypes.cs" />
     <Compile Include="RobotAdapter.cs" />
-    <Compile Include="Structural\Elements\GridIO.cs" />
-    <Compile Include="Structural\Elements\GroupIO.cs" />
-    <Compile Include="Structural\Elements\LevelIO.cs" />
-    <Compile Include="Structural\Elements\MeshIO.cs" />
-    <Compile Include="Structural\Elements\RigidLinkIO.cs" />
-    <Compile Include="Structural\Results\NodeResults.cs" />
-    <Compile Include="Base\Label.cs" />
-    <Compile Include="Structural\Elements\FiniteElement.cs" />
-    <Compile Include="Structural\Loads\LoadIO.cs" />
-    <Compile Include="Structural\Interface\ResultAdapter.cs" />
-    <Compile Include="Convert\FromRobot.cs" />
-    <Compile Include="Structural\Properties\SupportIO.cs" />
-    <Compile Include="Structural\Results\BarResults.cs" />
-    <Compile Include="Structural\Results\Global.cs" />
-    <Compile Include="Structural\Results\PanelResults.cs" />
-    <Compile Include="Structural\Results\SlabReinforcementResults.cs" />
-    <Compile Include="Structural\Results\Storey.cs" />
-    <Compile Include="Structural\Interface\ElementAdapter.cs" />
-    <Compile Include="Structural\Properties\PropertyIO.cs" />
-    <Compile Include="Base\Utils.cs" />
-    <Compile Include="Structural\Wind\WindCFD.cs" />
-    <Compile Include="Base\Enums.cs" />
-    <Compile Include="Structural\Elements\PanelIO.cs" />
-    <Compile Include="Structural\Elements\NodeIO.cs" />
-    <Compile Include="Structural\Elements\BarIO.cs" />
+    <Compile Include="Legacy\Elements\GridIO.cs" />
+    <Compile Include="Legacy\Elements\GroupIO.cs" />
+    <Compile Include="Legacy\Elements\LevelIO.cs" />
+    <Compile Include="Legacy\Elements\MeshIO.cs" />
+    <Compile Include="Legacy\Elements\RigidLinkIO.cs" />
+    <Compile Include="Legacy\Results\NodeResults.cs" />
+    <Compile Include="Legacy\Base\Label.cs" />
+    <Compile Include="Legacy\Elements\FiniteElement.cs" />
+    <Compile Include="Legacy\Loads\LoadIO.cs" />
+    <Compile Include="Legacy\Interface\ResultAdapter.cs" />
+    <Compile Include="Legacy\Properties\SupportIO.cs" />
+    <Compile Include="Legacy\Results\BarResults.cs" />
+    <Compile Include="Legacy\Results\Global.cs" />
+    <Compile Include="Legacy\Results\PanelResults.cs" />
+    <Compile Include="Legacy\Results\SlabReinforcementResults.cs" />
+    <Compile Include="Legacy\Results\Storey.cs" />
+    <Compile Include="Legacy\Interface\ElementAdapter.cs" />
+    <Compile Include="Legacy\Properties\PropertyIO.cs" />
+    <Compile Include="Legacy\Base\Utils.cs" />
+    <Compile Include="Legacy\Wind\WindCFD.cs" />
+    <Compile Include="Legacy\Base\Enums.cs" />
+    <Compile Include="Legacy\Elements\PanelIO.cs" />
+    <Compile Include="Legacy\Elements\NodeIO.cs" />
+    <Compile Include="Legacy\Elements\BarIO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Structural\Properties\Section Properties\Reinforced Concrete\" />
-    <Folder Include="Structural\Properties\Section Properties\Steel\" />
+    <Folder Include="Legacy\Properties\Section Properties\Reinforced Concrete\" />
+    <Folder Include="Legacy\Properties\Section Properties\Steel\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Robot_Engine\Robot_Engine.csproj">
+      <Project>{45d542cd-79b5-485a-ba39-0163230431f0}</Project>
+      <Name>Robot_Engine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

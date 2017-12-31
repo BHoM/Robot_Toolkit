@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BH.oM.Structural.Elements;
 using RobotOM;
-using BH.oM.Structural.Properties;
-using BH.Adapter;
-using BH.oM.Base;
-using BH.oM.Materials;
-using BH.Adapter.Queries;
-using Robot_Adapter.Structural.Elements;
 using BH.oM.Structural.Design;
 
 namespace BH.Adapter.Robot

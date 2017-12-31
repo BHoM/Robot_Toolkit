@@ -11,7 +11,7 @@
 //using Robot_Adapter.Base;
 //using BH.oM.Structural.Interface;
 
-//namespace BH.Adapter.Robot
+//namespace BH.Engine.Robot
 //{
 //    /// <summary>
 //    /// Robot bar class, for all bar objects and operations

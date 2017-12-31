@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BH.Adapter.Queries;
-using BH.oM.Materials;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Design;
-using BH.oM.Structural.Properties;
 using RobotOM;
 using System.Diagnostics;
 
@@ -17,11 +12,9 @@ namespace BH.Adapter.Robot
     public partial class RobotAdapter : BHoMAdapter
     {
         /***************************************************/
-        /**** Public fields                       ****/
+        /**** Public Fields                             ****/
         /***************************************************/
 
-        public const string ID = "Robot_id";
-        public string AdapterName = "Robot_name";
         public bool UseBarQueryMethod = false;
         public bool UseNodeQueryMethod = false;
                   
@@ -35,7 +28,6 @@ namespace BH.Adapter.Robot
             if (IsApplicationRunning())
             {
                this.RobotApplication = new RobotApplication();
-               AdapterId = ID;
                 Config.SeparateProperties = true;
                 Config.MergeWithComparer = true;
             }
@@ -47,7 +39,6 @@ namespace BH.Adapter.Robot
                     this.RobotApplication.Visible = 1;
                     this.RobotApplication.Interactive = 1; 
                     this.RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
-                    AdapterId = ID;
                     Config.SeparateProperties = true;
                     Config.MergeWithComparer = true;
                 }
@@ -70,7 +61,6 @@ namespace BH.Adapter.Robot
             else if (IsApplicationRunning())
             {
                 RobotApplication = new RobotApplication();
-                AdapterId = ID;
             }
             else
             {
@@ -78,7 +68,6 @@ namespace BH.Adapter.Robot
                 this.RobotApplication.Visible = 1;
                 this.RobotApplication.Interactive = 1;
                 RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
-                AdapterId = ID;
             }
         }
 
@@ -87,7 +76,7 @@ namespace BH.Adapter.Robot
             throw new NotImplementedException();
         }
 
-        protected override object GetNextId(Type type, bool refresh)
+        protected override object NextId(Type type, bool refresh)
         {
             int index = 1;
             if (!refresh && m_indexDict.TryGetValue(type, out index))
@@ -115,7 +104,7 @@ namespace BH.Adapter.Robot
                 {
                     index = this.RobotApplication.Project.Structure.Nodes.FreeNumber;
                 }
-                if (type == typeof(Panel))
+                if (type == typeof(BH.oM.Structural.Elements.PanelFreeForm)) //TODO: Check that this is the right rtype of panel
                 {
                     index = this.RobotApplication.Project.Structure.Objects.FreeNumber;
                 }

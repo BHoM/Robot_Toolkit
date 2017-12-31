@@ -4,33 +4,28 @@ using BH.oM.Structural.Properties;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Design;
 using RobotOM;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BH.oM.Base;
 
-namespace BH.Adapter.Robot
-{    
+namespace BH.Engine.Robot
+{
     public static partial class Convert
     {
         /***************************************/
 
         #region Object Converters
             
-        public static List<RobotNode> FromBHoMObjects(RobotAdapter robotAdapter, List<Node> bhomNodes)
+        public static IList<RobotNode> FromBHoMObjects(RobotApplication robot, List<Node> bhomNodes)
         {
             List<RobotNode> robotNodes = new List<RobotNode>();
-            RobotApplication robot = robotAdapter.RobotApplication;
             RobotStructureCache rcache = robot.Project.Structure.CreateCache();
             RobotSelection nodeSel = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
             foreach (Node bhomNode in bhomNodes)
             {
                 int nodeNum = 0;
-                int.TryParse(bhomNode.CustomData[robotAdapter.AdapterId].ToString(), out nodeNum);
-                rcache.AddNode(nodeNum, bhomNode.Point.X, bhomNode.Point.Y, bhomNode.Point.Z);
-                bhomNode.CustomData[RobotAdapter.ID] = nodeNum;
+                int.TryParse(bhomNode.CustomData[AdapterID].ToString(), out nodeNum);
+                rcache.AddNode(nodeNum, bhomNode.Position.X, bhomNode.Position.Y, bhomNode.Position.Z);
+                bhomNode.CustomData[AdapterID] = nodeNum;
                 nodeSel.AddText(nodeNum.ToString());
             }
             robot.Project.Structure.ApplyCache(rcache);
@@ -42,24 +37,23 @@ namespace BH.Adapter.Robot
             return robotNodes;
          }
 
-        public static List<RobotBar> FromBHoMObjects(RobotAdapter robotAdapter, List<Bar> bhomBars)
+        public static IList<RobotBar> FromBHoMObjects(RobotApplication robot, List<Bar> bhomBars)
         {
             List<RobotBar> robotBars = new List<RobotBar>();
-            RobotApplication robot = robotAdapter.RobotApplication;
             RobotStructureCache rcache = robot.Project.Structure.CreateCache();
             RobotSelection barSel = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
             foreach (Bar bhomBar in bhomBars)
             {
-                int barNum = System.Convert.ToInt32(bhomBar.CustomData[RobotAdapter.ID]);
+                int barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterID]);
                 rcache.AddBar(barNum, 
-                              System.Convert.ToInt32(bhomBar.StartNode.CustomData[RobotAdapter.ID]), 
-                              System.Convert.ToInt32(bhomBar.EndNode.CustomData[RobotAdapter.ID]),
+                              System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterID]), 
+                              System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterID]),
                               "UC 305x305x97",
                               //bhomBar.SectionProperty.Name, 
                               "STEEL",
                               //bhomBar.SectionProperty.Material.Name, 
                               bhomBar.OrientationAngle);
-                bhomBar.CustomData[RobotAdapter.ID] = barNum;
+                bhomBar.CustomData[AdapterID] = barNum;
                 barSel.AddText(barNum.ToString());
             }
             robot.Project.Structure.ApplyCache(rcache);
@@ -72,13 +66,12 @@ namespace BH.Adapter.Robot
             return robotBars;
         }
 
-        public static List<RDimGroup> FromBHoMObjects(RobotAdapter robotAdapter, List<DesignGroup> bhomdesignGroups)
+        public static IList<RDimGroup> FromBHoMObjects(RobotApplication robot, List<DesignGroup> bhomdesignGroups)
         {
             List<RDimGroup> robotSteelDesignGroups = new List<RDimGroup>();
             foreach (DesignGroup bhomdesignGroup in bhomdesignGroups)
             {
-                RobotApplication robot = robotAdapter.RobotApplication;
-                RDimServer RDServer = robotAdapter.RobotApplication.Kernel.GetExtension("RDimServer");
+                RDimServer RDServer = robot.Kernel.GetExtension("RDimServer");
                 RDServer.Mode = RobotOM.IRDimServerMode.I_DSM_STEEL;
                 RDimStream RDStream = RDServer.Connection.GetStream();
                 RDimGroups RDGroups = RDServer.GroupsService;
@@ -126,7 +119,7 @@ namespace BH.Adapter.Robot
             {
                 RobotGeoSegment segment = null;
                 {
-                    List<ICurve> segments = (List<ICurve>)perimeter.IGetExploded();
+                    List<ICurve> segments = (List<ICurve>)perimeter.ISubParts();
                     for (int j = 0; j < segments.Count; j++)
                     {
                         if (segments[j] is Arc)

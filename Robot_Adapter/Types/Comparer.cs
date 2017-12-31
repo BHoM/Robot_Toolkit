@@ -1,12 +1,10 @@
-﻿using BH.oM.Materials;
+﻿using BH.oM.Common.Materials;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
 using BH.Engine.Structure;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BH.Engine.Base.Objects;
 
 namespace BH.Adapter.Robot
 {
@@ -16,7 +14,7 @@ namespace BH.Adapter.Robot
         /**** BHoM Adapter Interface                    ****/
         /***************************************************/
 
-        protected override IEqualityComparer<T> GetComparer<T>()
+        protected override IEqualityComparer<T> Comparer<T>()
         {
             Type type = typeof(T);
 
@@ -36,11 +34,12 @@ namespace BH.Adapter.Robot
 
         private static Dictionary<Type, object> m_Comparers = new Dictionary<Type, object>
         {
-            {typeof(Node), new BH.Engine.Structure.NodeDistanceComparer(3) },
-            {typeof(Bar), new BH.Engine.Structure.BarEndNodesDistanceComparer(3) },
-            {typeof(SectionProperty), new BH.Engine.Base.BHoMObjectNameOrToStringComparer() },
-            {typeof(Material), new BH.Engine.Base.BHoMObjectNameComparer() },
+            {typeof(Node), new NodeDistanceComparer(3) },
+            {typeof(Bar), new BarEndNodesDistanceComparer(3) },
+            {typeof(ISectionProperty), new BHoMObjectNameOrToStringComparer() },
+            {typeof(Material), new BHoMObjectNameComparer() },
         };
 
+        /***************************************************/
     }
 }

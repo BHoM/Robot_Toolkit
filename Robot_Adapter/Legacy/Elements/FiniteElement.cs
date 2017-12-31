@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RobotOM;
-using BH.oM.Structural;
-
-namespace Robot_Adapter.Structural.Elements
+﻿namespace Robot_Adapter.Structural.Elements
 {
     /// <summary>
     /// Finite elements class for 2D planar shell finite element objects

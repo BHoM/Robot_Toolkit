@@ -1,20 +1,12 @@
 ﻿using BH.oM.Geometry;
 using GeometryEngine = BH.Engine.Geometry;
-using StructureEngine = BH.Engine.Structure;
 using RobotOM;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BH.oM.Structural.Elements;
-using BH.oM.Structural.Properties;
-using BH.oM.Materials;
-using BH.oM.Base;
-using BH.oM.Structural.Design;
 
-namespace BH.Adapter.Robot
-{    
+namespace BH.Engine.Robot
+{
     public static partial class Convert
     {
         /***************************************/
@@ -23,7 +15,7 @@ namespace BH.Adapter.Robot
 
         public static Point ToBHoMGeometry(RobotGeoPoint3D point)
         {
-            return new Point(point.X, point.Y, point.Z);
+            return new Point { X = point.X, Y = point.Y, Z = point.Z };
         }
 
         public static Circle ToBHoMGeometry(RobotGeoCircle circle)
@@ -33,7 +25,7 @@ namespace BH.Adapter.Robot
 
         public static Arc ToBHoMGeometry(this RobotGeoArc arc)
         {
-            return new Arc(ToBHoMGeometry(arc.P1 as dynamic), ToBHoMGeometry(arc.P2 as dynamic), ToBHoMGeometry(arc.P3 as dynamic));
+            return new Arc { Start = ToBHoMGeometry(arc.P1 as dynamic), Middle = ToBHoMGeometry(arc.P2 as dynamic), End = ToBHoMGeometry(arc.P3 as dynamic) };
         }
 
         public static Polyline ToBHoMGeometry(this RobotGeoPolyline polyline)
@@ -65,7 +57,7 @@ namespace BH.Adapter.Robot
                 }
                 else
                 {
-                    polycurve.Curves.Add(new Line(ToBHoMGeometry(segment1.P1 as dynamic), ToBHoMGeometry(segment2.P1 as dynamic)));
+                    polycurve.Curves.Add(new Line { Start = ToBHoMGeometry(segment1.P1 as dynamic), End = ToBHoMGeometry(segment2.P1 as dynamic) });
                 }
             }
             return polycurve;
@@ -79,13 +71,13 @@ namespace BH.Adapter.Robot
         {
             Node startNode = null;  bhomNodes.TryGetValue(robotBar.StartNode.ToString(), out startNode);
             Node endNode = null; bhomNodes.TryGetValue(robotBar.EndNode.ToString(), out endNode);
-            Bar bhomBar = new Bar(startNode, endNode, robotBar.Number.ToString());
+            Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode, Name = robotBar.Number.ToString() };
 
             bhomBar.SectionProperty = null;
             bhomBar.OrientationAngle = robotBar.Gamma * 180 / Math.PI;
             bhomBar.Name = robotBar.Number.ToString();
             bhomBar.Tags.Add(robotBar.Name);
-            bhomBar.CustomData[RobotAdapter.ID] = robotBar.Number;
+            bhomBar.CustomData[AdapterID] = robotBar.Number;
             if (robotBar.TensionCompression == IRobotBarTensionCompression.I_BTC_COMPRESSION_ONLY)
             {
                 bhomBar.FEAType = BarFEAType.CompressionOnly;
@@ -103,8 +95,8 @@ namespace BH.Adapter.Robot
 
         public static Node ToBHoMObject(this RobotNode robotNode)
         {
-            Node bhomNode = new Node(new Point(robotNode.X, robotNode.Y, robotNode.Z), robotNode.Number.ToString());
-            bhomNode.CustomData[RobotAdapter.ID] = robotNode.Number;
+            Node bhomNode = new Node { Position = new Point { X = robotNode.X, Y = robotNode.Y, Z = robotNode.Z }, Name = robotNode.Number.ToString() };
+            bhomNode.CustomData[AdapterID] = robotNode.Number;
             return bhomNode;
         }
 

@@ -126,7 +126,7 @@ namespace BH.Adapter.Robot
                     //bhomBar.OrientationAngle = robotBar.Gamma * 180 / Math.PI;
                     bhomBar.Name = bar_num.ToString();
 
-                    bhomBar.CustomData[Engine.Robot.Convert.AdapterID] = bar_num.ToString();
+                    bhomBar.CustomData[AdapterId] = bar_num.ToString();
                     bhomBars.Add(bhomBar);
 
                     ok = row_set.MoveNext();
@@ -202,7 +202,7 @@ namespace BH.Adapter.Robot
                         Z = (double)row_set.CurrentRow.GetValue(2)
                     };
                     Node bhomNode = new Node { Position = point, Name = nod_num.ToString() };
-                    bhomNode.CustomData[Engine.Robot.Convert.AdapterID] = nod_num.ToString();
+                    bhomNode.CustomData[AdapterId] = nod_num.ToString();
                     bhomNodes.Add(bhomNode);
                     point = null;
                     kounta++;
@@ -240,7 +240,7 @@ namespace BH.Adapter.Robot
                 DesignGroup bhomDesignGroup = new DesignGroup();
                 bhomDesignGroup.Name = designGroup.Name;
                 bhomDesignGroup.Number = designGroup.UsrNo;
-                bhomDesignGroup.CustomData[Engine.Robot.Convert.AdapterID] = designGroup.UsrNo;
+                bhomDesignGroup.CustomData[AdapterId] = designGroup.UsrNo;
                 bhomDesignGroup.CustomData[Engine.Robot.Convert.AdapterName] = designGroup.Name;
                 bhomDesignGroup.MaterialName = designGroup.Material;
                 designGroup.GetMembList(RDStream);

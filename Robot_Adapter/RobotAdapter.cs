@@ -25,6 +25,8 @@ namespace BH.Adapter.Robot
 
         public RobotAdapter()
         {
+            AdapterId = Engine.Robot.Convert.AdapterID;
+
             if (IsApplicationRunning())
             {
                this.RobotApplication = new RobotApplication();

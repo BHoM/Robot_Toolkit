@@ -18,7 +18,7 @@ namespace BH.Adapter.Robot
         /**** Adapter Methods                           ****/
         /***************************************************/
 
-        protected override IEnumerable<BHoMObject> Read(Type type, IList indices = null)
+        protected override IEnumerable<IObject> Read(Type type, IList indices = null)
         {
             if (type == typeof(Node))
                return  (this.UseNodeQueryMethod)? ReadNodesQuery() : ReadNodes();

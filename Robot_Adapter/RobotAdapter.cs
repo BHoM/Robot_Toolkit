@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BH.Adapter.Queries;
-using BH.oM.Materials;
+using BH.oM.Common.Materials;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Design;
 using BH.oM.Structural.Properties;
@@ -82,7 +81,7 @@ namespace BH.Adapter.Robot
             }
         }
 
-        protected override object GetNextId(Type type, bool refresh)
+        protected override object NextId(Type type, bool refresh)
         {
             int index = 1;
             if (!refresh && m_indexDict.TryGetValue(type, out index))

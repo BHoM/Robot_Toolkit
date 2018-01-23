@@ -1,4 +1,4 @@
-﻿using BH.oM.Materials;
+﻿using BH.oM.Common.Materials;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
 using BH.Engine.Structure;
@@ -16,7 +16,7 @@ namespace BH.Adapter.Robot
         /**** BHoM Adapter Interface                    ****/
         /***************************************************/
 
-        protected override IEqualityComparer<T> GetComparer<T>()
+        protected override IEqualityComparer<T> Comparer<T>()
         {
             Type type = typeof(T);
 
@@ -38,7 +38,7 @@ namespace BH.Adapter.Robot
         {
             {typeof(Node), new BH.Engine.Structure.NodeDistanceComparer(3) },
             //{typeof(Bar), new BH.Engine.Structure.BarEndNodesDistanceComparer(3) },
-            {typeof(ICrossSection), new BH.Engine.Base.BHoMObjectNameOrToStringComparer() },
+            {typeof(ISectionProperty), new BH.Engine.Base.Objects.BHoMObjectNameOrToStringComparer() },
             //{typeof(Material), new BH.Engine.Base.BHoMObjectNameComparer() },
         };
 

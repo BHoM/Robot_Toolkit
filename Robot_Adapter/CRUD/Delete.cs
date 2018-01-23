@@ -9,8 +9,7 @@ using RobotOM;
 using BH.oM.Structural.Properties;
 using BH.Adapter;
 using BH.oM.Base;
-using BH.oM.Materials;
-using BH.Adapter.Queries;
+using BH.oM.Common.Materials;
 using Robot_Adapter.Structural.Elements;
 using BH.oM.Structural.Design;
 

@@ -9,9 +9,8 @@ using BH.oM.Structural.Design;
 using RobotOM;
 using BH.oM.Structural.Properties;
 using BH.Adapter;
-using BH.oM.Base;
-using BH.oM.Materials;
-using BH.Adapter.Queries;
+using BH.oM.Common.Materials;
+
 
 namespace BH.Adapter.Robot
 {
@@ -29,7 +28,7 @@ namespace BH.Adapter.Robot
 
         protected override bool Create<T>(IEnumerable<T> objects, bool replaceAll = false)
         {
-            if (typeof(BHoMObject).IsAssignableFrom(typeof(T)))
+            if (typeof(BH.oM.Base.BHoMObject).IsAssignableFrom(typeof(T)))
             {
                 Convert.FromBHoMObjects(this, objects.ToList() as dynamic);
             }

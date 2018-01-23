@@ -1,4 +1,4 @@
-﻿using BH.oM.Materials;
+﻿using BH.oM.Common.Materials;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
 using System;
@@ -15,7 +15,7 @@ namespace BH.Adapter.Robot
         /**** BHoM Adapter Interface                    ****/
         /***************************************************/
 
-        protected override List<Type> GetDependencyTypes<T>()
+        protected override List<Type> DependencyTypes<T>()
         {
             Type type = typeof(T);
 
@@ -37,7 +37,7 @@ namespace BH.Adapter.Robot
         private static Dictionary<Type, List<Type>> m_DependencyTypes = new Dictionary<Type, List<Type>>
         {
             {typeof(Bar), new List<Type> { typeof(Node) } },
-            {typeof(ICrossSection), new List<Type> { typeof(Material) } }
+            {typeof(ISectionProperty), new List<Type> { typeof(Material) } }
         };
 
     }

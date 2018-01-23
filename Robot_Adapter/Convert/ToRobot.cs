@@ -29,7 +29,7 @@ namespace BH.Adapter.Robot
             {
                 int nodeNum = 0;
                 int.TryParse(bhomNode.CustomData[robotAdapter.AdapterId].ToString(), out nodeNum);
-                rcache.AddNode(nodeNum, bhomNode.Point.X, bhomNode.Point.Y, bhomNode.Point.Z);
+                rcache.AddNode(nodeNum, bhomNode.Position.X, bhomNode.Position.Y, bhomNode.Position.Z);
                 bhomNode.CustomData[RobotAdapter.ID] = nodeNum;
                 nodeSel.AddText(nodeNum.ToString());
             }
@@ -126,7 +126,7 @@ namespace BH.Adapter.Robot
             {
                 RobotGeoSegment segment = null;
                 {
-                    List<ICurve> segments = (List<ICurve>)perimeter.IGetExploded();
+                    List<ICurve> segments = (List<ICurve>)perimeter.ISubParts();
                     for (int j = 0; j < segments.Count; j++)
                     {
                         if (segments[j] is Arc)

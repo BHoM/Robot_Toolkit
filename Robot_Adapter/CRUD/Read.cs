@@ -9,9 +9,9 @@ using RobotOM;
 using BH.oM.Structural.Properties;
 using BH.Adapter;
 using BH.oM.Base;
-using BH.oM.Materials;
-using BH.Adapter.Queries;
+using BH.oM.Common.Materials;
 using BH.oM.Structural.Design;
+using BHS = BH.Engine.Structure;
 
 
 namespace BH.Adapter.Robot
@@ -23,7 +23,7 @@ namespace BH.Adapter.Robot
         /**** Adapter Methods                           ****/
         /***************************************************/
 
-        protected override IEnumerable<BHoMObject> Read(Type type, IList indices = null)
+        protected override IEnumerable<IObject> Read(Type type, IList indices = null)
         {
             if (type == typeof(Node))
                return  (this.UseNodeQueryMethod)? ReadNodesQuery() : ReadNodes();
@@ -125,7 +125,7 @@ namespace BH.Adapter.Robot
 
                     Node startNode = null; bhomNodes.TryGetValue(nod1.ToString(), out startNode);
                     Node endNode = null; bhomNodes.TryGetValue(nod2.ToString(), out endNode);
-                    Bar bhomBar = new Bar(startNode, endNode, bar_num.ToString());
+                    Bar bhomBar = BHS.Create.Bar(startNode, endNode, bar_num.ToString());
 
                     bhomBar.SectionProperty = null;
                     //bhomBar.OrientationAngle = robotBar.Gamma * 180 / Math.PI;
@@ -200,10 +200,10 @@ namespace BH.Adapter.Robot
                 {
                     result_row = row_set.CurrentRow;
                     nod_num = (int)result_row.GetParam(IRobotResultParamType.I_RPT_NODE);
-                    BH.oM.Geometry.Point point = new BH.oM.Geometry.Point((double)row_set.CurrentRow.GetValue(0),
+                    BH.oM.Geometry.Point point = BH.Engine.Geometry.Create.Point((double)row_set.CurrentRow.GetValue(0),
                                                                           (double)row_set.CurrentRow.GetValue(1),
                                                                           (double)row_set.CurrentRow.GetValue(2));
-                    Node bhomNode = new Node(point, nod_num.ToString());
+                    Node bhomNode = BHS.Create.Node(point, nod_num.ToString());
                     bhomNode.CustomData[RobotAdapter.ID] = nod_num.ToString();
                     bhomNodes.Add(bhomNode);
                     point = null;
@@ -218,7 +218,7 @@ namespace BH.Adapter.Robot
 
         /***************************************/
 
-        public List<ICrossSection> ReadSectionProperties(List<string> ids = null)
+        public List<ISectionProperty> ReadSectionProperties(List<string> ids = null)
         {
             return null;
         }

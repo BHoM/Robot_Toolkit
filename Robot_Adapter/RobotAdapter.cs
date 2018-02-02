@@ -29,7 +29,7 @@ namespace BH.Adapter.Robot
 
             if (IsApplicationRunning())
             {
-               this.RobotApplication = new RobotApplication();
+                m_RobotApplication = new RobotApplication();
                 Config.SeparateProperties = true;
                 Config.MergeWithComparer = true;
             }
@@ -37,10 +37,10 @@ namespace BH.Adapter.Robot
             {
                 try
                 {
-                    this.RobotApplication = new RobotApplication();
-                    this.RobotApplication.Visible = 1;
-                    this.RobotApplication.Interactive = 1; 
-                    this.RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
+                    m_RobotApplication = new RobotApplication();
+                    m_RobotApplication.Visible = 1;
+                    m_RobotApplication.Interactive = 1; 
+                    m_RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
                     Config.SeparateProperties = true;
                     Config.MergeWithComparer = true;
                 }
@@ -58,25 +58,25 @@ namespace BH.Adapter.Robot
         {
             if (!string.IsNullOrWhiteSpace(filePath))
             {
-                RobotApplication.Project.Open(filePath);
+                m_RobotApplication.Project.Open(filePath);
             }
             else if (IsApplicationRunning())
             {
-                RobotApplication = new RobotApplication();
+                m_RobotApplication = new RobotApplication();
             }
             else
             {
-                this.RobotApplication = new RobotApplication();
-                this.RobotApplication.Visible = 1;
-                this.RobotApplication.Interactive = 1;
-                RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
+                m_RobotApplication = new RobotApplication();
+                m_RobotApplication.Visible = 1;
+                m_RobotApplication.Interactive = 1;
+                m_RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
             }
         }
 
-        public int Update(FilterQuery filter, string property, object newValue, Dictionary<string, string> config = null)
-        {
-            throw new NotImplementedException();
-        }
+        //public int Update(FilterQuery filter, string property, object newValue, Dictionary<string, string> config = null)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         protected override object NextId(Type type, bool refresh)
         {
@@ -88,56 +88,59 @@ namespace BH.Adapter.Robot
             }
             else
             {
-                if (type == typeof(DesignGroup))
-                {
-                    List<int> groupNumbers = new List<int>();
-                    foreach (DesignGroup designGroup in ReadDesignGroups())
-                    {
-                        groupNumbers.Add(designGroup.Number);
-                    }
-                    groupNumbers.Sort();
-                    index = groupNumbers.Count > 0 ? groupNumbers.Last() + 1 : 1;
-                }
-                if (type == typeof(Bar))
-                {
-                    index = this.RobotApplication.Project.Structure.Bars.FreeNumber;
-                }
+                //if (type == typeof(DesignGroup))
+                //{
+                //    List<int> groupNumbers = new List<int>();
+                //    foreach (DesignGroup designGroup in ReadDesignGroups())
+                //    {
+                //        groupNumbers.Add(designGroup.Number);
+                //    }
+                //    groupNumbers.Sort();
+                //    index = groupNumbers.Count > 0 ? groupNumbers.Last() + 1 : 1;
+                //}
+                //if (type == typeof(Bar))
+                //{
+                //    index = m_RobotApplication.Project.Structure.Bars.FreeNumber;
+                //}
                 if (type == typeof(Node))
                 {
-                    index = this.RobotApplication.Project.Structure.Nodes.FreeNumber;
+                    index = m_RobotApplication.Project.Structure.Nodes.FreeNumber;
                 }
-                if (type == typeof(BH.oM.Structural.Elements.PanelFreeForm)) //TODO: Check that this is the right rtype of panel
-                {
-                    index = this.RobotApplication.Project.Structure.Objects.FreeNumber;
-                }
+                //if (type == typeof(BH.oM.Structural.Elements.PanelFreeForm)) //TODO: Check that this is the right rtype of panel
+                //{
+                //    index = m_RobotApplication.Project.Structure.Objects.FreeNumber;
+                //}
                 m_indexDict[type] = index;
             }
             return index;
         }
 
-        public bool UpdateTags(IEnumerable<object> objects)
-        {
-            throw new NotImplementedException();
-        }
+        //public bool UpdateTags(IEnumerable<object> objects)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-    
+
         /***************************************************/
         /**** Public  Fields                           ****/
         /***************************************************/
-
-        public RobotApplication RobotApplication;
 
         /***************************************************/
         /**** Public  Methods                           ****/
         /***************************************************/
 
-        public static void SetConfig(bool barQuery)
-        {            
-        }
+        //public static void SetConfig(bool barQuery)
+        //{            
+        //}
 
         public static bool IsApplicationRunning()
         {
             return (Process.GetProcessesByName("robot").Length > 0) ? true : false;
+        }
+
+        private void updateview()
+        {
+            m_RobotApplication.Project.ViewMngr.Refresh();
         }
 
         /***************************************************/
@@ -145,6 +148,7 @@ namespace BH.Adapter.Robot
         /***************************************************/
 
         private Dictionary<Type, int> m_indexDict = new Dictionary<Type, int>();
+        private RobotApplication m_RobotApplication;
 
     }
 }

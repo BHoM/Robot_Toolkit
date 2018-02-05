@@ -27,11 +27,13 @@ namespace BH.Adapter.Robot
         {
             AdapterId = Engine.Robot.Convert.AdapterID;
 
+            Config.SeparateProperties = true;
+            Config.MergeWithComparer = true;
+            Config.ProcessInMemory = false;
+
             if (IsApplicationRunning())
             {
                 m_RobotApplication = new RobotApplication();
-                Config.SeparateProperties = true;
-                Config.MergeWithComparer = true;
             }
             else 
             {
@@ -41,15 +43,12 @@ namespace BH.Adapter.Robot
                     m_RobotApplication.Visible = 1;
                     m_RobotApplication.Interactive = 1; 
                     m_RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
-                    Config.SeparateProperties = true;
-                    Config.MergeWithComparer = true;
                 }
                 catch
                 {
                     Console.WriteLine("Cannot load Robot, check that Robot is installed and a license is available");
                 }
             }
-
         }
 
         /***************************************************/
@@ -142,6 +141,12 @@ namespace BH.Adapter.Robot
         {
             m_RobotApplication.Project.ViewMngr.Refresh();
         }
+
+        //~RobotAdapter()
+        //{
+        //    //m_RobotApplication.Project.SaveAs(@"C:\Users\phesari\Desktop\Structure.rtd");
+        //    m_RobotApplication.Project.Save();
+        //}
 
         /***************************************************/
         /**** Private Fields                            ****/

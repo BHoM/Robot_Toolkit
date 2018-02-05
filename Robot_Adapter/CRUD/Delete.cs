@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using BH.oM.Structural.Elements;
 using RobotOM;
 using BH.oM.Structural.Design;
 
@@ -18,7 +20,31 @@ namespace BH.Adapter.Robot
             //{
             //    DeleteSteelDesignGroups(ids as List<int>);
             //}
-                return 0;
+
+            if (type == typeof(Node))
+                return DeleteNodes(ids);
+
+            return 0;
+        }
+
+        public int DeleteNodes(IEnumerable<object> ids)
+        {
+            //int sucess = 1;
+            //RobotSelection nodeSel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
+            //List<int> indicies = ids.Cast<int>().ToList();
+
+            //foreach (int ind in indicies)
+            //{
+            //    nodeSel.AddOne(ind);
+            //}
+
+            //if (nodeSel.Count == indicies.Count())
+            //{
+            //    m_RobotApplication.Project.Structure.Nodes.DeleteMany(nodeSel);
+            //    return sucess;
+            //}
+
+            return 0;
         }
 
         /***************************************************/

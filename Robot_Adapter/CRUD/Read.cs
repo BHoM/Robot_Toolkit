@@ -22,9 +22,12 @@ namespace BH.Adapter.Robot
         {
             if (type == typeof(Node))
                 return ReadNodes();
-
             if (type == typeof(Bar))
                 return new List<Bar>();
+            if (type == typeof(Constraint6DOF))
+                return ReadConstraints6DOF();
+            if (type == typeof(Material))
+                return new List<Material>();
             //if (type == typeof(Node))
             //   return  (this.UseNodeQueryMethod)? ReadNodesQuery() : ReadNodes();
             //if (type == typeof(Bar))
@@ -163,6 +166,20 @@ namespace BH.Adapter.Robot
                 bhomNodes.Add(bhomNode);
             }
             return bhomNodes;
+        }
+
+        public List<Constraint6DOF> ReadConstraints6DOF(List<string> ids = null)
+        {
+            IRobotCollection robSupport = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_SUPPORT);
+            List<Constraint6DOF> constList = new List<Constraint6DOF>();
+
+            for (int i = 1; i <= robSupport.Count; i++)
+            {
+                RobotNodeSupport robotNode = robSupport.Get(i);
+                Constraint6DOF bhomNode = BH.Engine.Robot.Convert.ToBHoMObject(robotNode);
+                constList.Add(bhomNode);
+            }
+            return constList;
         }
 
         ////Fast query method - only returns basic node information, not full node objects

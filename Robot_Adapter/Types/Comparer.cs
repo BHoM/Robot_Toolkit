@@ -38,6 +38,7 @@ namespace BH.Adapter.Robot
             {typeof(Bar), new BarEndNodesDistanceComparer(3) },
             {typeof(ISectionProperty), new BHoMObjectNameOrToStringComparer() },
             {typeof(Material), new BHoMObjectNameComparer() },
+            {typeof(Constraint6DOF), new BHoMObjectNameComparer() },
         };
 
         /***************************************************/

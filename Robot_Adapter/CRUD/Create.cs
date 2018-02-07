@@ -73,10 +73,12 @@ namespace BH.Adapter.Robot
         private bool Create(IEnumerable<ISectionProperty> secProp)
         {
             List<ISectionProperty> secPropList = secProp.ToList();
+
             for (int i = 0; i < secPropList.Count; i++)
             {
                 IRobotLabel lable = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, secPropList[i].Name);
                 RobotBarSectionData secData = lable.Data;
+                BH.Engine.Robot.Convert.ISectionType(secPropList[i], secData);
                 m_RobotApplication.Project.Structure.Labels.Store(lable);
             }
             return true;
@@ -94,9 +96,8 @@ namespace BH.Adapter.Robot
                 matData.E = matList[i].YoungsModulus;
                 matData.NU = matList[i].PoissonsRatio;
                 matData.RO = matList[i].Density;
-                matData.GMean = matList[i].ShearModulus;
+                matData.Kirchoff = matList[i].ShearModulus;
                 matData.DumpCoef = matList[i].DampingRatio;
-                matData.SaveToDBase();
                 m_RobotApplication.Project.Structure.Labels.Store(lable);
             }
             return true;

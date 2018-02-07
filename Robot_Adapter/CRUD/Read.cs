@@ -28,6 +28,8 @@ namespace BH.Adapter.Robot
                 return ReadConstraints6DOF();
             if (type == typeof(Material))
                 return new List<Material>();
+            if (typeof(ISectionProperty).IsAssignableFrom(type)) 
+                return new List<ISectionProperty>();
             //if (type == typeof(Node))
             //   return  (this.UseNodeQueryMethod)? ReadNodesQuery() : ReadNodes();
             //if (type == typeof(Bar))

@@ -96,6 +96,7 @@ namespace BH.Adapter.Robot
                 matData.RO = matList[i].Density;
                 matData.GMean = matList[i].ShearModulus;
                 matData.DumpCoef = matList[i].DampingRatio;
+                matData.SaveToDBase();
                 m_RobotApplication.Project.Structure.Labels.Store(lable);
             }
             return true;

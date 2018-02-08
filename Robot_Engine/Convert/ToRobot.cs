@@ -37,6 +37,7 @@ namespace BH.Engine.Robot
             return robotNodes;
          }
 
+
         public static IList<RobotBar> FromBHoMObjects(RobotApplication robot, List<Bar> bhomBars)
         {
             List<RobotBar> robotBars = new List<RobotBar>();

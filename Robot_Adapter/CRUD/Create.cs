@@ -3,6 +3,7 @@ using System.Linq;
 using BH.oM.Base;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
+using BH.oM.Structural.Loads;
 using BH.oM.Common.Materials;
 using RobotOM;
 using BH.Engine.Robot;
@@ -57,14 +58,7 @@ namespace BH.Adapter.Robot
             {
                 IRobotLabel lable = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_SUPPORT, constList[i].Name);
                 RobotNodeSupportData suppData = lable.Data;
-                suppData.UX = (int)(constList[i].TranslationX); suppData.UY = (int)(constList[i].TranslationY); suppData.UZ = (int)(constList[i].TranslationZ);
-                suppData.RX = (int)(constList[i].RotationX);    suppData.RY = (int)(constList[i].RotationY);    suppData.RZ = (int)(constList[i].RotationZ);
-                suppData.KX = constList[i].TranslationalStiffnessX;
-                suppData.KY = constList[i].TranslationalStiffnessY;
-                suppData.KZ = constList[i].TranslationalStiffnessZ;
-                suppData.HX = constList[i].RotationalStiffnessX;
-                suppData.HY = constList[i].RotationalStiffnessY;
-                suppData.HZ = constList[i].RotationalStiffnessZ;
+                BH.Engine.Robot.Convert.RobotConstraint(suppData, constList[i]);
                 m_RobotApplication.Project.Structure.Labels.Store(lable);
             }
             return true;
@@ -87,18 +81,23 @@ namespace BH.Adapter.Robot
         private bool Create(IEnumerable<Material> mat)
         {
             List<Material> matList = mat.ToList();
+    
             for (int i = 0; i < matList.Count; i++)
             {
                 IRobotLabel lable = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_MATERIAL, matList[i].Name);
                 IRobotMaterialData matData = lable.Data;
-                matData.Type = BH.Engine.Robot.Convert.GetMaterialType(matList[i]);
-                matData.Name = matList[i].Name;
-                matData.E = matList[i].YoungsModulus;
-                matData.NU = matList[i].PoissonsRatio;
-                matData.RO = matList[i].Density;
-                matData.Kirchoff = matList[i].ShearModulus;
-                matData.DumpCoef = matList[i].DampingRatio;
+                BH.Engine.Robot.Convert.RobotMaterial(matData, matList[i]);
                 m_RobotApplication.Project.Structure.Labels.Store(lable);
+            }
+            return true;
+        }
+
+        private bool Create(IEnumerable<ILoad> Loads)
+        {
+            List<ILoad> loadList = Loads.ToList();
+            for (int i = 0; i < loadList.Count; i++)
+            {
+
             }
             return true;
         }
@@ -138,22 +137,19 @@ namespace BH.Adapter.Robot
                 rcache.AddBar(barNum,
                               System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),
                               System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]),
-                              "UC 305x305x97",
+                              bhomBar.SectionProperty.Name,
+                              //"UC 305x305x97",
                               //bhomBar.SectionProperty.Name, 
-                              "STEEL",
+                              //"STEEL",
+                              bhomBar.SectionProperty.Material.Name,
                               //bhomBar.SectionProperty.Material.Name, 
                               bhomBar.OrientationAngle);
                 bhomBar.CustomData[AdapterId] = barNum;
                 barSel.AddText(barNum.ToString());
             }
             m_RobotApplication.Project.Structure.ApplyCache(rcache);
-            //IRobotCollection robotBarCol = m_RobotApplication.Project.Structure.Bars.GetMany(barSel);
 
-            //if (robotBarCol.Count > 0)
-            //    return true;
-            //else
-                return true;
-
+            return true;
         }
 
         /***************************************************/

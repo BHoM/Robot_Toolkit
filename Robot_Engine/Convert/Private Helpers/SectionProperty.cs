@@ -48,42 +48,139 @@ namespace BH.Engine.Robot
             SectionShapeType(section as dynamic, material, secData);
         }
 
-        private static void SectionShapeType(StandardBoxDimensions section, string material, IRobotBarSectionData secData)
+        private static void SectionShapeType(StandardBoxDimensions section, string material, IRobotBarSectionData sectionData)
         {
-            secData.Type = IRobotBarSectionType.I_BST_STANDARD;
-            secData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_RECT;
-            secData.MaterialName = material;
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_RECT;
 
-            RobotBarSectionData stdSecData = (RobotBarSectionData)secData;
-            stdSecData.SetValue(IRobotBarSectionDataValue.I_BSDV_BF, section.Width);
-            stdSecData.SetValue(IRobotBarSectionDataValue.I_BSDV_D, section.Height);
-            stdSecData.SetValue(IRobotBarSectionDataValue.I_BSDV_TW, section.Thickness);
-            stdSecData.SetValue(IRobotBarSectionDataValue.I_BSDV_TF, section.Thickness);
-            stdSecData.SetValue(IRobotBarSectionDataValue.I_BSDV_RA, section.InnerRadius);
-            stdSecData.SetValue(IRobotBarSectionDataValue.I_BSDV_RI, section.OuterRadius);
+            sectionData.MaterialName = material;
+
+            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H, section.Height);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B, section.Width);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_T, section.Thickness);
+
+            sectionData.CalcNonstdGeometry();
         }
 
-        private static void SectionShapeType(StandardISectionDimensions section, string material, IRobotBarSectionData secData)
+        private static void SectionShapeType(FabricatedBoxDimensions section, string material, IRobotBarSectionData sectionData)
         {
-            secData.Type = IRobotBarSectionType.I_BST_NS_I;
-            secData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_I_MONOSYM;
-            secData.MaterialName = material;
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_BOX;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_BOX_3;
+            sectionData.MaterialName = material;
 
-            RobotBarSectionNonstdData nonsStdData = secData.CreateNonstd(0);
-            RobotBarSectionData stdSecData = (RobotBarSectionData)secData;
-            stdSecData.SetValue(IRobotBarSectionDataValue.I_BSDV_BF, section.Width);
+            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B, section.Width);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B1, section.Width);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B2, section.Width);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_H, section.Height);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_TW, section.WebThickness);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF, section.TopFlangeThickness);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF2, section.BotFlangeThickness);
+
+            sectionData.CalcNonstdGeometry();
         }
 
-        //private static IRobotBarSectionType SectionShapeType(StandardTeeSectionDimensions section, IRobotBarSectionData secData)
-        //{
-        //    return IRobotBarSectionType.I_BST_NS_T;
-        //}
+        private static void SectionShapeType(FabricatedISectionDimensions section, string material, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_II;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_I_MONOSYM;
+            sectionData.MaterialName = material;
 
-        //private static IRobotBarSectionType SectionShapeType(StandardChannelSectionDimensions section, IRobotBarSectionData secData)
-        //{
-        //    return IRobotBarSectionType.I_BST_NS_TUBE;
-        //}
+            RobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_B1, section.BotFlangeWidth);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_B2, section.TopFlangeWidth);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_H, section.Height);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TW, section.WebThickness);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TF1, section.BotFlangeThickness);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TF2, section.TopFlangeThickness);
+
+            sectionData.CalcNonstdGeometry();
+        }
+
+        private static void SectionShapeType(StandardISectionDimensions section, string material, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_I;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_I_BISYM;
+            sectionData.MaterialName = material;
+
+            RobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B, section.Width);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H, section.Height);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW, section.WebThickness);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF, section.FlangeThickness);
+
+            sectionData.CalcNonstdGeometry();
+        }
+
+        private static void SectionShapeType(StandardTeeSectionDimensions section, string material, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_T;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_T_SHAPE;
+
+            sectionData.MaterialName = material;
+
+            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_B, section.Width);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_H, section.Height);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_TF, section.FlangeThickness);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_TW, section.WebThickness);
+
+            sectionData.CalcNonstdGeometry();
+        }
+
+        private static void SectionShapeType(TubeDimensions section, string material, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_TUBE;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_TUBE;
+
+            sectionData.MaterialName = material;
+
+            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D, section.Diameter);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_T, section.Thickness);
+
+            sectionData.CalcNonstdGeometry();
+        }
+
+        private static void SectionShapeType(RectangleSectionDimensions section, string material, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_RECT_FILLED;
+
+            sectionData.MaterialName = material;
+
+            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H, section.Height);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B, section.Width);
+
+            sectionData.CalcNonstdGeometry();
+        }
+
+
+        private static void SectionShapeType(StandardChannelSectionDimensions section, string material, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_C;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_C_SHAPE;
+
+            sectionData.MaterialName = material;
+
+            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_B, section.FlangeWidth);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_H, section.Height);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_TW, section.WebThickness);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_TF, section.FlangeThickness);
+
+            sectionData.CalcNonstdGeometry();
+        }
 
         //private static IRobotBarSectionType SectionShapeType(RectangleSectionDimensions section, IRobotBarSectionData secData)
         //{

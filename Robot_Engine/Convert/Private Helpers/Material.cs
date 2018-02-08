@@ -11,6 +11,18 @@ namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
+
+        public static void RobotMaterial(IRobotMaterialData materialData, Material material)
+        {
+            materialData.Type = GetMaterialType(material);
+            materialData.Name = material.Name;
+            materialData.E = material.YoungsModulus;
+            materialData.NU = material.PoissonsRatio;
+            materialData.RO = material.Density;
+            materialData.Kirchoff = material.ShearModulus;
+            materialData.DumpCoef = material.DampingRatio;
+        }
+
         public static IRobotMaterialType GetMaterialType(Material mat)
         {
             switch (mat.Type)

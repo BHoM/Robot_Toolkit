@@ -63,6 +63,7 @@
     <Compile Include="Convert\AdapterID.cs" />
     <Compile Include="Convert\FromRobot.cs" />
     <Compile Include="Convert\Private Helpers\Bar.cs" />
+    <Compile Include="Convert\Private Helpers\Constraint.cs" />
     <Compile Include="Convert\Private Helpers\Material.cs" />
     <Compile Include="Convert\Private Helpers\SectionProperty.cs" />
     <Compile Include="Convert\ToRobot.cs" />

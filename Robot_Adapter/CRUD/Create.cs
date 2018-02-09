@@ -92,12 +92,14 @@ namespace BH.Adapter.Robot
             return true;
         }
 
-        private bool Create(IEnumerable<ILoad> Loads)
+        private bool Create(IEnumerable<Loadcase> loadCase)
         {
-            List<ILoad> loadList = Loads.ToList();
-            for (int i = 0; i < loadList.Count; i++)
-            {
+            List<Loadcase> caseList = loadCase.ToList();
+            IRobotCaseServer caseServer = m_RobotApplication.Project.Structure.Cases;
 
+            for (int i = 0; i < caseList.Count; i++)
+            {
+                string name = IRobotCaseNature.I_CN_SEISMIC.ToString();
             }
             return true;
         }

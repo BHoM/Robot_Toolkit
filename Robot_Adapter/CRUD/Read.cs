@@ -5,6 +5,7 @@ using System.Linq;
 using BH.oM.Structural.Elements;
 using RobotOM;
 using BH.oM.Structural.Properties;
+using BH.oM.Structural.Loads;
 using BH.oM.Base;
 using BH.oM.Common.Materials;
 using BH.oM.Structural.Design;
@@ -30,6 +31,8 @@ namespace BH.Adapter.Robot
                 return new List<Material>();
             if (typeof(ISectionProperty).IsAssignableFrom(type)) 
                 return new List<ISectionProperty>();
+            if (type == typeof(Loadcase))
+                return new List<Loadcase>();
             //if (type == typeof(Node))
             //   return  (this.UseNodeQueryMethod)? ReadNodesQuery() : ReadNodes();
             //if (type == typeof(Bar))

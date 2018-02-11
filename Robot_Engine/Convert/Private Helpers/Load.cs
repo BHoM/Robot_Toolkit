@@ -11,33 +11,35 @@ namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
-        //public static int ReadLoadNature(Loadcase lCase, IRobotCaseServer caseServer)
-        //{
-        //    IRobotCase rCase = caseServer.CreateSimple(10000000, "", (IRobotCaseNature)2, IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
-        //    RobotCodeCmbGenerationParams RCCGP = caseServer.CodeCmbEngine.Params;
-        //    string[] names = new string[6];
-
-        //    for (int i = 0; i < names.Length; i++)
-        //    {
-        //        rCase.Nature = (IRobotCaseNature)i;
-        //        names[i] = rCase.Nature.ToString();
-        //    }
-
-        //    caseServer.Delete(10000000);
-        //    int numOfNatures = RCCGP.Regulations.Actions.Count;
-
-        //    string[] subNatures = new string[numOfNatures];
-        //    string[] subNames = new string[numOfNatures];
-
-        //    for (int i = 0; i < numOfNatures; i++)
-        //    {
-        //        subNames[i] = RCCGP.Regulations.Actions.GetName(i);
-
-        //        if (subNames[i] == "")
-        //            subNames[i] = names[(int)RCCGP.Regulations.Actions.GetNature(i)];
-
-        //        subNatures[i] = RCCGP.Regulations.Actions.GetNature(i).ToString();
-        //    }
-        //}
+        public static IRobotCaseNature RobotLoadNature(Loadcase lCase, out int subNature)
+        {
+            subNature = -1;
+            switch (lCase.Nature)
+            {
+                case LoadNature.Dead:
+                case LoadNature.SuperDead:
+                    subNature = 1;
+                    return IRobotCaseNature.I_CN_PERMANENT;
+                case LoadNature.Live:
+                    subNature = 4;
+                    return IRobotCaseNature.I_CN_EXPLOATATION;
+                case LoadNature.Accidental:
+                    subNature = 15;
+                    return IRobotCaseNature.I_CN_ACCIDENTAL;
+                case LoadNature.Snow:
+                    subNature = 10;
+                    return IRobotCaseNature.I_CN_SNOW;
+                case LoadNature.Wind:
+                    subNature = 13;
+                    return IRobotCaseNature.I_CN_WIND;
+                case LoadNature.Temperature:
+                    subNature = 14;
+                    return IRobotCaseNature.I_CN_TEMPERATURE;
+                case LoadNature.Seismic:
+                    return IRobotCaseNature.I_CN_SEISMIC;
+                default:
+                    return IRobotCaseNature.I_CN_PERMANENT;
+            }
+        }
     }
 }

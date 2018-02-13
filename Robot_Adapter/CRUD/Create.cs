@@ -14,42 +14,18 @@ namespace BH.Adapter.Robot
     {
 
         /***************************************************/
-        /**** Adapter Methods                           ****/
-        /***************************************************/
-
-
-        /***************************************************/
-        /**** Protected Methods                         ****/
+        /**** Index Adapter Interface                   ****/
         /***************************************************/
 
         protected override bool Create<T>(IEnumerable<T> objects, bool replaceAll = false)
         {
             bool success = true;
-
-            //if (typeof(T).IsAssignableFrom(typeof(Node)))
-            //    success = Create(objects as IEnumerable<Node>);
-            //if (typeof(T).IsAssignableFrom(typeof(Bar)))
-            //    success = Create(objects as IEnumerable<Bar>);
-            //if (typeof(T).IsAssignableFrom(typeof(Constraint6DOF)))
-            //    success = Create(objects as IEnumerable<Constraint6DOF>);
-            //foreach (T obj in objects)
-            //{
-            //    success &= Create(obj as dynamic);
-            //}
-
             success = Create(objects as dynamic);
             updateview();
             return success;
         }
 
-        //private bool Create(BH.oM.Base.IObject obj)
-        //{
-        //    if (obj is Node)
-        //        return Create(obj);
-        //    else
-        //        return false;
-        //}
-
+        /***************************************************/
 
         private bool Create(IEnumerable<Constraint6DOF> constraints)
         {
@@ -63,6 +39,8 @@ namespace BH.Adapter.Robot
             }
             return true;
         }
+
+        /***************************************************/
 
         private bool Create(IEnumerable<ISectionProperty> secProp)
         {
@@ -78,6 +56,8 @@ namespace BH.Adapter.Robot
             return true;
         }
 
+        /***************************************************/
+
         private bool Create(IEnumerable<Material> mat)
         {
             List<Material> matList = mat.ToList();
@@ -91,6 +71,8 @@ namespace BH.Adapter.Robot
             }
             return true;
         }
+
+        /***************************************************/
 
         private bool Create(IEnumerable<Loadcase> loadCase)
         {
@@ -108,6 +90,8 @@ namespace BH.Adapter.Robot
             }
             return true;
         }
+
+        /***************************************************/
 
 
         private bool Create(IEnumerable<BH.oM.Structural.Elements.Node> nodes)
@@ -134,6 +118,8 @@ namespace BH.Adapter.Robot
             return true;
         }
 
+        /***************************************************/
+
         public bool Create(IEnumerable<Bar> bhomBars)
         {
             RobotStructureCache rcache = m_RobotApplication.Project.Structure.CreateCache();
@@ -145,16 +131,42 @@ namespace BH.Adapter.Robot
                               System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),
                               System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]),
                               bhomBar.SectionProperty.Name,
-                              //"UC 305x305x97",
-                              //bhomBar.SectionProperty.Name, 
-                              //"STEEL",
                               bhomBar.SectionProperty.Material.Name,
-                              //bhomBar.SectionProperty.Material.Name, 
                               bhomBar.OrientationAngle);
                 bhomBar.CustomData[AdapterId] = barNum;
                 barSel.AddText(barNum.ToString());
             }
             m_RobotApplication.Project.Structure.ApplyCache(rcache);
+
+            return true;
+        }
+
+        /***************************************************/
+
+        public bool Create(IEnumerable<ILoad> loads)
+        {
+            RobotCaseServer caseServer = m_RobotApplication.Project.Structure.Cases;
+
+            foreach (ILoad load in loads)
+            {
+            }
+
+            return true;
+        }
+
+        /***************************************************/
+
+        public bool Create<T>(IEnumerable<BH.oM.Base.BHoMGroup<T>> groups) where T : BH.oM.Base.IObject
+        {
+
+            RobotGroupServer rServer = m_RobotApplication.Project.Structure.Groups;
+            foreach (BHoMGroup<T> group in groups)
+            {
+                IRobotObjectType rType = BH.Engine.Robot.Convert.RobotObjectType(typeof(T));
+                string members = group.Elements.Select(x => int.Parse(x.CustomData[BH.Engine.Robot.Convert.AdapterID].ToString())).GeterateIdString();
+                rServer.Create(rType, group.Name, members);
+                RobotGroup robotGroup = rServer.Get(rType, 0);
+            }
 
             return true;
         }

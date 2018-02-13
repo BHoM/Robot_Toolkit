@@ -41,5 +41,25 @@ namespace BH.Engine.Robot
                     return IRobotCaseNature.I_CN_PERMANENT;
             }
         }
+
+        public static void IRobotLoad(ILoad load, RobotCaseServer caseServer)
+        {
+            RobotLoad(load as dynamic, caseServer);
+        }
+
+        public static void RobotLoad(GravityLoad load, RobotCaseServer caseServer)
+        {
+            
+            IRobotCase rCase = caseServer.Get(load.Loadcase.Number);
+            RobotSimpleCase sCase = rCase as RobotSimpleCase;
+            IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_DEAD);
+
+            loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_DEAD);
+            //load.Objects.Elements[0].
+            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_X, load.GravityDirection.X);
+            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Y, load.GravityDirection.Y);
+            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Z, load.GravityDirection.Z);
+            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_ENTIRE_STRUCTURE, 1);
+        }
     }
 }

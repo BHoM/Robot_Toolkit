@@ -11,23 +11,23 @@ namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
-        public static void ISectionType(ISectionProperty section, IRobotBarSectionData secData)
+        public static void ISectionType(this ISectionProperty section, IRobotBarSectionData secData)
         {
             SectionType(section as dynamic, section.Material.Name, secData);
         }
 
-        public static IRobotBarSectionType SectionType(ExplicitSection section, string material, IRobotBarSectionData secData)
+        public static IRobotBarSectionType SectionType(this ExplicitSection section, string material, IRobotBarSectionData secData)
         {
             throw new NotImplementedException();
         }
 
-        public static IRobotBarSectionType SectionType(CableSection section, string material, IRobotBarSectionData secData)
+        public static IRobotBarSectionType SectionType(this CableSection section, string material, IRobotBarSectionData secData)
         {
             throw new NotImplementedException();
         }
 
 
-        public static void SectionType(SteelSection section, string material, IRobotBarSectionData secData)
+        public static void SectionType(this SteelSection section, string material, IRobotBarSectionData secData)
         {
             if (section.SectionDimensions.Shape == ShapeType.Polygon)
                 SectionShapeType(section.Edges, secData);
@@ -35,7 +35,7 @@ namespace BH.Engine.Robot
                 ISectionShapeType(section.SectionDimensions, material, secData);
         }
 
-        public static void SectionType(ConcreteSection section, string material, IRobotBarSectionData secData)
+        public static void SectionType(this ConcreteSection section, string material, IRobotBarSectionData secData)
         {
             if (section.SectionDimension.Shape == ShapeType.Polygon)
                 SectionShapeType(section.Edges, secData);
@@ -43,12 +43,12 @@ namespace BH.Engine.Robot
                 ISectionShapeType(section.SectionDimension, material, secData);
         }
 
-        public static void ISectionShapeType(ISectionDimensions section, string material, IRobotBarSectionData secData)
+        public static void ISectionShapeType(this ISectionDimensions section, string material, IRobotBarSectionData secData)
         {
             SectionShapeType(section as dynamic, material, secData);
         }
 
-        private static void SectionShapeType(StandardBoxDimensions section, string material, IRobotBarSectionData sectionData)
+        private static void SectionShapeType(this StandardBoxDimensions section, string material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_RECT;
@@ -64,7 +64,7 @@ namespace BH.Engine.Robot
             sectionData.CalcNonstdGeometry();
         }
 
-        private static void SectionShapeType(FabricatedBoxDimensions section, string material, IRobotBarSectionData sectionData)
+        private static void SectionShapeType(this FabricatedBoxDimensions section, string material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_BOX;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_BOX_3;
@@ -83,7 +83,7 @@ namespace BH.Engine.Robot
             sectionData.CalcNonstdGeometry();
         }
 
-        private static void SectionShapeType(FabricatedISectionDimensions section, string material, IRobotBarSectionData sectionData)
+        private static void SectionShapeType(this FabricatedISectionDimensions section, string material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_II;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_I_MONOSYM;
@@ -101,7 +101,7 @@ namespace BH.Engine.Robot
             sectionData.CalcNonstdGeometry();
         }
 
-        private static void SectionShapeType(StandardISectionDimensions section, string material, IRobotBarSectionData sectionData)
+        private static void SectionShapeType(this StandardISectionDimensions section, string material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_I;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_I_BISYM;
@@ -117,7 +117,7 @@ namespace BH.Engine.Robot
             sectionData.CalcNonstdGeometry();
         }
 
-        private static void SectionShapeType(StandardTeeSectionDimensions section, string material, IRobotBarSectionData sectionData)
+        private static void SectionShapeType(this StandardTeeSectionDimensions section, string material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_T;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_T_SHAPE;
@@ -134,7 +134,7 @@ namespace BH.Engine.Robot
             sectionData.CalcNonstdGeometry();
         }
 
-        private static void SectionShapeType(TubeDimensions section, string material, IRobotBarSectionData sectionData)
+        private static void SectionShapeType(this TubeDimensions section, string material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_TUBE;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_TUBE;
@@ -149,7 +149,7 @@ namespace BH.Engine.Robot
             sectionData.CalcNonstdGeometry();
         }
 
-        private static void SectionShapeType(RectangleSectionDimensions section, string material, IRobotBarSectionData sectionData)
+        private static void SectionShapeType(this RectangleSectionDimensions section, string material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_RECT_FILLED;
@@ -165,7 +165,7 @@ namespace BH.Engine.Robot
         }
 
 
-        private static void SectionShapeType(StandardChannelSectionDimensions section, string material, IRobotBarSectionData sectionData)
+        private static void SectionShapeType(this StandardChannelSectionDimensions section, string material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_C;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_C_SHAPE;
@@ -187,7 +187,7 @@ namespace BH.Engine.Robot
         //    return IRobotBarSectionType.I_BST_NS_RECT;
         //}
 
-        private static void SectionShapeType(IList<ICurve> edges, IRobotBarSectionData secData)
+        private static void SectionShapeType(this IList<ICurve> edges, IRobotBarSectionData secData)
         {
             throw new NotImplementedException();
         }

@@ -2,6 +2,7 @@
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
 using BH.oM.Structural.Loads;
+using BH.oM.Base;
 using System;
 using System.Collections.Generic;
 
@@ -37,7 +38,7 @@ namespace BH.Adapter.Robot
             {typeof(Bar), new List<Type> { typeof(ISectionProperty), typeof(Node) } },
             {typeof(ISectionProperty), new List<Type> { typeof(Material) } },
             {typeof(Node), new List<Type> { typeof(Constraint6DOF) } },
-            {typeof(ILoad), new List<Type> { typeof(Loadcase) } }
+            {typeof(ILoad), new List<Type> { typeof(Loadcase), typeof(BHoMGroup<IObject>)} }
         };
 
 

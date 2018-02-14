@@ -113,7 +113,8 @@ namespace BH.Adapter.Robot
 
             for (int i = freeNum; i <= (freeNum - 1 + nodeList.Count); i++)
             {
-                m_RobotApplication.Project.Structure.Nodes.Get(i).SetLabel(IRobotLabelType.I_LT_SUPPORT, nodeList[i - freeNum].Constraint.Name);
+                if(nodeList[i - freeNum].Constraint != null)
+                    m_RobotApplication.Project.Structure.Nodes.Get(i).SetLabel(IRobotLabelType.I_LT_SUPPORT, nodeList[i - freeNum].Constraint.Name);
             }
             return true;
         }
@@ -146,9 +147,14 @@ namespace BH.Adapter.Robot
         public bool Create(IEnumerable<ILoad> loads)
         {
             RobotCaseServer caseServer = m_RobotApplication.Project.Structure.Cases;
+            RobotGroupServer rGroupServer = m_RobotApplication.Project.Structure.Groups;
 
             foreach (ILoad load in loads)
             {
+                IRobotCase rCase = caseServer.Get(load.Loadcase.Number);
+                RobotSimpleCase sCase = rCase as RobotSimpleCase;
+                IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_DEAD);
+                Convert.IRobotLoad(load, loadRecord, rGroupServer);
             }
 
             return true;
@@ -159,13 +165,12 @@ namespace BH.Adapter.Robot
         public bool Create<T>(IEnumerable<BH.oM.Base.BHoMGroup<T>> groups) where T : BH.oM.Base.IObject
         {
 
-            RobotGroupServer rServer = m_RobotApplication.Project.Structure.Groups;
+            RobotGroupServer rGroupServer = m_RobotApplication.Project.Structure.Groups;
             foreach (BHoMGroup<T> group in groups)
             {
                 IRobotObjectType rType = BH.Engine.Robot.Convert.RobotObjectType(typeof(T));
                 string members = group.Elements.Select(x => int.Parse(x.CustomData[BH.Engine.Robot.Convert.AdapterID].ToString())).GeterateIdString();
-                rServer.Create(rType, group.Name, members);
-                RobotGroup robotGroup = rServer.Get(rType, 0);
+                rGroupServer.Create(rType, group.Name, members);
             }
 
             return true;

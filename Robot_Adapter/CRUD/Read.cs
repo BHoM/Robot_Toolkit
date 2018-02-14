@@ -29,10 +29,14 @@ namespace BH.Adapter.Robot
                 return ReadConstraints6DOF();
             if (type == typeof(Material))
                 return new List<Material>();
-            if (typeof(ISectionProperty).IsAssignableFrom(type)) 
-                return new List<ISectionProperty>();
             if (type == typeof(Loadcase))
                 return new List<Loadcase>();
+            if (typeof(ISectionProperty).IsAssignableFrom(type)) 
+                return new List<ISectionProperty>();
+            else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
+                return new List<ILoad>(); //TODO: Implement load extraction
+            if (type.IsGenericType && type.Name == typeof(BHoMGroup<IObject>).Name)
+                return new List<BHoMGroup<IObject>>();
             //if (type == typeof(Node))
             //   return  (this.UseNodeQueryMethod)? ReadNodesQuery() : ReadNodes();
             //if (type == typeof(Bar))

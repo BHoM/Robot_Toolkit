@@ -42,24 +42,41 @@ namespace BH.Engine.Robot
             }
         }
 
-        public static void IRobotLoad(ILoad load, RobotCaseServer caseServer)
+        public static void IRobotLoad(this ILoad load, IRobotLoadRecord loadRecord, RobotGroupServer rGroupServer)
         {
-            RobotLoad(load as dynamic, caseServer);
+            RobotLoad(load as dynamic, loadRecord, rGroupServer);
         }
 
-        public static void RobotLoad(GravityLoad load, RobotCaseServer caseServer)
+        public static void RobotLoad(this GravityLoad load, IRobotLoadRecord loadRecord, RobotGroupServer rGroupServer)
         {
-            
-            IRobotCase rCase = caseServer.Get(load.Loadcase.Number);
-            RobotSimpleCase sCase = rCase as RobotSimpleCase;
-            IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_DEAD);
-
-            loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_DEAD);
-            //load.Objects.Elements[0].
+            loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
             loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_X, load.GravityDirection.X);
             loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Y, load.GravityDirection.Y);
             loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Z, load.GravityDirection.Z);
             loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_ENTIRE_STRUCTURE, 1);
         }
+
+        public static void RobotLoad(this PointForce load, IRobotLoadRecord loadRecord, RobotGroupServer rGroupServer)
+        {
+            loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
+            loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_FX, load.Force.X);
+            loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_FY, load.Force.Y);
+            loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_FZ, load.Force.Z);
+            if (load.Moment != null)
+            {
+                loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_CX, load.Moment.X);
+                loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_CY, load.Moment.Y);
+                loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_CZ, load.Moment.Z);
+            }
+        }
+
+        public static void RobotLoad(this BarUniformlyDistributedLoad load, IRobotLoadRecord loadRecord, RobotGroupServer rGroupServer)
+        {
+            loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
+            loadRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PX, load.Force.X);
+            loadRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PY, load.Force.Y);
+            loadRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PZ, load.Force.Z);
+        }
+
     }
 }

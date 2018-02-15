@@ -1,10 +1,12 @@
 ﻿using BH.oM.Geometry;
+using BH.Engine.Serialiser;
 using GeometryEngine = BH.Engine.Geometry;
 using RobotOM;
 using System;
 using System.Collections.Generic;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
+
 
 namespace BH.Engine.Robot
 {
@@ -97,7 +99,11 @@ namespace BH.Engine.Robot
         public static Node ToBHoMObject(this RobotNode robotNode)
         {
             Node bhomNode = new Node { Position = new Point { X = robotNode.X, Y = robotNode.Y, Z = robotNode.Z }, Name = robotNode.Number.ToString() };
-            bhomNode.CustomData[AdapterID] = robotNode.Number;
+            if (robotNode.HasLabel(IRobotLabelType.I_LT_SUPPORT) == 1)
+            {
+                bhomNode.Constraint = BH.Engine.Robot.Convert.ToBHoMObject((RobotNodeSupport)robotNode.GetLabel(IRobotLabelType.I_LT_SUPPORT));
+            }
+            bhomNode.CustomData.Add(AdapterID, robotNode.Number);
             return bhomNode;
         }
 

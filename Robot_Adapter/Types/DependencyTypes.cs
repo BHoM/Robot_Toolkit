@@ -25,7 +25,15 @@ namespace BH.Adapter.Robot
                 return m_DependencyTypes[type.BaseType];
 
             else
-                return new List<Type>();
+            {
+                foreach (Type interType in type.GetInterfaces())
+                {
+                    if (m_DependencyTypes.ContainsKey(interType))
+                        return m_DependencyTypes[interType];
+                }
+            }
+
+            return new List<Type>();
         }
 
 
@@ -38,7 +46,7 @@ namespace BH.Adapter.Robot
             {typeof(Bar), new List<Type> { typeof(ISectionProperty), typeof(Node) } },
             {typeof(ISectionProperty), new List<Type> { typeof(Material) } },
             {typeof(Node), new List<Type> { typeof(Constraint6DOF) } },
-            {typeof(ILoad), new List<Type> { typeof(Loadcase), typeof(BHoMGroup<IObject>)} }
+            {typeof(ILoad), new List<Type> { typeof(Loadcase) } }
         };
 
 

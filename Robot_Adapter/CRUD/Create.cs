@@ -153,8 +153,7 @@ namespace BH.Adapter.Robot
             {
                 IRobotCase rCase = caseServer.Get(load.Loadcase.Number);
                 RobotSimpleCase sCase = rCase as RobotSimpleCase;
-                IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_DEAD);
-                Convert.IRobotLoad(load, loadRecord, rGroupServer);
+                Convert.IRobotLoad(load, sCase, rGroupServer);
             }
 
             return true;

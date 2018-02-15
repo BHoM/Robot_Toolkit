@@ -51,26 +51,26 @@ namespace BH.Adapter.Robot
         /**** Protected Methods                         ****/
         /***************************************************/
 
-        //public List<Bar> ReadBars(List<string> ids = null)
-        //{
-        //    IRobotCollection robotBars = m_RobotApplication.Project.Structure.Bars.GetAll();
+        public List<Bar> ReadBars(List<string> ids = null)
+        {
+            IRobotCollection robotBars = m_RobotApplication.Project.Structure.Bars.GetAll();
 
-        //    List<Bar> bhomBars = new List<Bar>();
-        //    IEnumerable<Node> bhomNodesList = ReadNodesQuery();
-        //    Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionary(x => x.Name.ToString());
+            List<Bar> bhomBars = new List<Bar>();
+            IEnumerable<Node> bhomNodesList = ReadNodes();
+            Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionary(x => x.Name.ToString());
 
-        //    m_RobotApplication.Project.Structure.Bars.BeginMultiOperation();
-        //    for (int i = 1; i <= robotBars.Count; i++)
-        //    {
-        //        RobotBar robotBar = robotBars.Get(i);
-        //        Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar as dynamic, bhomNodes as dynamic);
-        //        bhomBar.CustomData[Engine.Robot.Convert.AdapterName] = robotBar.Name;
-        //        bhomBars.Add(bhomBar);
-        //    }
-        //    m_RobotApplication.Project.Structure.Bars.EndMultiOperation();
+            m_RobotApplication.Project.Structure.Bars.BeginMultiOperation();
+            for (int i = 1; i <= robotBars.Count; i++)
+            {
+                RobotBar robotBar = robotBars.Get(i);
+                Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar as dynamic, bhomNodes as dynamic);
+                bhomBar.CustomData[Engine.Robot.Convert.AdapterName] = robotBar.Name;
+                bhomBars.Add(bhomBar);
+            }
+            m_RobotApplication.Project.Structure.Bars.EndMultiOperation();
 
-        //    return bhomBars;
-        //}
+            return bhomBars;
+        }
 
         ////Fast query method - returns basic bar information, not full bar objects
         //public List<Bar> ReadBarsQuery(List<string> ids = null)
@@ -167,6 +167,7 @@ namespace BH.Adapter.Robot
         {
             IRobotCollection robotNodes = m_RobotApplication.Project.Structure.Nodes.GetAll();
             List<Node> bhomNodes = new List<Node>();
+            List<Constraint6DOF> constraints = ReadConstraints6DOF();
 
             for (int i = 1; i <= robotNodes.Count; i++)
             {

@@ -24,7 +24,7 @@ namespace BH.Adapter.Robot
             if (type == typeof(Node))
                 return ReadNodes();
             if (type == typeof(Bar))
-                return new List<Bar>();
+                return ReadBars();
             if (type == typeof(Constraint6DOF))
                 return ReadConstraints6DOF();
             if (type == typeof(Material))
@@ -250,6 +250,13 @@ namespace BH.Adapter.Robot
 
         //public List<ISectionProperty> ReadSectionProperties(List<string> ids = null)
         //{
+        //    IRobotCollection secProps = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_BAR_SECTION);
+        //    return null;
+        //}
+
+        //public List<Material> ReadMaterial(List<string> ids = null)
+        //{
+        //    IRobotCollection secProps = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_MATERIAL);
         //    return null;
         //}
 

@@ -44,5 +44,22 @@ namespace BH.Engine.Robot
                     return IRobotMaterialType.I_MT_OTHER;
             }
         }
+
+        public static MaterialType GetMaterialType(IRobotMaterialType mType)
+        {
+            switch (mType)
+            {
+                case IRobotMaterialType.I_MT_CONCRETE:
+                    return MaterialType.Concrete;
+                case IRobotMaterialType.I_MT_STEEL:
+                    return MaterialType.Steel;
+                case IRobotMaterialType.I_MT_TIMBER:
+                    return MaterialType.Timber;
+                case IRobotMaterialType.I_MT_ALUMINIUM:
+                    return MaterialType.Aluminium;
+                default:
+                    return MaterialType.Steel;
+            }
+        }
     }
 }

@@ -70,13 +70,13 @@ namespace BH.Engine.Robot
 
         #region Object Converters
 
-        public static Bar ToBHoMObject(this RobotBar robotBar, Dictionary<string,Node> bhomNodes)
+        public static Bar ToBHoMObject(this RobotBar robotBar, Dictionary<string,Node> bhomNodes, Dictionary<string, ISectionProperty> bhomSections)
         {
             Node startNode = null;  bhomNodes.TryGetValue(robotBar.StartNode.ToString(), out startNode);
             Node endNode = null; bhomNodes.TryGetValue(robotBar.EndNode.ToString(), out endNode);
             Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode, Name = robotBar.Number.ToString() };
 
-            bhomBar.SectionProperty = null;
+            bhomBar.SectionProperty = bhomSections[robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION)];
             bhomBar.OrientationAngle = robotBar.Gamma * 180 / Math.PI;
             bhomBar.Name = robotBar.Number.ToString();
             bhomBar.Tags.Add(robotBar.Name);

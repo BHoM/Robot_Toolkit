@@ -192,5 +192,145 @@ namespace BH.Engine.Robot
             throw new NotImplementedException();
         }
 
+
+        public static ISectionProperty IBHoMSection(IRobotBarSectionData secData, Material material)
+        {
+            switch (material.Type)
+            {
+                case MaterialType.Aluminium:
+                    return null;
+                case MaterialType.Steel:
+                    return BHoMSteelSection(secData);
+                case MaterialType.Concrete:
+                    return BHoMConcreteSection(secData);
+                case MaterialType.Timber:
+                    return null;
+                case MaterialType.Rebar:
+                    return null;
+                case MaterialType.Tendon:
+                    return null;
+                case MaterialType.Glass:
+                    return null;
+                case MaterialType.Cable:
+                    return null;
+                default:
+                    return null;
+            }
+
+        }
+
+        public static ISectionProperty BHoMConcreteSection(IRobotBarSectionData secData)
+        {
+            double b = 0;
+            double h = 0;
+            double T1 = 0;
+            double T2 = 0;
+            double T3 = 0;
+            double b1 = 0;
+            double b2 = 0;
+            double b3 = 0;
+
+            RobotBarSectionConcreteData concMember = secData.Concrete;
+            ISectionDimensions secDim;
+
+            switch (secData.ShapeType)
+            {
+                case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_RECT:
+                    h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_H);
+                    b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_B);
+                    secDim = new RectangleSectionDimensions(b, h, 0);
+                    return BH.Engine.Structure.Create.ConcreteSectionFromDimensions(secDim);
+                case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_I:
+                    b1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B1);
+                    b2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B2);
+                    T2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF1);
+                    T3 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF2);
+                    h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_H);
+                    b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B);
+                    secDim = new FabricatedISectionDimensions(h, b1, b2, b, T2, T3, 0);
+                    return BH.Engine.Structure.Create.ConcreteSectionFromDimensions(secDim);
+                case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_T:
+                    h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_H);
+                    b1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_B);
+                    T2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_HF);
+                    b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_BF);
+                    secDim = new StandardTeeSectionDimensions(h, b, b1, T2, 0, 0);
+                    return BH.Engine.Structure.Create.ConcreteSectionFromDimensions(secDim);
+                default:
+                    return null;
+            }
+        }
+
+
+        public static ISectionProperty BHoMSteelSection(IRobotBarSectionData secData)
+        {
+            ISectionDimensions secDim;
+
+            double h = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+            double b = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
+            double Tf = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);
+            double Tw = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);
+            double r = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_RA);
+            double ri = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_RI);
+            double s = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_S);
+            double mass = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_WEIGHT);
+
+            switch (secData.Type)
+            {
+                //case IRobotBarSectionType.I_BST_STANDARD:
+                //    break;
+                case IRobotBarSectionType.I_BST_NS_BOX:
+                    secDim = new StandardBoxDimensions(h, b, Tf, r, ri);
+                    return BH.Engine.Structure.Create.SteelSectionFromDimensions(secDim);
+                //case IRobotBarSectionType.I_BST_NS_I:
+                //    break;
+                //case IRobotBarSectionType.I_BST_NS_II:
+                //    break;
+                //case IRobotBarSectionType.I_BST_NS_TUBE:
+                //    break;
+                //case IRobotBarSectionType.I_BST_NS_RECT:
+                //    break;
+                //case IRobotBarSectionType.I_BST_NS_C:
+                //    break;
+                //case IRobotBarSectionType.I_BST_NS_L:
+                //    break;
+                //case IRobotBarSectionType.I_BST_NS_LP:
+                //    break;
+                //case IRobotBarSectionType.I_BST_NS_Z:
+                //    break;
+                //case IRobotBarSectionType.I_BST_NS_ZP:
+                //    break;
+                //case IRobotBarSectionType.I_BST_NS_T:
+                //    break;
+                //case IRobotBarSectionType.I_BST_NS_H:
+                //    break;
+                //case IRobotBarSectionType.I_BST_NS_XT:
+                //    break;
+                //case IRobotBarSectionType.I_BST_NS_XI:
+                //    break;
+                //case IRobotBarSectionType.I_BST_NS_DRECT:
+                //    break;
+                //case IRobotBarSectionType.I_BST_NS_CROSS:
+                //    break;
+                //case IRobotBarSectionType.I_BST_NS_HOLE:
+                //    break;
+                //case IRobotBarSectionType.I_BST_COMPLEX:
+                //    break;
+                //case IRobotBarSectionType.I_BST_NS_BOX_2:
+                //    break;
+                //case IRobotBarSectionType.I_BST_NS_POLYGONAL:
+                //    break;
+                //case IRobotBarSectionType.I_BST_SPECIAL:
+                //    break;
+                //case IRobotBarSectionType.I_BST_JOIST:
+                //    break;
+                //case IRobotBarSectionType.I_BST_NS_BOX_3:
+                //    break;
+                default:
+                    return null;
+            }
+        }
+
+
     }
 }

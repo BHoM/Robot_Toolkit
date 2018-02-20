@@ -30,7 +30,7 @@ namespace BH.Adapter.Robot
             if (type == typeof(Material))
                 return ReadMaterial();
             if (type == typeof(Loadcase))
-                return new List<Loadcase>();
+                return ReadLoadCase();
             if (typeof(ISectionProperty).IsAssignableFrom(type))
                 return ReadSectionProperties();
             else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
@@ -122,9 +122,12 @@ namespace BH.Adapter.Robot
                 {
                     IRobotLabel rLable = m_RobotApplication.Project.Structure.Labels.Get(IRobotLabelType.I_LT_MATERIAL, secData.MaterialName);
                     ISectionProperty bhomSec = BH.Engine.Robot.Convert.IBHoMSection(secData, materials[secData.MaterialName]);
-                    bhomSec.Material = materials[secData.MaterialName];
-                    bhomSec.Name = rSection.Name;
-                    bhomSectionProps.Add(bhomSec);
+                    if(bhomSec != null)
+                    {
+                        bhomSec.Material = materials[secData.MaterialName];
+                        bhomSec.Name = rSection.Name;
+                        bhomSectionProps.Add(bhomSec);
+                    }
                 }
             }
             return bhomSectionProps;
@@ -145,6 +148,21 @@ namespace BH.Adapter.Robot
                 bhomMaterials.Add(BH.Engine.Common.Create.Material(mData.Name, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO));
             }
             return bhomMaterials;
+        }
+
+        /***************************************************/
+
+        public List<Loadcase> ReadLoadCase(List<string> ids = null)
+        {
+            RobotCaseCollection rLoadCases = m_RobotApplication.Project.Structure.Cases.GetAll();
+            List<Loadcase> bhomLoadCases = new List<Loadcase>();
+
+            for (int i = 1; i <= rLoadCases.Count; i++)
+            {
+                IRobotCase rLoadCase = rLoadCases.Get(i) as IRobotCase;
+                bhomLoadCases.Add(BH.Engine.Structure.Create.Loadcase(rLoadCase.Name, rLoadCase.Number, BH.Engine.Robot.Convert.BHoMLoadNature(rLoadCase.Nature)));
+            }
+            return bhomLoadCases;
         }
 
         ///***************************************************/

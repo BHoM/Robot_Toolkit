@@ -42,6 +42,27 @@ namespace BH.Engine.Robot
             }
         }
 
+        public static LoadNature BHoMLoadNature(IRobotCaseNature nature)
+        {
+            switch (nature)
+            {
+                case IRobotCaseNature.I_CN_PERMANENT:
+                    return LoadNature.Dead;
+                case IRobotCaseNature.I_CN_EXPLOATATION:
+                    return LoadNature.Live;
+                case IRobotCaseNature.I_CN_SEISMIC:
+                    return LoadNature.Seismic;
+                case IRobotCaseNature.I_CN_SNOW:
+                    return LoadNature.Snow;
+                case IRobotCaseNature.I_CN_TEMPERATURE:
+                    return LoadNature.Temperature;
+                case IRobotCaseNature.I_CN_WIND:
+                    return LoadNature.Wind;
+                default:
+                    return LoadNature.Other;
+            }
+        }
+
         public static void IRobotLoad(this ILoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
             RobotLoad(load as dynamic, sCase, rGroupServer);
@@ -80,6 +101,8 @@ namespace BH.Engine.Robot
             loadRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PY, load.Force.Y);
             loadRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PZ, load.Force.Z);
         }
+
+
 
     }
 }

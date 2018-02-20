@@ -164,6 +164,23 @@ namespace BH.Engine.Robot
             sectionData.CalcNonstdGeometry();
         }
 
+        private static void SectionShapeType(this StandardAngleSectionDimensions section, string material, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_L;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_UUAP;
+
+            sectionData.MaterialName = material;
+
+            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H, section.Height);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B, section.Width);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF, section.FlangeThickness);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW, section.WebThickness);
+
+            sectionData.CalcNonstdGeometry();
+        }
+
 
         private static void SectionShapeType(this StandardChannelSectionDimensions section, string material, IRobotBarSectionData sectionData)
         {
@@ -223,12 +240,16 @@ namespace BH.Engine.Robot
         {
             double b = 0;
             double h = 0;
-            double T1 = 0;
-            double T2 = 0;
-            double T3 = 0;
+            double HF = 0;
+            double HF1 = 0;
+            double HF2 = 0;
             double b1 = 0;
             double b2 = 0;
             double b3 = 0;
+            double h1 = 0;
+            double h2 = 0;
+            double l1 = 0;
+            double l2 = 0;
 
             RobotBarSectionConcreteData concMember = secData.Concrete;
             ISectionDimensions secDim;
@@ -240,22 +261,54 @@ namespace BH.Engine.Robot
                     b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_B);
                     secDim = new RectangleSectionDimensions(b, h, 0);
                     return BH.Engine.Structure.Create.ConcreteSectionFromDimensions(secDim);
+
                 case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_I:
                     b1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B1);
                     b2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B2);
-                    T2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF1);
-                    T3 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF2);
+                    HF1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF1);
+                    HF2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF2);
                     h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_H);
                     b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B);
-                    secDim = new FabricatedISectionDimensions(h, b1, b2, b, T2, T3, 0);
+                    secDim = new FabricatedISectionDimensions(h, b1, b2, b, HF1, HF2, 0);
                     return BH.Engine.Structure.Create.ConcreteSectionFromDimensions(secDim);
+
                 case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_T:
                     h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_H);
                     b1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_B);
-                    T2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_HF);
+                    HF = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_HF);
                     b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_BF);
-                    secDim = new StandardTeeSectionDimensions(h, b, b1, T2, 0, 0);
+                    secDim = new StandardTeeSectionDimensions(h, b, b1, HF, 0, 0);
                     return BH.Engine.Structure.Create.ConcreteSectionFromDimensions(secDim);
+
+                case IRobotBarSectionShapeType.I_BSST_CONCR_COL_R:
+                    h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H);
+                    b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_B);
+                    secDim = new RectangleSectionDimensions(b, h, 0);
+                    return BH.Engine.Structure.Create.ConcreteSectionFromDimensions(secDim);
+
+                case IRobotBarSectionShapeType.I_BSST_CONCR_COL_T:
+                    h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H);
+                    b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_B);
+                    h1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H1);
+                    h2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H2);
+                    l1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_L1);
+                    l2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_L2);
+                    secDim = new StandardTeeSectionDimensions(h, b, b - l1 - l2, h - h1, 0, 0);
+                    return BH.Engine.Structure.Create.ConcreteSectionFromDimensions(secDim);
+
+                case IRobotBarSectionShapeType.I_BSST_CONCR_COL_C:
+                    h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_DE);
+                    secDim = new CircleDimensions(h);
+                    return BH.Engine.Structure.Create.ConcreteSectionFromDimensions(secDim);
+
+                case IRobotBarSectionShapeType.I_BSST_CONCR_COL_L:
+                    h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H);
+                    b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_B);
+                    h1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H1);
+                    l1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_L1);
+                    secDim = new StandardAngleSectionDimensions(h, b, b - l1, h - h1, 0, 0);
+                    return BH.Engine.Structure.Create.ConcreteSectionFromDimensions(secDim);
+
                 default:
                     return null;
             }
@@ -266,8 +319,8 @@ namespace BH.Engine.Robot
         {
             ISectionDimensions secDim;
 
-            double h = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
-            double b = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
+            double d = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_D);
+            double bf = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);
             double Tf = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);
             double Tw = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);
             double r = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_RA);
@@ -275,59 +328,39 @@ namespace BH.Engine.Robot
             double s = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_S);
             double mass = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_WEIGHT);
 
-            switch (secData.Type)
+            //List<double> testVal = new List<double>();
+            //for (int i = 0; i < 41; i++)
+            //{
+            //    testVal.Add(secData.GetValue((IRobotBarSectionDataValue)i));
+            //}
+
+            switch (secData.ShapeType)
             {
-                //case IRobotBarSectionType.I_BST_STANDARD:
-                //    break;
-                case IRobotBarSectionType.I_BST_NS_BOX:
-                    secDim = new StandardBoxDimensions(h, b, Tf, r, ri);
+                case IRobotBarSectionShapeType.I_BSST_USER_I_BISYM:
+                    secDim = new StandardISectionDimensions(d, bf, Tw, Tf, ri, r);
                     return BH.Engine.Structure.Create.SteelSectionFromDimensions(secDim);
-                //case IRobotBarSectionType.I_BST_NS_I:
-                //    break;
-                //case IRobotBarSectionType.I_BST_NS_II:
-                //    break;
-                //case IRobotBarSectionType.I_BST_NS_TUBE:
-                //    break;
-                //case IRobotBarSectionType.I_BST_NS_RECT:
-                //    break;
-                //case IRobotBarSectionType.I_BST_NS_C:
-                //    break;
-                //case IRobotBarSectionType.I_BST_NS_L:
-                //    break;
-                //case IRobotBarSectionType.I_BST_NS_LP:
-                //    break;
-                //case IRobotBarSectionType.I_BST_NS_Z:
-                //    break;
-                //case IRobotBarSectionType.I_BST_NS_ZP:
-                //    break;
-                //case IRobotBarSectionType.I_BST_NS_T:
-                //    break;
-                //case IRobotBarSectionType.I_BST_NS_H:
-                //    break;
-                //case IRobotBarSectionType.I_BST_NS_XT:
-                //    break;
-                //case IRobotBarSectionType.I_BST_NS_XI:
-                //    break;
-                //case IRobotBarSectionType.I_BST_NS_DRECT:
-                //    break;
-                //case IRobotBarSectionType.I_BST_NS_CROSS:
-                //    break;
-                //case IRobotBarSectionType.I_BST_NS_HOLE:
-                //    break;
-                //case IRobotBarSectionType.I_BST_COMPLEX:
-                //    break;
-                //case IRobotBarSectionType.I_BST_NS_BOX_2:
-                //    break;
-                //case IRobotBarSectionType.I_BST_NS_POLYGONAL:
-                //    break;
-                //case IRobotBarSectionType.I_BST_SPECIAL:
-                //    break;
-                //case IRobotBarSectionType.I_BST_JOIST:
-                //    break;
-                //case IRobotBarSectionType.I_BST_NS_BOX_3:
-                //    break;
+
+                case IRobotBarSectionShapeType.I_BSST_USER_RECT:
+                    secDim = new StandardBoxDimensions(d, bf, Tf, 0, 0);
+                    return BH.Engine.Structure.Create.SteelSectionFromDimensions(secDim);
+
+                case IRobotBarSectionShapeType.I_BSST_RECT_FILLED:
+                    secDim = new RectangleSectionDimensions(d, bf, 0);
+                    return BH.Engine.Structure.Create.SteelSectionFromDimensions(secDim);
+
+                case IRobotBarSectionShapeType.I_BSST_USER_T_SHAPE:
+                    secDim = new StandardTeeSectionDimensions(d, bf, Tw, Tf, 0, 0);
+                    return BH.Engine.Structure.Create.SteelSectionFromDimensions(secDim);
+
+                //case IRobotBarSectionShapeType.I_BSST_USER_TUBE:
+                //    secDim = new TubeDimensions(d, Tf);
+                //    return BH.Engine.Structure.Create.SteelSectionFromDimensions(secDim);
+
                 default:
                     return null;
+
+
+
             }
         }
 

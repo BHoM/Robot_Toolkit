@@ -15,57 +15,7 @@ namespace BH.Engine.Robot
 
         #region Object Converters
             
-        public static IList<RobotNode> FromBHoMObjects(RobotApplication robot, List<Node> bhomNodes)
-        {
-            List<RobotNode> robotNodes = new List<RobotNode>();
-            RobotStructureCache rcache = robot.Project.Structure.CreateCache();
-            RobotSelection nodeSel = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
-            foreach (Node bhomNode in bhomNodes)
-            {
-                int nodeNum = 0;
-                int.TryParse(bhomNode.CustomData[AdapterID].ToString(), out nodeNum);
-                rcache.AddNode(nodeNum, bhomNode.Position.X, bhomNode.Position.Y, bhomNode.Position.Z);
-                bhomNode.CustomData[AdapterID] = nodeNum;
-                nodeSel.AddText(nodeNum.ToString());
-            }
-            robot.Project.Structure.ApplyCache(rcache);
-            IRobotCollection robotNodeCol = robot.Project.Structure.Nodes.GetMany(nodeSel);
-            for(int i = 1; i <= robotNodeCol.Count; i++)
-            {
-                robotNodes.Add(robotNodeCol.Get(i));
-            }
-            return robotNodes;
-         }
 
-
-        public static IList<RobotBar> FromBHoMObjects(RobotApplication robot, List<Bar> bhomBars)
-        {
-            List<RobotBar> robotBars = new List<RobotBar>();
-            RobotStructureCache rcache = robot.Project.Structure.CreateCache();
-            RobotSelection barSel = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
-            foreach (Bar bhomBar in bhomBars)
-            {
-                int barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterID]);
-                rcache.AddBar(barNum, 
-                              System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterID]), 
-                              System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterID]),
-                              "UC 305x305x97",
-                              //bhomBar.SectionProperty.Name, 
-                              "STEEL",
-                              //bhomBar.SectionProperty.Material.Name, 
-                              bhomBar.OrientationAngle);
-                bhomBar.CustomData[AdapterID] = barNum;
-                barSel.AddText(barNum.ToString());
-            }
-            robot.Project.Structure.ApplyCache(rcache);
-            IRobotCollection robotBarCol = robot.Project.Structure.Bars.GetMany(barSel);
-            for (int i = 1; i <= robotBarCol.Count; i++)
-            {
-                robotBars.Add(robotBarCol.Get(i));
-            }
-
-            return robotBars;
-        }
 
         public static IList<RDimGroup> FromBHoMObjects(RobotApplication robot, List<DesignGroup> bhomdesignGroups)
         {
@@ -112,6 +62,7 @@ namespace BH.Engine.Robot
             }    
             return contour;
         }
+
         public static RobotGeoContour FromBHoMGeometry(RobotApplication robotapp, ICurve perimeter)
         {           
             RobotGeoContour contour = robotapp.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_CONTOUR);

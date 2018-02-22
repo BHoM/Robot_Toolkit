@@ -70,6 +70,7 @@
     <Compile Include="Convert\Private Helpers\Group.cs" />
     <Compile Include="Convert\Private Helpers\Load.cs" />
     <Compile Include="Convert\Private Helpers\Material.cs" />
+    <Compile Include="Convert\Private Helpers\Panel.cs" />
     <Compile Include="Convert\Private Helpers\SectionProperty.cs" />
     <Compile Include="Convert\ToRobot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

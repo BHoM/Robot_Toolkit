@@ -47,7 +47,9 @@ namespace BH.Adapter.Robot
             {typeof(ISectionProperty), new List<Type> { typeof(Material) } },
             {typeof(Node), new List<Type> { typeof(Constraint6DOF) } },
             {typeof(ILoad), new List<Type> { typeof(Loadcase) } },
-            {typeof(LoadCombination), new List<Type> { typeof(Loadcase) } }
+            {typeof(LoadCombination), new List<Type> { typeof(Loadcase) } },
+            {typeof(PanelPlanar), new List<Type> { typeof(Property2D) } },
+            {typeof(Property2D), new List<Type> { typeof(Material) } }
         };
 
 

@@ -97,10 +97,10 @@ namespace BH.Adapter.Robot
                 //    groupNumbers.Sort();
                 //    index = groupNumbers.Count > 0 ? groupNumbers.Last() + 1 : 1;
                 //}
-                //if (type == typeof(Bar))
-                //{
-                //    index = m_RobotApplication.Project.Structure.Bars.FreeNumber;
-                //}
+                if (type == typeof(Bar))
+                {
+                    index = m_RobotApplication.Project.Structure.Bars.FreeNumber;
+                }
                 if (type == typeof(Node))
                 {
                     index = m_RobotApplication.Project.Structure.Nodes.FreeNumber;

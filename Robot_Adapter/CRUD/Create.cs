@@ -136,7 +136,6 @@ namespace BH.Adapter.Robot
                               bhomBar.SectionProperty.Name,
                               bhomBar.SectionProperty.Material.Name,
                               bhomBar.OrientationAngle);
-                bhomBar.CustomData[AdapterId] = barNum;
                 barSel.AddText(barNum.ToString());
             }
             m_RobotApplication.Project.Structure.ApplyCache(rcache);

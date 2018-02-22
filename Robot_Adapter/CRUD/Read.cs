@@ -29,6 +29,10 @@ namespace BH.Adapter.Robot
                 return ReadConstraints6DOF();
             if (type == typeof(Material))
                 return ReadMaterial();
+            if (type == typeof(PanelPlanar))
+                return new List<PanelPlanar>();
+            if (type == typeof(Property2D))
+                return new List<Property2D>();
             if (type == typeof(Loadcase))
                 return ReadLoadCase();
             if (typeof(ISectionProperty).IsAssignableFrom(type))

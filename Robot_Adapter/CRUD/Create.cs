@@ -2,11 +2,13 @@
 using System.Linq;
 using BH.oM.Base;
 using BH.oM.Structural.Elements;
+using BH.oM.Geometry;
 using BH.oM.Structural.Properties;
 using BH.oM.Structural.Loads;
 using BH.oM.Common.Materials;
 using RobotOM;
 using BH.Engine.Robot;
+using BHEG = BH.Engine.Geometry;
 
 namespace BH.Adapter.Robot
 {
@@ -161,6 +163,51 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
+        public bool Create(IEnumerable<PanelPlanar> panels)
+        {
+            m_RobotApplication.Interactive = 0;
+            m_RobotApplication.Project.Structure.Objects.BeginMultiOperation();
+            RobotObjObjectServer objServer = m_RobotApplication.Project.Structure.Objects;
+
+            foreach (PanelPlanar panel in panels)
+            {
+                List<ICurve> segments = new List<ICurve>();
+                foreach (Edge edge in panel.ExternalEdges)
+                {
+                    segments.AddRange(BHEG.Query.ISubParts(edge.Curve).ToList());
+                }
+
+                RobotGeoObject contour;
+                RobotObjObject rpanel = objServer.Create(System.Convert.ToInt32(panel.CustomData[AdapterId]));
+                if (segments.Count > 1)
+                {
+                    contour = m_RobotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_CONTOUR);
+                    foreach (ICurve crv in segments)
+                    {
+                        RobotGeoSegment segment = m_RobotApplication.CmpntFactory.Create(BH.Engine.Robot.Convert.SegmentType(crv));
+                        (contour as RobotGeoContour).Add(BH.Engine.Robot.Convert.Segment(crv, segment));
+                    }
+                }
+                else
+                {
+                    contour = m_RobotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_CIRCLE);
+                    BH.Engine.Robot.Convert.SingleContourGeometry(segments[0], contour);
+                }
+
+                rpanel.Main.Geometry = contour as RobotGeoObject;
+                rpanel.Initialize();
+
+                rpanel.Main.Attribs.Meshed = 1;
+                rpanel.Update();
+                rpanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, panel.Property.Name);
+            }
+            m_RobotApplication.Project.Structure.Objects.EndMultiOperation();
+            m_RobotApplication.Interactive = 1;
+            return true;
+        }
+
+        /***************************************************/
+
         public bool Create<T>(IEnumerable<BH.oM.Base.BHoMGroup<T>> groups) where T : BH.oM.Base.IObject
         {
 
@@ -170,6 +217,23 @@ namespace BH.Adapter.Robot
                 IRobotObjectType rType = BH.Engine.Robot.Convert.RobotObjectType(typeof(T));
                 string members = group.Elements.Select(x => int.Parse(x.CustomData[BH.Engine.Robot.Convert.AdapterID].ToString())).GeterateIdString();
                 rGroupServer.Create(rType, group.Name, members);
+            }
+
+            return true;
+        }
+
+        /***************************************************/
+
+        public bool Create(IEnumerable<Property2D> properties)
+        {
+            RobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
+            foreach (Property2D property in properties)
+            {
+                IRobotLabel lable = labelServer.Create(IRobotLabelType.I_LT_PANEL_THICKNESS, property.Name);
+                RobotThicknessData thicknessData = lable.Data;
+                thicknessData.MaterialName = property.Material.Name;
+                BH.Engine.Robot.Convert.ThicknessProperty(thicknessData, property);
+                labelServer.Store(lable);
             }
 
             return true;

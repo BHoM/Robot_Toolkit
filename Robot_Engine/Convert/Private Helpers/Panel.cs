@@ -21,9 +21,6 @@ namespace BH.Engine.Robot
             if (curve is Line)
                 return IRobotComponentType.I_CT_GEO_SEGMENT_LINE;
 
-            if (curve is Circle)
-                return IRobotComponentType.I_CT_GEO_CIRCLE;
-
             else
                 throw new Exception("Geometry is only valid for Line, Arc and Circle");              
         }

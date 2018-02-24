@@ -19,7 +19,7 @@ namespace BH.Adapter.Robot
         /**** Adapter Methods                           ****/
         /***************************************************/
 
-        protected override IEnumerable<IObject> Read(Type type, IList indices = null)
+        protected override IEnumerable<IBHoMObject> Read(Type type, IList indices = null)
         {
             if (type == typeof(Node))
                 return ReadNodes();
@@ -39,8 +39,8 @@ namespace BH.Adapter.Robot
                 return ReadSectionProperties();
             else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
                 return new List<ILoad>(); //TODO: Implement load extraction
-            if (type.IsGenericType && type.Name == typeof(BHoMGroup<IObject>).Name)
-                return new List<BHoMGroup<IObject>>();
+            if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
+                return new List<BHoMGroup<IBHoMObject>>();
             //if (type == typeof(Node))
             //   return  (this.UseNodeQueryMethod)? ReadNodesQuery() : ReadNodes();
             //if (type == typeof(Bar))

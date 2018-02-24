@@ -28,7 +28,7 @@ namespace BH.Engine.Robot
                 return IRobotObjectType.I_OT_OBJECT;
         }
 
-        public static string CreateIdListOrGroupName<T>(this Load<T> load, RobotGroupServer rServer) where T : IObject
+        public static string CreateIdListOrGroupName<T>(this Load<T> load, RobotGroupServer rServer) where T : IBHoMObject
         {
             //For a named group, appy loads to the group name
             if (!string.IsNullOrWhiteSpace(load.Objects.Name))
@@ -107,7 +107,7 @@ namespace BH.Engine.Robot
 
         ///***************************************************/
 
-        //public static IRobotObjectType ElementType(this BHoMGroup<IObject> group)
+        //public static IRobotObjectType ElementType(this BHoMGroup<IBHoMObject> group)
         //{
         //    if (group.Elements.Where(x => x.GetType() == typeof(Node)).Count() == group.Elements.Count)
         //        return "NODE";
@@ -135,7 +135,7 @@ namespace BH.Engine.Robot
         ///***************************************************/
         ///**** Public Methods - Interfaces               ****/
         ///***************************************************/
-        //public static IRobotObjectType IElementType<T>(this BHoMGroup<T> group) where T : IObject
+        //public static IRobotObjectType IElementType<T>(this BHoMGroup<T> group) where T : IBHoMObject
         //{
         //    return ElementType(group as dynamic);
         //}

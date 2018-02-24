@@ -158,7 +158,7 @@ namespace BH.Engine.Robot
             return selection.Trim();
         }
 
-        internal static string FromSelectionList<T>(IEnumerable<T> objects) where T : IObject
+        internal static string FromSelectionList<T>(IEnumerable<T> objects) where T : IBHoMObject
         {
             string selection = "";
             foreach (T obj in objects)

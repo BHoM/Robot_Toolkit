@@ -207,7 +207,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        public bool Create<T>(IEnumerable<BH.oM.Base.BHoMGroup<T>> groups) where T : BH.oM.Base.IObject
+        public bool Create<T>(IEnumerable<BH.oM.Base.BHoMGroup<T>> groups) where T : BH.oM.Base.IBHoMObject
         {
 
             RobotGroupServer rGroupServer = m_RobotApplication.Project.Structure.Groups;

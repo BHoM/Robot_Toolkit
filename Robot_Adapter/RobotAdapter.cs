@@ -105,10 +105,10 @@ namespace BH.Adapter.Robot
                 {
                     index = m_RobotApplication.Project.Structure.Nodes.FreeNumber;
                 }
-                //if (type == typeof(BH.oM.Structural.Elements.PanelFreeForm)) //TODO: Check that this is the right rtype of panel
-                //{
-                //    index = m_RobotApplication.Project.Structure.Objects.FreeNumber;
-                //}
+                if (type == typeof(BH.oM.Structural.Elements.PanelPlanar)) //TODO: Check that this is the right rtype of panel
+                {
+                    index = m_RobotApplication.Project.Structure.Objects.FreeNumber;
+                }
                 m_indexDict[type] = index;
             }
             return index;

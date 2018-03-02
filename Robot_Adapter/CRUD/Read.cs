@@ -33,6 +33,8 @@ namespace BH.Adapter.Robot
                 return new List<PanelPlanar>();
             if (type == typeof(Property2D))
                 return new List<Property2D>();
+            if (type == typeof(RigidLink))
+                return new List<RigidLink>();
             if (type == typeof(Loadcase))
                 return ReadLoadCase();
             if (typeof(ISectionProperty).IsAssignableFrom(type))
@@ -69,7 +71,7 @@ namespace BH.Adapter.Robot
             {
                 RobotBar robotBar = robotBars.Get(i);
                 Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar as dynamic, bhomNodes as dynamic, bhomSections);
-                bhomBar.CustomData[Engine.Robot.Convert.AdapterName] = robotBar.Name;
+                bhomBar.CustomData[AdapterId] = robotBar.Number;
                 bhomBars.Add(bhomBar);
             }
             m_RobotApplication.Project.Structure.Bars.EndMultiOperation();
@@ -149,7 +151,9 @@ namespace BH.Adapter.Robot
                 IRobotLabel rMatLable = rMaterials.Get(i);
                 IRobotMaterialData mData = rMatLable.Data as IRobotMaterialData;
                 MaterialType bhomMatType = BH.Engine.Robot.Convert.GetMaterialType(mData.Type);
-                bhomMaterials.Add(BH.Engine.Common.Create.Material(mData.Name, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO));
+                Material bhomMat = BH.Engine.Common.Create.Material(mData.Name, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO);
+                bhomMat.CustomData.Add(AdapterId, mData.Name);
+                bhomMaterials.Add(bhomMat);
             }
             return bhomMaterials;
         }

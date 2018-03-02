@@ -74,6 +74,7 @@
     <Compile Include="CRUD\Create.cs" />
     <Compile Include="CRUD\Read.cs" />
     <Compile Include="CRUD\ReadResults.cs" />
+    <Compile Include="CRUD\UpdateObjects.cs" />
     <Compile Include="Types\Comparer.cs" />
     <Compile Include="Types\DependencyTypes.cs" />
     <Compile Include="RobotAdapter.cs" />

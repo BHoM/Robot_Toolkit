@@ -42,6 +42,23 @@ namespace BH.Adapter.Robot
             return true;
         }
 
+        private bool Create(IEnumerable<RigidLink> rigidLinks)
+        {
+            foreach (RigidLink rLink in rigidLinks)
+            {
+                IRobotLabel rigidLink = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_NODE_RIGID_LINK, rLink.Name);
+                string[] str = rLink.SlaveNodes.Select(x => x.CustomData[AdapterId].ToString() + ",").ToList().ToArray();
+                string slaves = string.Join("", str).TrimEnd(',');
+                m_RobotApplication.Project.Structure.Nodes.RigidLinks.Set((int)rLink.MasterNode.CustomData[AdapterId], slaves, rLink.Name);
+                IRobotNodeRigidLinkData rLinkData = rigidLink.Data;
+                m_RobotApplication.Project.Structure.Labels.Store(rigidLink);
+
+                rLinkData.UX = rLink.Constraint.XtoX; rLinkData.UY = rLink.Constraint.YtoY; rLinkData.UZ = rLink.Constraint.ZtoZ;
+                rLinkData.RX = rLink.Constraint.XXtoXX; rLinkData.RY = rLink.Constraint.YYtoYY; rLinkData.RZ = rLink.Constraint.ZZtoZZ;
+            }
+            return true;
+        }
+
         /***************************************************/
 
         private bool Create(IEnumerable<ISectionProperty> secProp)
@@ -126,7 +143,7 @@ namespace BH.Adapter.Robot
         public bool Create(IEnumerable<Bar> bhomBars)
         {
             RobotStructureCache rcache = m_RobotApplication.Project.Structure.CreateCache();
-            RobotSelection barSel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
+
             foreach (Bar bhomBar in bhomBars)
             {
                 int barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterId]);
@@ -136,11 +153,17 @@ namespace BH.Adapter.Robot
                               bhomBar.SectionProperty.Name,
                               bhomBar.SectionProperty.Material.Name,
                               bhomBar.OrientationAngle);
-                barSel.AddText(barNum.ToString());
             }
-            m_RobotApplication.Project.Structure.ApplyCache(rcache);
 
-            return true;
+            try
+            {
+                return m_RobotApplication.Project.Structure.ApplyCache(rcache).Bars.Count == bhomBars.Count();
+            }
+            catch (System.Exception e)
+            {
+                ErrorLog.Add(e.Message);
+                return false;
+            }
         }
 
         /***************************************************/

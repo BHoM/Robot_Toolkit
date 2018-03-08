@@ -95,14 +95,17 @@ namespace BH.Engine.Robot
 
         public static void RobotLoad(this BarUniformlyDistributedLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
-            IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_UNIFORM);
-            loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
-            loadRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PX, load.Force.X);
-            loadRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PY, load.Force.Y);
-            loadRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PZ, load.Force.Z);
+            IRobotLoadRecord loadRecordForce = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_UNIFORM);
+            loadRecordForce.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
+            loadRecordForce.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PX, load.Force.X);
+            loadRecordForce.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PY, load.Force.Y);
+            loadRecordForce.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PZ, load.Force.Z);
+
+            IRobotLoadRecord loadRecordMoment = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_MOMENT_DISTRIBUTED);
+            loadRecordMoment.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
+            loadRecordMoment.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MX, load.Moment.X);
+            loadRecordMoment.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MY, load.Moment.Y);
+            loadRecordMoment.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MZ, load.Moment.Z);
         }
-
-
-
     }
 }

@@ -50,7 +50,7 @@ namespace BH.Adapter.Robot
             {typeof(LoadCombination), new List<Type> { typeof(Loadcase) } },
             {typeof(PanelPlanar), new List<Type> { typeof(Property2D) } },
             {typeof(Property2D), new List<Type> { typeof(Material) } },
-            {typeof(RigidLink), new List<Type> { typeof(Node) } }
+            {typeof(RigidLink), new List<Type> { typeof(LinkConstraint), typeof(Node) } }
         };
 
 

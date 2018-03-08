@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BH.oM.DataManipulation.Queries;
 using BH.oM.Structural.Elements;
-using BH.oM.Structural.Design;
+using BH.oM.Structural.Loads;
 using RobotOM;
 using System.Diagnostics;
 
@@ -77,42 +77,7 @@ namespace BH.Adapter.Robot
         //    throw new NotImplementedException();
         //}
 
-        protected override object NextId(Type type, bool refresh)
-        {
-            int index = 1;
-            if (!refresh && m_indexDict.TryGetValue(type, out index))
-            {
-                index++;
-                m_indexDict[type] = index;
-            }
-            else
-            {
-                //if (type == typeof(DesignGroup))
-                //{
-                //    List<int> groupNumbers = new List<int>();
-                //    foreach (DesignGroup designGroup in ReadDesignGroups())
-                //    {
-                //        groupNumbers.Add(designGroup.Number);
-                //    }
-                //    groupNumbers.Sort();
-                //    index = groupNumbers.Count > 0 ? groupNumbers.Last() + 1 : 1;
-                //}
-                if (type == typeof(Bar))
-                {
-                    index = m_RobotApplication.Project.Structure.Bars.FreeNumber;
-                }
-                if (type == typeof(Node))
-                {
-                    index = m_RobotApplication.Project.Structure.Nodes.FreeNumber;
-                }
-                if (type == typeof(BH.oM.Structural.Elements.PanelPlanar)) //TODO: Check that this is the right rtype of panel
-                {
-                    index = m_RobotApplication.Project.Structure.Objects.FreeNumber;
-                }
-                m_indexDict[type] = index;
-            }
-            return index;
-        }
+     
 
         //public bool UpdateTags(IEnumerable<object> objects)
         //{
@@ -152,7 +117,6 @@ namespace BH.Adapter.Robot
         /**** Private Fields                            ****/
         /***************************************************/
 
-        private Dictionary<Type, int> m_indexDict = new Dictionary<Type, int>();
         private RobotApplication m_RobotApplication;
 
     }

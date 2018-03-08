@@ -31,10 +31,16 @@ namespace BH.Adapter.Robot
                 return ReadMaterial();
             if (type == typeof(PanelPlanar))
                 return new List<PanelPlanar>();
+            if (type == typeof(MeshFace))
+                return new List<MeshFace>();
             if (type == typeof(Property2D))
                 return new List<Property2D>();
             if (type == typeof(RigidLink))
                 return new List<RigidLink>();
+            if (type == typeof(LoadCombination))
+                return new List<LoadCombination>();
+            if (type == typeof(LinkConstraint))
+                return new List<LinkConstraint>();
             if (type == typeof(Loadcase))
                 return ReadLoadCase();
             if (typeof(ISectionProperty).IsAssignableFrom(type))
@@ -70,7 +76,7 @@ namespace BH.Adapter.Robot
             for (int i = 1; i <= robotBars.Count; i++)
             {
                 RobotBar robotBar = robotBars.Get(i);
-                Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar as dynamic, bhomNodes as dynamic, bhomSections);
+                Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar , bhomNodes, bhomSections);
                 bhomBar.CustomData[AdapterId] = robotBar.Number;
                 bhomBars.Add(bhomBar);
             }
@@ -91,6 +97,7 @@ namespace BH.Adapter.Robot
             {
                 RobotNode robotNode = robotNodes.Get(i);
                 Node bhomNode = BH.Engine.Robot.Convert.ToBHoMObject(robotNode);
+                bhomNode.CustomData[AdapterId] = robotNode.Number;
                 bhomNodes.Add(bhomNode);
             }
             return bhomNodes;
@@ -105,9 +112,10 @@ namespace BH.Adapter.Robot
 
             for (int i = 1; i <= robSupport.Count; i++)
             {
-                RobotNodeSupport robotNode = robSupport.Get(i);
-                Constraint6DOF bhomNode = BH.Engine.Robot.Convert.ToBHoMObject(robotNode);
-                constList.Add(bhomNode);
+                RobotNodeSupport rNodeSupp = robSupport.Get(i);
+                Constraint6DOF bhomSupp = BH.Engine.Robot.Convert.ToBHoMObject(rNodeSupp);
+                bhomSupp.CustomData.Add(AdapterId, rNodeSupp.Name);
+                constList.Add(bhomSupp);
             }
             return constList;
         }
@@ -119,7 +127,7 @@ namespace BH.Adapter.Robot
             IRobotCollection secProps = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_BAR_SECTION);
             List<ISectionProperty> bhomSectionProps = new List<ISectionProperty>();
             Dictionary<string, Material> materials = ReadMaterial().ToDictionary(x => x.Name);
-
+            int counter = 1;
             for (int i = 1; i <= secProps.Count; i++)
             {
                 IRobotLabel rSection = secProps.Get(i);
@@ -132,7 +140,9 @@ namespace BH.Adapter.Robot
                     {
                         bhomSec.Material = materials[secData.MaterialName];
                         bhomSec.Name = rSection.Name;
+                        bhomSec.CustomData.Add(AdapterId, rSection.Name);
                         bhomSectionProps.Add(bhomSec);
+                        counter++;
                     }
                 }
             }
@@ -168,7 +178,9 @@ namespace BH.Adapter.Robot
             for (int i = 1; i <= rLoadCases.Count; i++)
             {
                 IRobotCase rLoadCase = rLoadCases.Get(i) as IRobotCase;
-                bhomLoadCases.Add(BH.Engine.Structure.Create.Loadcase(rLoadCase.Name, rLoadCase.Number, BH.Engine.Robot.Convert.BHoMLoadNature(rLoadCase.Nature)));
+                Loadcase lCase = BH.Engine.Structure.Create.Loadcase(rLoadCase.Name, rLoadCase.Number, BH.Engine.Robot.Convert.BHoMLoadNature(rLoadCase.Nature));
+                lCase.CustomData[AdapterId] = rLoadCase.Number;
+                bhomLoadCases.Add(lCase);
             }
             return bhomLoadCases;
         }

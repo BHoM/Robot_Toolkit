@@ -370,6 +370,8 @@ namespace BH.Engine.Robot
                 double T = 0;
                 double B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B);
                 double H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H);
+                double TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW);
+                double TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF);
 
 
                 switch (secData.ShapeType)
@@ -382,6 +384,11 @@ namespace BH.Engine.Robot
                     case IRobotBarSectionShapeType.I_BSST_USER_RECT:
                         T = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_T);
                         secDim = new StandardBoxDimensions(H, B, T, 0, 0);
+                        return BH.Engine.Structure.Create.SteelSectionFromDimensions(secDim);
+
+                    case IRobotBarSectionShapeType.I_BSST_USER_I_BISYM:
+                        T = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_T);
+                        secDim = new StandardISectionDimensions(H, B, TW, TF, 0, 0);
                         return BH.Engine.Structure.Create.SteelSectionFromDimensions(secDim);
 
                     default:

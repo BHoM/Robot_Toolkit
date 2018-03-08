@@ -103,7 +103,6 @@ namespace BH.Engine.Robot
             {
                 bhomNode.Constraint = BH.Engine.Robot.Convert.ToBHoMObject((RobotNodeSupport)robotNode.GetLabel(IRobotLabelType.I_LT_SUPPORT));
             }
-            bhomNode.CustomData.Add(AdapterID, robotNode.Number);
             return bhomNode;
         }
 

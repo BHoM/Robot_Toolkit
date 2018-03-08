@@ -72,6 +72,8 @@
   <ItemGroup>
     <Compile Include="CRUD\Delete.cs" />
     <Compile Include="CRUD\Create.cs" />
+    <Compile Include="CRUD\Execute.cs" />
+    <Compile Include="CRUD\NextId.cs" />
     <Compile Include="CRUD\Read.cs" />
     <Compile Include="CRUD\ReadResults.cs" />
     <Compile Include="CRUD\UpdateObjects.cs" />

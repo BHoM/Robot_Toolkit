@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System;
 using BH.oM.Base;
 using BH.oM.Structural.Elements;
 using BH.oM.Geometry;
@@ -7,6 +8,7 @@ using BH.oM.Structural.Properties;
 using BH.oM.Structural.Loads;
 using BH.oM.Common.Materials;
 using RobotOM;
+
 using BH.Engine.Robot;
 using BHEG = BH.Engine.Geometry;
 
@@ -22,14 +24,82 @@ namespace BH.Adapter.Robot
         protected override bool Create<T>(IEnumerable<T> objects, bool replaceAll = false)
         {
             bool success = true;
-            success = Create(objects as dynamic);
+            if (objects.Count() > 0)
+            {
+                if (objects.First() is Constraint6DOF)
+                {
+                    success = CreateCollection(objects as IEnumerable<Constraint6DOF>);
+                }
+
+                if (objects.First() is RigidLink)
+                {
+                    success = CreateCollection(objects as IEnumerable<RigidLink>);
+                }
+
+                if (objects.First() is LinkConstraint)
+                {
+                    success = CreateCollection(objects as IEnumerable<LinkConstraint>);
+                }
+
+                if (typeof(ISectionProperty).IsAssignableFrom(objects.First().GetType()))
+                {
+                    success = CreateCollection(objects as IEnumerable<ISectionProperty>);
+                }
+
+                if (objects.First() is Material)
+                {
+                    success = CreateCollection(objects as IEnumerable<Material>);
+                }
+
+                if (objects.First() is Loadcase)
+                {
+                    success = CreateCollection(objects as IEnumerable<Loadcase>);
+                }
+
+                if (objects.First() is MeshFace)
+                {
+                    success = CreateCollection(objects as IEnumerable<MeshFace>);
+                }
+
+                if (objects.First() is Node)
+                {
+                    success = CreateCollection(objects as IEnumerable<Node>);
+                }
+
+                if (objects.First() is Bar)
+                {
+                    success = CreateCollection(objects as IEnumerable<Bar>);
+                }
+
+                if (typeof(ILoad).IsAssignableFrom(objects.First().GetType()))
+                {
+                    success = CreateCollection(objects as IEnumerable<ILoad>);
+                }
+
+                if (objects.First() is PanelPlanar)
+                {
+                    success = CreateCollection(objects as IEnumerable<PanelPlanar>);
+                }
+
+                if (objects.First() is Property2D)
+                {
+                    success = CreateCollection(objects as IEnumerable<Property2D>);
+                }
+
+                if (objects.First() is LoadCombination)
+                {
+                    success = CreateCollection(objects as IEnumerable<LoadCombination>);
+                }
+
+            }
+            //success = CreateObjects(objects as dynamic);
             updateview();
             return success;
         }
 
         /***************************************************/
 
-        private bool Create(IEnumerable<Constraint6DOF> constraints)
+        private bool CreateCollection(IEnumerable<Constraint6DOF> constraints)
         {
             List<Constraint6DOF> constList = constraints.ToList();
             for (int i = 0; i < constList.Count; i++)
@@ -42,26 +112,42 @@ namespace BH.Adapter.Robot
             return true;
         }
 
-        private bool Create(IEnumerable<RigidLink> rigidLinks)
+        /***************************************************/
+
+        private bool CreateCollection(IEnumerable<LinkConstraint> linkConstraints)
         {
-            foreach (RigidLink rLink in rigidLinks)
+            foreach (LinkConstraint lConst in linkConstraints)
             {
-                IRobotLabel rigidLink = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_NODE_RIGID_LINK, rLink.Name);
-                string[] str = rLink.SlaveNodes.Select(x => x.CustomData[AdapterId].ToString() + ",").ToList().ToArray();
-                string slaves = string.Join("", str).TrimEnd(',');
-                m_RobotApplication.Project.Structure.Nodes.RigidLinks.Set((int)rLink.MasterNode.CustomData[AdapterId], slaves, rLink.Name);
+                IRobotLabel rigidLink = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_NODE_RIGID_LINK, lConst.Name);
                 IRobotNodeRigidLinkData rLinkData = rigidLink.Data;
                 m_RobotApplication.Project.Structure.Labels.Store(rigidLink);
 
-                rLinkData.UX = rLink.Constraint.XtoX; rLinkData.UY = rLink.Constraint.YtoY; rLinkData.UZ = rLink.Constraint.ZtoZ;
-                rLinkData.RX = rLink.Constraint.XXtoXX; rLinkData.RY = rLink.Constraint.YYtoYY; rLinkData.RZ = rLink.Constraint.ZZtoZZ;
+                rLinkData.UX = lConst.XtoX;
+                rLinkData.UY = lConst.YtoY;
+                rLinkData.UZ = lConst.ZtoZ;
+                rLinkData.RX = lConst.XXtoXX;
+                rLinkData.RY = lConst.YYtoYY;
+                rLinkData.RZ = lConst.ZZtoZZ;
             }
             return true;
         }
 
         /***************************************************/
 
-        private bool Create(IEnumerable<ISectionProperty> secProp)
+        private bool CreateCollection(IEnumerable<RigidLink> rigidLinks)
+        {
+            foreach (RigidLink rLink in rigidLinks)
+            {
+                string[] str = rLink.SlaveNodes.Select(x => x.CustomData[AdapterId].ToString() + ",").ToList().ToArray();
+                string slaves = string.Join("", str).TrimEnd(',');
+                m_RobotApplication.Project.Structure.Nodes.RigidLinks.Set(System.Convert.ToInt32(rLink.MasterNode.CustomData[AdapterId]), slaves, rLink.Constraint.Name);
+            }
+            return true;
+        }
+
+        /***************************************************/
+
+        private bool CreateCollection(IEnumerable<ISectionProperty> secProp)
         {
             List<ISectionProperty> secPropList = secProp.ToList();
 
@@ -77,7 +163,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private bool Create(IEnumerable<Material> mat)
+        private bool CreateCollection(IEnumerable<Material> mat)
         {
             List<Material> matList = mat.ToList();
     
@@ -93,7 +179,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private bool Create(IEnumerable<Loadcase> loadCase)
+        private bool CreateCollection(IEnumerable<Loadcase> loadCase)
         {
             List<Loadcase> caseList = loadCase.ToList();
             IRobotCaseServer caseServer = m_RobotApplication.Project.Structure.Cases;
@@ -102,8 +188,8 @@ namespace BH.Adapter.Robot
             {
                 int subNature;
                 IRobotCaseNature rNature = BH.Engine.Robot.Convert.RobotLoadNature(caseList[i], out subNature);
-                m_RobotApplication.Project.Structure.Cases.CreateSimple(caseList[i].Number, caseList[i].Name, rNature, IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
-                IRobotSimpleCase sCase = caseServer.Get(caseList[i].Number) as IRobotSimpleCase;
+                m_RobotApplication.Project.Structure.Cases.CreateSimple(System.Convert.ToInt32(caseList[i].CustomData[AdapterId]), caseList[i].Name, rNature, IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
+                IRobotSimpleCase sCase = caseServer.Get(System.Convert.ToInt32(caseList[i].CustomData[AdapterId])) as IRobotSimpleCase;
                 if (subNature >= 0)
                     sCase.SetNatureExt(subNature);
             }
@@ -113,7 +199,7 @@ namespace BH.Adapter.Robot
         /***************************************************/
 
 
-        private bool Create(IEnumerable<BH.oM.Structural.Elements.Node> nodes)
+        private bool CreateCollection(IEnumerable<BH.oM.Structural.Elements.Node> nodes)
         {
             List<Node> nodeList = nodes.ToList();
             RobotStructureCache rcache = m_RobotApplication.Project.Structure.CreateCache();
@@ -140,11 +226,13 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        public bool Create(IEnumerable<Bar> bhomBars)
+        public bool CreateCollection(IEnumerable<Bar> bhomBars)
         {
+            List<Bar> bars = bhomBars.ToList();
             RobotStructureCache rcache = m_RobotApplication.Project.Structure.CreateCache();
+            int freeNum = m_RobotApplication.Project.Structure.Bars.FreeNumber;
 
-            foreach (Bar bhomBar in bhomBars)
+            foreach (Bar bhomBar in bars)
             {
                 int barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterId]);
                 rcache.AddBar(barNum,
@@ -152,23 +240,32 @@ namespace BH.Adapter.Robot
                               System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]),
                               bhomBar.SectionProperty.Name,
                               bhomBar.SectionProperty.Material.Name,
-                              bhomBar.OrientationAngle);
+                              bhomBar.OrientationAngle * Math.PI / 180);
             }
 
-            try
+            m_RobotApplication.Project.Structure.ApplyCache(rcache);
+            IRobotCollection robotNodeCol = m_RobotApplication.Project.Structure.Bars.GetAll();
+
+            for (int i = freeNum; i <= (freeNum - 1 + bars.Count); i++)
             {
-                return m_RobotApplication.Project.Structure.ApplyCache(rcache).Bars.Count == bhomBars.Count();
+                RobotBar rBar = m_RobotApplication.Project.Structure.Bars.Get(i) as RobotBar;
+                BH.Engine.Robot.Convert.SetFEAType(rBar, bars[i - freeNum]);
             }
-            catch (System.Exception e)
-            {
-                ErrorLog.Add(e.Message);
-                return false;
-            }
+            return true;
+            //try
+            //{
+            //    return m_RobotApplication.Project.Structure.ApplyCache(rcache).Bars.Count == bhomBars.Count();
+            //}
+            //catch (System.Exception e)
+            //{
+            //    ErrorLog.Add(e.Message);
+            //    return false;
+            //}
         }
 
         /***************************************************/
 
-        public bool Create(IEnumerable<ILoad> loads)
+        public bool CreateCollection(IEnumerable<ILoad> loads)
         {
             RobotCaseServer caseServer = m_RobotApplication.Project.Structure.Cases;
             RobotGroupServer rGroupServer = m_RobotApplication.Project.Structure.Groups;
@@ -177,7 +274,7 @@ namespace BH.Adapter.Robot
             {
                 IRobotCase rCase = caseServer.Get(load.Loadcase.Number);
                 RobotSimpleCase sCase = rCase as RobotSimpleCase;
-                Convert.IRobotLoad(load, sCase, rGroupServer);
+                BH.Engine.Robot.Convert.IRobotLoad(load, sCase, rGroupServer);
             }
 
             return true;
@@ -185,7 +282,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        public bool Create(IEnumerable<PanelPlanar> panels)
+        public bool CreateCollection(IEnumerable<PanelPlanar> panels)
         {
             m_RobotApplication.Interactive = 0;
             m_RobotApplication.Project.Structure.Objects.BeginMultiOperation();
@@ -230,7 +327,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        public bool Create<T>(IEnumerable<BH.oM.Base.BHoMGroup<T>> groups) where T : BH.oM.Base.IBHoMObject
+        public bool CreateCollection<T>(IEnumerable<BH.oM.Base.BHoMGroup<T>> groups) where T : BH.oM.Base.IBHoMObject
         {
 
             RobotGroupServer rGroupServer = m_RobotApplication.Project.Structure.Groups;
@@ -246,7 +343,57 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        public bool Create(IEnumerable<Property2D> properties)
+        public bool CreateCollection(IEnumerable<MeshFace> meshFaces)
+        {
+            RobotObjObjectServer objServer = m_RobotApplication.Project.Structure.Objects;
+            foreach (MeshFace face in meshFaces)
+            {
+                IRobotPointsArray ptarray = new RobotPointsArray();
+                RobotObjObject mesh = null;
+                if (face.Nodes.Count == 3)
+                {
+                    ptarray.SetSize(3);
+                    ptarray.Set(1, face.Nodes[0].Position.X, face.Nodes[0].Position.Y, face.Nodes[0].Position.Z);
+                    ptarray.Set(2, face.Nodes[1].Position.X, face.Nodes[1].Position.Y, face.Nodes[1].Position.Z);
+                    ptarray.Set(3, face.Nodes[2].Position.X, face.Nodes[2].Position.Y, face.Nodes[2].Position.Z);
+                }
+                else
+                {
+                    ptarray.SetSize(4);
+                    ptarray.Set(1, face.Nodes[0].Position.X, face.Nodes[0].Position.Y, face.Nodes[0].Position.Z);
+                    ptarray.Set(2, face.Nodes[1].Position.X, face.Nodes[1].Position.Y, face.Nodes[1].Position.Z);
+                    ptarray.Set(3, face.Nodes[2].Position.X, face.Nodes[2].Position.Y, face.Nodes[2].Position.Z);
+                    ptarray.Set(4, face.Nodes[3].Position.X, face.Nodes[3].Position.Y, face.Nodes[3].Position.Z);
+                }
+
+                RobotPointsArray ptArray = ptarray as RobotPointsArray;
+                objServer.CreateContour(System.Convert.ToInt32(face.CustomData[AdapterId]), ptArray);
+                mesh = objServer.Get(System.Convert.ToInt32(face.CustomData[AdapterId])) as RobotObjObject;
+                if (face.Property is LoadingPanelProperty)
+                {
+                    LoadingPanelProperty panalProp = face.Property as LoadingPanelProperty;
+                    if (panalProp.LoadApplication == LoadPanelSupportConditions.AllSides)
+                    {
+                        mesh.SetLabel(IRobotLabelType.I_LT_CLADDING, "Two-way");
+                    }
+                    if (panalProp.LoadApplication == LoadPanelSupportConditions.TwoSides && panalProp.ReferenceEdge % 2 == 1)
+                    {
+                        mesh.SetLabel(IRobotLabelType.I_LT_CLADDING, "One-way X");
+                    }
+                    if (panalProp.LoadApplication == LoadPanelSupportConditions.TwoSides && panalProp.ReferenceEdge % 2 == 0)
+                    {
+                        mesh.SetLabel(IRobotLabelType.I_LT_CLADDING, "One-way Y");
+                    }
+                }
+                mesh.Update();
+            }
+
+            return true;
+        }
+
+        /***************************************************/
+
+        public bool CreateCollection(IEnumerable<Property2D> properties)
         {
             RobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
             foreach (Property2D property in properties)
@@ -263,16 +410,17 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        public bool Create<T>(IEnumerable<LoadCombination> lComabinations)
+        public bool CreateCollection(IEnumerable<LoadCombination> lComabinations)
         {
 
             foreach (LoadCombination lComb in lComabinations)
             {
-                RobotCaseCombination rCaseCombination = m_RobotApplication.Project.Structure.Cases.CreateCombination(lComb.Number, lComb.Name, IRobotCombinationType.I_CBT_ULS, IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_COMB);
+                RobotCaseCombination rCaseCombination = m_RobotApplication.Project.Structure.Cases.CreateCombination(System.Convert.ToInt32(lComb.CustomData[AdapterId]), lComb.Name, IRobotCombinationType.I_CBT_ULS, IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_COMB);
                 for (int i = 0; i < lComb.LoadCases.Count; i++)
                 {
-                    rCaseCombination.CaseFactors.New(lComb.LoadCases[i].Item2.Number, lComb.LoadCases[i].Item1);
+                    rCaseCombination.CaseFactors.New(System.Convert.ToInt32(lComb.LoadCases[i].Item2.CustomData[AdapterId]), lComb.LoadCases[i].Item1);
                 }
+                updateview();
             }
         
             return true;

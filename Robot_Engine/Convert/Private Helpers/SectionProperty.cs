@@ -16,14 +16,14 @@ namespace BH.Engine.Robot
             SectionType(section as dynamic, section.Material.Name, secData);
         }
 
-        public static IRobotBarSectionType SectionType(this ExplicitSection section, string material, IRobotBarSectionData secData)
+        public static void SectionType(this ExplicitSection section, string material, IRobotBarSectionData secData)
         {
-            throw new NotImplementedException();
+            
         }
 
-        public static IRobotBarSectionType SectionType(this CableSection section, string material, IRobotBarSectionData secData)
+        public static void SectionType(this CableSection section, string material, IRobotBarSectionData secData)
         {
-            throw new NotImplementedException();
+            
         }
 
 
@@ -37,10 +37,10 @@ namespace BH.Engine.Robot
 
         public static void SectionType(this ConcreteSection section, string material, IRobotBarSectionData secData)
         {
-            if (section.SectionDimension.Shape == ShapeType.Polygon)
+            if (section.SectionDimensions.Shape == ShapeType.Polygon)
                 SectionShapeType(section.Edges, secData);
             else
-                ISectionShapeType(section.SectionDimension, material, secData);
+                ISectionShapeType(section.SectionDimensions, material, secData);
         }
 
         public static void ISectionShapeType(this ISectionDimensions section, string material, IRobotBarSectionData secData)
@@ -161,6 +161,19 @@ namespace BH.Engine.Robot
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H, section.Height);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B, section.Width);
 
+            sectionData.CalcNonstdGeometry();
+        }
+
+        private static void SectionShapeType(this CircleDimensions section, string material, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_TUBE;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_TUBE;
+
+            sectionData.MaterialName = material;
+
+            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D, section.Diameter);
             sectionData.CalcNonstdGeometry();
         }
 

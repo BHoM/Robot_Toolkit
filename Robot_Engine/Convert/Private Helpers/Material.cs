@@ -19,7 +19,7 @@ namespace BH.Engine.Robot
             materialData.E = material.YoungsModulus;
             materialData.NU = material.PoissonsRatio;
             materialData.RO = material.Density;
-            materialData.Kirchoff = material.ShearModulus;
+            materialData.Kirchoff = BH.Engine.Common.Query.ShearModulus(material);
             materialData.DumpCoef = material.DampingRatio;
         }
 

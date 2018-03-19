@@ -6,6 +6,7 @@ using BH.oM.Geometry;
 using BH.oM.Structural.Properties;
 using BH.oM.Structural.Loads;
 using BH.oM.Common.Materials;
+using BH.Engine.Serialiser;
 using RobotOM;
 using BH.Engine.Robot;
 using BHEG = BH.Engine.Geometry;
@@ -43,6 +44,7 @@ namespace BH.Adapter.Robot
                 robotNode.X = node.Position.X;
                 robotNode.Y = node.Position.Y;
                 robotNode.Z = node.Position.Z;
+                m_NodeTaggs[System.Convert.ToInt32(node.CustomData[AdapterId])] = node.TaggedName();
             }
             return true;
         }
@@ -63,7 +65,7 @@ namespace BH.Adapter.Robot
                     robotBar.SetSection(bar.SectionProperty.Name, false);
 
                 robotBar.Gamma = bar.OrientationAngle * Math.PI / 180;
-                BH.Engine.Robot.Convert.SetFEAType(robotBar, bar);
+                //BH.Engine.Robot.Convert.SetFEAType(robotBar, bar);
 
             }
             return true;

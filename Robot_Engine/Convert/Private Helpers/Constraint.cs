@@ -11,7 +11,7 @@ namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
-        public static void RobotConstraint(RobotNodeSupportData suppData, Constraint6DOF constraint)
+        public static void RobotConstraint(IRobotNodeSupportData suppData, Constraint6DOF constraint)
         {
             suppData.UX = (int)(constraint.TranslationX); suppData.UY = (int)(constraint.TranslationY); suppData.UZ = (int)(constraint.TranslationZ);
             suppData.RX = (int)(constraint.RotationX); suppData.RY = (int)(constraint.RotationY); suppData.RZ = (int)(constraint.RotationZ);

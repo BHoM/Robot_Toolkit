@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System;
+using BH.Engine.Serialiser;
 using BH.oM.Base;
 using BH.oM.Structural.Elements;
 using BH.oM.Geometry;
@@ -26,9 +27,13 @@ namespace BH.Adapter.Robot
             bool success = true;
             if (objects.Count() > 0)
             {
+                var watch = new System.Diagnostics.Stopwatch();
                 if (objects.First() is Constraint6DOF)
                 {
+                    watch = System.Diagnostics.Stopwatch.StartNew();
                     success = CreateCollection(objects as IEnumerable<Constraint6DOF>);
+                    watch.Stop();
+                    var elapsedMs = watch.ElapsedMilliseconds;
                 }
 
                 if (objects.First() is RigidLink)
@@ -43,12 +48,18 @@ namespace BH.Adapter.Robot
 
                 if (typeof(ISectionProperty).IsAssignableFrom(objects.First().GetType()))
                 {
+                    watch = System.Diagnostics.Stopwatch.StartNew();
                     success = CreateCollection(objects as IEnumerable<ISectionProperty>);
+                    watch.Stop();
+                    var elapsedMs = watch.ElapsedMilliseconds;
                 }
 
                 if (objects.First() is Material)
                 {
+                    watch = System.Diagnostics.Stopwatch.StartNew();
                     success = CreateCollection(objects as IEnumerable<Material>);
+                    watch.Stop();
+                    var elapsedMs = watch.ElapsedMilliseconds;
                 }
 
                 if (objects.First() is Loadcase)
@@ -63,12 +74,18 @@ namespace BH.Adapter.Robot
 
                 if (objects.First() is Node)
                 {
+                    watch = System.Diagnostics.Stopwatch.StartNew();
                     success = CreateCollection(objects as IEnumerable<Node>);
+                    watch.Stop();
+                    var elapsedMs = watch.ElapsedMilliseconds;
                 }
 
                 if (objects.First() is Bar)
                 {
+                    watch = System.Diagnostics.Stopwatch.StartNew();
                     success = CreateCollection(objects as IEnumerable<Bar>);
+                    watch.Stop();
+                    var elapsedMs = watch.ElapsedMilliseconds;
                 }
 
                 if (typeof(ILoad).IsAssignableFrom(objects.First().GetType()))
@@ -102,12 +119,17 @@ namespace BH.Adapter.Robot
         private bool CreateCollection(IEnumerable<Constraint6DOF> constraints)
         {
             List<Constraint6DOF> constList = constraints.ToList();
+            IRobotLabel lable = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_SUPPORT, "");
+            IRobotNodeSupportData suppData = lable.Data;
+
             for (int i = 0; i < constList.Count; i++)
             {
-                IRobotLabel lable = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_SUPPORT, constList[i].Name);
-                RobotNodeSupportData suppData = lable.Data;
                 BH.Engine.Robot.Convert.RobotConstraint(suppData, constList[i]);
-                m_RobotApplication.Project.Structure.Labels.Store(lable);
+                m_RobotApplication.Project.Structure.Labels.StoreWithName(lable, constList[i].Name);
+                if (m_SupportTaggs.ContainsKey(constList[i].Name))
+                    m_SupportTaggs[constList[i].Name] = constList[i].TaggedName();
+                else
+                    m_SupportTaggs.Add(constList[i].Name, constList[i].TaggedName());
             }
             return true;
         }
@@ -116,11 +138,12 @@ namespace BH.Adapter.Robot
 
         private bool CreateCollection(IEnumerable<LinkConstraint> linkConstraints)
         {
+            IRobotLabel rigidLink = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_NODE_RIGID_LINK, "");
+            IRobotNodeRigidLinkData rLinkData = rigidLink.Data;
+
             foreach (LinkConstraint lConst in linkConstraints)
             {
-                IRobotLabel rigidLink = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_NODE_RIGID_LINK, lConst.Name);
-                IRobotNodeRigidLinkData rLinkData = rigidLink.Data;
-                m_RobotApplication.Project.Structure.Labels.Store(rigidLink);
+                m_RobotApplication.Project.Structure.Labels.StoreWithName(rigidLink, lConst.Name);
 
                 rLinkData.UX = lConst.XtoX;
                 rLinkData.UY = lConst.YtoY;
@@ -150,13 +173,17 @@ namespace BH.Adapter.Robot
         private bool CreateCollection(IEnumerable<ISectionProperty> secProp)
         {
             List<ISectionProperty> secPropList = secProp.ToList();
+            IRobotLabel lable = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, "");
+            IRobotBarSectionData secData = lable.Data;
 
             for (int i = 0; i < secPropList.Count; i++)
             {
-                IRobotLabel lable = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, secPropList[i].Name);
-                RobotBarSectionData secData = lable.Data;
                 BH.Engine.Robot.Convert.ISectionType(secPropList[i], secData);
-                m_RobotApplication.Project.Structure.Labels.Store(lable);
+                m_RobotApplication.Project.Structure.Labels.StoreWithName(lable, secPropList[i].Name);
+                if (m_SectionPropertyTaggs.ContainsKey(secPropList[i].Name))
+                    m_SectionPropertyTaggs[secPropList[i].Name] = secPropList[i].TaggedName();
+                else
+                    m_SectionPropertyTaggs.Add(secPropList[i].Name, secPropList[i].TaggedName());
             }
             return true;
         }
@@ -166,13 +193,17 @@ namespace BH.Adapter.Robot
         private bool CreateCollection(IEnumerable<Material> mat)
         {
             List<Material> matList = mat.ToList();
-    
+            IRobotLabel lable = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_MATERIAL, "");
+            IRobotMaterialData matData = lable.Data;
+
             for (int i = 0; i < matList.Count; i++)
             {
-                IRobotLabel lable = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_MATERIAL, matList[i].Name);
-                IRobotMaterialData matData = lable.Data;
                 BH.Engine.Robot.Convert.RobotMaterial(matData, matList[i]);
-                m_RobotApplication.Project.Structure.Labels.Store(lable);
+                m_RobotApplication.Project.Structure.Labels.StoreWithName(lable, matList[i].Name);
+                if (m_MaterialTaggs.ContainsKey(matList[i].Name))
+                    m_MaterialTaggs[matList[i].Name] = matList[i].TaggedName();
+                else
+                    m_MaterialTaggs.Add(matList[i].Name, matList[i].TaggedName());
             }
             return true;
         }
@@ -201,26 +232,32 @@ namespace BH.Adapter.Robot
 
         private bool CreateCollection(IEnumerable<BH.oM.Structural.Elements.Node> nodes)
         {
+            m_RobotApplication.Interactive = 0;
             List<Node> nodeList = nodes.ToList();
-            RobotStructureCache rcache = m_RobotApplication.Project.Structure.CreateCache();
-            RobotSelection nodeSel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
+            int nodeNum = 0;
+            IRobotStructureCache rcache = m_RobotApplication.Project.Structure.CreateCache();
+            IRobotSelection nodeSel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
             int freeNum = m_RobotApplication.Project.Structure.Nodes.FreeNumber;
 
             foreach (Node node in nodes)
             {
-                int nodeNum = 0;
-                int.TryParse(node.CustomData[AdapterId].ToString(), out nodeNum);
+                nodeNum = System.Convert.ToInt32(node.CustomData[AdapterId]);
                 rcache.AddNode(nodeNum, node.Position.X, node.Position.Y, node.Position.Z);
-                nodeSel.AddText(nodeNum.ToString());
             }
-            m_RobotApplication.Project.Structure.ApplyCache(rcache);
-            IRobotCollection robotNodeCol = m_RobotApplication.Project.Structure.Nodes.GetAll();
+            m_RobotApplication.Project.Structure.ApplyCache(rcache as RobotStructureCache);
+            IRobotNodeServer robotNodeCol = m_RobotApplication.Project.Structure.Nodes;
 
-            for (int i = freeNum; i <= (freeNum - 1 + nodeList.Count); i++)
+            foreach (Node node in nodes)
             {
-                if(nodeList[i - freeNum].Constraint != null)
-                    m_RobotApplication.Project.Structure.Nodes.Get(i).SetLabel(IRobotLabelType.I_LT_SUPPORT, nodeList[i - freeNum].Constraint.Name);
+                nodeNum = System.Convert.ToInt32(node.CustomData[AdapterId]);
+                if (m_NodeTaggs.ContainsKey(nodeNum))
+                    m_NodeTaggs[nodeNum] = node.TaggedName();
+                else
+                    m_NodeTaggs.Add(nodeNum, node.TaggedName());
+                if (node.Constraint != null)
+                    robotNodeCol.Get(nodeNum).SetLabel(IRobotLabelType.I_LT_SUPPORT, node.Constraint.Name);
             }
+            m_RobotApplication.Interactive = 1;
             return true;
         }
 
@@ -228,39 +265,44 @@ namespace BH.Adapter.Robot
 
         public bool CreateCollection(IEnumerable<Bar> bhomBars)
         {
+            
+            m_RobotApplication.Interactive = 0;
             List<Bar> bars = bhomBars.ToList();
-            RobotStructureCache rcache = m_RobotApplication.Project.Structure.CreateCache();
+            IRobotStructureCache rcache = m_RobotApplication.Project.Structure.CreateCache();
+            RobotSelection rSelect = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
+            string str = "";
+            int barNum = 0;
             int freeNum = m_RobotApplication.Project.Structure.Bars.FreeNumber;
-
             foreach (Bar bhomBar in bars)
             {
-                int barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterId]);
+                barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterId]);
                 rcache.AddBar(barNum,
                               System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),
                               System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]),
                               bhomBar.SectionProperty.Name,
                               bhomBar.SectionProperty.Material.Name,
                               bhomBar.OrientationAngle * Math.PI / 180);
-            }
 
-            m_RobotApplication.Project.Structure.ApplyCache(rcache);
-            IRobotCollection robotNodeCol = m_RobotApplication.Project.Structure.Bars.GetAll();
-
-            for (int i = freeNum; i <= (freeNum - 1 + bars.Count); i++)
-            {
-                RobotBar rBar = m_RobotApplication.Project.Structure.Bars.Get(i) as RobotBar;
-                BH.Engine.Robot.Convert.SetFEAType(rBar, bars[i - freeNum]);
+                str = str + barNum.ToString() + ",";                            
             }
+            str.TrimEnd(',');
+
+            m_RobotApplication.Project.Structure.ApplyCache(rcache as RobotStructureCache);
+            IRobotBarServer barServer = m_RobotApplication.Project.Structure.Bars;
+            barServer.BeginMultiOperation();
+            rSelect.FromText(str);
+            barServer.SetTensionCompression(rSelect, IRobotBarTensionCompression.I_BTC_TENSION_ONLY);
+
+            //foreach (Bar bhomBar in bars)
+            //{
+            //    RobotBar rBar = barServer.Get(System.Convert.ToInt32(bhomBar.CustomData[AdapterId])) as RobotBar;
+            //    rBar.NameTemplate = bhomBar.TaggedName();
+            //    BH.Engine.Robot.Convert.SetFEAType(rBar, bhomBar);
+            //}
+
+            barServer.EndMultiOperation();
+            m_RobotApplication.Interactive = 1;
             return true;
-            //try
-            //{
-            //    return m_RobotApplication.Project.Structure.ApplyCache(rcache).Bars.Count == bhomBars.Count();
-            //}
-            //catch (System.Exception e)
-            //{
-            //    ErrorLog.Add(e.Message);
-            //    return false;
-            //}
         }
 
         /***************************************************/

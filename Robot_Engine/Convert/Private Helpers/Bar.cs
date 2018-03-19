@@ -11,7 +11,7 @@ namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
-        public static void SetFEAType(RobotBar rBar, Bar bhomBar)
+        public static void SetFEAType(IRobotBar rBar, Bar bhomBar)
         {
             if (bhomBar.FEAType == BarFEAType.CompressionOnly)
             {

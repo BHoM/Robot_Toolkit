@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Structural.Elements;
 using RobotOM;
+using BH.Engine.Serialiser;
 using BH.oM.Structural.Properties;
 using BH.oM.Structural.Loads;
 using BH.oM.Base;
@@ -69,7 +70,7 @@ namespace BH.Adapter.Robot
 
             List<Bar> bhomBars = new List<Bar>();
             IEnumerable<Node> bhomNodesList = ReadNodes();
-            Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionary(x => x.Name.ToString());
+            Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionary(x => x.CustomData[AdapterId].ToString());
             Dictionary<string, ISectionProperty> bhomSections = ReadSectionProperties().ToDictionary(x => x.Name.ToString());
 
             m_RobotApplication.Project.Structure.Bars.BeginMultiOperation();
@@ -78,6 +79,8 @@ namespace BH.Adapter.Robot
                 RobotBar robotBar = robotBars.Get(i);
                 Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar , bhomNodes, bhomSections);
                 bhomBar.CustomData[AdapterId] = robotBar.Number;
+                if (m_NodeTaggs != null)
+                    bhomBar.ApplyTaggedName(robotBar.NameTemplate);
                 bhomBars.Add(bhomBar);
             }
             m_RobotApplication.Project.Structure.Bars.EndMultiOperation();
@@ -98,6 +101,9 @@ namespace BH.Adapter.Robot
                 RobotNode robotNode = robotNodes.Get(i);
                 Node bhomNode = BH.Engine.Robot.Convert.ToBHoMObject(robotNode);
                 bhomNode.CustomData[AdapterId] = robotNode.Number;
+                if (m_NodeTaggs != null)
+                    bhomNode.ApplyTaggedName(m_NodeTaggs[i]);
+
                 bhomNodes.Add(bhomNode);
             }
             return bhomNodes;
@@ -115,6 +121,8 @@ namespace BH.Adapter.Robot
                 RobotNodeSupport rNodeSupp = robSupport.Get(i);
                 Constraint6DOF bhomSupp = BH.Engine.Robot.Convert.ToBHoMObject(rNodeSupp);
                 bhomSupp.CustomData.Add(AdapterId, rNodeSupp.Name);
+                if (m_SupportTaggs != null)
+                    bhomSupp.ApplyTaggedName(m_SupportTaggs[rNodeSupp.Name]);
                 constList.Add(bhomSupp);
             }
             return constList;
@@ -141,6 +149,8 @@ namespace BH.Adapter.Robot
                         bhomSec.Material = materials[secData.MaterialName];
                         bhomSec.Name = rSection.Name;
                         bhomSec.CustomData.Add(AdapterId, rSection.Name);
+                        if (m_SectionPropertyTaggs != null)
+                            bhomSec.ApplyTaggedName(m_SectionPropertyTaggs[rSection.Name]);
                         bhomSectionProps.Add(bhomSec);
                         counter++;
                     }
@@ -163,6 +173,8 @@ namespace BH.Adapter.Robot
                 MaterialType bhomMatType = BH.Engine.Robot.Convert.GetMaterialType(mData.Type);
                 Material bhomMat = BH.Engine.Common.Create.Material(mData.Name, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO);
                 bhomMat.CustomData.Add(AdapterId, mData.Name);
+                if (m_MaterialTaggs != null)
+                    bhomMat.ApplyTaggedName(m_MaterialTaggs[mData.Name]);
                 bhomMaterials.Add(bhomMat);
             }
             return bhomMaterials;

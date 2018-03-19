@@ -24,28 +24,62 @@ namespace BH.Adapter.Robot
             if (type == typeof(Node))
                 return DeleteNodes(ids);
 
+            if (type == typeof(Bar))
+                return DeleteBars(ids);
+
             return 0;
         }
 
         public int DeleteNodes(IEnumerable<object> ids)
         {
-            //int sucess = 1;
-            //RobotSelection nodeSel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
-            //List<int> indicies = ids.Cast<int>().ToList();
+            int sucess = 1;
+            RobotSelection nodeSel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
+            List<int> indicies = ids.Cast<int>().ToList();
+            if (ids != null)
+            {
+                foreach (int ind in indicies)
+                {
+                    nodeSel.AddOne(ind);
+                }
+            }
+            else
+                nodeSel = m_RobotApplication.Project.Structure.Nodes.GetAll() as RobotSelection;
 
-            //foreach (int ind in indicies)
-            //{
-            //    nodeSel.AddOne(ind);
-            //}
 
-            //if (nodeSel.Count == indicies.Count())
-            //{
-            //    m_RobotApplication.Project.Structure.Nodes.DeleteMany(nodeSel);
-            //    return sucess;
-            //}
+            if (nodeSel.Count == indicies.Count())
+            {
+                m_RobotApplication.Project.Structure.Nodes.DeleteMany(nodeSel);
+                return sucess;
+            }
 
             return 0;
         }
+
+        public int DeleteBars(IEnumerable<object> ids)
+        {
+            int sucess = 1;
+            RobotSelection barSel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
+            List<int> indicies = ids.Cast<int>().ToList();
+            if (ids != null)
+            {
+                foreach (int ind in indicies)
+                {
+                    barSel.AddOne(ind);
+                }
+            }
+            else
+                barSel = m_RobotApplication.Project.Structure.Bars.GetAll() as RobotSelection;
+
+
+            if (barSel.Count == indicies.Count())
+            {
+                m_RobotApplication.Project.Structure.Bars.DeleteMany(barSel);
+                return sucess;
+            }
+
+            return 0;
+        }
+
 
         /***************************************************/
         /**** Protected Methods                         ****/

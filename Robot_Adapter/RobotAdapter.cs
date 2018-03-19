@@ -118,6 +118,9 @@ namespace BH.Adapter.Robot
         /***************************************************/
 
         private RobotApplication m_RobotApplication;
-
+        private Dictionary<int, string> m_NodeTaggs = new Dictionary<int, string>();
+        private Dictionary<string, string> m_MaterialTaggs = new Dictionary<string, string>();
+        private Dictionary<string, string> m_SectionPropertyTaggs = new Dictionary<string, string>();
+        private Dictionary<string, string> m_SupportTaggs = new Dictionary<string, string>();
     }
 }

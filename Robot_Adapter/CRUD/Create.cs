@@ -360,7 +360,11 @@ namespace BH.Adapter.Robot
 
                 rpanel.Main.Attribs.Meshed = 1;
                 rpanel.Update();
-                rpanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, panel.Property.Name);
+                if (panel.Property is LoadingPanelProperty)
+                    rpanel.SetLabel(IRobotLabelType.I_LT_CLADDING, panel.Property.Name);
+
+                else
+                    rpanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, panel.Property.Name);
             }
             m_RobotApplication.Project.Structure.Objects.EndMultiOperation();
             m_RobotApplication.Interactive = 1;
@@ -411,22 +415,12 @@ namespace BH.Adapter.Robot
                 RobotPointsArray ptArray = ptarray as RobotPointsArray;
                 objServer.CreateContour(System.Convert.ToInt32(face.CustomData[AdapterId]), ptArray);
                 mesh = objServer.Get(System.Convert.ToInt32(face.CustomData[AdapterId])) as RobotObjObject;
+
                 if (face.Property is LoadingPanelProperty)
-                {
-                    LoadingPanelProperty panalProp = face.Property as LoadingPanelProperty;
-                    if (panalProp.LoadApplication == LoadPanelSupportConditions.AllSides)
-                    {
-                        mesh.SetLabel(IRobotLabelType.I_LT_CLADDING, "Two-way");
-                    }
-                    if (panalProp.LoadApplication == LoadPanelSupportConditions.TwoSides && panalProp.ReferenceEdge % 2 == 1)
-                    {
-                        mesh.SetLabel(IRobotLabelType.I_LT_CLADDING, "One-way X");
-                    }
-                    if (panalProp.LoadApplication == LoadPanelSupportConditions.TwoSides && panalProp.ReferenceEdge % 2 == 0)
-                    {
-                        mesh.SetLabel(IRobotLabelType.I_LT_CLADDING, "One-way Y");
-                    }
-                }
+                    mesh.SetLabel(IRobotLabelType.I_LT_CLADDING, face.Property.Name);
+
+                else
+                    mesh.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, face.Property.Name);
                 mesh.Update();
             }
 
@@ -438,12 +432,21 @@ namespace BH.Adapter.Robot
         public bool CreateCollection(IEnumerable<Property2D> properties)
         {
             RobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
+            IRobotLabel lable = null;
+            string name = "";
             foreach (Property2D property in properties)
             {
-                IRobotLabel lable = labelServer.Create(IRobotLabelType.I_LT_PANEL_THICKNESS, property.Name);
-                RobotThicknessData thicknessData = lable.Data;
-                thicknessData.MaterialName = property.Material.Name;
-                BH.Engine.Robot.Convert.ThicknessProperty(thicknessData, property);
+                if (property is LoadingPanelProperty)
+                {
+                    name = BH.Engine.Robot.Convert.ThicknessProperty(lable, property);
+                    lable = labelServer.CreateLike(IRobotLabelType.I_LT_CLADDING, property.Name, name);
+                }
+
+                else
+                {
+                    lable = labelServer.Create(IRobotLabelType.I_LT_PANEL_THICKNESS, name);
+                }
+
                 labelServer.Store(lable);
             }
 

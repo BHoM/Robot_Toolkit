@@ -59,61 +59,88 @@ namespace BH.Engine.Robot
                 circle.P3.Set(bhomPoint3.X, bhomPoint3.Y, bhomPoint3.Z);
         }
 
-        public static void ThicknessProperty(RobotThicknessData thicknessData, Property2D property)
+        public static string ThicknessProperty(IRobotLabel rLabel, Property2D property)
         {
-            RobotThicknessOrthoData orthoData = null;
-            if (property is ConstantThickness)
+            string name = "";
+
+            if (property is LoadingPanelProperty)
             {
-                if(BH.Engine.Structure.Query.HasModifiers(property))
+                LoadingPanelProperty panalProp = property as LoadingPanelProperty;
+                if (panalProp.LoadApplication == LoadPanelSupportConditions.AllSides)
                 {
+                    name = "Two-way";
+                }
+                if (panalProp.LoadApplication == LoadPanelSupportConditions.TwoSides && panalProp.ReferenceEdge % 2 == 1)
+                {
+                    name = "One-way X";
+                }
+                if (panalProp.LoadApplication == LoadPanelSupportConditions.TwoSides && panalProp.ReferenceEdge % 2 == 0)
+                {
+                    name = "One-way Y";
+                }
+            }
+            else
+            {
+                RobotThicknessOrthoData orthoData = null;
+                RobotThicknessData thicknessData = rLabel.Data;
+                thicknessData.MaterialName = property.Material.Name;
+                name = property.Name;
+                if (property is ConstantThickness)
+                {
+                    if (BH.Engine.Structure.Query.HasModifiers(property))
+                    {
+                        thicknessData.ThicknessType = IRobotThicknessType.I_TT_ORTHOTROPIC;
+                        orthoData = thicknessData.Data;
+                        orthoData.Type = (IRobotThicknessOrthoType)14;
+                        orthoData.H = property.Thickness;
+                        double[] modifiers = property.Modifiers;
+                        orthoData.HA = modifiers[(int)PanelModifier.f11];
+                        orthoData.H0 = modifiers[(int)PanelModifier.f12];
+                        orthoData.HB = modifiers[(int)PanelModifier.f22];
+                        orthoData.HC = modifiers[(int)PanelModifier.m11];
+                        orthoData.A = modifiers[(int)PanelModifier.m12];
+                        orthoData.A1 = modifiers[(int)PanelModifier.m22];
+                        orthoData.A2 = modifiers[(int)PanelModifier.v13];
+                        orthoData.B = modifiers[(int)PanelModifier.v23];
+                        orthoData.B1 = modifiers[(int)PanelModifier.Weight];
+                    }
+                    else
+                    {
+                        thicknessData.ThicknessType = IRobotThicknessType.I_TT_HOMOGENEOUS;
+                        (thicknessData.Data as RobotThicknessHomoData).ThickConst = property.Thickness;
+                    }
+                }
+
+                else if (property is Waffle)
+                {
+                    Waffle waffle = property as Waffle;
                     thicknessData.ThicknessType = IRobotThicknessType.I_TT_ORTHOTROPIC;
                     orthoData = thicknessData.Data;
                     orthoData.Type = (IRobotThicknessOrthoType)14;
                     orthoData.H = property.Thickness;
-                    double[] modifiers = property.Modifiers;
-                    orthoData.HA = modifiers[(int)PanelModifier.f11];
-                    orthoData.H0 = modifiers[(int)PanelModifier.f12];
-                    orthoData.HB = modifiers[(int)PanelModifier.f22];
-                    orthoData.HC = modifiers[(int)PanelModifier.m11];
-                    orthoData.A = modifiers[(int)PanelModifier.m12];
-                    orthoData.A1 = modifiers[(int)PanelModifier.m22];
-                    orthoData.A2 = modifiers[(int)PanelModifier.v13];
-                    orthoData.B = modifiers[(int)PanelModifier.v23];
-                    orthoData.B1 = modifiers[(int)PanelModifier.Weight];
+                    orthoData.HA = waffle.TotalDepthX;
+                    orthoData.HB = waffle.TotalDepthY;
+                    orthoData.A = waffle.SpacingX;
+                    orthoData.A1 = waffle.StemWidthX;
+                    orthoData.B = waffle.SpacingY;
+                    orthoData.B1 = waffle.StemWidthY;
                 }
+
                 else
                 {
-                    thicknessData.ThicknessType = IRobotThicknessType.I_TT_HOMOGENEOUS;
-                    (thicknessData.Data as RobotThicknessHomoData).ThickConst = property.Thickness;
+                    Ribbed ribbed = property as Ribbed;
+                    thicknessData.ThicknessType = IRobotThicknessType.I_TT_ORTHOTROPIC;
+                    orthoData = thicknessData.Data;
+                    orthoData.Type = (IRobotThicknessOrthoType)14;
+                    orthoData.H = property.Thickness;
+                    orthoData.HA = ribbed.TotalDepth;
+                    orthoData.A = ribbed.Spacing;
+                    orthoData.A1 = ribbed.StemWidth;
                 }
             }
-
-            else if (property is Waffle)
-            {
-                Waffle waffle = property as Waffle;
-                thicknessData.ThicknessType = IRobotThicknessType.I_TT_ORTHOTROPIC;
-                orthoData = thicknessData.Data;
-                orthoData.Type = (IRobotThicknessOrthoType)14;
-                orthoData.H = property.Thickness;
-                orthoData.HA = waffle.TotalDepthX;
-                orthoData.HB = waffle.TotalDepthY;
-                orthoData.A = waffle.SpacingX;
-                orthoData.A1 = waffle.StemWidthX;
-                orthoData.B = waffle.SpacingY;
-                orthoData.B1 = waffle.StemWidthY;
-            }
-
-            else
-            {
-                Ribbed ribbed = property as Ribbed;
-                thicknessData.ThicknessType = IRobotThicknessType.I_TT_ORTHOTROPIC;
-                orthoData = thicknessData.Data;
-                orthoData.Type = (IRobotThicknessOrthoType)14;
-                orthoData.H = property.Thickness;
-                orthoData.HA = ribbed.TotalDepth;
-                orthoData.A = ribbed.Spacing;
-                orthoData.A1 = ribbed.StemWidth;
-            }
+            return name;          
         }
+
+
     }
 }

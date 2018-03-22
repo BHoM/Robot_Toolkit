@@ -44,7 +44,7 @@ namespace BH.Adapter.Robot
                 robotNode.X = node.Position.X;
                 robotNode.Y = node.Position.Y;
                 robotNode.Z = node.Position.Z;
-                m_NodeTaggs[System.Convert.ToInt32(node.CustomData[AdapterId])] = node.TaggedName();
+                //m_NodeTaggs[System.Convert.ToInt32(node.CustomData[AdapterId])] = node.TaggedName();
             }
             return true;
         }

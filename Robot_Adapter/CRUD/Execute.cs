@@ -117,7 +117,10 @@ namespace BH.Adapter.Robot
         {
             RobotSelection rSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
             int index = m_RobotApplication.Project.Structure.Cases.FreeNumber;
-            rSelection.FromText("1to" + (index - 1).ToString());
+            if(index > 2)
+                rSelection.FromText("1to" + (index - 1).ToString());
+            else
+                rSelection.FromText("1");
             SetAux(rSelection, false);
 
             rSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
@@ -169,6 +172,15 @@ namespace BH.Adapter.Robot
                     caseNums.Add(System.Convert.ToInt32((lComb as LoadCombination).CustomData[AdapterId]));
                 }
             }
+
+            else
+            {
+                for (int i = 0; i < cases.Count; i++)
+                {
+                    caseNums.Add(System.Convert.ToInt32(cases[i]));
+                }
+            }
+
             return caseNums;
         }
 

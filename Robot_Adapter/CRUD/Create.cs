@@ -126,10 +126,10 @@ namespace BH.Adapter.Robot
             {
                 BH.Engine.Robot.Convert.RobotConstraint(suppData, constList[i]);
                 m_RobotApplication.Project.Structure.Labels.StoreWithName(lable, constList[i].Name);
-                if (m_SupportTaggs.ContainsKey(constList[i].Name))
-                    m_SupportTaggs[constList[i].Name] = constList[i].TaggedName();
-                else
-                    m_SupportTaggs.Add(constList[i].Name, constList[i].TaggedName());
+                //if (m_SupportTaggs.ContainsKey(constList[i].Name))
+                //    m_SupportTaggs[constList[i].Name] = constList[i].TaggedName();
+                //else
+                //    m_SupportTaggs.Add(constList[i].Name, constList[i].TaggedName());
             }
             return true;
         }
@@ -180,10 +180,10 @@ namespace BH.Adapter.Robot
             {
                 BH.Engine.Robot.Convert.ISectionType(secPropList[i], secData);
                 m_RobotApplication.Project.Structure.Labels.StoreWithName(lable, secPropList[i].Name);
-                if (m_SectionPropertyTaggs.ContainsKey(secPropList[i].Name))
-                    m_SectionPropertyTaggs[secPropList[i].Name] = secPropList[i].TaggedName();
-                else
-                    m_SectionPropertyTaggs.Add(secPropList[i].Name, secPropList[i].TaggedName());
+                //if (m_SectionPropertyTaggs.ContainsKey(secPropList[i].Name))
+                //    m_SectionPropertyTaggs[secPropList[i].Name] = secPropList[i].TaggedName();
+                //else
+                //    m_SectionPropertyTaggs.Add(secPropList[i].Name, secPropList[i].TaggedName());
             }
             return true;
         }
@@ -200,10 +200,10 @@ namespace BH.Adapter.Robot
             {
                 BH.Engine.Robot.Convert.RobotMaterial(matData, matList[i]);
                 m_RobotApplication.Project.Structure.Labels.StoreWithName(lable, matList[i].Name);
-                if (m_MaterialTaggs.ContainsKey(matList[i].Name))
-                    m_MaterialTaggs[matList[i].Name] = matList[i].TaggedName();
-                else
-                    m_MaterialTaggs.Add(matList[i].Name, matList[i].TaggedName());
+                //if (m_MaterialTaggs.ContainsKey(matList[i].Name))
+                //    m_MaterialTaggs[matList[i].Name] = matList[i].TaggedName();
+                //else
+                //    m_MaterialTaggs.Add(matList[i].Name, matList[i].TaggedName());
             }
             return true;
         }
@@ -250,10 +250,10 @@ namespace BH.Adapter.Robot
             foreach (Node node in nodes)
             {
                 nodeNum = System.Convert.ToInt32(node.CustomData[AdapterId]);
-                if (m_NodeTaggs.ContainsKey(nodeNum))
-                    m_NodeTaggs[nodeNum] = node.TaggedName();
-                else
-                    m_NodeTaggs.Add(nodeNum, node.TaggedName());
+                //if (m_NodeTaggs.ContainsKey(nodeNum))
+                //    m_NodeTaggs[nodeNum] = node.TaggedName();
+                //else
+                //    m_NodeTaggs.Add(nodeNum, node.TaggedName());
                 if (node.Constraint != null)
                     robotNodeCol.Get(nodeNum).SetLabel(IRobotLabelType.I_LT_SUPPORT, node.Constraint.Name);
             }
@@ -270,7 +270,9 @@ namespace BH.Adapter.Robot
             List<Bar> bars = bhomBars.ToList();
             IRobotStructureCache rcache = m_RobotApplication.Project.Structure.CreateCache();
             RobotSelection rSelect = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
-            string str = "";
+            string tensionBars = "";
+            string compressionBars = "";
+            string axialBars = "";
             int barNum = 0;
             int freeNum = m_RobotApplication.Project.Structure.Bars.FreeNumber;
             foreach (Bar bhomBar in bars)
@@ -282,16 +284,25 @@ namespace BH.Adapter.Robot
                               bhomBar.SectionProperty.Name,
                               bhomBar.SectionProperty.Material.Name,
                               bhomBar.OrientationAngle * Math.PI / 180);
-
-                str = str + barNum.ToString() + ",";                            
+                rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_MEMBER_TYPE, "Simple bar");
+                if(bhomBar.FEAType == BarFEAType.TensionOnly)
+                    tensionBars = tensionBars + barNum.ToString() + ",";       
+                else if(bhomBar.FEAType == BarFEAType.CompressionOnly)
+                    compressionBars = compressionBars + barNum.ToString() + ",";
+                else if (bhomBar.FEAType == BarFEAType.Axial)
+                    axialBars = axialBars + barNum.ToString() + ",";
             }
-            str.TrimEnd(',');
+            tensionBars.TrimEnd(',');
 
             m_RobotApplication.Project.Structure.ApplyCache(rcache as RobotStructureCache);
             IRobotBarServer barServer = m_RobotApplication.Project.Structure.Bars;
+
             barServer.BeginMultiOperation();
-            rSelect.FromText(str);
+            rSelect.FromText(tensionBars);
             barServer.SetTensionCompression(rSelect, IRobotBarTensionCompression.I_BTC_TENSION_ONLY);
+            rSelect.FromText(compressionBars);
+            barServer.SetTensionCompression(rSelect, IRobotBarTensionCompression.I_BTC_COMPRESSION_ONLY);
+            barServer.SetTrussBar(axialBars, true);
 
             //foreach (Bar bhomBar in bars)
             //{
@@ -445,9 +456,10 @@ namespace BH.Adapter.Robot
                 else
                 {
                     lable = labelServer.Create(IRobotLabelType.I_LT_PANEL_THICKNESS, name);
+                    name = BH.Engine.Robot.Convert.ThicknessProperty(lable, property);
                 }
 
-                labelServer.Store(lable);
+                labelServer.StoreWithName(lable, name);
             }
 
             return true;
@@ -468,6 +480,18 @@ namespace BH.Adapter.Robot
                 updateview();
             }
         
+            return true;
+        }
+
+        public bool CreateCollection(IEnumerable<BarRelease> releases)
+        {
+            IRobotLabel lable = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_RELEASE, "");
+            IRobotBarReleaseData rData = lable.Data;
+
+            foreach (BarRelease bRelease in releases)
+            {
+            }
+
             return true;
         }
 

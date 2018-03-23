@@ -265,11 +265,13 @@ namespace BH.Adapter.Robot
 
         public bool CreateCollection(IEnumerable<Bar> bhomBars)
         {
-            
+            IRobotStructure rStructure = m_RobotApplication.Project.Structure;
+            IRobotBarServer barServer = rStructure.Bars;
             m_RobotApplication.Interactive = 0;
+            barServer.BeginMultiOperation();
             List<Bar> bars = bhomBars.ToList();
-            IRobotStructureCache rcache = m_RobotApplication.Project.Structure.CreateCache();
-            RobotSelection rSelect = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
+            IRobotStructureCache rcache = rStructure.CreateCache();
+            RobotSelection rSelect = rStructure.Selections.Create(IRobotObjectType.I_OT_BAR);
             string tensionBars = "";
             string compressionBars = "";
             string axialBars = "";
@@ -278,26 +280,36 @@ namespace BH.Adapter.Robot
             foreach (Bar bhomBar in bars)
             {
                 barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterId]);
-                rcache.AddBar(barNum,
-                              System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),
-                              System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]),
-                              bhomBar.SectionProperty.Name,
-                              bhomBar.SectionProperty.Material.Name,
-                              bhomBar.OrientationAngle * Math.PI / 180);
-                rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_MEMBER_TYPE, "Simple bar");
-                if(bhomBar.FEAType == BarFEAType.TensionOnly)
-                    tensionBars = tensionBars + barNum.ToString() + ",";       
-                else if(bhomBar.FEAType == BarFEAType.CompressionOnly)
+                if (bhomBar.SectionProperty != null)
+                {
+                    rcache.AddBar(barNum,
+                                  System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),
+                                  System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]),
+                                  bhomBar.SectionProperty.Name,
+                                  bhomBar.SectionProperty.Material.Name,
+                                  bhomBar.OrientationAngle * Math.PI / 180);
+                }
+
+                else
+                {
+                    barServer.Create(barNum,
+                                     System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),
+                                     System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]));
+                }
+
+                if (bhomBar.FEAType == BarFEAType.TensionOnly)
+                    tensionBars = tensionBars + barNum.ToString() + ",";
+                else if (bhomBar.FEAType == BarFEAType.CompressionOnly)
                     compressionBars = compressionBars + barNum.ToString() + ",";
                 else if (bhomBar.FEAType == BarFEAType.Axial)
                     axialBars = axialBars + barNum.ToString() + ",";
             }
             tensionBars.TrimEnd(',');
+            compressionBars.TrimEnd(',');
+            axialBars.TrimEnd(',');
 
             m_RobotApplication.Project.Structure.ApplyCache(rcache as RobotStructureCache);
-            IRobotBarServer barServer = m_RobotApplication.Project.Structure.Bars;
 
-            barServer.BeginMultiOperation();
             rSelect.FromText(tensionBars);
             barServer.SetTensionCompression(rSelect, IRobotBarTensionCompression.I_BTC_TENSION_ONLY);
             rSelect.FromText(compressionBars);
@@ -402,40 +414,55 @@ namespace BH.Adapter.Robot
 
         public bool CreateCollection(IEnumerable<MeshFace> meshFaces)
         {
-            RobotObjObjectServer objServer = m_RobotApplication.Project.Structure.Objects;
-            foreach (MeshFace face in meshFaces)
+            int nbOfDistinctProps = meshFaces.Select(x => x.Property).Distinct(Comparer<Property2D>()).Count();
+            if (nbOfDistinctProps == 1)
             {
-                IRobotPointsArray ptarray = new RobotPointsArray();
+                string faceList = "";
+                IRobotStructure objServer = m_RobotApplication.Project.Structure;
                 RobotObjObject mesh = null;
-                if (face.Nodes.Count == 3)
+                foreach (MeshFace face in meshFaces)
                 {
-                    ptarray.SetSize(3);
-                    ptarray.Set(1, face.Nodes[0].Position.X, face.Nodes[0].Position.Y, face.Nodes[0].Position.Z);
-                    ptarray.Set(2, face.Nodes[1].Position.X, face.Nodes[1].Position.Y, face.Nodes[1].Position.Z);
-                    ptarray.Set(3, face.Nodes[2].Position.X, face.Nodes[2].Position.Y, face.Nodes[2].Position.Z);
+                    IRobotNumbersArray ptarray = new RobotNumbersArray();
+                    if (face.Nodes.Count == 3)
+                    {
+                        ptarray.SetSize(3);
+                        ptarray.Set(1, System.Convert.ToInt32(face.Nodes[0].CustomData[AdapterId]));
+                        ptarray.Set(2, System.Convert.ToInt32(face.Nodes[1].CustomData[AdapterId]));
+                        ptarray.Set(3, System.Convert.ToInt32(face.Nodes[2].CustomData[AdapterId]));
+                    }
+                    else
+                    {
+                        ptarray.SetSize(4);
+                        ptarray.Set(1, System.Convert.ToInt32(face.Nodes[0].CustomData[AdapterId]));
+                        ptarray.Set(2, System.Convert.ToInt32(face.Nodes[1].CustomData[AdapterId]));
+                        ptarray.Set(3, System.Convert.ToInt32(face.Nodes[2].CustomData[AdapterId]));
+                        ptarray.Set(4, System.Convert.ToInt32(face.Nodes[3].CustomData[AdapterId]));
+                    }
+                    int faceNum = System.Convert.ToInt32(face.CustomData[AdapterId]);
+                    RobotNumbersArray ptArray = ptarray as RobotNumbersArray;
+                    faceList = faceList + faceNum.ToString() + ",";
+
+                    objServer.FiniteElems.Create(faceNum, ptArray);
                 }
-                else
-                {
-                    ptarray.SetSize(4);
-                    ptarray.Set(1, face.Nodes[0].Position.X, face.Nodes[0].Position.Y, face.Nodes[0].Position.Z);
-                    ptarray.Set(2, face.Nodes[1].Position.X, face.Nodes[1].Position.Y, face.Nodes[1].Position.Z);
-                    ptarray.Set(3, face.Nodes[2].Position.X, face.Nodes[2].Position.Y, face.Nodes[2].Position.Z);
-                    ptarray.Set(4, face.Nodes[3].Position.X, face.Nodes[3].Position.Y, face.Nodes[3].Position.Z);
-                }
+                faceList.TrimEnd(',');
 
-                RobotPointsArray ptArray = ptarray as RobotPointsArray;
-                objServer.CreateContour(System.Convert.ToInt32(face.CustomData[AdapterId]), ptArray);
-                mesh = objServer.Get(System.Convert.ToInt32(face.CustomData[AdapterId])) as RobotObjObject;
-
-                if (face.Property is LoadingPanelProperty)
-                    mesh.SetLabel(IRobotLabelType.I_LT_CLADDING, face.Property.Name);
+                objServer.Objects.CreateOnFiniteElems(faceList, objServer.Objects.FreeNumber);
+                mesh = objServer.Objects.Get(objServer.Objects.FreeNumber - 1) as RobotObjObject;
+                //mesh.Main.Attribs.Meshed = 1;
+                //mesh.Update();
+                if (meshFaces.First().Property is LoadingPanelProperty)
+                    mesh.SetLabel(IRobotLabelType.I_LT_CLADDING, meshFaces.First().Property.Name);
 
                 else
-                    mesh.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, face.Property.Name);
-                mesh.Update();
+                    mesh.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, meshFaces.First().Property.Name);
+
+                return true;
             }
 
-            return true;
+            else
+            {
+                throw new Exception("All meshFaces should have the same property");
+            }
         }
 
         /***************************************************/

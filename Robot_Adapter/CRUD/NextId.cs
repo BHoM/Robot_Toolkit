@@ -69,7 +69,7 @@ namespace BH.Adapter.Robot
                 }
                 if (type == typeof(MeshFace))
                 {
-                    index = m_RobotApplication.Project.Structure.Objects.FreeNumber;
+                    index = m_RobotApplication.Project.Structure.FiniteElems.FreeNumber;
                 }
                 if (type == typeof(BH.oM.Structural.Elements.PanelPlanar)) //TODO: Check that this is the right rtype of panel
                 {

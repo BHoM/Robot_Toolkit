@@ -74,13 +74,13 @@ namespace BH.Engine.Robot
         {
             Node startNode = null;  bhomNodes.TryGetValue(robotBar.StartNode.ToString(), out startNode);
             Node endNode = null; bhomNodes.TryGetValue(robotBar.EndNode.ToString(), out endNode);
-            Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode, Name = robotBar.Number.ToString() };
+            Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode, Name = robotBar.Name };
 
             bhomBar.SectionProperty = bhomSections[robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION)];
             bhomBar.OrientationAngle = robotBar.Gamma * 180 / Math.PI;
-            bhomBar.Name = robotBar.Number.ToString();
-            bhomBar.Tags.Add(robotBar.Name);
+
             bhomBar.CustomData[AdapterID] = robotBar.Number;
+
             if (robotBar.TensionCompression == IRobotBarTensionCompression.I_BTC_COMPRESSION_ONLY)
             {
                 bhomBar.FEAType = BarFEAType.CompressionOnly;
@@ -98,7 +98,7 @@ namespace BH.Engine.Robot
 
         public static Node ToBHoMObject(this RobotNode robotNode)
         {
-            Node bhomNode = new Node { Position = new Point { X = robotNode.X, Y = robotNode.Y, Z = robotNode.Z }, Name = robotNode.Number.ToString() };
+            Node bhomNode = new Node { Position = new Point { X = robotNode.X, Y = robotNode.Y, Z = robotNode.Z }};
             if (robotNode.HasLabel(IRobotLabelType.I_LT_SUPPORT) == 1)
             {
                 bhomNode.Constraint = BH.Engine.Robot.Convert.ToBHoMObject((RobotNodeSupport)robotNode.GetLabel(IRobotLabelType.I_LT_SUPPORT));

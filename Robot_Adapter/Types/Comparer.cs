@@ -36,7 +36,6 @@ namespace BH.Adapter.Robot
         private static Dictionary<Type, object> m_Comparers = new Dictionary<Type, object>
         {
             {typeof(Node), new NodeDistanceComparer(3) },
-            {typeof(Bar), new BarEndNodesDistanceComparer(3) },
             {typeof(ISectionProperty), new BHoMObjectNameOrToStringComparer() },
             {typeof(Material), new BHoMObjectNameComparer() },
             {typeof(Constraint6DOF), new BHoMObjectNameComparer() },

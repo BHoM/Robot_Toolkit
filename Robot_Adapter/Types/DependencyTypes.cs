@@ -51,7 +51,7 @@ namespace BH.Adapter.Robot
             {typeof(PanelPlanar), new List<Type> { typeof(Property2D) } },
             {typeof(Property2D), new List<Type> { typeof(Material) } },
             {typeof(RigidLink), new List<Type> { typeof(LinkConstraint), typeof(Node) } },
-            {typeof(MeshFace), new List<Type> { typeof(Property2D) } }
+            {typeof(MeshFace), new List<Type> { typeof(Property2D), typeof(Node) } }
         };
 
 

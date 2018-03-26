@@ -173,13 +173,13 @@ namespace BH.Adapter.Robot
         private bool CreateCollection(IEnumerable<ISectionProperty> secProp)
         {
             List<ISectionProperty> secPropList = secProp.ToList();
-            IRobotLabel lable = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, "");
-            IRobotBarSectionData secData = lable.Data;
-
+            IRobotLabel label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, "");
+            IRobotBarSectionData secData = label.Data;
+            
             for (int i = 0; i < secPropList.Count; i++)
             {
                 BH.Engine.Robot.Convert.ISectionType(secPropList[i], secData);
-                m_RobotApplication.Project.Structure.Labels.StoreWithName(lable, secPropList[i].Name);
+                m_RobotApplication.Project.Structure.Labels.StoreWithName(label, secPropList[i].Name);
                 //if (m_SectionPropertyTaggs.ContainsKey(secPropList[i].Name))
                 //    m_SectionPropertyTaggs[secPropList[i].Name] = secPropList[i].TaggedName();
                 //else

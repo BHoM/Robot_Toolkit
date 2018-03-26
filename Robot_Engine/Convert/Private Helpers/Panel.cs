@@ -59,7 +59,7 @@ namespace BH.Engine.Robot
                 circle.P3.Set(bhomPoint3.X, bhomPoint3.Y, bhomPoint3.Z);
         }
 
-        public static string ThicknessProperty(IRobotLabel rLabel, Property2D property)
+        public static string ThicknessProperty(IRobotLabel rLabel, IProperty2D property)
         {
             string name = "";
 
@@ -87,13 +87,14 @@ namespace BH.Engine.Robot
                 name = property.Name;
                 if (property is ConstantThickness)
                 {
+                    ConstantThickness constThickness = property as ConstantThickness;
                     if (BH.Engine.Structure.Query.HasModifiers(property))
                     {
                         thicknessData.ThicknessType = IRobotThicknessType.I_TT_ORTHOTROPIC;
                         orthoData = thicknessData.Data;
                         orthoData.Type = (IRobotThicknessOrthoType)14;
-                        orthoData.H = property.Thickness;
-                        double[] modifiers = property.Modifiers;
+                        orthoData.H = constThickness.Thickness;
+                        double[] modifiers = BH.Engine.Structure.Query.Modifiers(constThickness);
                         orthoData.HA = modifiers[(int)PanelModifier.f11];
                         orthoData.H0 = modifiers[(int)PanelModifier.f12];
                         orthoData.HB = modifiers[(int)PanelModifier.f22];
@@ -107,7 +108,7 @@ namespace BH.Engine.Robot
                     else
                     {
                         thicknessData.ThicknessType = IRobotThicknessType.I_TT_HOMOGENEOUS;
-                        (thicknessData.Data as RobotThicknessHomoData).ThickConst = property.Thickness;
+                        (thicknessData.Data as RobotThicknessHomoData).ThickConst = constThickness.Thickness;
                     }
                 }
 
@@ -117,7 +118,7 @@ namespace BH.Engine.Robot
                     thicknessData.ThicknessType = IRobotThicknessType.I_TT_ORTHOTROPIC;
                     orthoData = thicknessData.Data;
                     orthoData.Type = (IRobotThicknessOrthoType)14;
-                    orthoData.H = property.Thickness;
+                    orthoData.H = waffle.Thickness;
                     orthoData.HA = waffle.TotalDepthX;
                     orthoData.HB = waffle.TotalDepthY;
                     orthoData.A = waffle.SpacingX;
@@ -132,7 +133,7 @@ namespace BH.Engine.Robot
                     thicknessData.ThicknessType = IRobotThicknessType.I_TT_ORTHOTROPIC;
                     orthoData = thicknessData.Data;
                     orthoData.Type = (IRobotThicknessOrthoType)14;
-                    orthoData.H = property.Thickness;
+                    orthoData.H = ribbed.Thickness;
                     orthoData.HA = ribbed.TotalDepth;
                     orthoData.A = ribbed.Spacing;
                     orthoData.A1 = ribbed.StemWidth;

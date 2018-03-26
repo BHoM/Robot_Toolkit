@@ -86,7 +86,7 @@ namespace BH.Adapter.Robot
             return success;
         }
 
-        protected bool Update(IEnumerable<Property2D> property2Ds)
+        protected bool Update(IEnumerable<IProperty2D> property2Ds)
         {
             bool success = true;
             success = Create(property2Ds);

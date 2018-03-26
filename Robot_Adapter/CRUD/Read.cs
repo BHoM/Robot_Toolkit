@@ -34,8 +34,8 @@ namespace BH.Adapter.Robot
                 return new List<PanelPlanar>();
             if (type == typeof(MeshFace))
                 return new List<MeshFace>();
-            if (type == typeof(Property2D))
-                return new List<Property2D>();
+            if (type == typeof(IProperty2D))
+                return new List<IProperty2D>();
             if (type == typeof(RigidLink))
                 return new List<RigidLink>();
             if (type == typeof(LoadCombination))

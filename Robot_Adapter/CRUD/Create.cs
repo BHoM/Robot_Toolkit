@@ -98,9 +98,9 @@ namespace BH.Adapter.Robot
                     success = CreateCollection(objects as IEnumerable<PanelPlanar>);
                 }
 
-                if (objects.First() is Property2D)
+                if (typeof(IProperty2D).IsAssignableFrom(objects.First().GetType()))
                 {
-                    success = CreateCollection(objects as IEnumerable<Property2D>);
+                    success = CreateCollection(objects as IEnumerable<IProperty2D>);
                 }
 
                 if (objects.First() is LoadCombination)
@@ -414,7 +414,7 @@ namespace BH.Adapter.Robot
 
         public bool CreateCollection(IEnumerable<MeshFace> meshFaces)
         {
-            int nbOfDistinctProps = meshFaces.Select(x => x.Property).Distinct(Comparer<Property2D>()).Count();
+            int nbOfDistinctProps = meshFaces.Select(x => x.Property).Distinct(Comparer<IProperty2D>()).Count();
             if (nbOfDistinctProps == 1)
             {
                 string faceList = "";
@@ -467,12 +467,12 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        public bool CreateCollection(IEnumerable<Property2D> properties)
+        public bool CreateCollection(IEnumerable<IProperty2D> properties)
         {
             RobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotLabel lable = null;
             string name = "";
-            foreach (Property2D property in properties)
+            foreach (IProperty2D property in properties)
             {
                 if (property is LoadingPanelProperty)
                 {

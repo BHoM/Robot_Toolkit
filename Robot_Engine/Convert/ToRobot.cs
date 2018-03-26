@@ -126,7 +126,7 @@ namespace BH.Engine.Robot
                 case ShapeType.Tube:
                 case ShapeType.Cable:
                     return IRobotBarSectionType.I_BST_NS_TUBE;
-                case ShapeType.Polygon:
+                case ShapeType.FreeForm:
                     return IRobotBarSectionType.I_BST_NS_POLYGONAL;
                 default:
                     return IRobotBarSectionType.I_BST_NS_RECT;

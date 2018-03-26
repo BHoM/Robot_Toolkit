@@ -48,10 +48,10 @@ namespace BH.Adapter.Robot
             {typeof(Node), new List<Type> { typeof(Constraint6DOF) } },
             {typeof(ILoad), new List<Type> { typeof(Loadcase) } },
             {typeof(LoadCombination), new List<Type> { typeof(Loadcase) } },
-            {typeof(PanelPlanar), new List<Type> { typeof(Property2D) } },
-            {typeof(Property2D), new List<Type> { typeof(Material) } },
+            {typeof(PanelPlanar), new List<Type> { typeof(IProperty2D) } },
+            {typeof(IProperty2D), new List<Type> { typeof(Material) } },
             {typeof(RigidLink), new List<Type> { typeof(LinkConstraint), typeof(Node) } },
-            {typeof(MeshFace), new List<Type> { typeof(Property2D), typeof(Node) } }
+            {typeof(MeshFace), new List<Type> { typeof(IProperty2D), typeof(Node) } }
         };
 
 

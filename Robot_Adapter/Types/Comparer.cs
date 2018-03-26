@@ -41,7 +41,7 @@ namespace BH.Adapter.Robot
             {typeof(Constraint6DOF), new BHoMObjectNameComparer() },
             {typeof(Loadcase), new BHoMObjectNameComparer() },
             {typeof(LinkConstraint), new BHoMObjectNameComparer() },
-            {typeof(Property2D), new BHoMObjectNameComparer() }
+            {typeof(IProperty2D), new BHoMObjectNameComparer() }
 
         };
 

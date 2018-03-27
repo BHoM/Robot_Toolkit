@@ -70,6 +70,7 @@
     <Compile Include="Convert\AdapterID.cs" />
     <Compile Include="Convert\FromRobot.cs" />
     <Compile Include="Convert\Private Helpers\Bar.cs" />
+    <Compile Include="Convert\Private Helpers\ConcreteSectionProperty.cs" />
     <Compile Include="Convert\Private Helpers\Constraint.cs" />
     <Compile Include="Convert\Private Helpers\Group.cs" />
     <Compile Include="Convert\Private Helpers\Load.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Convert\Private Helpers\Panel.cs" />
     <Compile Include="Convert\Private Helpers\Release.cs" />
     <Compile Include="Convert\Private Helpers\SectionProperty.cs" />
+    <Compile Include="Convert\Private Helpers\SteelSectionProperty.cs" />
     <Compile Include="Convert\ToRobot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

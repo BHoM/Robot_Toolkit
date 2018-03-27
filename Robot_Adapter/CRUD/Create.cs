@@ -178,7 +178,7 @@ namespace BH.Adapter.Robot
             
             for (int i = 0; i < secPropList.Count; i++)
             {
-                BH.Engine.Robot.Convert.ISectionType(secPropList[i], secData);
+                BH.Engine.Robot.Convert.ISectionProperty(secPropList[i], secData);
                 m_RobotApplication.Project.Structure.Labels.StoreWithName(label, secPropList[i].Name);
                 //if (m_SectionPropertyTaggs.ContainsKey(secPropList[i].Name))
                 //    m_SectionPropertyTaggs[secPropList[i].Name] = secPropList[i].TaggedName();

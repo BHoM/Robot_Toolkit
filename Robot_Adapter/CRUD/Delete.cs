@@ -71,26 +71,34 @@ namespace BH.Adapter.Robot
         public int DeleteBars(IEnumerable<object> ids)
         {
             int sucess = 1;
+            string barIds = "";
             RobotSelection barSel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
-            List<int> indicies = ids.Cast<int>().ToList();
             if (ids != null)
             {
+                List<int> indicies = ids.Cast<int>().ToList();
                 foreach (int ind in indicies)
                 {
-                    barSel.AddOne(ind);
+                    barIds += ind.ToString() + ",";
+                }
+                barIds.TrimEnd(',');
+                barSel.FromText(barIds);
+                if (barSel.Count != indicies.Count())
+                {
+                    return 0;
                 }
             }
             else
-                barSel = m_RobotApplication.Project.Structure.Bars.GetAll() as RobotSelection;
-
-
-            if (barSel.Count == indicies.Count())
             {
-                m_RobotApplication.Project.Structure.Bars.DeleteMany(barSel);
-                return sucess;
+                int maxNodeIndex = m_RobotApplication.Project.Structure.Bars.FreeNumber;
+                for (int i = 1; i < maxNodeIndex; i++)
+                {
+                    barIds += i.ToString() + ",";
+                }
+                barIds.TrimEnd(',');
+                barSel.FromText(barIds);
             }
-
-            return 0;
+            m_RobotApplication.Project.Structure.Bars.DeleteMany(barSel);
+            return sucess;
         }
 
 

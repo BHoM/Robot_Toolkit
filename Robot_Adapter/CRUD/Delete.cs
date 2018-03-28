@@ -21,38 +21,51 @@ namespace BH.Adapter.Robot
             //    DeleteSteelDesignGroups(ids as List<int>);
             //}
 
+            int success = 0;
+
             if (type == typeof(Node))
-                return DeleteNodes(ids);
+                success = DeleteNodes(ids);
 
             if (type == typeof(Bar))
-                return DeleteBars(ids);
+                success = DeleteBars(ids);
 
-            return 0;
+            updateview();
+            return success;
         }
 
         public int DeleteNodes(IEnumerable<object> ids)
         {
             int sucess = 1;
+            string nodeIds = "";
             RobotSelection nodeSel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
-            List<int> indicies = ids.Cast<int>().ToList();
             if (ids != null)
             {
+                List<int> indicies = ids.Cast<int>().ToList();
                 foreach (int ind in indicies)
                 {
-                    nodeSel.AddOne(ind);
+                    nodeIds += ind.ToString() + ",";
+                }
+                nodeIds.TrimEnd(',');
+                nodeSel.FromText(nodeIds);
+
+                if (nodeSel.Count != indicies.Count())
+                {
+                    return 0;
                 }
             }
             else
-                nodeSel = m_RobotApplication.Project.Structure.Nodes.GetAll() as RobotSelection;
-
-
-            if (nodeSel.Count == indicies.Count())
             {
-                m_RobotApplication.Project.Structure.Nodes.DeleteMany(nodeSel);
-                return sucess;
+                int maxNodeIndex = m_RobotApplication.Project.Structure.Nodes.FreeNumber;
+                for (int i = 1; i < maxNodeIndex; i++)
+                {
+                    nodeIds += i.ToString() + ",";
+                }
+                nodeIds.TrimEnd(',');
+                nodeSel.FromText(nodeIds);
             }
+            m_RobotApplication.Project.Structure.Nodes.DeleteMany(nodeSel);
+            return sucess;
 
-            return 0;
         }
 
         public int DeleteBars(IEnumerable<object> ids)

@@ -72,16 +72,31 @@ namespace BH.Adapter.Robot
             IEnumerable<Node> bhomNodesList = ReadNodes();
             Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionary(x => x.CustomData[AdapterId].ToString());
             Dictionary<string, ISectionProperty> bhomSections = ReadSectionProperties().ToDictionary(x => x.Name.ToString());
-
+            Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
             m_RobotApplication.Project.Structure.Bars.BeginMultiOperation();
-            for (int i = 1; i <= robotBars.Count; i++)
+            if (ids == null)
             {
-                RobotBar robotBar = robotBars.Get(i);
-                Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar , bhomNodes, bhomSections);
-                bhomBar.CustomData[AdapterId] = robotBar.Number;
-                //if (m_NodeTaggs != null)
-                //    bhomBar.ApplyTaggedName(robotBar.NameTemplate);
-                bhomBars.Add(bhomBar);
+                for (int i = 1; i <= robotBars.Count; i++)
+                {
+                    RobotBar robotBar = robotBars.Get(i);
+                    Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections);
+                    bhomBar.CustomData[AdapterId] = robotBar.Number;
+                    if (barTags != null)
+                        bhomBar.Tags = barTags[robotBar.Number];
+                    bhomBars.Add(bhomBar);
+                }
+            }
+            else if (ids != null && ids.Count > 0)
+            {
+                for (int i = 0; i < ids.Count; i++)
+                {
+                    RobotBar robotBar = m_RobotApplication.Project.Structure.Bars.Get(System.Convert.ToInt32(ids[i])) as RobotBar;
+                    Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections);
+                    bhomBar.CustomData[AdapterId] = robotBar.Number;
+                    if (barTags != null)
+                        bhomBar.Tags = barTags[System.Convert.ToInt32(ids[i])];
+                    bhomBars.Add(bhomBar);
+                }
             }
             m_RobotApplication.Project.Structure.Bars.EndMultiOperation();
 

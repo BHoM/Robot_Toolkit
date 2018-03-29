@@ -38,12 +38,14 @@ namespace BH.Adapter.Robot
             int sucess = 1;
             string nodeIds = "";
             RobotSelection nodeSel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
+            Dictionary<int, HashSet<string>> nodeTags = GetTypeTags(typeof(Node));
             if (ids != null)
             {
                 List<int> indicies = ids.Cast<int>().ToList();
                 foreach (int ind in indicies)
                 {
                     nodeIds += ind.ToString() + ",";
+                    nodeTags.Remove(ind);
                 }
                 nodeIds.TrimEnd(',');
                 nodeSel.FromText(nodeIds);
@@ -59,13 +61,14 @@ namespace BH.Adapter.Robot
                 for (int i = 1; i < maxNodeIndex; i++)
                 {
                     nodeIds += i.ToString() + ",";
+                    nodeTags.Remove(i);
                 }
                 nodeIds.TrimEnd(',');
                 nodeSel.FromText(nodeIds);
             }
             m_RobotApplication.Project.Structure.Nodes.DeleteMany(nodeSel);
+            m_tags[typeof(Node)] = nodeTags;
             return sucess;
-
         }
 
         public int DeleteBars(IEnumerable<object> ids)

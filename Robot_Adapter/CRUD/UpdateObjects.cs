@@ -31,9 +31,9 @@ namespace BH.Adapter.Robot
 
         protected bool Update(IEnumerable<Node> nodes)
         {
-
+            Dictionary<int, HashSet<string>> nodeTags = GetTypeTags(typeof(Node));
             foreach (Node node in nodes)
-            { 
+            {
                 RobotNode robotNode = m_RobotApplication.Project.Structure.Nodes.Get(System.Convert.ToInt32(node.CustomData[AdapterId])) as RobotNode;
                 if (robotNode == null)
                     return false;
@@ -44,8 +44,9 @@ namespace BH.Adapter.Robot
                 robotNode.X = node.Position.X;
                 robotNode.Y = node.Position.Y;
                 robotNode.Z = node.Position.Z;
-                //m_NodeTaggs[System.Convert.ToInt32(node.CustomData[AdapterId])] = node.TaggedName();
+                nodeTags[System.Convert.ToInt32(node.CustomData[AdapterId])] = node.Tags;
             }
+            m_tags[typeof(Node)] = nodeTags;
             return true;
         }
 

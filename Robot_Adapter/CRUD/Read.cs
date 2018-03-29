@@ -95,16 +95,32 @@ namespace BH.Adapter.Robot
             IRobotCollection robotNodes = m_RobotApplication.Project.Structure.Nodes.GetAll();
             List<Node> bhomNodes = new List<Node>();
             List<Constraint6DOF> constraints = ReadConstraints6DOF();
-
-            for (int i = 1; i <= robotNodes.Count; i++)
+            Dictionary<int, HashSet<string>> nodeTags = GetTypeTags(typeof(Node));
+            if (ids == null)
             {
-                RobotNode robotNode = robotNodes.Get(i);
-                Node bhomNode = BH.Engine.Robot.Convert.ToBHoMObject(robotNode);
-                bhomNode.CustomData[AdapterId] = robotNode.Number;
-                //if (m_NodeTaggs != null)
-                //    bhomNode.ApplyTaggedName(m_NodeTaggs[i]);
+                for (int i = 1; i <= robotNodes.Count; i++)
+                {
+                    RobotNode robotNode = robotNodes.Get(i);
+                    Node bhomNode = BH.Engine.Robot.Convert.ToBHoMObject(robotNode);
+                    bhomNode.CustomData[AdapterId] = robotNode.Number;
+                    if (nodeTags != null)
+                        bhomNode.Tags = nodeTags[robotNode.Number];
 
-                bhomNodes.Add(bhomNode);
+                    bhomNodes.Add(bhomNode);
+                }
+            }
+            else if (ids != null && ids.Count > 0)
+            {
+                for (int i = 0; i < ids.Count; i++)
+                {
+                    RobotNode robotNode = m_RobotApplication.Project.Structure.Nodes.Get(System.Convert.ToInt32(ids[i])) as RobotNode;
+                    Node bhomNode = BH.Engine.Robot.Convert.ToBHoMObject(robotNode);
+                    bhomNode.CustomData[AdapterId] = robotNode.Number;
+                    if (nodeTags != null)
+                        bhomNode.Tags = nodeTags[System.Convert.ToInt32(ids[i])];
+
+                    bhomNodes.Add(bhomNode);
+                }
             }
             return bhomNodes;
         }

@@ -76,19 +76,21 @@ namespace BH.Adapter.Robot
             int sucess = 1;
             string barIds = "";
             RobotSelection barSel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
+            Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
             if (ids != null)
             {
                 List<int> indicies = ids.Cast<int>().ToList();
                 foreach (int ind in indicies)
                 {
                     barIds += ind.ToString() + ",";
+                    barTags.Remove(ind);
                 }
                 barIds.TrimEnd(',');
                 barSel.FromText(barIds);
-                if (barSel.Count != indicies.Count())
-                {
-                    return 0;
-                }
+                //if (barSel.Count != indicies.Count())
+                //{
+                //    return 0;
+                //}
             }
             else
             {
@@ -96,11 +98,13 @@ namespace BH.Adapter.Robot
                 for (int i = 1; i < maxNodeIndex; i++)
                 {
                     barIds += i.ToString() + ",";
+                    barTags.Remove(i);
                 }
                 barIds.TrimEnd(',');
                 barSel.FromText(barIds);
             }
             m_RobotApplication.Project.Structure.Bars.DeleteMany(barSel);
+            m_tags[typeof(Bar)] = barTags;
             return sucess;
         }
 

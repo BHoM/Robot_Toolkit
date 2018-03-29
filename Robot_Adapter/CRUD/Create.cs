@@ -270,66 +270,71 @@ namespace BH.Adapter.Robot
 
         public bool CreateCollection(IEnumerable<Bar> bhomBars)
         {
-            IRobotStructure rStructure = m_RobotApplication.Project.Structure;
-            IRobotBarServer barServer = rStructure.Bars;
-            m_RobotApplication.Interactive = 0;
-            barServer.BeginMultiOperation();
-            List<Bar> bars = bhomBars.ToList();
-            IRobotStructureCache rcache = rStructure.CreateCache();
-            RobotSelection rSelect = rStructure.Selections.Create(IRobotObjectType.I_OT_BAR);
-            string tensionBars = "";
-            string compressionBars = "";
-            string axialBars = "";
-            int barNum = 0;
-            int freeNum = m_RobotApplication.Project.Structure.Bars.FreeNumber;
-            foreach (Bar bhomBar in bars)
+            if (bhomBars != null)
             {
-                barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterId]);
-                if (bhomBar.SectionProperty != null)
+                IRobotStructure rStructure = m_RobotApplication.Project.Structure;
+                IRobotBarServer barServer = rStructure.Bars;
+                m_RobotApplication.Interactive = 0;
+                barServer.BeginMultiOperation();
+                List<Bar> bars = bhomBars.ToList();
+                IRobotStructureCache rcache = rStructure.CreateCache();
+                RobotSelection rSelect = rStructure.Selections.Create(IRobotObjectType.I_OT_BAR);
+                string tensionBars = "";
+                string compressionBars = "";
+                string axialBars = "";
+                int barNum = 0;
+                int freeNum = m_RobotApplication.Project.Structure.Bars.FreeNumber;
+                Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
+                foreach (Bar bhomBar in bars)
                 {
-                    rcache.AddBar(barNum,
-                                  System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),
-                                  System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]),
-                                  bhomBar.SectionProperty.Name,
-                                  bhomBar.SectionProperty.Material.Name,
-                                  bhomBar.OrientationAngle * Math.PI / 180);
-                }
+                    barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterId]);
+                    if (bhomBar.SectionProperty != null)
+                    {
+                        rcache.AddBar(barNum,
+                                      System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),
+                                      System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]),
+                                      bhomBar.SectionProperty.Name,
+                                      bhomBar.SectionProperty.Material.Name,
+                                      bhomBar.OrientationAngle * Math.PI / 180);
+                    }
 
-                else
+                    else
+                    {
+                        barServer.Create(barNum,
+                                         System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),
+                                         System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]));
+                    }
+
+                    if (bhomBar.FEAType == BarFEAType.TensionOnly)
+                        tensionBars = tensionBars + barNum.ToString() + ",";
+                    else if (bhomBar.FEAType == BarFEAType.CompressionOnly)
+                        compressionBars = compressionBars + barNum.ToString() + ",";
+                    else if (bhomBar.FEAType == BarFEAType.Axial)
+                        axialBars = axialBars + barNum.ToString() + ",";
+                }
+                tensionBars.TrimEnd(',');
+                compressionBars.TrimEnd(',');
+                axialBars.TrimEnd(',');
+
+                m_RobotApplication.Project.Structure.ApplyCache(rcache as RobotStructureCache);
+
+                rSelect.FromText(tensionBars);
+                barServer.SetTensionCompression(rSelect, IRobotBarTensionCompression.I_BTC_TENSION_ONLY);
+                rSelect.FromText(compressionBars);
+                barServer.SetTensionCompression(rSelect, IRobotBarTensionCompression.I_BTC_COMPRESSION_ONLY);
+                barServer.SetTrussBar(axialBars, true);
+
+                foreach (Bar bhomBar in bars)
                 {
-                    barServer.Create(barNum,
-                                     System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),
-                                     System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]));
+                    RobotBar rBar = barServer.Get(System.Convert.ToInt32(bhomBar.CustomData[AdapterId])) as RobotBar;
+                    barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterId]);
+                    barTags[barNum] = bhomBar.Tags;
+                    BH.Engine.Robot.Convert.SetFEAType(rBar, bhomBar);
                 }
-
-                if (bhomBar.FEAType == BarFEAType.TensionOnly)
-                    tensionBars = tensionBars + barNum.ToString() + ",";
-                else if (bhomBar.FEAType == BarFEAType.CompressionOnly)
-                    compressionBars = compressionBars + barNum.ToString() + ",";
-                else if (bhomBar.FEAType == BarFEAType.Axial)
-                    axialBars = axialBars + barNum.ToString() + ",";
+                m_tags[typeof(Bar)] = barTags;
+                barServer.EndMultiOperation();
+                m_RobotApplication.Interactive = 1;
             }
-            tensionBars.TrimEnd(',');
-            compressionBars.TrimEnd(',');
-            axialBars.TrimEnd(',');
-
-            m_RobotApplication.Project.Structure.ApplyCache(rcache as RobotStructureCache);
-
-            rSelect.FromText(tensionBars);
-            barServer.SetTensionCompression(rSelect, IRobotBarTensionCompression.I_BTC_TENSION_ONLY);
-            rSelect.FromText(compressionBars);
-            barServer.SetTensionCompression(rSelect, IRobotBarTensionCompression.I_BTC_COMPRESSION_ONLY);
-            barServer.SetTrussBar(axialBars, true);
-
-            //foreach (Bar bhomBar in bars)
-            //{
-            //    RobotBar rBar = barServer.Get(System.Convert.ToInt32(bhomBar.CustomData[AdapterId])) as RobotBar;
-            //    rBar.NameTemplate = bhomBar.TaggedName();
-            //    BH.Engine.Robot.Convert.SetFEAType(rBar, bhomBar);
-            //}
-
-            barServer.EndMultiOperation();
-            m_RobotApplication.Interactive = 1;
             return true;
         }
 

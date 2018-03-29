@@ -52,7 +52,7 @@ namespace BH.Adapter.Robot
 
         protected bool Update(IEnumerable<Bar> bars)
         {
-
+            Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
             foreach (Bar bar in bars)
             {
                 RobotBar robotBar = m_RobotApplication.Project.Structure.Bars.Get((int)bar.CustomData[AdapterId]) as RobotBar;
@@ -61,14 +61,17 @@ namespace BH.Adapter.Robot
 
                 robotBar.StartNode = System.Convert.ToInt32(bar.StartNode.CustomData[AdapterId]);
                 robotBar.EndNode = System.Convert.ToInt32(bar.EndNode.CustomData[AdapterId]);
+                barTags[System.Convert.ToInt32(bar.CustomData[AdapterId])] = bar.Tags;
+
 
                 if (bar.SectionProperty != null && !string.IsNullOrWhiteSpace(bar.SectionProperty.Name))
                     robotBar.SetSection(bar.SectionProperty.Name, false);
 
                 robotBar.Gamma = bar.OrientationAngle * Math.PI / 180;
-                //BH.Engine.Robot.Convert.SetFEAType(robotBar, bar);
+                BH.Engine.Robot.Convert.SetFEAType(robotBar, bar);
 
             }
+            m_tags[typeof(Bar)] = barTags;
             return true;
         }
 

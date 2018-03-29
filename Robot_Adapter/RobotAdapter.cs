@@ -107,6 +107,18 @@ namespace BH.Adapter.Robot
             m_RobotApplication.Project.ViewMngr.Refresh();
         }
 
+        private Dictionary<int, HashSet<string>> GetTypeTags(Type t)
+        {
+            Dictionary<int, HashSet<string>> typeTags;
+
+            if (!m_tags.TryGetValue(t, out typeTags))
+                typeTags = new Dictionary<int, HashSet<string>>();
+
+            m_tags[t] = typeTags;
+
+            return typeTags;
+        }
+
         //~RobotAdapter()
         //{
         //    //m_RobotApplication.Project.SaveAs(@"C:\Users\phesari\Desktop\Structure.rtd");
@@ -118,6 +130,7 @@ namespace BH.Adapter.Robot
         /***************************************************/
 
         private RobotApplication m_RobotApplication;
+        private Dictionary<Type, Dictionary<int, HashSet<string>>> m_tags = new Dictionary<Type, Dictionary<int, HashSet<string>>>();
         //private Dictionary<int, string> m_NodeTaggs = new Dictionary<int, string>();
         //private Dictionary<string, string> m_MaterialTaggs = new Dictionary<string, string>();
         //private Dictionary<string, string> m_SectionPropertyTaggs = new Dictionary<string, string>();

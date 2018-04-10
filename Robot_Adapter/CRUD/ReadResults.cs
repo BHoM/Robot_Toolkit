@@ -71,6 +71,7 @@ namespace BH.Adapter.Robot
                     int idCase = (int)row.GetParam(IRobotResultParamType.I_RPT_LOAD_CASE);
                     int idBar = (int)row.GetParam(IRobotResultParamType.I_RPT_BAR);
                     int idPoint = (int)row.GetParam(IRobotResultParamType.I_RPT_BAR_DIV_POINT);
+                    int division = (int)row.GetParam(IRobotResultParamType.I_RPT_BAR_DIV_COUNT);
 
                     double fx = row.IsAvailable((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FX) ? row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FX) : 0;
                     double fy = row.IsAvailable((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FY) ? row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FY) : 0;
@@ -78,7 +79,12 @@ namespace BH.Adapter.Robot
                     double mx = row.IsAvailable((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MX) ? row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MX) : 0;
                     double my = row.IsAvailable((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MY) ? row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MY) : 0;
                     double mz = row.IsAvailable((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MZ) ? row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MZ) : 0;
-                    barforces.Add(new BarForce { FX = fx, FY = fy, FZ = fz, MX = mx, MY = my, MZ = mz });
+                    BarForce tempbForce = new BarForce { FX = fx, FY = fy, FZ = fz, MX = mx, MY = my, MZ = mz };
+                    tempbForce.Case = idCase.ToString();
+                    tempbForce.ObjectId = idBar.ToString();
+                    tempbForce.Divisions = idPoint;
+                    tempbForce.Position = (1 / (System.Convert.ToDouble(division) - 1)) * (System.Convert.ToDouble(idPoint) - 1); 
+                    barforces.Add(tempbForce);
                     isOk = rowSet.MoveNext();
 
                 }
@@ -129,7 +135,7 @@ namespace BH.Adapter.Robot
                 {
                     RobotResultRow row = rowSet.CurrentRow;
                     int idCase = (int)row.GetParam(IRobotResultParamType.I_RPT_LOAD_CASE);
-                    int idnode = (int)row.GetParam(IRobotResultParamType.I_RPT_NODE);
+                    int idNode = (int)row.GetParam(IRobotResultParamType.I_RPT_NODE);
 
                     double ux = row.GetValue((int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UX);
                     double uy = row.GetValue((int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UY);
@@ -138,7 +144,10 @@ namespace BH.Adapter.Robot
                     double ry = row.GetValue((int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_RY);
                     double rz = row.GetValue((int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_RZ);
 
-                    nodeDisplacements.Add(new NodeDisplacement { UX = ux, UY = uy, UZ = uz, RX = rx, RY = ry, RZ = rz});
+                    NodeDisplacement tempNodeDisp = new NodeDisplacement { UX = ux, UY = uy, UZ = uz, RX = rx, RY = ry, RZ = rz };
+                    tempNodeDisp.Case = idCase.ToString();
+                    tempNodeDisp.ObjectId = idNode.ToString();
+                    nodeDisplacements.Add(tempNodeDisp);
                     isOk = rowSet.MoveNext();
                 }
             }

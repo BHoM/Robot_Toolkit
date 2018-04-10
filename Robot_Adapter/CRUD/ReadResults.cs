@@ -79,12 +79,23 @@ namespace BH.Adapter.Robot
                     double mx = row.IsAvailable((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MX) ? row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MX) : 0;
                     double my = row.IsAvailable((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MY) ? row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MY) : 0;
                     double mz = row.IsAvailable((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MZ) ? row.GetValue((int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MZ) : 0;
-                    BarForce tempbForce = new BarForce { FX = fx, FY = fy, FZ = fz, MX = mx, MY = my, MZ = mz };
-                    tempbForce.Case = idCase.ToString();
-                    tempbForce.ObjectId = idBar.ToString();
-                    tempbForce.Divisions = idPoint;
-                    tempbForce.Position = (1 / (System.Convert.ToDouble(division) - 1)) * (System.Convert.ToDouble(idPoint) - 1); 
-                    barforces.Add(tempbForce);
+                    double position = (1 / (System.Convert.ToDouble(division) - 1)) * (System.Convert.ToDouble(idPoint) - 1);
+
+                    BarForce barForce = new BarForce
+                    {
+                        Case = idCase.ToString(),
+                        ObjectId = idBar.ToString(),
+                        Divisions = division,
+                        Position = position,
+                        FX = fx,
+                        FY = fy,
+                        FZ = fz,
+                        MX = mx,
+                        MY = my,
+                        MZ = mz
+                    };
+
+                    barforces.Add(barForce);
                     isOk = rowSet.MoveNext();
 
                 }
@@ -144,10 +155,19 @@ namespace BH.Adapter.Robot
                     double ry = row.GetValue((int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_RY);
                     double rz = row.GetValue((int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_RZ);
 
-                    NodeDisplacement tempNodeDisp = new NodeDisplacement { UX = ux, UY = uy, UZ = uz, RX = rx, RY = ry, RZ = rz };
-                    tempNodeDisp.Case = idCase.ToString();
-                    tempNodeDisp.ObjectId = idNode.ToString();
-                    nodeDisplacements.Add(tempNodeDisp);
+                    NodeDisplacement nodeDisp = new NodeDisplacement
+                    {
+                        Case = idCase.ToString(),
+                        ObjectId = idNode.ToString(),
+                        UX = ux,
+                        UY = uy,
+                        UZ = uz,
+                        RX = rx,
+                        RY = ry,
+                        RZ = rz
+                    };
+
+                    nodeDisplacements.Add(nodeDisp);
                     isOk = rowSet.MoveNext();
                 }
             }

@@ -28,6 +28,26 @@ namespace BH.Engine.Robot
             rData.HZ = bhomRelease.RotationalStiffnessZ;
         }
 
+        public static Constraint6DOF BHoMRelease(IRobotBarEndReleaseData rData)
+        {
+            Constraint6DOF bhomEndRelease = new Constraint6DOF();
+            bhomEndRelease.TranslationX = GetReleaseType(rData.UX);
+            bhomEndRelease.TranslationY = GetReleaseType(rData.UY);
+            bhomEndRelease.TranslationZ = GetReleaseType(rData.UZ);
+            bhomEndRelease.RotationX = GetReleaseType(rData.RX);
+            bhomEndRelease.RotationY = GetReleaseType(rData.RY);
+            bhomEndRelease.RotationZ = GetReleaseType(rData.RZ);
+
+            bhomEndRelease.TranslationalStiffnessX = rData.KX;
+            bhomEndRelease.TranslationalStiffnessY = rData.KY;
+            bhomEndRelease.TranslationalStiffnessZ = rData.KZ;
+            bhomEndRelease.RotationalStiffnessX = rData.HX;
+            bhomEndRelease.RotationalStiffnessY = rData.HY;
+            bhomEndRelease.RotationalStiffnessZ = rData.HZ;
+
+            return bhomEndRelease;
+        }
+
         public static DOFType GetReleaseType(IRobotBarEndReleaseValue endRelease)
         {
             switch (endRelease)

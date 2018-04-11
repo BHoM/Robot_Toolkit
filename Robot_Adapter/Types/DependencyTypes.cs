@@ -43,7 +43,7 @@ namespace BH.Adapter.Robot
 
         private static Dictionary<Type, List<Type>> m_DependencyTypes = new Dictionary<Type, List<Type>>
         {
-            {typeof(Bar), new List<Type> { typeof(ISectionProperty), typeof(Node) } },
+            {typeof(Bar), new List<Type> { typeof(ISectionProperty), typeof(Node), typeof(BarRelease) } },
             {typeof(ISectionProperty), new List<Type> { typeof(Material) } },
             {typeof(Node), new List<Type> { typeof(Constraint6DOF) } },
             {typeof(ILoad), new List<Type> { typeof(Loadcase) } },

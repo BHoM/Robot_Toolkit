@@ -43,7 +43,7 @@ namespace BH.Adapter.Robot
             if (type == typeof(LinkConstraint))
                 return new List<LinkConstraint>();
             if (type == typeof(BarRelease))
-                return new List<BarRelease>();
+                return ReadBarRelease();
             if (type == typeof(Loadcase))
                 return ReadLoadCase();
             if (typeof(ISectionProperty).IsAssignableFrom(type))
@@ -73,6 +73,7 @@ namespace BH.Adapter.Robot
             List<Bar> bhomBars = new List<Bar>();
             IEnumerable<Node> bhomNodesList = ReadNodes();
             Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionary(x => x.CustomData[AdapterId].ToString());
+            Dictionary<string, BarRelease> bhombarReleases = ReadBarRelease().ToDictionary(x => x.Name.ToString());
             Dictionary<string, ISectionProperty> bhomSections = ReadSectionProperties().ToDictionary(x => x.Name.ToString());
             Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
             m_RobotApplication.Project.Structure.Bars.BeginMultiOperation();
@@ -81,7 +82,7 @@ namespace BH.Adapter.Robot
                 for (int i = 1; i <= robotBars.Count; i++)
                 {
                     RobotBar robotBar = robotBars.Get(i);
-                    Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections);
+                    Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections, bhombarReleases);
                     bhomBar.CustomData[AdapterId] = robotBar.Number;
                     if (barTags != null)
                         bhomBar.Tags = barTags[robotBar.Number];
@@ -93,7 +94,7 @@ namespace BH.Adapter.Robot
                 for (int i = 0; i < ids.Count; i++)
                 {
                     RobotBar robotBar = m_RobotApplication.Project.Structure.Bars.Get(System.Convert.ToInt32(ids[i])) as RobotBar;
-                    Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections);
+                    Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections, bhombarReleases);
                     bhomBar.CustomData[AdapterId] = robotBar.Number;
                     if (barTags != null)
                         bhomBar.Tags = barTags[System.Convert.ToInt32(ids[i])];
@@ -211,6 +212,29 @@ namespace BH.Adapter.Robot
                 bhomMaterials.Add(bhomMat);
             }
             return bhomMaterials;
+        }
+
+        /***************************************************/
+
+        public List<BarRelease> ReadBarRelease(List<string> ids = null)
+        {
+            IRobotCollection releaseCollection = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_BAR_RELEASE);
+            List<BarRelease> bhomReleases = new List<BarRelease>();
+
+            for (int i = 1; i <= releaseCollection.Count; i++)
+            {
+                IRobotLabel rReleaseLabel = releaseCollection.Get(i);
+                IRobotBarReleaseData rReleaseData = rReleaseLabel.Data as IRobotBarReleaseData;
+                BarRelease bhomMBarRelease = new BarRelease
+                {
+                    Name = rReleaseLabel.Name,
+                    StartRelease = BH.Engine.Robot.Convert.BHoMRelease(rReleaseData.StartNode),
+                    EndRelease = BH.Engine.Robot.Convert.BHoMRelease(rReleaseData.EndNode)
+                };
+                bhomMBarRelease.CustomData.Add(AdapterId, rReleaseLabel.Name);
+                bhomReleases.Add(bhomMBarRelease);
+            }
+            return bhomReleases;
         }
 
         /***************************************************/

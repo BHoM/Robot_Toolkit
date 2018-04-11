@@ -70,17 +70,22 @@ namespace BH.Engine.Robot
 
         #region Object Converters
 
-        public static Bar ToBHoMObject(this RobotBar robotBar, Dictionary<string,Node> bhomNodes, Dictionary<string, ISectionProperty> bhomSections)
+        public static Bar ToBHoMObject(this RobotBar robotBar, Dictionary<string,Node> bhomNodes, Dictionary<string, ISectionProperty> bhomSections, Dictionary<string, BarRelease> barReleases)
         {
             Node startNode = null;  bhomNodes.TryGetValue(robotBar.StartNode.ToString(), out startNode);
             Node endNode = null; bhomNodes.TryGetValue(robotBar.EndNode.ToString(), out endNode);
             Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode, Name = robotBar.Name };
 
-            int i = robotBar.HasLabel(IRobotLabelType.I_LT_BAR_SECTION);
-            if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_SECTION) == 1)
+            if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_SECTION) == -1)
             {
                 bhomBar.SectionProperty = bhomSections[robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION)];
             }
+
+            if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_RELEASE) == -1)
+            {
+                bhomBar.Release = barReleases[robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_RELEASE)];
+            }
+
             bhomBar.OrientationAngle = robotBar.Gamma * 180 / Math.PI;
 
             bhomBar.CustomData[AdapterID] = robotBar.Number;

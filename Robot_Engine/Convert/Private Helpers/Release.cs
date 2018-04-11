@@ -59,13 +59,13 @@ namespace BH.Engine.Robot
                 case IRobotBarEndReleaseValue.I_BERV_ELASTIC_PLUS:
                     return DOFType.SpringPositive;
                 case IRobotBarEndReleaseValue.I_BERV_NONE:
-                    return DOFType.Free;
+                    return DOFType.Fixed;
                 case IRobotBarEndReleaseValue.I_BERV_MINUS:
                     return DOFType.FixedNegative;
                 case IRobotBarEndReleaseValue.I_BERV_PLUS:
                     return DOFType.FixedPositive;
                 case IRobotBarEndReleaseValue.I_BERV_STD:
-                    return DOFType.Fixed;
+                    return DOFType.Free;
                 case IRobotBarEndReleaseValue.I_BERV_NONLINEAR:
                     return DOFType.NonLinear;
                 case IRobotBarEndReleaseValue.I_BERV_ELASTIC_REDUCED:
@@ -75,7 +75,7 @@ namespace BH.Engine.Robot
                 case IRobotBarEndReleaseValue.I_BERV_ELASTIC_REDUCED_PLUS:
                     return DOFType.SpringRelativePositive;
                 default:
-                    return DOFType.Free;
+                    return DOFType.Fixed;
             }
         }
 
@@ -90,13 +90,13 @@ namespace BH.Engine.Robot
                 case DOFType.SpringPositive:
                     return IRobotBarEndReleaseValue.I_BERV_ELASTIC_PLUS;
                 case DOFType.Free:
-                    return IRobotBarEndReleaseValue.I_BERV_NONE;
+                    return IRobotBarEndReleaseValue.I_BERV_STD;
                 case DOFType.FixedNegative:
                     return IRobotBarEndReleaseValue.I_BERV_MINUS;
                 case DOFType.FixedPositive:
                     return IRobotBarEndReleaseValue.I_BERV_PLUS;
                 case DOFType.Fixed:
-                    return IRobotBarEndReleaseValue.I_BERV_STD;
+                    return IRobotBarEndReleaseValue.I_BERV_NONE;
                 case DOFType.NonLinear:
                     return IRobotBarEndReleaseValue.I_BERV_NONLINEAR;
                 case DOFType.SpringRelative:
@@ -106,7 +106,7 @@ namespace BH.Engine.Robot
                 case DOFType.SpringRelativePositive:
                     return IRobotBarEndReleaseValue.I_BERV_ELASTIC_REDUCED_PLUS;
                 default:
-                    return IRobotBarEndReleaseValue.I_BERV_NONE;
+                    return IRobotBarEndReleaseValue.I_BERV_STD;
             }
         }
     }

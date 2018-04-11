@@ -41,6 +41,11 @@ namespace BH.Adapter.Robot
                     success = CreateCollection(objects as IEnumerable<RigidLink>);
                 }
 
+                if (objects.First() is BarRelease)
+                {
+                    success = CreateCollection(objects as IEnumerable<BarRelease>);
+                }
+
                 if (objects.First() is LinkConstraint)
                 {
                     success = CreateCollection(objects as IEnumerable<LinkConstraint>);
@@ -296,6 +301,7 @@ namespace BH.Adapter.Robot
                                       bhomBar.SectionProperty.Name,
                                       bhomBar.SectionProperty.Material.Name,
                                       bhomBar.OrientationAngle * Math.PI / 180);
+                        rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_RELEASE, bhomBar.Release.Name);
                     }
 
                     else
@@ -522,13 +528,16 @@ namespace BH.Adapter.Robot
 
         public bool CreateCollection(IEnumerable<BarRelease> releases)
         {
-            IRobotLabel lable = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_RELEASE, "");
+            IRobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
+            IRobotLabel lable = labelServer.Create(IRobotLabelType.I_LT_BAR_RELEASE, "");
             IRobotBarReleaseData rData = lable.Data;
 
             foreach (BarRelease bRelease in releases)
             {
+                BH.Engine.Robot.Convert.RobotRelease(rData.StartNode, bRelease.StartRelease);
+                BH.Engine.Robot.Convert.RobotRelease(rData.EndNode, bRelease.EndRelease);
+                labelServer.StoreWithName(lable, bRelease.Name);
             }
-
             return true;
         }
 

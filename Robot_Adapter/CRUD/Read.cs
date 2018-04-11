@@ -42,6 +42,8 @@ namespace BH.Adapter.Robot
                 return new List<LoadCombination>();
             if (type == typeof(LinkConstraint))
                 return new List<LinkConstraint>();
+            if (type == typeof(BarRelease))
+                return new List<BarRelease>();
             if (type == typeof(Loadcase))
                 return ReadLoadCase();
             if (typeof(ISectionProperty).IsAssignableFrom(type))

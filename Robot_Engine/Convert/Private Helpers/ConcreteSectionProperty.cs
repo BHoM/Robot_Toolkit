@@ -14,9 +14,6 @@ namespace BH.Engine.Robot
 
         public static void SectionProperty(this ConcreteSection section, Material material, IRobotBarSectionData secData)
         {
-            if (section.SectionProfile.Shape == ShapeType.FreeForm)
-                SectionShapeType(section.SectionProfile.Edges, secData);
-            else
                 IConcreteSection(section.SectionProfile, material, secData);
         }
 
@@ -92,6 +89,25 @@ namespace BH.Engine.Robot
             sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF2, section.FlangeThickness);
             sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_H, section.Height);
             sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B, section.WebThickness);
+
+            sectionData.CalcNonstdGeometry();
+        }
+
+        /***************************************************/
+
+        private static void ConcreteSection(this FreeFormProfile section, Material material, IRobotBarSectionData sectionData)
+        {
+            sectionData.MaterialName = material.Name;
+            ConcreteSection steelSection = BH.Engine.Structure.Create.ConcreteSectionFromProfile(section, material);
+
+            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, steelSection.Area);
+            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IX, steelSection.J);
+            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IY, steelSection.Iy);
+            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IZ, steelSection.Iz);
+            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VY, steelSection.Vy);
+            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VZ, steelSection.Vz);
+            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VPY, steelSection.Vpy);
+            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VPZ, steelSection.Vpz);
 
             sectionData.CalcNonstdGeometry();
         }

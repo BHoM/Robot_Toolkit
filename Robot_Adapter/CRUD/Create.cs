@@ -300,7 +300,7 @@ namespace BH.Adapter.Robot
                                       System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]),
                                       bhomBar.SectionProperty.Name,
                                       bhomBar.SectionProperty.Material.Name,
-                                      bhomBar.OrientationAngle * Math.PI / 180);
+                                      bhomBar.OrientationAngle * 180 / Math.PI);
                         rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_RELEASE, bhomBar.Release.Name);
                     }
 

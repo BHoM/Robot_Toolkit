@@ -78,6 +78,7 @@ namespace BH.Engine.Robot
 
             if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_SECTION) == -1)
             {
+                string secName = robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION);
                 bhomBar.SectionProperty = bhomSections[robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION)];
             }
 

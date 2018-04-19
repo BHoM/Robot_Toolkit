@@ -87,7 +87,7 @@ namespace BH.Engine.Robot
                 bhomBar.Release = barReleases[robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_RELEASE)];
             }
 
-            bhomBar.OrientationAngle = robotBar.Gamma * 180 / Math.PI;
+            bhomBar.OrientationAngle = robotBar.Gamma * Math.PI / 180;
 
             bhomBar.CustomData[AdapterID] = robotBar.Number;
 

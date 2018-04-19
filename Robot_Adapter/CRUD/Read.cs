@@ -76,6 +76,8 @@ namespace BH.Adapter.Robot
             Dictionary<string, BarRelease> bhombarReleases = ReadBarRelease().ToDictionary(x => x.Name.ToString());
             Dictionary<string, ISectionProperty> bhomSections = ReadSectionProperties().ToDictionary(x => x.Name.ToString());
             Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
+            HashSet<string> tags = new HashSet<string>();
+
             m_RobotApplication.Project.Structure.Bars.BeginMultiOperation();
             if (ids == null)
             {
@@ -84,8 +86,8 @@ namespace BH.Adapter.Robot
                     RobotBar robotBar = robotBars.Get(i);
                     Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections, bhombarReleases);
                     bhomBar.CustomData[AdapterId] = robotBar.Number;
-                    if (barTags != null)
-                        bhomBar.Tags = barTags[robotBar.Number];
+                    if (barTags != null && !barTags.TryGetValue(robotBar.Number, out tags))
+                        bhomBar.Tags = tags;
                     bhomBars.Add(bhomBar);
                 }
             }
@@ -96,8 +98,8 @@ namespace BH.Adapter.Robot
                     RobotBar robotBar = m_RobotApplication.Project.Structure.Bars.Get(System.Convert.ToInt32(ids[i])) as RobotBar;
                     Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections, bhombarReleases);
                     bhomBar.CustomData[AdapterId] = robotBar.Number;
-                    if (barTags != null)
-                        bhomBar.Tags = barTags[System.Convert.ToInt32(ids[i])];
+                    if (barTags != null && !barTags.TryGetValue(robotBar.Number, out tags))
+                        bhomBar.Tags = tags;
                     bhomBars.Add(bhomBar);
                 }
             }
@@ -114,6 +116,7 @@ namespace BH.Adapter.Robot
             List<Node> bhomNodes = new List<Node>();
             List<Constraint6DOF> constraints = ReadConstraints6DOF();
             Dictionary<int, HashSet<string>> nodeTags = GetTypeTags(typeof(Node));
+            HashSet<string> tags = new HashSet<string>();
             if (ids == null)
             {
                 for (int i = 1; i <= robotNodes.Count; i++)
@@ -121,8 +124,8 @@ namespace BH.Adapter.Robot
                     RobotNode robotNode = robotNodes.Get(i);
                     Node bhomNode = BH.Engine.Robot.Convert.ToBHoMObject(robotNode);
                     bhomNode.CustomData[AdapterId] = robotNode.Number;
-                    if (nodeTags != null && nodeTags.Count > 0)
-                        bhomNode.Tags = nodeTags[robotNode.Number];
+                    if (nodeTags != null && !nodeTags.TryGetValue(robotNode.Number, out tags))
+                        bhomNode.Tags = tags;
 
                     bhomNodes.Add(bhomNode);
                 }
@@ -134,8 +137,8 @@ namespace BH.Adapter.Robot
                     RobotNode robotNode = m_RobotApplication.Project.Structure.Nodes.Get(System.Convert.ToInt32(ids[i])) as RobotNode;
                     Node bhomNode = BH.Engine.Robot.Convert.ToBHoMObject(robotNode);
                     bhomNode.CustomData[AdapterId] = robotNode.Number;
-                    if (nodeTags != null)
-                        bhomNode.Tags = nodeTags[System.Convert.ToInt32(ids[i])];
+                    if (nodeTags != null && !nodeTags.TryGetValue(robotNode.Number, out tags))
+                        bhomNode.Tags = tags;
 
                     bhomNodes.Add(bhomNode);
                 }

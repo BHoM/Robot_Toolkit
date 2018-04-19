@@ -23,13 +23,15 @@ namespace BH.Adapter.Robot
         /**** Constructors                              ****/
         /***************************************************/
 
-        public RobotAdapter()
+        public RobotAdapter(string filePath = "")
         {
+
             AdapterId = Engine.Robot.Convert.AdapterID;
 
             Config.SeparateProperties = true;
             Config.MergeWithComparer = true;
             Config.ProcessInMemory = false;
+
 
             if (IsApplicationRunning())
             {
@@ -49,28 +51,33 @@ namespace BH.Adapter.Robot
                     Console.WriteLine("Cannot load Robot, check that Robot is installed and a license is available");
                 }
             }
-        }
 
-        /***************************************************/
-
-        public RobotAdapter(string filePath = "") : this()
-        {
             if (!string.IsNullOrWhiteSpace(filePath))
             {
                 m_RobotApplication.Project.Open(filePath);
             }
-            else if (IsApplicationRunning())
-            {
-                m_RobotApplication = new RobotApplication();
-            }
-            else
-            {
-                m_RobotApplication = new RobotApplication();
-                m_RobotApplication.Visible = 1;
-                m_RobotApplication.Interactive = 1;
-                m_RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
-            }
         }
+
+        /***************************************************/
+
+        //public RobotAdapter(string filePath = null) : this()
+        //{
+        //    if (!string.IsNullOrWhiteSpace(filePath))
+        //    {
+        //        m_RobotApplication.Project.Open(filePath);
+        //    }
+        //    else if (IsApplicationRunning())
+        //    {
+        //        m_RobotApplication = new RobotApplication();
+        //    }
+        //    //else
+        //    //{
+        //    //    m_RobotApplication = new RobotApplication();
+        //    //    m_RobotApplication.Visible = 1;
+        //    //    m_RobotApplication.Interactive = 1;
+        //    //    m_RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
+        //    //}
+        //}
 
         //public int Update(FilterQuery filter, string property, object newValue, Dictionary<string, string> config = null)
         //{

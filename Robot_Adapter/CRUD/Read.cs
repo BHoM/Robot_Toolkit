@@ -121,7 +121,7 @@ namespace BH.Adapter.Robot
                     RobotNode robotNode = robotNodes.Get(i);
                     Node bhomNode = BH.Engine.Robot.Convert.ToBHoMObject(robotNode);
                     bhomNode.CustomData[AdapterId] = robotNode.Number;
-                    if (nodeTags != null)
+                    if (nodeTags != null && nodeTags.Count > 0)
                         bhomNode.Tags = nodeTags[robotNode.Number];
 
                     bhomNodes.Add(bhomNode);
@@ -169,14 +169,18 @@ namespace BH.Adapter.Robot
             IRobotCollection secProps = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_BAR_SECTION);
             List<ISectionProperty> bhomSectionProps = new List<ISectionProperty>();
             Dictionary<string, Material> materials = ReadMaterial().ToDictionary(x => x.Name);
-            int counter = 1;
+            //int counter = 1;
             for (int i = 1; i <= secProps.Count; i++)
             {
                 IRobotLabel rSection = secProps.Get(i);
                 IRobotBarSectionData secData = rSection.Data as IRobotBarSectionData;
+                int a = 1;
+                if (rSection.Name == "CR1")
+                    a = 1;
+
                 if (materials.ContainsKey(secData.MaterialName))
                 {
-                    IRobotLabel rLable = m_RobotApplication.Project.Structure.Labels.Get(IRobotLabelType.I_LT_MATERIAL, secData.MaterialName);
+                    //IRobotLabel rLable = m_RobotApplication.Project.Structure.Labels.Get(IRobotLabelType.I_LT_MATERIAL, secData.MaterialName);
                     ISectionProperty bhomSec = BH.Engine.Robot.Convert.IBHoMSection(secData, materials[secData.MaterialName]);
                     if(bhomSec != null)
                     {
@@ -186,7 +190,7 @@ namespace BH.Adapter.Robot
                         //if (m_SectionPropertyTaggs != null)
                         //    bhomSec.ApplyTaggedName(m_SectionPropertyTaggs[rSection.Name]);
                         bhomSectionProps.Add(bhomSec);
-                        counter++;
+                        //counter++;
                     }
                 }
             }

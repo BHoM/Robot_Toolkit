@@ -301,6 +301,15 @@ namespace BH.Engine.Robot
                         sectionProfile = BH.Engine.Structure.Create.ISectionProfile(H, B, TW, TF, 0, 0);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
+                    case IRobotBarSectionShapeType.I_BSST_USER_BOX_3:
+                        B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B);
+                        H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_H);
+                        TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TW);
+                        TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF);
+                        double TF2 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF2);
+                        sectionProfile = BH.Engine.Structure.Create.FabricatedBoxProfile(H, B, TW, TF, TF2, 0);
+                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
+
                     default:
                         return null;
                 }

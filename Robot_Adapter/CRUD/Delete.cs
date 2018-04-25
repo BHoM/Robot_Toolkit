@@ -29,9 +29,17 @@ namespace BH.Adapter.Robot
             if (type == typeof(Bar))
                 success = DeleteBars(ids);
 
+            if (type == typeof(BH.oM.Structural.Loads.Loadcase)) 
+                success = DeleteLoadcases(ids);
+
+            if (type == null)
+                success = DeleteAll();
+
             updateview();
             return success;
         }
+
+        
 
         public int DeleteNodes(IEnumerable<object> ids)
         {
@@ -105,6 +113,46 @@ namespace BH.Adapter.Robot
             }
             m_RobotApplication.Project.Structure.Bars.DeleteMany(barSel);
             m_tags[typeof(Bar)] = barTags;
+            return sucess;
+        }
+
+        public int DeleteLoadcases(IEnumerable<object> ids)
+        {
+            int sucess = 1;
+            string caseIds = "";
+            RobotSelection caseSel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
+            Dictionary<int, HashSet<string>> caseTags = GetTypeTags(typeof(BH.oM.Structural.Loads.Loadcase));
+            if (ids != null)
+            {
+                List<int> indicies = ids.Cast<int>().ToList();
+                foreach (int ind in indicies)
+                {
+                    caseIds += ind.ToString() + ",";
+                    caseTags.Remove(ind);
+                }
+                caseIds.TrimEnd(',');
+                caseSel.FromText(caseIds);
+            }
+            else
+            {
+                int maxNodeIndex = m_RobotApplication.Project.Structure.Cases.FreeNumber;
+                for (int i = 1; i < maxNodeIndex; i++)
+                {
+                    caseIds += i.ToString() + ",";
+                    caseTags.Remove(i);
+                }
+                caseIds.TrimEnd(',');
+                caseSel.FromText(caseIds);
+            }
+            m_RobotApplication.Project.Structure.Cases.DeleteMany(caseSel);
+            m_tags[typeof(Bar)] = caseTags;
+            return sucess;
+        }
+
+        public int DeleteAll()
+        {
+            int sucess = 1;
+            m_RobotApplication.Project.Structure.Clear();
             return sucess;
         }
 

@@ -23,7 +23,7 @@ namespace BH.Adapter.Robot
         /**** Constructors                              ****/
         /***************************************************/
 
-        public RobotAdapter(string filePath = "")
+        public RobotAdapter(string filePath = "", string dataBase = "British")
         {
 
             AdapterId = Engine.Robot.Convert.AdapterID;
@@ -32,7 +32,7 @@ namespace BH.Adapter.Robot
             Config.MergeWithComparer = true;
             Config.ProcessInMemory = false;
 
-
+            m_dataBaseName = dataBase;
             if (IsApplicationRunning())
             {
                 m_RobotApplication = new RobotApplication();
@@ -138,6 +138,7 @@ namespace BH.Adapter.Robot
 
         private RobotApplication m_RobotApplication;
         private Dictionary<Type, Dictionary<int, HashSet<string>>> m_tags = new Dictionary<Type, Dictionary<int, HashSet<string>>>();
+        private string m_dataBaseName;
         //private Dictionary<int, string> m_NodeTaggs = new Dictionary<int, string>();
         //private Dictionary<string, string> m_MaterialTaggs = new Dictionary<string, string>();
         //private Dictionary<string, string> m_SectionPropertyTaggs = new Dictionary<string, string>();

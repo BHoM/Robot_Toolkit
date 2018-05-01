@@ -77,6 +77,21 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
+        private static void ConcreteSection(this CircleProfile section, Material material, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_C;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_COL_C;
+
+            sectionData.MaterialName = material.Name;
+
+            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_DE, section.Diameter);
+
+            sectionData.CalcNonstdGeometry();
+        }
+
+        /***************************************************/
+
         private static void ConcreteSection(this ISectionProfile section, Material material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_I;

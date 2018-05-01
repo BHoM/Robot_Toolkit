@@ -77,9 +77,22 @@ namespace BH.Adapter.Robot
 
         protected bool Update(IEnumerable<Material> materials)
         {
+            RobotNamesArray defaultMat = m_RobotApplication.Project.Preferences.Materials.GetAll();
+            List<string> matList = new List<string>();
+            List<Material> matToCreate = new List<Material>();
+            for (int i = 1; i <= defaultMat.Count; i++)
+            {
+                matList.Add(defaultMat.Get(i));
+            }
+
+            foreach (Material m in materials)
+            {
+                if (!matList.Contains(m.Name))
+                    matToCreate.Add(m);
+            }
 
             bool success = true;
-            success = Create(materials);
+            success = Create(matToCreate);
             return success;
         }
 

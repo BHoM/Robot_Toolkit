@@ -77,17 +77,12 @@ namespace BH.Adapter.Robot
 
         protected bool Update(IEnumerable<Material> materials)
         {
-            RobotNamesArray defaultMat = m_RobotApplication.Project.Preferences.Materials.GetAll();
-            List<string> matList = new List<string>();
             List<Material> matToCreate = new List<Material>();
-            for (int i = 1; i <= defaultMat.Count; i++)
-            {
-                matList.Add(defaultMat.Get(i));
-            }
 
             foreach (Material m in materials)
             {
-                if (!matList.Contains(m.Name))
+                string match = BH.Engine.Robot.Convert.Match(m_dbMaterialNames, m);
+                if (match == null)
                     matToCreate.Add(m);
             }
 
@@ -98,8 +93,17 @@ namespace BH.Adapter.Robot
 
         protected bool Update(IEnumerable<ISectionProperty> sectionProperties)
         {
+            List<ISectionProperty> secPropToCreate = new List<ISectionProperty>();
+
+            foreach (ISectionProperty p in sectionProperties)
+            {
+                string match = BH.Engine.Robot.Convert.Match(m_dbSecPropNames, p);
+                if (match == null)
+                    secPropToCreate.Add(p);
+            }
+
             bool success = true;
-            success = Create(sectionProperties);
+            success = Create(secPropToCreate);
             return success;
         }
 

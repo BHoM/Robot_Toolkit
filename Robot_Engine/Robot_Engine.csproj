@@ -72,6 +72,7 @@
     <Compile Include="Convert\Private Helpers\Bar.cs" />
     <Compile Include="Convert\Private Helpers\ConcreteSectionProperty.cs" />
     <Compile Include="Convert\Private Helpers\Constraint.cs" />
+    <Compile Include="Convert\Private Helpers\DataBase.cs" />
     <Compile Include="Convert\Private Helpers\Group.cs" />
     <Compile Include="Convert\Private Helpers\Load.cs" />
     <Compile Include="Convert\Private Helpers\Material.cs" />

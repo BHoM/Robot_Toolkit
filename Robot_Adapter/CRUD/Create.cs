@@ -177,18 +177,22 @@ namespace BH.Adapter.Robot
 
         private bool CreateCollection(IEnumerable<ISectionProperty> secProp)
         {
-            List<ISectionProperty> secPropList = secProp.ToList();
             IRobotLabel label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, "");
             IRobotBarSectionData secData = label.Data;
-            
-            for (int i = 0; i < secPropList.Count; i++)
+
+            foreach (ISectionProperty p in secProp)
             {
-                BH.Engine.Robot.Convert.ISectionProperty(secPropList[i], secData);
-                m_RobotApplication.Project.Structure.Labels.StoreWithName(label, secPropList[i].Name);
-                //if (m_SectionPropertyTaggs.ContainsKey(secPropList[i].Name))
-                //    m_SectionPropertyTaggs[secPropList[i].Name] = secPropList[i].TaggedName();
-                //else
-                //    m_SectionPropertyTaggs.Add(secPropList[i].Name, secPropList[i].TaggedName());
+                string match = BH.Engine.Robot.Convert.Match(m_dbSecPropNames, p);
+                if (match != null)
+                {
+                    secData.LoadFromDBase(match);
+                    m_RobotApplication.Project.Structure.Labels.StoreWithName(label, match);
+                }
+                else
+                {
+                    BH.Engine.Robot.Convert.ISectionProperty(p, secData);
+                    m_RobotApplication.Project.Structure.Labels.StoreWithName(label, p.Name);
+                }
             }
             return true;
         }
@@ -197,18 +201,21 @@ namespace BH.Adapter.Robot
 
         private bool CreateCollection(IEnumerable<Material> mat)
         {
-            List<Material> matList = mat.ToList();
             IRobotLabel lable = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_MATERIAL, "");
             IRobotMaterialData matData = lable.Data;
 
-            for (int i = 0; i < matList.Count; i++)
+            foreach (Material m in mat)
             {
-                BH.Engine.Robot.Convert.RobotMaterial(matData, matList[i]);
-                m_RobotApplication.Project.Structure.Labels.StoreWithName(lable, matList[i].Name);
-                //if (m_MaterialTaggs.ContainsKey(matList[i].Name))
-                //    m_MaterialTaggs[matList[i].Name] = matList[i].TaggedName();
-                //else
-                //    m_MaterialTaggs.Add(matList[i].Name, matList[i].TaggedName());
+                string match = BH.Engine.Robot.Convert.Match(m_dbMaterialNames, m);
+                if (match != null)
+                {
+                    m_RobotApplication.Project.Structure.Labels.StoreWithName(lable, match);
+                }
+                else
+                {
+                    BH.Engine.Robot.Convert.RobotMaterial(matData, m);
+                    m_RobotApplication.Project.Structure.Labels.StoreWithName(lable, m.Name);
+                }
             }
             return true;
         }

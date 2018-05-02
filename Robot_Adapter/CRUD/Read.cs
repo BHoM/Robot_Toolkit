@@ -171,38 +171,22 @@ namespace BH.Adapter.Robot
         {
             IRobotCollection secProps = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_BAR_SECTION);
             List<ISectionProperty> bhomSectionProps = new List<ISectionProperty>();
-            List<Material> materials = ReadMaterial();
-            Dictionary<string, Material> uniqueMat = new Dictionary<string, Material>();
+            Dictionary<string, Material> materials = ReadMaterial().ToDictionary(x => x.Name);
 
-
-            for (int i = 0; i < materials.Count; i++)
-            {
-                if (!uniqueMat.ContainsKey(materials[i].Name))
-                    uniqueMat.Add(materials[i].Name, materials[i]);
-            }
-
-            //int counter = 1;
             for (int i = 1; i <= secProps.Count; i++)
             {
                 IRobotLabel rSection = secProps.Get(i);
                 IRobotBarSectionData secData = rSection.Data as IRobotBarSectionData;
-                //int a = 1;
-                //if (rSection.Name == "CR1")
-                //    a = 1;
 
-                if (uniqueMat.ContainsKey(secData.MaterialName))
+                if (materials.ContainsKey(secData.MaterialName))
                 {
-                    //IRobotLabel rLable = m_RobotApplication.Project.Structure.Labels.Get(IRobotLabelType.I_LT_MATERIAL, secData.MaterialName);
-                    ISectionProperty bhomSec = BH.Engine.Robot.Convert.IBHoMSection(secData, uniqueMat[secData.MaterialName]);
+                    ISectionProperty bhomSec = BH.Engine.Robot.Convert.IBHoMSection(secData, materials[secData.MaterialName]);
                     if(bhomSec != null)
                     {
-                        bhomSec.Material = uniqueMat[secData.MaterialName];
+                        bhomSec.Material = materials[secData.MaterialName];
                         bhomSec.Name = rSection.Name;
                         bhomSec.CustomData.Add(AdapterId, rSection.Name);
-                        //if (m_SectionPropertyTaggs != null)
-                        //    bhomSec.ApplyTaggedName(m_SectionPropertyTaggs[rSection.Name]);
                         bhomSectionProps.Add(bhomSec);
-                        //counter++;
                     }
                 }
             }
@@ -215,8 +199,6 @@ namespace BH.Adapter.Robot
         {
             IRobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotCollection rMaterials = labelServer.GetMany(IRobotLabelType.I_LT_MATERIAL);
-            m_RobotApplication.Project.Preferences.Materials.Load(m_dataBaseName);
-            RobotNamesArray defaultMaterial = m_RobotApplication.Project.Preferences.Materials.GetAll();
             List<Material> bhomMaterials = new List<Material>();
 
             for (int i = 1; i <= rMaterials.Count; i++)
@@ -226,23 +208,8 @@ namespace BH.Adapter.Robot
                 MaterialType bhomMatType = BH.Engine.Robot.Convert.GetMaterialType(mData.Type);
                 Material bhomMat = BH.Engine.Common.Create.Material(mData.Name, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO);
                 bhomMat.CustomData.Add(AdapterId, mData.Name);
-                //if (m_MaterialTaggs != null)
-                //    bhomMat.ApplyTaggedName(m_MaterialTaggs[mData.Name]);
                 bhomMaterials.Add(bhomMat);
             }
-
-            for (int i = 1; i <= defaultMaterial.Count; i++)
-            {
-                RobotLabel rMatLable = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_MATERIAL, defaultMaterial.Get(i)) as RobotLabel;
-                RobotMaterialData mData = rMatLable.Data as RobotMaterialData;
-                MaterialType bhomMatType = BH.Engine.Robot.Convert.GetMaterialType(mData.Type);
-                Material bhomMat = BH.Engine.Common.Create.Material(mData.Name, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO);
-                bhomMat.CustomData.Add(AdapterId, mData.Name);
-                //if (m_MaterialTaggs != null)
-                //    bhomMat.ApplyTaggedName(m_MaterialTaggs[mData.Name]);
-                bhomMaterials.Add(bhomMat);
-            }
-
             return bhomMaterials;
         }
 

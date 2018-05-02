@@ -201,20 +201,21 @@ namespace BH.Adapter.Robot
 
         private bool CreateCollection(IEnumerable<Material> mat)
         {
-            IRobotLabel lable = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_MATERIAL, "");
-            IRobotMaterialData matData = lable.Data;
+            IRobotLabel label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_MATERIAL, "");
+            IRobotMaterialData matData = label.Data;
 
             foreach (Material m in mat)
             {
                 string match = BH.Engine.Robot.Convert.Match(m_dbMaterialNames, m);
                 if (match != null)
                 {
-                    m_RobotApplication.Project.Structure.Labels.StoreWithName(lable, match);
+                    matData.LoadFromDBase(match);
+                    m_RobotApplication.Project.Structure.Labels.StoreWithName(label, match);
                 }
                 else
                 {
                     BH.Engine.Robot.Convert.RobotMaterial(matData, m);
-                    m_RobotApplication.Project.Structure.Labels.StoreWithName(lable, m.Name);
+                    m_RobotApplication.Project.Structure.Labels.StoreWithName(label, m.Name);
                 }
             }
             return true;

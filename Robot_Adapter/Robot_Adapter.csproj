@@ -120,6 +120,10 @@
       <Project>{45d542cd-79b5-485a-ba39-0163230431f0}</Project>
       <Name>Robot_Engine</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Robot_oM\Robot_oM.csproj">
+      <Project>{0dd05698-6a33-4092-bfad-ff702685feaf}</Project>
+      <Name>Robot_oM</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

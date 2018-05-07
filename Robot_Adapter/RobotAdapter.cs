@@ -8,6 +8,8 @@ using RobotOM;
 using System.Diagnostics;
 using BH.oM.Structural.Adapters.Robot;
 using BH.Engine.Structural.Adapters.Robot;
+using BH.oM.Reflection.Debuging;
+using BH.Engine.Reflection;
 
 namespace BH.Adapter.Robot
 {
@@ -31,18 +33,15 @@ namespace BH.Adapter.Robot
 
                 AdapterId = Engine.Robot.Convert.AdapterID;
 
-                if (DatabaseSettings == null)
-                    DatabaseSettings = new DatabaseSettings();
-
-                if (AdvancedSettings == null)
-                    AdvancedSettings = new AdvancedSettings();
-
+                this.AdvancedSettings = (AdvancedSettings != null)? AdvancedSettings : new AdvancedSettings();
+                this.DatabaseSettings = (DatabaseSettings != null)? DatabaseSettings: new DatabaseSettings();
+                
                 Config.SeparateProperties = true;
                 Config.MergeWithComparer = true;
                 Config.ProcessInMemory = false;
 
-                m_matDataBaseName = DatabaseSettings.materialDatabase.ToString();
-                m_secPropDataBaseName = DatabaseSettings.sectionDatabase.ToString();
+                m_matDataBaseName = this.DatabaseSettings.materialDatabase.ToString();
+                m_secPropDataBaseName = this.DatabaseSettings.sectionDatabase.ToString();
 
                 if (IsApplicationRunning())
                 {
@@ -59,6 +58,7 @@ namespace BH.Adapter.Robot
                     }
                     catch
                     {
+                        Compute.RecordEvent("Cannot load Robot, check that Robot is installed and a license is available", EventType.Error);
                         Console.WriteLine("Cannot load Robot, check that Robot is installed and a license is available");
                     }
                 }

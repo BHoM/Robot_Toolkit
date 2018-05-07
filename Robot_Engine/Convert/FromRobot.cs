@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
+using BH.Engine.Reflection;
+using BH.oM.Reflection.Debuging;
 
 
 namespace BH.Engine.Robot
@@ -79,18 +81,26 @@ namespace BH.Engine.Robot
             if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_SECTION) == -1)
             {
                 string secName = robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION);
-                try
-                {
+                //try
+                //{
                     bhomBar.SectionProperty = bhomSections[robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION)];
-                }
-                catch 
-                {
-                }
+                //}
+                //catch 
+                //{
+                //   Compute.RecordEvent("Section property type not supported", EventType.Error);
+                //}
             }
 
             if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_RELEASE) == -1)
             {
-                bhomBar.Release = barReleases[robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_RELEASE)];
+                //try
+                //{
+                    bhomBar.Release = barReleases[robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_RELEASE)];
+                //}
+                //catch
+                //{
+                //    Compute.RecordEvent("Release not present in the BHoM List", EventType.Error);
+                //}
             }
 
             bhomBar.OrientationAngle = robotBar.Gamma * Math.PI / 180;

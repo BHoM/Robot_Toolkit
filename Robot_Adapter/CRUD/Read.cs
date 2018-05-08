@@ -10,6 +10,8 @@ using BH.oM.Structural.Loads;
 using BH.oM.Base;
 using BH.oM.Common.Materials;
 using BH.oM.Structural.Design;
+using BH.oM.Adapters.Robot.Properties;
+using BHE = BH.Engine.Adapters.Robot.Properties;
 
 namespace BH.Adapter.Robot
 {
@@ -52,12 +54,20 @@ namespace BH.Adapter.Robot
                 return new List<ILoad>(); //TODO: Implement load extraction
             if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
                 return new List<BHoMGroup<IBHoMObject>>();
+            if (type == typeof(DesignGroup))
+                return ReadDesignGroups();
 
             if (type == typeof(BHoMObject))
             {
                 List<IBHoMObject> objects = new List<IBHoMObject>();
+                objects.AddRange(ReadConstraints6DOF());
+                objects.AddRange(ReadMaterial());
+                objects.AddRange(ReadBarRelease());
+                objects.AddRange(ReadLoadCase());
+                objects.AddRange(ReadSectionProperties());
                 objects.AddRange(ReadNodes());
                 objects.AddRange(ReadBars());
+                objects.AddRange(ReadDesignGroups());
                 return objects;
             }
             return null;         
@@ -77,12 +87,12 @@ namespace BH.Adapter.Robot
             else
             {
                 IRobotCollection robotBars = m_RobotApplication.Project.Structure.Bars.GetAll();
-
-                
+                                
                 IEnumerable<Node> bhomNodesList = ReadNodes();
                 Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionary(x => x.CustomData[AdapterId].ToString());
                 Dictionary<string, BarRelease> bhombarReleases = ReadBarRelease().ToDictionary(x => x.Name.ToString());
                 Dictionary<string, ISectionProperty> bhomSections = ReadSectionProperties().ToDictionary(x => x.Name.ToString());
+                Dictionary<string, FramingElementDesignProperties> framingElementDesignProperties = ReadFramingElementDesignProperties().ToDictionary(x => x.Name.ToString());
                 Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
                 HashSet<string> tags = new HashSet<string>();
 
@@ -92,7 +102,7 @@ namespace BH.Adapter.Robot
                     for (int i = 1; i <= robotBars.Count; i++)
                     {
                         RobotBar robotBar = robotBars.Get(i);
-                        Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections, bhombarReleases);
+                        Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections, bhombarReleases, framingElementDesignProperties);
                         bhomBar.CustomData[AdapterId] = robotBar.Number;
                         if (barTags != null && !barTags.TryGetValue(robotBar.Number, out tags))
                             bhomBar.Tags = tags;
@@ -104,7 +114,7 @@ namespace BH.Adapter.Robot
                     for (int i = 0; i < ids.Count; i++)
                     {
                         RobotBar robotBar = m_RobotApplication.Project.Structure.Bars.Get(System.Convert.ToInt32(ids[i])) as RobotBar;
-                        Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections, bhombarReleases);
+                        Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections, bhombarReleases, framingElementDesignProperties);
                         bhomBar.CustomData[AdapterId] = robotBar.Number;
                         if (barTags != null && !barTags.TryGetValue(robotBar.Number, out tags))
                             bhomBar.Tags = tags;
@@ -271,34 +281,52 @@ namespace BH.Adapter.Robot
 
         ///***************************************************/
 
-        //public List<DesignGroup> ReadDesignGroups()
-        //{
-        //    RobotApplication robot = this.RobotApplication;
-        //    RDimServer RDServer = this.RobotApplication.Kernel.GetExtension("RDimServer");
-        //    RDServer.Mode = RobotOM.IRDimServerMode.I_DSM_STEEL;
-        //    RDimStream RDStream = RDServer.Connection.GetStream();
-        //    RDimGroups RDGroups = RDServer.GroupsService;
-        //    RDimGrpProfs RDGroupProfs = RDServer.Connection.GetGrpProfs();
-        //    List<DesignGroup> designGroupList = new List<DesignGroup>();
+        public List<DesignGroup> ReadDesignGroups()
+        {
+            RobotApplication robot = m_RobotApplication;
+            RDimServer RDServer = m_RobotApplication.Kernel.GetExtension("RDimServer");
+            RDServer.Mode = RobotOM.IRDimServerMode.I_DSM_STEEL;
+            RDimStream RDStream = RDServer.Connection.GetStream();
+            RDimGroups RDGroups = RDServer.GroupsService;
+            RDimGrpProfs RDGroupProfs = RDServer.Connection.GetGrpProfs();
+            List<DesignGroup> designGroupList = new List<DesignGroup>();
 
-        //    for (int i = 0; i <= RDGroups.Count - 1; i++)
-        //    {
-        //        int designGroupNumber = RDGroups.GetUserNo(i);
-        //        RDimGroup designGroup = RDGroups.Get(designGroupNumber);
-        //        DesignGroup bhomDesignGroup = new DesignGroup();
-        //        bhomDesignGroup.Name = designGroup.Name;
-        //        bhomDesignGroup.Number = designGroup.UsrNo;
-        //        bhomDesignGroup.CustomData[AdapterId] = designGroup.UsrNo;
-        //        bhomDesignGroup.CustomData[Engine.Robot.Convert.AdapterName] = designGroup.Name;
-        //        bhomDesignGroup.MaterialName = designGroup.Material;
-        //        designGroup.GetMembList(RDStream);
-        //        string test = RDStream.ReadText();
-        //        if (RDStream.Size(IRDimStreamType.I_DST_TEXT) > 0)
-        //            bhomDesignGroup.MemberIds = Engine.Robot.Convert.ToSelectionList(RDStream.ReadText());
-        //        designGroupList.Add(bhomDesignGroup);
-        //    }
-        //    return designGroupList;
-        //}
+            for (int i = 0; i <= RDGroups.Count - 1; i++)
+            {
+                int designGroupNumber = RDGroups.GetUserNo(i);
+                RDimGroup designGroup = RDGroups.Get(designGroupNumber);
+                DesignGroup bhomDesignGroup = new DesignGroup();
+                bhomDesignGroup.Name = designGroup.Name;
+                bhomDesignGroup.Number = designGroup.UsrNo;
+                bhomDesignGroup.CustomData[AdapterId] = designGroup.UsrNo;
+                bhomDesignGroup.CustomData[Engine.Robot.Convert.AdapterName] = designGroup.Name;
+                bhomDesignGroup.MaterialName = designGroup.Material;
+                designGroup.GetMembList(RDStream);
+                string test = RDStream.ReadText();
+                if (RDStream.Size(IRDimStreamType.I_DST_TEXT) > 0)
+                    bhomDesignGroup.MemberIds = Engine.Robot.Convert.ToSelectionList(RDStream.ReadText());
+                designGroupList.Add(bhomDesignGroup);
+            }
+            return designGroupList;
+        }
+
+        /***************************************************/
+
+        public List<FramingElementDesignProperties> ReadFramingElementDesignProperties(List<string> names = null)
+        {
+            IRobotCollection memberTypes = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_MEMBER_TYPE);
+            List<FramingElementDesignProperties> bhomDesignPropsList = new List<FramingElementDesignProperties>();
+
+            for (int i = 1; i <= memberTypes.Count; i++)
+            {
+                IRobotLabel rMemberType = memberTypes.Get(i);
+                FramingElementDesignProperties bhomDesignProps = BHE.Create.FramingElementDesignProperties(rMemberType.Name);
+
+                bhomDesignPropsList.Add(bhomDesignProps);                  
+                
+            }
+            return bhomDesignPropsList;
+        }
 
         /***************************************************/
 

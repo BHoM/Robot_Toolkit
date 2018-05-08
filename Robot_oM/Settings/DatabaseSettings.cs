@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BH.oM.Base;
 
-namespace BH.oM.Structural.Adapters.Robot
+namespace BH.oM.Adapters.Robot
 {
     public class DatabaseSettings : BHoMObject
     {        

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BH.oM.Structural.Adapters.Robot
+namespace BH.oM.Adapters.Robot
 {
     public enum MaterialDB
     {
@@ -16,5 +16,22 @@ namespace BH.oM.Structural.Adapters.Robot
     {
         UKST,
         AISC
+    }
+
+    public enum ObjectProperties
+    {
+        Name, 
+        Number
+    }
+
+    public enum BarProperties
+    {
+        MemberType,
+        StructureObjectType                
+    }
+
+    public enum NodeProperties
+    {
+        CoordinateSystem
     }
 }

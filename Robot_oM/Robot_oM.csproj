@@ -45,12 +45,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Geometry\CoordinateSystem.cs" />
     <Compile Include="Settings\AdvancedSettings.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Settings\DatabaseSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Structural\Properties\FramingElementDesignProperties.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Structural\Design\" />
+    <Folder Include="Structural\Elements\" />
+    <Folder Include="Structural\Loads\" />
+    <Folder Include="Structural\Results\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

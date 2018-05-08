@@ -6,8 +6,8 @@ using BH.oM.Structural.Elements;
 using BH.oM.Structural.Loads;
 using RobotOM;
 using System.Diagnostics;
-using BH.oM.Structural.Adapters.Robot;
-using BH.Engine.Structural.Adapters.Robot;
+using BH.oM.Adapters.Robot;
+using BH.Engine.Adapters.Robot;
 using BH.oM.Reflection.Debuging;
 using BH.Engine.Reflection;
 

@@ -8,6 +8,7 @@ using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
 using BH.Engine.Reflection;
 using BH.oM.Reflection.Debuging;
+using BH.oM.Adapters.Robot.Properties;
 
 
 namespace BH.Engine.Robot
@@ -72,7 +73,11 @@ namespace BH.Engine.Robot
 
         #region Object Converters
 
-        public static Bar ToBHoMObject(this RobotBar robotBar, Dictionary<string,Node> bhomNodes, Dictionary<string, ISectionProperty> bhomSections, Dictionary<string, BarRelease> barReleases)
+        public static Bar ToBHoMObject(this RobotBar robotBar, 
+                                        Dictionary<string,Node> bhomNodes, 
+                                        Dictionary<string, ISectionProperty> bhomSections, 
+                                        Dictionary<string, BarRelease> barReleases,
+                                        Dictionary<string, FramingElementDesignProperties> framingElementDesignProperties)
         {
             Node startNode = null;  bhomNodes.TryGetValue(robotBar.StartNode.ToString(), out startNode);
             Node endNode = null; bhomNodes.TryGetValue(robotBar.EndNode.ToString(), out endNode);
@@ -81,26 +86,26 @@ namespace BH.Engine.Robot
             if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_SECTION) == -1)
             {
                 string secName = robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION);
-                //try
-                //{
+                try
+                {
                     bhomBar.SectionProperty = bhomSections[robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION)];
-                //}
-                //catch 
-                //{
-                //   Compute.RecordEvent("Section property type not supported", EventType.Error);
-                //}
+                }
+                catch
+                {
+                    Compute.RecordEvent("Section property type not supported", EventType.Error);
+                }
             }
 
             if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_RELEASE) == -1)
             {
-                //try
-                //{
+                try
+                {
                     bhomBar.Release = barReleases[robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_RELEASE)];
-                //}
-                //catch
-                //{
-                //    Compute.RecordEvent("Release not present in the BHoM List", EventType.Error);
-                //}
+                }
+                catch
+                {
+                    Compute.RecordEvent("Release not present in the BHoM List", EventType.Error);
+                }
             }
 
             bhomBar.OrientationAngle = robotBar.Gamma * Math.PI / 180;
@@ -119,6 +124,22 @@ namespace BH.Engine.Robot
             {
                 bhomBar.FEAType = BarFEAType.Axial;
             }
+
+            //Custom properties inserted into the custom property dictionary
+            if (robotBar.HasLabel(IRobotLabelType.I_LT_MEMBER_TYPE) == -1)
+            {
+                string memberTypeName = robotBar.GetLabelName(IRobotLabelType.I_LT_MEMBER_TYPE);
+                try
+                {
+                    bhomBar.CustomData.Add("FramingElementDesignProperties", framingElementDesignProperties[memberTypeName]);
+                }
+                catch
+                {
+                    Compute.RecordEvent("Member type not present in the BHoM list", EventType.Error);
+                }
+            }
+
+
             return bhomBar;       
         }
 

@@ -157,7 +157,7 @@ namespace BH.Adapter.Robot
             {
                 for (int i = 0; i < cases.Count; i++)
                 {
-                    caseNums.Add(System.Convert.ToInt32((cases[i] as Loadcase).CustomData[AdapterId]));
+                    caseNums.Add(System.Convert.ToInt32((cases[i] as Loadcase).Number));
                 }
             }
 
@@ -167,7 +167,7 @@ namespace BH.Adapter.Robot
                 {
                     foreach (Tuple<double, ICase> lCase in (lComb as LoadCombination).LoadCases)
                     {
-                        caseNums.Add(System.Convert.ToInt32(lCase.Item2.CustomData[AdapterId]));
+                        caseNums.Add(System.Convert.ToInt32(lCase.Item2.Number));
                     }
                     caseNums.Add(System.Convert.ToInt32((lComb as LoadCombination).CustomData[AdapterId]));
                 }

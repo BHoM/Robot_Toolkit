@@ -75,6 +75,7 @@ namespace BH.Adapter.Robot
             Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionary(x => x.CustomData[AdapterId].ToString());
             Dictionary<string, BarRelease> bhombarReleases = ReadBarRelease().ToDictionary(x => x.Name.ToString());
             Dictionary<string, ISectionProperty> bhomSections = ReadSectionProperties().ToDictionary(x => x.Name.ToString());
+            Dictionary<string, Material> bhomMaterial = ReadMaterial().ToDictionary(x => x.Name.ToString());
             Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
             HashSet<string> tags = new HashSet<string>();
 
@@ -84,7 +85,7 @@ namespace BH.Adapter.Robot
                 for (int i = 1; i <= robotBars.Count; i++)
                 {
                     RobotBar robotBar = robotBars.Get(i);
-                    Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections, bhombarReleases);
+                    Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections, bhomMaterial, bhombarReleases);
                     bhomBar.CustomData[AdapterId] = robotBar.Number;
                     if (barTags != null && !barTags.TryGetValue(robotBar.Number, out tags))
                         bhomBar.Tags = tags;
@@ -96,7 +97,7 @@ namespace BH.Adapter.Robot
                 for (int i = 0; i < ids.Count; i++)
                 {
                     RobotBar robotBar = m_RobotApplication.Project.Structure.Bars.Get(System.Convert.ToInt32(ids[i])) as RobotBar;
-                    Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections, bhombarReleases);
+                    Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections, bhomMaterial, bhombarReleases);
                     bhomBar.CustomData[AdapterId] = robotBar.Number;
                     if (barTags != null && !barTags.TryGetValue(robotBar.Number, out tags))
                         bhomBar.Tags = tags;
@@ -175,19 +176,32 @@ namespace BH.Adapter.Robot
 
             for (int i = 1; i <= secProps.Count; i++)
             {
+                ISectionProperty bhomSec = null;
+                Material bhomMat = null;
                 IRobotLabel rSection = secProps.Get(i);
                 IRobotBarSectionData secData = rSection.Data as IRobotBarSectionData;
 
                 if (materials.ContainsKey(secData.MaterialName))
                 {
-                    ISectionProperty bhomSec = BH.Engine.Robot.Convert.IBHoMSection(secData, materials[secData.MaterialName]);
-                    if(bhomSec != null)
-                    {
-                        bhomSec.Material = materials[secData.MaterialName];
-                        bhomSec.Name = rSection.Name;
-                        bhomSec.CustomData.Add(AdapterId, rSection.Name);
-                        bhomSectionProps.Add(bhomSec);
-                    }
+                   bhomSec = BH.Engine.Robot.Convert.IBHoMSection(secData, materials[secData.MaterialName]);
+                   bhomMat = materials[secData.MaterialName];
+                }
+
+                else if(m_dbMaterialNames.Contains(secData.MaterialName))
+                {
+                    IRobotLabel label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_MATERIAL, "");
+                    IRobotMaterialData matData = label.Data;
+                    matData.LoadFromDBase(secData.MaterialName);
+                    MaterialType bhomMatType = BH.Engine.Robot.Convert.GetMaterialType(matData.Type);
+                    bhomMat = BH.Engine.Common.Create.Material(secData.MaterialName, bhomMatType, matData.E, matData.NU, matData.LX, matData.RO);
+                    bhomSec = BH.Engine.Robot.Convert.IBHoMSection(secData, bhomMat);
+                }
+                if (bhomSec != null)
+                {
+                    bhomSec.Material = bhomMat;
+                    bhomSec.Name = rSection.Name;
+                    bhomSec.CustomData.Add(AdapterId, rSection.Name);
+                    bhomSectionProps.Add(bhomSec);
                 }
             }
             return bhomSectionProps;

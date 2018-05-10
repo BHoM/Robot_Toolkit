@@ -185,7 +185,12 @@ namespace BH.Adapter.Robot
                 string match = BH.Engine.Robot.Convert.Match(m_dbSecPropNames, p);
                 if (match != null)
                 {
+                    string matName = BH.Engine.Robot.Convert.Match(m_dbMaterialNames, p.Material);
+                    if (matName == null)
+                        matName = p.Material.Name;
+                    
                     secData.LoadFromDBase(match);
+                    secData.MaterialName = matName;
                     m_RobotApplication.Project.Structure.Labels.StoreWithName(label, match);
                 }
                 else
@@ -302,14 +307,20 @@ namespace BH.Adapter.Robot
                 Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
                 foreach (Bar bhomBar in bars)
                 {
+                    string sectionName = BH.Engine.Robot.Convert.Match(m_dbSecPropNames, bhomBar.SectionProperty);
+                    string materialName = BH.Engine.Robot.Convert.Match(m_dbMaterialNames, bhomBar.SectionProperty.Material);
+                    if (sectionName == null)
+                        sectionName = bhomBar.SectionProperty.Name;
+                    if (materialName == null)
+                        materialName = bhomBar.SectionProperty.Material.Name;
                     barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterId]);
                     if (bhomBar.SectionProperty != null)
                     {
                         rcache.AddBar(barNum,
                                       System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),
                                       System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]),
-                                      bhomBar.SectionProperty.Name,
-                                      bhomBar.SectionProperty.Material.Name,
+                                      sectionName,
+                                      materialName,
                                       bhomBar.OrientationAngle * 180 / Math.PI);
                         rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_RELEASE, bhomBar.Release.Name);
                     }
@@ -525,10 +536,10 @@ namespace BH.Adapter.Robot
 
             foreach (LoadCombination lComb in lComabinations)
             {
-                RobotCaseCombination rCaseCombination = m_RobotApplication.Project.Structure.Cases.CreateCombination(System.Convert.ToInt32(lComb.CustomData[AdapterId]), lComb.Name, IRobotCombinationType.I_CBT_ULS, IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_COMB);
+                RobotCaseCombination rCaseCombination = m_RobotApplication.Project.Structure.Cases.CreateCombination(lComb.Number, lComb.Name, IRobotCombinationType.I_CBT_ULS, IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_COMB);
                 for (int i = 0; i < lComb.LoadCases.Count; i++)
                 {
-                    rCaseCombination.CaseFactors.New(System.Convert.ToInt32(lComb.LoadCases[i].Item2.CustomData[AdapterId]), lComb.LoadCases[i].Item1);
+                    rCaseCombination.CaseFactors.New(lComb.LoadCases[i].Item2.Number, lComb.LoadCases[i].Item1);
                 }
                 updateview();
             }

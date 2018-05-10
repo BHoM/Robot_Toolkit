@@ -266,6 +266,7 @@ namespace BH.Engine.Robot
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
                     case IRobotBarSectionShapeType.I_BSST_USER_TUBE:
+                    case IRobotBarSectionShapeType.I_BSST_TRON:
                         sectionProfile = BH.Engine.Structure.Create.TubeProfile(d, Tf);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 

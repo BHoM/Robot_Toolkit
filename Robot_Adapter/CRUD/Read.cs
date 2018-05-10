@@ -10,6 +10,8 @@ using BH.oM.Structural.Loads;
 using BH.oM.Base;
 using BH.oM.Common.Materials;
 using BH.oM.Structural.Design;
+using BH.oM.Adapters.Robot.Properties;
+using BHE = BH.Engine.Adapters.Robot.Properties;
 
 namespace BH.Adapter.Robot
 {
@@ -52,13 +54,22 @@ namespace BH.Adapter.Robot
                 return new List<ILoad>(); //TODO: Implement load extraction
             if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
                 return new List<BHoMGroup<IBHoMObject>>();
-            //if (type == typeof(Node))
-            //   return  (this.UseNodeQueryMethod)? ReadNodesQuery() : ReadNodes();
-            //if (type == typeof(Bar))
-            //    return (this.UseBarQueryMethod) ? ReadBarsQuery() : ReadBars();
-            //if (type == typeof(DesignGroup))
-            //    return ReadDesignGroups();
-            //else
+            if (type == typeof(DesignGroup))
+                return ReadDesignGroups();
+
+            if (type == typeof(BHoMObject))
+            {
+                List<IBHoMObject> objects = new List<IBHoMObject>();
+                objects.AddRange(ReadConstraints6DOF());
+                objects.AddRange(ReadMaterial());
+                objects.AddRange(ReadBarRelease());
+                objects.AddRange(ReadLoadCase());
+                objects.AddRange(ReadSectionProperties());
+                objects.AddRange(ReadNodes());
+                objects.AddRange(ReadBars());
+                objects.AddRange(ReadDesignGroups());
+                return objects;
+            }
             return null;         
         }
 
@@ -68,8 +79,6 @@ namespace BH.Adapter.Robot
 
         public List<Bar> ReadBars(List<string> ids = null)
         {
-            IRobotCollection robotBars = m_RobotApplication.Project.Structure.Bars.GetAll();
-
             List<Bar> bhomBars = new List<Bar>();
             IEnumerable<Node> bhomNodesList = ReadNodes();
             Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionary(x => x.CustomData[AdapterId].ToString());
@@ -91,10 +100,19 @@ namespace BH.Adapter.Robot
                         bhomBar.Tags = tags;
                     bhomBars.Add(bhomBar);
                 }
-            }
-            else if (ids != null && ids.Count > 0)
-            {
-                for (int i = 0; i < ids.Count; i++)
+            
+                IRobotCollection robotBars = m_RobotApplication.Project.Structure.Bars.GetAll();
+                                
+                IEnumerable<Node> bhomNodesList = ReadNodes();
+                Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionary(x => x.CustomData[AdapterId].ToString());
+                Dictionary<string, BarRelease> bhombarReleases = ReadBarRelease().ToDictionary(x => x.Name.ToString());
+                Dictionary<string, ISectionProperty> bhomSections = ReadSectionProperties().ToDictionary(x => x.Name.ToString());
+                Dictionary<string, FramingElementDesignProperties> framingElementDesignProperties = ReadFramingElementDesignProperties().ToDictionary(x => x.Name.ToString());
+                Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
+                HashSet<string> tags = new HashSet<string>();
+
+                m_RobotApplication.Project.Structure.Bars.BeginMultiOperation();
+                if (ids == null)
                 {
                     RobotBar robotBar = m_RobotApplication.Project.Structure.Bars.Get(System.Convert.ToInt32(ids[i])) as RobotBar;
                     Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections, bhomMaterial, bhombarReleases);
@@ -102,10 +120,30 @@ namespace BH.Adapter.Robot
                     if (barTags != null && !barTags.TryGetValue(robotBar.Number, out tags))
                         bhomBar.Tags = tags;
                     bhomBars.Add(bhomBar);
+                    for (int i = 1; i <= robotBars.Count; i++)
+                    {
+                        RobotBar robotBar = robotBars.Get(i);
+                        Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections, bhombarReleases, framingElementDesignProperties);
+                        bhomBar.CustomData[AdapterId] = robotBar.Number;
+                        if (barTags != null && !barTags.TryGetValue(robotBar.Number, out tags))
+                            bhomBar.Tags = tags;
+                        bhomBars.Add(bhomBar);
+                    }
                 }
+                else if (ids != null && ids.Count > 0)
+                {
+                    for (int i = 0; i < ids.Count; i++)
+                    {
+                        RobotBar robotBar = m_RobotApplication.Project.Structure.Bars.Get(System.Convert.ToInt32(ids[i])) as RobotBar;
+                        Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections, bhombarReleases, framingElementDesignProperties);
+                        bhomBar.CustomData[AdapterId] = robotBar.Number;
+                        if (barTags != null && !barTags.TryGetValue(robotBar.Number, out tags))
+                            bhomBar.Tags = tags;
+                        bhomBars.Add(bhomBar);
+                    }
+                }
+                m_RobotApplication.Project.Structure.Bars.EndMultiOperation();
             }
-            m_RobotApplication.Project.Structure.Bars.EndMultiOperation();
-
             return bhomBars;
         }
 
@@ -113,35 +151,43 @@ namespace BH.Adapter.Robot
 
         public List<Node> ReadNodes(List<string> ids = null)
         {
-            IRobotCollection robotNodes = m_RobotApplication.Project.Structure.Nodes.GetAll();
             List<Node> bhomNodes = new List<Node>();
-            List<Constraint6DOF> constraints = ReadConstraints6DOF();
-            Dictionary<int, HashSet<string>> nodeTags = GetTypeTags(typeof(Node));
-            HashSet<string> tags = new HashSet<string>();
-            if (ids == null)
+            if (this.AdvancedSettings.readNodesByQuery)
             {
-                for (int i = 1; i <= robotNodes.Count; i++)
-                {
-                    RobotNode robotNode = robotNodes.Get(i);
-                    Node bhomNode = BH.Engine.Robot.Convert.ToBHoMObject(robotNode);
-                    bhomNode.CustomData[AdapterId] = robotNode.Number;
-                    if (nodeTags != null && !nodeTags.TryGetValue(robotNode.Number, out tags))
-                        bhomNode.Tags = tags;
-
-                    bhomNodes.Add(bhomNode);
-                }
+                bhomNodes = ReadNodesQuery(ids);
             }
-            else if (ids != null && ids.Count > 0)
+            else
             {
-                for (int i = 0; i < ids.Count; i++)
-                {
-                    RobotNode robotNode = m_RobotApplication.Project.Structure.Nodes.Get(System.Convert.ToInt32(ids[i])) as RobotNode;
-                    Node bhomNode = BH.Engine.Robot.Convert.ToBHoMObject(robotNode);
-                    bhomNode.CustomData[AdapterId] = robotNode.Number;
-                    if (nodeTags != null && !nodeTags.TryGetValue(robotNode.Number, out tags))
-                        bhomNode.Tags = tags;
+                IRobotCollection robotNodes = m_RobotApplication.Project.Structure.Nodes.GetAll();
 
-                    bhomNodes.Add(bhomNode);
+                List<Constraint6DOF> constraints = ReadConstraints6DOF();
+                Dictionary<int, HashSet<string>> nodeTags = GetTypeTags(typeof(Node));
+                HashSet<string> tags = new HashSet<string>();
+                if (ids == null)
+                {
+                    for (int i = 1; i <= robotNodes.Count; i++)
+                    {
+                        RobotNode robotNode = robotNodes.Get(i);
+                        Node bhomNode = BH.Engine.Robot.Convert.ToBHoMObject(robotNode);
+                        bhomNode.CustomData[AdapterId] = robotNode.Number;
+                        if (nodeTags != null && !nodeTags.TryGetValue(robotNode.Number, out tags))
+                            bhomNode.Tags = tags;
+
+                        bhomNodes.Add(bhomNode);
+                    }
+                }
+                else if (ids != null && ids.Count > 0)
+                {
+                    for (int i = 0; i < ids.Count; i++)
+                    {
+                        RobotNode robotNode = m_RobotApplication.Project.Structure.Nodes.Get(System.Convert.ToInt32(ids[i])) as RobotNode;
+                        Node bhomNode = BH.Engine.Robot.Convert.ToBHoMObject(robotNode);
+                        bhomNode.CustomData[AdapterId] = robotNode.Number;
+                        if (nodeTags != null && !nodeTags.TryGetValue(robotNode.Number, out tags))
+                            bhomNode.Tags = tags;
+
+                        bhomNodes.Add(bhomNode);
+                    }
                 }
             }
             return bhomNodes;
@@ -269,174 +315,192 @@ namespace BH.Adapter.Robot
 
         ///***************************************************/
 
-        //public List<DesignGroup> ReadDesignGroups()
-        //{
-        //    RobotApplication robot = this.RobotApplication;
-        //    RDimServer RDServer = this.RobotApplication.Kernel.GetExtension("RDimServer");
-        //    RDServer.Mode = RobotOM.IRDimServerMode.I_DSM_STEEL;
-        //    RDimStream RDStream = RDServer.Connection.GetStream();
-        //    RDimGroups RDGroups = RDServer.GroupsService;
-        //    RDimGrpProfs RDGroupProfs = RDServer.Connection.GetGrpProfs();
-        //    List<DesignGroup> designGroupList = new List<DesignGroup>();
+        public List<DesignGroup> ReadDesignGroups()
+        {
+            RobotApplication robot = m_RobotApplication;
+            RDimServer RDServer = m_RobotApplication.Kernel.GetExtension("RDimServer");
+            RDServer.Mode = RobotOM.IRDimServerMode.I_DSM_STEEL;
+            RDimStream RDStream = RDServer.Connection.GetStream();
+            RDimGroups RDGroups = RDServer.GroupsService;
+            RDimGrpProfs RDGroupProfs = RDServer.Connection.GetGrpProfs();
+            List<DesignGroup> designGroupList = new List<DesignGroup>();
 
-        //    for (int i = 0; i <= RDGroups.Count - 1; i++)
-        //    {
-        //        int designGroupNumber = RDGroups.GetUserNo(i);
-        //        RDimGroup designGroup = RDGroups.Get(designGroupNumber);
-        //        DesignGroup bhomDesignGroup = new DesignGroup();
-        //        bhomDesignGroup.Name = designGroup.Name;
-        //        bhomDesignGroup.Number = designGroup.UsrNo;
-        //        bhomDesignGroup.CustomData[AdapterId] = designGroup.UsrNo;
-        //        bhomDesignGroup.CustomData[Engine.Robot.Convert.AdapterName] = designGroup.Name;
-        //        bhomDesignGroup.MaterialName = designGroup.Material;
-        //        designGroup.GetMembList(RDStream);
-        //        string test = RDStream.ReadText();
-        //        if (RDStream.Size(IRDimStreamType.I_DST_TEXT) > 0)
-        //            bhomDesignGroup.MemberIds = Engine.Robot.Convert.ToSelectionList(RDStream.ReadText());
-        //        designGroupList.Add(bhomDesignGroup);
-        //    }
-        //    return designGroupList;
-        //}
-
-        /***************************************************/
-
-        ////Fast query method - only returns basic node information, not full node objects
-        //public List<Node> ReadNodesQuery(List<string> ids = null)
-        //{
-        //    List<Node> bhomNodes = new List<Node>();
-
-        //    RobotResultQueryParams result_params = this.RobotApplication.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
-
-        //    RobotSelection nod_sel = this.RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
-        //    IRobotResultQueryReturnType query_return = default(IRobotResultQueryReturnType);
-
-        //    nod_sel.FromText("all");
-        //    result_params.ResultIds.SetSize(3);
-        //    result_params.ResultIds.Set(1, 0);
-        //    result_params.ResultIds.Set(2, 1);
-        //    result_params.ResultIds.Set(3, 2);
-
-        //    result_params.Selection.Set(IRobotObjectType.I_OT_NODE, nod_sel);
-        //    result_params.SetParam(IRobotResultParamType.I_RPT_MULTI_THREADS, true);
-        //    result_params.SetParam(IRobotResultParamType.I_RPT_THREAD_COUNT, 4);
-        //    query_return = IRobotResultQueryReturnType.I_RQRT_MORE_AVAILABLE;
-        //    RobotResultRowSet row_set = new RobotResultRowSet();
-        //    bool ok = false;
-
-        //    RobotResultRow result_row = default(RobotResultRow);
-        //    int nod_num = 0;
-        //    int kounta = 0;
-
-        //    while (!(query_return == IRobotResultQueryReturnType.I_RQRT_DONE))
-        //    {
-        //        query_return = this.RobotApplication.Project.Structure.Results.Query(result_params, row_set);
-        //        ok = row_set.MoveFirst();
-        //        while (ok)
-        //        {
-        //            result_row = row_set.CurrentRow;
-        //            nod_num = (int)result_row.GetParam(IRobotResultParamType.I_RPT_NODE);
-        //            BH.oM.Geometry.Point point = new BH.oM.Geometry.Point
-        //            {
-        //                X = (double)row_set.CurrentRow.GetValue(0),
-        //                Y = (double)row_set.CurrentRow.GetValue(1),
-        //                Z = (double)row_set.CurrentRow.GetValue(2)
-        //            };
-        //            Node bhomNode = new Node { Position = point, Name = nod_num.ToString() };
-        //            bhomNode.CustomData[AdapterId] = nod_num.ToString();
-        //            bhomNodes.Add(bhomNode);
-        //            point = null;
-        //            kounta++;
-        //            ok = row_set.MoveNext();
-        //        }
-        //        row_set.Clear();
-        //    }
-        //    result_params.Reset();
-        //    return bhomNodes;
-        //}
+            for (int i = 0; i <= RDGroups.Count - 1; i++)
+            {
+                int designGroupNumber = RDGroups.GetUserNo(i);
+                RDimGroup designGroup = RDGroups.Get(designGroupNumber);
+                DesignGroup bhomDesignGroup = new DesignGroup();
+                bhomDesignGroup.Name = designGroup.Name;
+                bhomDesignGroup.Number = designGroup.UsrNo;
+                bhomDesignGroup.CustomData[AdapterId] = designGroup.UsrNo;
+                bhomDesignGroup.CustomData[Engine.Robot.Convert.AdapterName] = designGroup.Name;
+                bhomDesignGroup.MaterialName = designGroup.Material;
+                designGroup.GetMembList(RDStream);
+                string test = RDStream.ReadText();
+                if (RDStream.Size(IRDimStreamType.I_DST_TEXT) > 0)
+                    bhomDesignGroup.MemberIds = Engine.Robot.Convert.ToSelectionList(RDStream.ReadText());
+                designGroupList.Add(bhomDesignGroup);
+            }
+            return designGroupList;
+        }
 
         /***************************************************/
 
-        ////Fast query method - returns basic bar information, not full bar objects
-        //public List<Bar> ReadBarsQuery(List<string> ids = null)
-        //{
-        //    List<Bar> bhomBars = new List<Bar>();
-        //    IEnumerable<Node> bhomNodesList = ReadNodesQuery();
-        //    Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionary(x => x.Name.ToString());
+        public List<FramingElementDesignProperties> ReadFramingElementDesignProperties(List<string> names = null)
+        {
+            IRobotCollection memberTypes = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_MEMBER_TYPE);
+            List<FramingElementDesignProperties> bhomDesignPropsList = new List<FramingElementDesignProperties>();
 
-        //    RobotResultQueryParams result_params = default(RobotResultQueryParams);
-        //    result_params = (RobotResultQueryParams)this.RobotApplication.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
-        //    RobotStructure rstructure = default(RobotStructure);
-        //    rstructure = this.RobotApplication.Project.Structure;
-        //    RobotSelection cas_sel = default(RobotSelection);
-        //    RobotSelection bar_sel = default(RobotSelection);
-        //    IRobotResultQueryReturnType query_return = default(IRobotResultQueryReturnType);
+            for (int i = 1; i <= memberTypes.Count; i++)
+            {
+                IRobotLabel rMemberType = memberTypes.Get(i);
+                FramingElementDesignProperties bhomDesignProps = BHE.Create.FramingElementDesignProperties(rMemberType.Name);
 
-        //    bool ok = false;
-        //    RobotResultRow result_row = default(RobotResultRow);
-        //    int bar_num = 0;
+                bhomDesignPropsList.Add(bhomDesignProps);                  
+                
+            }
+            return bhomDesignPropsList;
+        }
 
-        //    int nod1 = 0;
-        //    int nod2 = 0;
+        /***************************************************/
 
-        //    int nod1_id = 15;
-        //    int nod2_id = 16;
+        //Fast query method - only returns basic node information, not full node objects
+        public List<Node> ReadNodesQuery(List<string> ids = null)
+        {
+            List<Node> bhomNodes = new List<Node>();
 
-        //    bar_sel = this.RobotApplication.Project.Structure.Selections.CreateFull(IRobotObjectType.I_OT_BAR);
-        //    cas_sel = this.RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
-        //    try
-        //    {
-        //        cas_sel.FromText(this.RobotApplication.Project.Structure.Cases.Get(1).Number.ToString());
-        //    }
-        //    catch
-        //    {
-        //        this.RobotApplication.Project.Structure.Cases.CreateSimple(1, "Dead Load", IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
-        //        cas_sel.FromText(this.RobotApplication.Project.Structure.Cases.Get(1).Number.ToString());
-        //    }
+            RobotResultQueryParams result_params = m_RobotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
 
-        //    result_params.ResultIds.SetSize(5);
-        //    result_params.ResultIds.Set(1, nod1_id);
-        //    result_params.ResultIds.Set(2, nod2_id);
-        //    result_params.ResultIds.Set(3, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FX);
-        //    result_params.ResultIds.Set(4, 269);
-        //    result_params.ResultIds.Set(5, 270);
+            RobotSelection nod_sel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
+            IRobotResultQueryReturnType query_return = default(IRobotResultQueryReturnType);
 
-        //    result_params.SetParam(IRobotResultParamType.I_RPT_BAR_RELATIVE_POINT, 0);
-        //    result_params.Selection.Set(IRobotObjectType.I_OT_BAR, bar_sel);
-        //    result_params.Selection.Set(IRobotObjectType.I_OT_CASE, cas_sel);
-        //    result_params.SetParam(IRobotResultParamType.I_RPT_MULTI_THREADS, true);
-        //    result_params.SetParam(IRobotResultParamType.I_RPT_THREAD_COUNT, 4);
-        //    RobotResultRowSet row_set = new RobotResultRowSet();
+            nod_sel.FromText("all");
+            result_params.ResultIds.SetSize(3);
+            result_params.ResultIds.Set(1, 0);
+            result_params.ResultIds.Set(2, 1);
+            result_params.ResultIds.Set(3, 2);
 
-        //    while (!(query_return == IRobotResultQueryReturnType.I_RQRT_DONE))
-        //    {
-        //        query_return = rstructure.Results.Query(result_params, row_set);
-        //        ok = row_set.MoveFirst();
-        //        while (ok)
-        //        {
-        //            result_row = row_set.CurrentRow;
-        //            bar_num = (int)result_row.GetParam(IRobotResultParamType.I_RPT_BAR);
+            result_params.Selection.Set(IRobotObjectType.I_OT_NODE, nod_sel);
+            result_params.SetParam(IRobotResultParamType.I_RPT_MULTI_THREADS, true);
+            result_params.SetParam(IRobotResultParamType.I_RPT_THREAD_COUNT, 4);
+            query_return = IRobotResultQueryReturnType.I_RQRT_MORE_AVAILABLE;
+            RobotResultRowSet row_set = new RobotResultRowSet();
+            bool ok = false;
 
-        //            nod1 = (int)result_row.GetValue(nod1_id);
-        //            nod2 = (int)result_row.GetValue(nod2_id);
+            RobotResultRow result_row = default(RobotResultRow);
+            int nod_num = 0;
+            int kounta = 0;
 
-        //            Node startNode = null; bhomNodes.TryGetValue(nod1.ToString(), out startNode);
-        //            Node endNode = null; bhomNodes.TryGetValue(nod2.ToString(), out endNode);
-        //            Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode, Name = bar_num.ToString() };
+            while (!(query_return == IRobotResultQueryReturnType.I_RQRT_DONE))
+            {
+                query_return = m_RobotApplication.Project.Structure.Results.Query(result_params, row_set);
+                ok = row_set.MoveFirst();
+                while (ok)
+                {
+                    result_row = row_set.CurrentRow;
+                    nod_num = (int)result_row.GetParam(IRobotResultParamType.I_RPT_NODE);
+                    BH.oM.Geometry.Point point = new BH.oM.Geometry.Point
+                    {
+                        X = (double)row_set.CurrentRow.GetValue(0),
+                        Y = (double)row_set.CurrentRow.GetValue(1),
+                        Z = (double)row_set.CurrentRow.GetValue(2)
+                    };
+                    Node bhomNode = new Node { Position = point, Name = nod_num.ToString() };
+                    bhomNode.CustomData[AdapterId] = nod_num.ToString();
+                    bhomNodes.Add(bhomNode);
+                    point = null;
+                    kounta++;
+                    ok = row_set.MoveNext();
+                }
+                row_set.Clear();
+            }
+            result_params.Reset();
+            return bhomNodes;
+        }
 
-        //            bhomBar.SectionProperty = null;
-        //            //bhomBar.OrientationAngle = robotBar.Gamma * 180 / Math.PI;
-        //            bhomBar.Name = bar_num.ToString();
+        /***************************************************/
 
-        //            bhomBar.CustomData[AdapterId] = bar_num.ToString();
-        //            bhomBars.Add(bhomBar);
+        //Fast query method - returns basic bar information, not full bar objects
+        public List<Bar> ReadBarsQuery(List<string> ids = null)
+        {
+            List<Bar> bhomBars = new List<Bar>();
+            IEnumerable<Node> bhomNodesList = ReadNodesQuery();
+            Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionary(x => x.Name.ToString());
 
-        //            ok = row_set.MoveNext();
-        //        }
-        //        row_set.Clear();
-        //    }
-        //    result_params.Reset();
-        //    return bhomBars;
-        //}
+            RobotResultQueryParams result_params = default(RobotResultQueryParams);
+            result_params = (RobotResultQueryParams)m_RobotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
+            RobotStructure rstructure = default(RobotStructure);
+            rstructure = m_RobotApplication.Project.Structure;
+            RobotSelection cas_sel = default(RobotSelection);
+            RobotSelection bar_sel = default(RobotSelection);
+            IRobotResultQueryReturnType query_return = default(IRobotResultQueryReturnType);
+
+            bool ok = false;
+            RobotResultRow result_row = default(RobotResultRow);
+            int bar_num = 0;
+
+            int nod1 = 0;
+            int nod2 = 0;
+
+            int nod1_id = 15;
+            int nod2_id = 16;
+
+            bar_sel = m_RobotApplication.Project.Structure.Selections.CreateFull(IRobotObjectType.I_OT_BAR);
+            cas_sel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
+            try
+            {
+                cas_sel.FromText(m_RobotApplication.Project.Structure.Cases.Get(1).Number.ToString());
+            }
+            catch
+            {
+                m_RobotApplication.Project.Structure.Cases.CreateSimple(1, "Dead Load", IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
+                cas_sel.FromText(m_RobotApplication.Project.Structure.Cases.Get(1).Number.ToString());
+            }
+
+            result_params.ResultIds.SetSize(5);
+            result_params.ResultIds.Set(1, nod1_id);
+            result_params.ResultIds.Set(2, nod2_id);
+            result_params.ResultIds.Set(3, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FX);
+            result_params.ResultIds.Set(4, 269);
+            result_params.ResultIds.Set(5, 270);
+
+            result_params.SetParam(IRobotResultParamType.I_RPT_BAR_RELATIVE_POINT, 0);
+            result_params.Selection.Set(IRobotObjectType.I_OT_BAR, bar_sel);
+            result_params.Selection.Set(IRobotObjectType.I_OT_CASE, cas_sel);
+            result_params.SetParam(IRobotResultParamType.I_RPT_MULTI_THREADS, true);
+            result_params.SetParam(IRobotResultParamType.I_RPT_THREAD_COUNT, 4);
+            RobotResultRowSet row_set = new RobotResultRowSet();
+
+            while (!(query_return == IRobotResultQueryReturnType.I_RQRT_DONE))
+            {
+                query_return = rstructure.Results.Query(result_params, row_set);
+                ok = row_set.MoveFirst();
+                while (ok)
+                {
+                    result_row = row_set.CurrentRow;
+                    bar_num = (int)result_row.GetParam(IRobotResultParamType.I_RPT_BAR);
+
+                    nod1 = (int)result_row.GetValue(nod1_id);
+                    nod2 = (int)result_row.GetValue(nod2_id);
+
+                    Node startNode = null; bhomNodes.TryGetValue(nod1.ToString(), out startNode);
+                    Node endNode = null; bhomNodes.TryGetValue(nod2.ToString(), out endNode);
+                    Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode, Name = bar_num.ToString() };
+
+                    bhomBar.SectionProperty = null;
+                    //bhomBar.OrientationAngle = robotBar.Gamma * 180 / Math.PI;
+                    bhomBar.Name = bar_num.ToString();
+
+                    bhomBar.CustomData[AdapterId] = bar_num.ToString();
+                    bhomBars.Add(bhomBar);
+
+                    ok = row_set.MoveNext();
+                }
+                row_set.Clear();
+            }
+            result_params.Reset();
+            return bhomBars;
+        }
 
         ///***************************************************/
 

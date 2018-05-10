@@ -18,83 +18,66 @@ namespace BH.Engine.Robot
             return DataBaseStringFormat(obj as dynamic);
         }
 
-        public static string DataBaseStringFormat(ISectionProperty sectionProperty)
+        private static string DataBaseStringFormat(ISectionProperty sectionProperty)
         {
-            string objectName = sectionProperty.Name;
+            string objName = sectionProperty.Name;
+            char[] charArray = objName.ToCharArray();
             string result = "";
-            List<string> name = new List<string>();
-            objectName.TrimEnd(' ').TrimStart(' ');
-            objectName.ToUpper();
-            string[] array;
-            char[] characters;
-            char character;
-            int firstNum;
 
-            if (objectName.Contains(" "))
-            {
-                array = objectName.Split(' ');
-                character = (array[1].ToCharArray())[0];
-            }
+            if (string.IsNullOrEmpty(objName) || charArray.Length < 3 || ContainsNumber(objName) == -1)
+                return objName;
 
             else
             {
-                characters = objectName.ToCharArray();
-                int counter = 0;
-                foreach (char c in characters)
-                {
-                    if (Int32.TryParse(c.ToString(), out firstNum))
-                    {
-                        break;
-                    }
-                    counter++;
-                }
-                objectName = objectName.Insert(counter, " ");
-                array = objectName.Split(' ');
-                character = (array[1].ToCharArray())[0];
-            }
-
-            if (array.Length == 2 && Int32.TryParse(character.ToString(), out firstNum))
-            {
-                name.Add(array[0] + " ");
-                string[] array1 = array[1].Split('x');
-                if (array1.Length > 1)
-                {
-                    foreach (string s in array1)
-                    {
-                        string[] array2 = s.Split('.');
-                        if (array2.Length == 2)
-                        {
-                            if (System.Convert.ToInt32(array2[1]) > 0)
-                                name.Add(s + "x");
-                            else
-                                name.Add(array2[0] + "x");
-                        }
-
-                        else
-                        {
-                            name.Add(array2[0] + "x");
-                        }
-                    }
-                }
+                List<string> name = new List<string>();
+                objName = objName.Replace(" ", "");
+                objName = objName.ToUpper();
+                objName = objName.Insert(ContainsNumber(objName), " ");
+                string[] secSizeArray = objName.Split(' ');
+                if (secSizeArray.Length < 2)
+                    return objName;
                 else
                 {
-                    name.Add(array1[0]);
-                }
+                    name.Add(secSizeArray[0] + " ");
+                    string[] dimArray = secSizeArray[1].Split('X');
+                    if (dimArray.Length > 1)
+                    {
+                        foreach (string s in dimArray)
+                        {
+                            string endChar = s.TrimEnd('0');
+                            string[] array2 = endChar.Split('.');
+                            if (array2.Length == 2)
+                            {
 
-                for (int i = 0; i < name.Count; i++)
-                {
-                    result = result + name[i];
-                }
+                                if (System.Convert.ToInt32(array2[1]) > 0)
+                                    name.Add(endChar + "x");
+                                else
+                                    name.Add(array2[0] + "x");
+                            }
+                            else
+                            {
+                                name.Add(array2[0] + "x");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        name.Add(dimArray[0]);
+                    }
 
-                result = result.TrimEnd('x');
+                    for (int i = 0; i < name.Count; i++)
+                    {
+                        result = result + name[i];
+                    }
+                    result = result.TrimEnd('x');
+
+                    return result;
+                }
             }
-            else
-                result = objectName;
 
-            return result;
         }
 
-        public static string DataBaseStringFormat(Material material)
+        private static string DataBaseStringFormat(Material material)
         {
             string objectName = material.Name;
             objectName = objectName.TrimEnd(' ').TrimStart(' ');
@@ -124,5 +107,26 @@ namespace BH.Engine.Robot
             }
         }
 
+        private static int ContainsNumber(string objName)
+        {
+            int counter = 0;
+            int check = -1;
+            int num;
+            if (!string.IsNullOrEmpty(objName))
+            {
+                char[] charArray = objName.ToCharArray();
+                foreach (char c in charArray)
+                {
+                    if (Int32.TryParse(c.ToString(), out num))
+                    {
+                        break;
+                    }
+                    counter++;
+                }
+                if (counter != charArray.Length)
+                    check = counter;               
+            }
+            return check;
+        }
     }
 }

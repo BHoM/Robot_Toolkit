@@ -56,10 +56,6 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Reflection_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\BHoM_Engine\Build\Reflection_Engine.dll</HintPath>
-    </Reference>
     <Reference Include="Serialiser_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM_Engine\Build\Serialiser_Engine.dll</HintPath>
@@ -123,10 +119,6 @@
     <ProjectReference Include="..\Robot_Engine\Robot_Engine.csproj">
       <Project>{45d542cd-79b5-485a-ba39-0163230431f0}</Project>
       <Name>Robot_Engine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Robot_oM\Robot_oM.csproj">
-      <Project>{0dd05698-6a33-4092-bfad-ff702685feaf}</Project>
-      <Name>Robot_oM</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -6,10 +6,6 @@ using BH.oM.Structural.Elements;
 using BH.oM.Structural.Loads;
 using RobotOM;
 using System.Diagnostics;
-using BH.oM.Adapters.Robot;
-using BH.Engine.Adapters.Robot;
-using BH.oM.Reflection.Debuging;
-using BH.Engine.Reflection;
 
 namespace BH.Adapter.Robot
 {
@@ -19,69 +15,98 @@ namespace BH.Adapter.Robot
         /**** Public Fields                             ****/
         /***************************************************/
 
-        public AdvancedSettings AdvancedSettings;
-        public DatabaseSettings DatabaseSettings;
-
+        public bool UseBarQueryMethod = false;
+        public bool UseNodeQueryMethod = false;
+                  
+                
         /***************************************************/
         /**** Constructors                              ****/
         /***************************************************/
 
-        public RobotAdapter(string FilePath = "", DatabaseSettings DatabaseSettings = null, AdvancedSettings AdvancedSettings = null, bool Active = false)
+        public RobotAdapter(string filePath = "", string materialDB = "British", string sectionDB = "UKST")
         {
-            if (Active)
+
+            AdapterId = Engine.Robot.Convert.AdapterID;
+
+            Config.SeparateProperties = true;
+            Config.MergeWithComparer = true;
+            Config.ProcessInMemory = false;
+
+            m_matDataBaseName = materialDB;
+            m_secPropDataBaseName = sectionDB;
+            if (IsApplicationRunning())
             {
-
-                AdapterId = Engine.Robot.Convert.AdapterID;
-
-                this.AdvancedSettings = (AdvancedSettings != null)? AdvancedSettings : new AdvancedSettings();
-                this.DatabaseSettings = (DatabaseSettings != null)? DatabaseSettings: new DatabaseSettings();
-                
-                Config.SeparateProperties = true;
-                Config.MergeWithComparer = true;
-                Config.ProcessInMemory = false;
-
-                m_matDataBaseName = this.DatabaseSettings.materialDatabase.ToString();
-                m_secPropDataBaseName = this.DatabaseSettings.sectionDatabase.ToString();
-
-                if (IsApplicationRunning())
+                m_RobotApplication = new RobotApplication();
+            }
+            else 
+            {
+                try
                 {
                     m_RobotApplication = new RobotApplication();
+                    m_RobotApplication.Visible = 1;
+                    m_RobotApplication.Interactive = 1; 
+                    m_RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
                 }
-                else
+                catch
                 {
-                    try
-                    {
-                        m_RobotApplication = new RobotApplication();
-                        m_RobotApplication.Visible = 1;
-                        m_RobotApplication.Interactive = 1;
-                        m_RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
-                    }
-                    catch
-                    {
-                        Compute.RecordEvent("Cannot load Robot, check that Robot is installed and a license is available", EventType.Error);
-                        Console.WriteLine("Cannot load Robot, check that Robot is installed and a license is available");
-                    }
+                    Console.WriteLine("Cannot load Robot, check that Robot is installed and a license is available");
                 }
+            }
 
-                ReadMaterialNamesFromDB(m_matDataBaseName);
-                ReadSecPropNamesFromDB(m_secPropDataBaseName);
+            ReadMaterialNamesFromDB(m_matDataBaseName);
+            ReadSecPropNamesFromDB(m_secPropDataBaseName);
 
-                if (!string.IsNullOrWhiteSpace(FilePath))
-                {
-                    m_RobotApplication.Project.Open(FilePath);
-                }
+            if (!string.IsNullOrWhiteSpace(filePath))
+            {
+                m_RobotApplication.Project.Open(filePath);
             }
         }
 
         /***************************************************/
 
+        //public RobotAdapter(string filePath = null) : this()
+        //{
+        //    if (!string.IsNullOrWhiteSpace(filePath))
+        //    {
+        //        m_RobotApplication.Project.Open(filePath);
+        //    }
+        //    else if (IsApplicationRunning())
+        //    {
+        //        m_RobotApplication = new RobotApplication();
+        //    }
+        //    //else
+        //    //{
+        //    //    m_RobotApplication = new RobotApplication();
+        //    //    m_RobotApplication.Visible = 1;
+        //    //    m_RobotApplication.Interactive = 1;
+        //    //    m_RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
+        //    //}
+        //}
+
+        //public int Update(FilterQuery filter, string property, object newValue, Dictionary<string, string> config = null)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+     
+
+        //public bool UpdateTags(IEnumerable<object> objects)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+
         /***************************************************/
-        /**** Public  Fields                            ****/
+        /**** Public  Fields                           ****/
         /***************************************************/
 
         /***************************************************/
         /**** Public  Methods                           ****/
         /***************************************************/
+
+        //public static void SetConfig(bool barQuery)
+        //{            
+        //}
 
         public static bool IsApplicationRunning()
         {
@@ -140,6 +165,12 @@ namespace BH.Adapter.Robot
                     m_dbSecPropNames.Add(sections.Get(i));
             }
         }
+
+        //~RobotAdapter()
+        //{
+        //    //m_RobotApplication.Project.SaveAs(@"C:\Users\phesari\Desktop\Structure.rtd");
+        //    m_RobotApplication.Project.Save();
+        //}
 
         /***************************************************/
         /**** Private Fields                            ****/

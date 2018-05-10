@@ -42,9 +42,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM_Engine\Build\Common_Engine.dll</HintPath>
     </Reference>
-    <Reference Include="DataManipulation_Engine">
-      <HintPath>..\..\BHoM_Engine\Build\DataManipulation_Engine.dll</HintPath>
-    </Reference>
     <Reference Include="Geometry_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM_Engine\Build\Geometry_Engine.dll</HintPath>
@@ -88,20 +85,7 @@
     <Compile Include="Convert\Private Helpers\SectionProperty.cs" />
     <Compile Include="Convert\Private Helpers\SteelSectionProperty.cs" />
     <Compile Include="Convert\ToRobot.cs" />
-    <Compile Include="Create\FramingElementDesignProperties.cs" />
-    <Compile Include="Create\DatabaseSettings.cs" />
-    <Compile Include="Create\AdvancedSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Create\FilterQuery.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Robot_oM\Robot_oM.csproj">
-      <Project>{0dd05698-6a33-4092-bfad-ff702685feaf}</Project>
-      <Name>Robot_oM</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Query\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

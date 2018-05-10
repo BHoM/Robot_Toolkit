@@ -1,5 +1,6 @@
 ﻿using BH.oM.Geometry;
-using BH.Engine.Serialiser;
+using BH.oM.Common.Materials;
+using BH.Engine.Reflection;
 using GeometryEngine = BH.Engine.Geometry;
 using RobotOM;
 using System;
@@ -70,25 +71,44 @@ namespace BH.Engine.Robot
 
         #region Object Converters
 
-        public static Bar ToBHoMObject(this RobotBar robotBar, Dictionary<string,Node> bhomNodes, Dictionary<string, ISectionProperty> bhomSections, Dictionary<string, BarRelease> barReleases)
+        public static Bar ToBHoMObject(this RobotBar robotBar, Dictionary<string,Node> bhomNodes, Dictionary<string, ISectionProperty> bhomSections, Dictionary<string, Material> bhomMaterials, Dictionary<string, BarRelease> barReleases)
         {
             Node startNode = null;  bhomNodes.TryGetValue(robotBar.StartNode.ToString(), out startNode);
             Node endNode = null; bhomNodes.TryGetValue(robotBar.EndNode.ToString(), out endNode);
             Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode, Name = robotBar.Name };
+            ISectionProperty secProp = null;
+            Material barMaterial = null;
+            BarRelease bhomBarRel = null;
 
             if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_SECTION) == -1)
             {
                 string secName = robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION);
-                bhomBar.SectionProperty = bhomSections[robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION)];
+                if (!bhomSections.TryGetValue(secName, out secProp))
+                    BH.Engine.Reflection.Compute.RecordEvent("Section property type is not supported", oM.Reflection.Debuging.EventType.Warning);
+            }
+
+            if (robotBar.HasLabel(IRobotLabelType.I_LT_MATERIAL) == -1)
+            {
+                string matName = robotBar.GetLabelName(IRobotLabelType.I_LT_MATERIAL);
+                if (secProp != null)
+                {
+                    if (bhomMaterials.TryGetValue(matName, out barMaterial))
+                        secProp.Material = barMaterial;
+                    else
+                        BH.Engine.Reflection.Compute.RecordEvent("Section property has no material assigned", oM.Reflection.Debuging.EventType.Warning);
+                }
+
             }
 
             if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_RELEASE) == -1)
             {
-                bhomBar.Release = barReleases[robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_RELEASE)];
+                string releaseName = robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_RELEASE);
+                if (!barReleases.TryGetValue(releaseName, out bhomBarRel))
+                    BH.Engine.Reflection.Compute.RecordEvent("Bars with auto-generated releases will not have releases", oM.Reflection.Debuging.EventType.Warning);
             }
 
+            bhomBar.SectionProperty = secProp;
             bhomBar.OrientationAngle = robotBar.Gamma * Math.PI / 180;
-
             bhomBar.CustomData[AdapterID] = robotBar.Number;
 
             if (robotBar.TensionCompression == IRobotBarTensionCompression.I_BTC_COMPRESSION_ONLY)

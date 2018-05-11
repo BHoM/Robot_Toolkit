@@ -87,11 +87,11 @@ namespace BH.Adapter.Robot
                         ObjectId = idBar.ToString(),
                         Divisions = division,
                         Position = position,
-                        FX = fx,
-                        FY = fy,
-                        FZ = fz,
-                        MX = mx,
-                        MY = my,
+                        FX = fx * -1,
+                        FY = fy * -1,
+                        FZ = fz * -1,
+                        MX = mx * -1,
+                        MY = my * -1,
                         MZ = mz
                     };
 

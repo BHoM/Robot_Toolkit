@@ -34,4 +34,9 @@ namespace BH.oM.Adapters.Robot
     {
         CoordinateSystem
     }
+
+    public enum Commands
+    {
+
+    }
 }

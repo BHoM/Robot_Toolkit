@@ -18,8 +18,6 @@ namespace BH.Engine.Robot
     {
         /***************************************/
 
-        #region Geometry Converters
-
         public static Point ToBHoMGeometry(RobotGeoPoint3D point)
         {
             return new Point { X = point.X, Y = point.Y, Z = point.Z };
@@ -69,10 +67,6 @@ namespace BH.Engine.Robot
             }
             return polycurve;
         }
-
-        #endregion
-
-        #region Object Converters
 
         public static Bar ToBHoMObject(this RobotBar robotBar, Dictionary<string,Node> bhomNodes, Dictionary<string, ISectionProperty> bhomSections, Dictionary<string, Material> bhomMaterials, Dictionary<string, BarRelease> barReleases)
         {
@@ -133,7 +127,7 @@ namespace BH.Engine.Robot
                 string memberTypeName = robotBar.GetLabelName(IRobotLabelType.I_LT_MEMBER_TYPE);
                 try
                 {
-                    bhomBar.CustomData.Add("FramingElementDesignProperties", framingElementDesignProperties[memberTypeName]);
+                    //bhomBar.CustomData.Add("FramingElementDesignProperties", framingElementDesignProperties[memberTypeName]);
                 }
                 catch
                 {
@@ -680,10 +674,6 @@ namespace BH.Engine.Robot
         //    }
         // }
 
-        #endregion
-
-        #region List Converters
-
         public static List<int> ToSelectionList(string selection)
         {
             if (selection.Contains("EDGE")) return null;
@@ -721,8 +711,6 @@ namespace BH.Engine.Robot
             }
             return output;
         }        
-
-        #endregion
 
     }
 }

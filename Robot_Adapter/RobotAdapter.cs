@@ -10,6 +10,7 @@ using BH.oM.Adapters.Robot;
 using BH.Engine.Adapters.Robot;
 using BH.oM.Reflection.Debuging;
 using BH.Engine.Reflection;
+using BH.oM.Base;
 
 namespace BH.Adapter.Robot
 {
@@ -18,9 +19,9 @@ namespace BH.Adapter.Robot
         /***************************************************/
         /**** Public Fields                             ****/
         /***************************************************/
-
-        public AdvancedSettings AdvancedSettings;
-        public DatabaseSettings DatabaseSettings;
+        
+        public AdvancedSettings AdvancedSettings { get; private set; } 
+        public DatabaseSettings DatabaseSettings { get; private set; } 
 
         /***************************************************/
         /**** Constructors                              ****/
@@ -141,6 +142,7 @@ namespace BH.Adapter.Robot
             }
         }
 
+
         /***************************************************/
         /**** Private Fields                            ****/
         /***************************************************/
@@ -151,6 +153,7 @@ namespace BH.Adapter.Robot
         private string m_secPropDataBaseName;
         private List<string> m_dbMaterialNames = new List<string>();
         private List<string> m_dbSecPropNames = new List<string>();
+      
         //private Dictionary<int, string> m_NodeTaggs = new Dictionary<int, string>();
         //private Dictionary<string, string> m_MaterialTaggs = new Dictionary<string, string>();
         //private Dictionary<string, string> m_SectionPropertyTaggs = new Dictionary<string, string>();

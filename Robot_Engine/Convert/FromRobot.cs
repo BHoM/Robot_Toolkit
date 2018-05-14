@@ -84,7 +84,7 @@ namespace BH.Engine.Robot
             {
                 string secName = robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION);
                 if (!bhomSections.TryGetValue(secName, out secProp))
-                    BH.Engine.Reflection.Compute.RecordEvent("Section property type is not supported", oM.Reflection.Debuging.EventType.Warning);
+                    BH.Engine.Reflection.Compute.RecordEvent("Section property " + secName + " is not supported", oM.Reflection.Debuging.EventType.Warning);
             }
 
             if (robotBar.HasLabel(IRobotLabelType.I_LT_MATERIAL) == -1)

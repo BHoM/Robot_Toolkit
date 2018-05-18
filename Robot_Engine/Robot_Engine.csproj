@@ -85,7 +85,10 @@
     <Compile Include="Convert\Private Helpers\SectionProperty.cs" />
     <Compile Include="Convert\Private Helpers\SteelSectionProperty.cs" />
     <Compile Include="Convert\ToRobot.cs" />
+    <Compile Include="FromRobot\Bar.cs" />
+    <Compile Include="FromRobot\Geometry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ToRobot\ToRobot.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

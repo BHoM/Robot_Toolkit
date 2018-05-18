@@ -52,13 +52,22 @@ namespace BH.Adapter.Robot
                 return new List<ILoad>(); //TODO: Implement load extraction
             if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
                 return new List<BHoMGroup<IBHoMObject>>();
-            //if (type == typeof(Node))
-            //   return  (this.UseNodeQueryMethod)? ReadNodesQuery() : ReadNodes();
-            //if (type == typeof(Bar))
-            //    return (this.UseBarQueryMethod) ? ReadBarsQuery() : ReadBars();
-            //if (type == typeof(DesignGroup))
-            //    return ReadDesignGroups();
-            //else
+
+            if (type == typeof(BHoMObject))
+            {
+                List<IBHoMObject> objects = new List<IBHoMObject>();
+                objects.AddRange(ReadConstraints6DOF());
+                objects.AddRange(ReadMaterial());
+                objects.AddRange(ReadBarRelease());
+                objects.AddRange(ReadLoadCase());
+                objects.AddRange(ReadSectionProperties());
+                objects.AddRange(ReadNodes());
+                objects.AddRange(ReadBars());
+                objects.AddRange(ReadDesignGroups());
+                objects.AddRange(ReadFramingElementDesignProperties());
+                return objects;
+            }
+
             return null;         
         }
 

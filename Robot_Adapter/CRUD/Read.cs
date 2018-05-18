@@ -278,34 +278,34 @@ namespace BH.Adapter.Robot
 
         ///***************************************************/
 
-        //public List<DesignGroup> ReadDesignGroups()
-        //{
-        //    RobotApplication robot = this.RobotApplication;
-        //    RDimServer RDServer = this.RobotApplication.Kernel.GetExtension("RDimServer");
-        //    RDServer.Mode = RobotOM.IRDimServerMode.I_DSM_STEEL;
-        //    RDimStream RDStream = RDServer.Connection.GetStream();
-        //    RDimGroups RDGroups = RDServer.GroupsService;
-        //    RDimGrpProfs RDGroupProfs = RDServer.Connection.GetGrpProfs();
-        //    List<DesignGroup> designGroupList = new List<DesignGroup>();
+        public List<DesignGroup> ReadDesignGroups()
+        {
+            RobotApplication robot = this.RobotApplication;
+            RDimServer RDServer = this.RobotApplication.Kernel.GetExtension("RDimServer");
+            RDServer.Mode = RobotOM.IRDimServerMode.I_DSM_STEEL;
+            RDimStream RDStream = RDServer.Connection.GetStream();
+            RDimGroups RDGroups = RDServer.GroupsService;
+            RDimGrpProfs RDGroupProfs = RDServer.Connection.GetGrpProfs();
+            List<DesignGroup> designGroupList = new List<DesignGroup>();
 
-        //    for (int i = 0; i <= RDGroups.Count - 1; i++)
-        //    {
-        //        int designGroupNumber = RDGroups.GetUserNo(i);
-        //        RDimGroup designGroup = RDGroups.Get(designGroupNumber);
-        //        DesignGroup bhomDesignGroup = new DesignGroup();
-        //        bhomDesignGroup.Name = designGroup.Name;
-        //        bhomDesignGroup.Number = designGroup.UsrNo;
-        //        bhomDesignGroup.CustomData[AdapterId] = designGroup.UsrNo;
-        //        bhomDesignGroup.CustomData[Engine.Robot.Convert.AdapterName] = designGroup.Name;
-        //        bhomDesignGroup.MaterialName = designGroup.Material;
-        //        designGroup.GetMembList(RDStream);
-        //        string test = RDStream.ReadText();
-        //        if (RDStream.Size(IRDimStreamType.I_DST_TEXT) > 0)
-        //            bhomDesignGroup.MemberIds = Engine.Robot.Convert.ToSelectionList(RDStream.ReadText());
-        //        designGroupList.Add(bhomDesignGroup);
-        //    }
-        //    return designGroupList;
-        //}
+            for (int i = 0; i <= RDGroups.Count - 1; i++)
+            {
+                int designGroupNumber = RDGroups.GetUserNo(i);
+                RDimGroup designGroup = RDGroups.Get(designGroupNumber);
+                DesignGroup bhomDesignGroup = new DesignGroup();
+                bhomDesignGroup.Name = designGroup.Name;
+                bhomDesignGroup.Number = designGroup.UsrNo;
+                bhomDesignGroup.CustomData[AdapterId] = designGroup.UsrNo;
+                bhomDesignGroup.CustomData[Engine.Robot.Convert.AdapterName] = designGroup.Name;
+                bhomDesignGroup.MaterialName = designGroup.Material;
+                designGroup.GetMembList(RDStream);
+                string test = RDStream.ReadText();
+                if (RDStream.Size(IRDimStreamType.I_DST_TEXT) > 0)
+                    bhomDesignGroup.MemberIds = Engine.Robot.Convert.ToSelectionList(RDStream.ReadText());
+                designGroupList.Add(bhomDesignGroup);
+            }
+            return designGroupList;
+        }
 
         /***************************************************/
 

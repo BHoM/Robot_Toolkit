@@ -92,6 +92,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToRobot\ToRobot.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Robot_oM\Robot_oM.csproj">
+      <Project>{0dd05698-6a33-4092-bfad-ff702685feaf}</Project>
+      <Name>Robot_oM</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

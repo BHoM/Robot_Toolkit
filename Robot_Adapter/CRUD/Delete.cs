@@ -163,8 +163,8 @@ namespace BH.Adapter.Robot
 
         //public void DeleteSteelDesignGroups(List<int> designGroupNumbers = null)
         //{
-        //    RobotApplication robot = this.RobotApplication;
-        //    RDimServer RDServer = this.RobotApplication.Kernel.GetExtension("RDimServer");
+        //    RobotApplication robot = m_RobotApplication;
+        //    RDimServer RDServer = m_RobotApplication.Kernel.GetExtension("RDimServer");
         //    RDServer.Mode = RobotOM.IRDimServerMode.I_DSM_STEEL;
         //    RDimGroups RDGroups = RDServer.GroupsService;
 
@@ -188,8 +188,8 @@ namespace BH.Adapter.Robot
 
         //private void _DeleteSteelDesignGroup(int designGroupNumber)
         //{
-        //    RobotApplication robot = this.RobotApplication;
-        //    RDimServer RDServer = this.RobotApplication.Kernel.GetExtension("RDimServer");
+        //    RobotApplication robot = m_RobotApplication;
+        //    RDimServer RDServer = m_RobotApplication.Kernel.GetExtension("RDimServer");
         //    RDServer.Mode = RobotOM.IRDimServerMode.I_DSM_STEEL;
         //    RDimGroups RDGroups = RDServer.GroupsService;
         //    RDGroups.Delete(designGroupNumber);            

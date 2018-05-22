@@ -194,11 +194,5 @@ namespace BH.Adapter.Robot
                 CServer.SetAuxiliary(Caux.Get(i).Number, yn);
             }
         }
-
-        
-        
-
-
-
     }
 }

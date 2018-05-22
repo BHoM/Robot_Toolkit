@@ -16,31 +16,21 @@ namespace BH.Adapter.Robot
 
         protected override int Delete(Type type, IEnumerable<object> ids)
         {
-            //if (type == typeof(DesignGroup))
-            //{
-            //    DeleteSteelDesignGroups(ids as List<int>);
-            //}
-
             int success = 0;
-
+            if (type == typeof(DesignGroup))
+                success = DeleteSteelDesignGroups(ids as List<int>);
             if (type == typeof(Node))
                 success = DeleteNodes(ids);
-
             if (type == typeof(Bar))
                 success = DeleteBars(ids);
-
             if (type == typeof(BH.oM.Structural.Loads.Loadcase)) 
                 success = DeleteLoadcases(ids);
-
             if (type == null)
                 success = DeleteAll();
-
             updateview();
             return success;
         }
-
         
-
         public int DeleteNodes(IEnumerable<object> ids)
         {
             int sucess = 1;
@@ -151,9 +141,9 @@ namespace BH.Adapter.Robot
 
         public int DeleteAll()
         {
-            int sucess = 1;
+            int success = 1;
             m_RobotApplication.Project.Structure.Clear();
-            return sucess;
+            return success;
         }
 
 
@@ -161,42 +151,42 @@ namespace BH.Adapter.Robot
         /**** Protected Methods                         ****/
         /***************************************************/
 
-        //public void DeleteSteelDesignGroups(List<int> designGroupNumbers = null)
-        //{
-        //    RobotApplication robot = m_RobotApplication;
-        //    RDimServer RDServer = m_RobotApplication.Kernel.GetExtension("RDimServer");
-        //    RDServer.Mode = RobotOM.IRDimServerMode.I_DSM_STEEL;
-        //    RDimGroups RDGroups = RDServer.GroupsService;
+        public int DeleteSteelDesignGroups(List<int> designGroupNumbers = null)
+        {
+            RobotApplication robot = m_RobotApplication;
+            RDimServer RDServer = m_RobotApplication.Kernel.GetExtension("RDimServer");
+            RDServer.Mode = RobotOM.IRDimServerMode.I_DSM_STEEL;
+            RDimGroups RDGroups = RDServer.GroupsService;
 
-        //    if (designGroupNumbers != null)
-        //    {
-        //        foreach (int designGroupNumber in designGroupNumbers)
-        //        {
-        //            _DeleteSteelDesignGroup(designGroupNumber);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        for (int i = 0; i <= RDGroups.Count - 1; i++)
-        //        {
-        //            int designGroupNumber = RDGroups.GetUserNo(i);
-        //            _DeleteSteelDesignGroup(designGroupNumber);
+            if (designGroupNumbers != null)
+            {
+                foreach (int designGroupNumber in designGroupNumbers)
+                {
+                    _DeleteSteelDesignGroup(designGroupNumber);
+                }
+            }
+            else
+            {
+                for (int i = 0; i <= RDGroups.Count - 1; i++)
+                {
+                    int designGroupNumber = RDGroups.GetUserNo(i);
+                    _DeleteSteelDesignGroup(designGroupNumber);
 
-        //        }
-        //    }
-        //}
+                }
+            }
+            int success = 1;
+            return success;
+        }
 
-        //private void _DeleteSteelDesignGroup(int designGroupNumber)
-        //{
-        //    RobotApplication robot = m_RobotApplication;
-        //    RDimServer RDServer = m_RobotApplication.Kernel.GetExtension("RDimServer");
-        //    RDServer.Mode = RobotOM.IRDimServerMode.I_DSM_STEEL;
-        //    RDimGroups RDGroups = RDServer.GroupsService;
-        //    RDGroups.Delete(designGroupNumber);            
-        //}
-
-
-
+        private void _DeleteSteelDesignGroup(int designGroupNumber)
+        {
+            RobotApplication robot = m_RobotApplication;
+            RDimServer RDServer = m_RobotApplication.Kernel.GetExtension("RDimServer");
+            RDServer.Mode = RobotOM.IRDimServerMode.I_DSM_STEEL;
+            RDimGroups RDGroups = RDServer.GroupsService;
+            RDGroups.Delete(designGroupNumber);
+        }
+        
         /***************************************************/
         /**** Private Fields                            ****/
         /***************************************************/

@@ -6,6 +6,7 @@ using BH.oM.Structural.Elements;
 using BH.oM.Structural.Loads;
 using RobotOM;
 using System.Diagnostics;
+using BH.oM.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {
@@ -15,86 +16,55 @@ namespace BH.Adapter.Robot
         /**** Public Fields                             ****/
         /***************************************************/
 
-        public bool UseBarQueryMethod = false;
-        public bool UseNodeQueryMethod = false;
-                  
-                
+        public RobotConfig RobotConfig { get; set; } = new RobotConfig();               
+               
         /***************************************************/
         /**** Constructors                              ****/
         /***************************************************/
 
-        public RobotAdapter(string filePath = "", string materialDB = "British", string sectionDB = "UKST")
+        public RobotAdapter(string filePath = "", RobotConfig robotConfig = null, bool Active = false)
         {
-
-            AdapterId = Engine.Robot.Convert.AdapterID;
-
-            Config.SeparateProperties = true;
-            Config.MergeWithComparer = true;
-            Config.ProcessInMemory = false;
-
-            m_matDataBaseName = materialDB;
-            m_secPropDataBaseName = sectionDB;
-            if (IsApplicationRunning())
+            if (Active)
             {
-                m_RobotApplication = new RobotApplication();
-            }
-            else 
-            {
-                try
+                AdapterId = Engine.Robot.Convert.AdapterID;
+
+                Config.SeparateProperties = true;
+                Config.MergeWithComparer = true;
+                Config.ProcessInMemory = false;
+
+                if (robotConfig != null)
+                    RobotConfig = robotConfig;
+
+                if (IsApplicationRunning())
                 {
                     m_RobotApplication = new RobotApplication();
-                    m_RobotApplication.Visible = 1;
-                    m_RobotApplication.Interactive = 1; 
-                    m_RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
                 }
-                catch
+                else
                 {
-                    Console.WriteLine("Cannot load Robot, check that Robot is installed and a license is available");
+                    try
+                    {
+                        m_RobotApplication = new RobotApplication();
+                        m_RobotApplication.Visible = 1;
+                        m_RobotApplication.Interactive = 1;
+                        m_RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Cannot load Robot, check that Robot is installed and a license is available");
+                    }
                 }
-            }
 
-            ReadMaterialNamesFromDB(m_matDataBaseName);
-            ReadSecPropNamesFromDB(m_secPropDataBaseName);
+                ReadMaterialNamesFromDB(RobotConfig.DatabaseSettings.materialDatabase.ToString());
+                ReadSecPropNamesFromDB(RobotConfig.DatabaseSettings.sectionDatabase.ToString());
 
-            if (!string.IsNullOrWhiteSpace(filePath))
-            {
-                m_RobotApplication.Project.Open(filePath);
+                if (!string.IsNullOrWhiteSpace(filePath))
+                {
+                    m_RobotApplication.Project.Open(filePath);
+                }
             }
         }
 
         /***************************************************/
-
-        //public RobotAdapter(string filePath = null) : this()
-        //{
-        //    if (!string.IsNullOrWhiteSpace(filePath))
-        //    {
-        //        m_RobotApplication.Project.Open(filePath);
-        //    }
-        //    else if (IsApplicationRunning())
-        //    {
-        //        m_RobotApplication = new RobotApplication();
-        //    }
-        //    //else
-        //    //{
-        //    //    m_RobotApplication = new RobotApplication();
-        //    //    m_RobotApplication.Visible = 1;
-        //    //    m_RobotApplication.Interactive = 1;
-        //    //    m_RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
-        //    //}
-        //}
-
-        //public int Update(FilterQuery filter, string property, object newValue, Dictionary<string, string> config = null)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-     
-
-        //public bool UpdateTags(IEnumerable<object> objects)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
 
         /***************************************************/
         /**** Public  Fields                           ****/
@@ -103,10 +73,6 @@ namespace BH.Adapter.Robot
         /***************************************************/
         /**** Public  Methods                           ****/
         /***************************************************/
-
-        //public static void SetConfig(bool barQuery)
-        //{            
-        //}
 
         public static bool IsApplicationRunning()
         {
@@ -166,22 +132,15 @@ namespace BH.Adapter.Robot
             }
         }
 
-        //~RobotAdapter()
-        //{
-        //    //m_RobotApplication.Project.SaveAs(@"C:\Users\phesari\Desktop\Structure.rtd");
-        //    m_RobotApplication.Project.Save();
-        //}
-
         /***************************************************/
         /**** Private Fields                            ****/
         /***************************************************/
 
         private RobotApplication m_RobotApplication;
         private Dictionary<Type, Dictionary<int, HashSet<string>>> m_tags = new Dictionary<Type, Dictionary<int, HashSet<string>>>();
-        private string m_matDataBaseName;
-        private string m_secPropDataBaseName;
         private List<string> m_dbMaterialNames = new List<string>();
         private List<string> m_dbSecPropNames = new List<string>();
+        private RobotConfig m_robotConfig = new RobotConfig();
         //private Dictionary<int, string> m_NodeTaggs = new Dictionary<int, string>();
         //private Dictionary<string, string> m_MaterialTaggs = new Dictionary<string, string>();
         //private Dictionary<string, string> m_SectionPropertyTaggs = new Dictionary<string, string>();

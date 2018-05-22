@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Geometry\CoordinateSystem.cs" />
+    <Compile Include="Settings\RobotConfig.cs" />
     <Compile Include="Settings\AdvancedSettings.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Settings\DatabaseSettings.cs" />

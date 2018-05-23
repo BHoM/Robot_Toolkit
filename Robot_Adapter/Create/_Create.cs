@@ -12,6 +12,7 @@ using RobotOM;
 
 using BH.Engine.Robot;
 using BHEG = BH.Engine.Geometry;
+using BH.oM.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {
@@ -111,6 +112,11 @@ namespace BH.Adapter.Robot
                 if (objects.First() is LoadCombination)
                 {
                     success = CreateCollection(objects as IEnumerable<LoadCombination>);
+                }
+
+                if (objects.First() is FramingElementDesignProperties)
+                {
+                    success = CreateCollection(objects as IEnumerable<FramingElementDesignProperties>);
                 }
 
             }

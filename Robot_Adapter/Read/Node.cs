@@ -11,8 +11,8 @@ using BH.oM.Base;
 using BH.oM.Common.Materials;
 using BH.oM.Structural.Design;
 using BH.oM.Adapters.Robot;
-using BH.oM.Adapters.Robot.Properties;
-using BHE = BH.Engine.Adapters.Robot.Properties;
+using BH.oM.Adapters.Robot;
+using BHE = BH.Engine.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {

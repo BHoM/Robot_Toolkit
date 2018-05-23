@@ -12,6 +12,7 @@ using RobotOM;
 
 using BH.Engine.Robot;
 using BHEG = BH.Engine.Geometry;
+using BH.oM.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {
@@ -59,6 +60,14 @@ namespace BH.Adapter.Robot
                                       materialName,
                                       bhomBar.OrientationAngle * 180 / Math.PI);
                         rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_RELEASE, bhomBar.Release.Name);
+                        if (bhomBar.CustomData.ContainsKey("MemberType"))
+                        {
+                            FramingElementDesignProperties designProps = bhomBar.CustomData["MemberType"] as FramingElementDesignProperties;
+                            if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, designProps.Name) != -1)
+                                Create(designProps);
+                           rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_MEMBER_TYPE, designProps.Name);
+                         }
+                        
                     }
 
                     else

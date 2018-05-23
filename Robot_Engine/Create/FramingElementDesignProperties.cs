@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BH.oM.Adapters.Robot;
-using BH.oM.Adapters.Robot.Properties;
 
-namespace BH.Engine.Adapters.Robot.Properties
+namespace BH.Engine.Adapters.Robot
 {
     public static partial class Create
     {

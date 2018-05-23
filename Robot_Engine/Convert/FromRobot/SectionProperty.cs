@@ -9,7 +9,7 @@ using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
 using BH.Engine.Reflection;
 using BH.oM.Reflection.Debuging;
-using BH.oM.Adapters.Robot.Properties;
+using BH.oM.Adapters.Robot;
 
 
 namespace BH.Engine.Robot

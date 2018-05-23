@@ -74,6 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Create\MemberType.cs" />
     <Compile Include="Create\Constraints.cs" />
     <Compile Include="Create\Bars.cs" />
     <Compile Include="Create\Release.cs" />

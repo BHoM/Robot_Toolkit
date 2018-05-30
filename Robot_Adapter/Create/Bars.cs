@@ -41,17 +41,21 @@ namespace BH.Adapter.Robot
                 int barNum = 0;
                 int freeNum = m_RobotApplication.Project.Structure.Bars.FreeNumber;
                 Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
+
+                List<Bar> nonCasheBars = new List<Bar>();
                 foreach (Bar bhomBar in bars)
                 {
-                    string sectionName = BH.Engine.Robot.Convert.Match(m_dbSecPropNames, bhomBar.SectionProperty);
-                    string materialName = BH.Engine.Robot.Convert.Match(m_dbMaterialNames, bhomBar.SectionProperty.Material);
-                    if (sectionName == null)
-                        sectionName = bhomBar.SectionProperty.Name;
-                    if (materialName == null)
-                        materialName = bhomBar.SectionProperty.Material.Name;
                     barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterId]);
+
                     if (bhomBar.SectionProperty != null)
                     {
+                        string sectionName = BH.Engine.Robot.Convert.Match(m_dbSecPropNames, bhomBar.SectionProperty);
+                        string materialName = BH.Engine.Robot.Convert.Match(m_dbMaterialNames, bhomBar.SectionProperty.Material);
+                        if (sectionName == null)
+                            sectionName = bhomBar.SectionProperty.Name;
+                        if (materialName == null)
+                            materialName = bhomBar.SectionProperty.Material.Name;
+                        
                         rcache.AddBar(barNum,
                                       System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),
                                       System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]),
@@ -63,9 +67,10 @@ namespace BH.Adapter.Robot
 
                     else
                     {
-                        barServer.Create(barNum,
-                                         System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),
-                                         System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]));
+                        nonCasheBars.Add(bhomBar);
+                        //barServer.Create(barNum,
+                        //                 System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),
+                        //                 System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]));
                     }
 
                     if (bhomBar.FEAType == BarFEAType.TensionOnly)
@@ -81,22 +86,30 @@ namespace BH.Adapter.Robot
 
                 m_RobotApplication.Project.Structure.ApplyCache(rcache as RobotStructureCache);
 
+                foreach (Bar bhomBar in nonCasheBars)
+                {
+                    barServer.Create(System.Convert.ToInt32(bhomBar.CustomData[AdapterId]),
+                                     System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),
+                                     System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]));
+                }
+
                 rSelect.FromText(tensionBars);
                 barServer.SetTensionCompression(rSelect, IRobotBarTensionCompression.I_BTC_TENSION_ONLY);
                 rSelect.FromText(compressionBars);
                 barServer.SetTensionCompression(rSelect, IRobotBarTensionCompression.I_BTC_COMPRESSION_ONLY);
                 barServer.SetTrussBar(axialBars, true);
 
+                barServer.EndMultiOperation();
+                m_RobotApplication.Interactive = 1;
+
                 foreach (Bar bhomBar in bars)
                 {
-                    RobotBar rBar = barServer.Get(System.Convert.ToInt32(bhomBar.CustomData[AdapterId])) as RobotBar;
                     barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterId]);
+                    RobotBar rBar = barServer.Get(barNum) as RobotBar;
                     barTags[barNum] = bhomBar.Tags;
                     BH.Engine.Robot.Convert.SetFEAType(rBar, bhomBar);
                 }
                 m_tags[typeof(Bar)] = barTags;
-                barServer.EndMultiOperation();
-                m_RobotApplication.Interactive = 1;
             }
             return true;
         }

@@ -41,17 +41,18 @@ namespace BH.Engine.Robot
 
         private static void SteelSection(this FabricatedBoxProfile section, Material material, IRobotBarSectionData sectionData)
         {
-            sectionData.Type = IRobotBarSectionType.I_BST_NS_BOX;
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_BOX_3;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_BOX_3;
             sectionData.MaterialName = material.Name;
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
+
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B, section.Width);
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B1, section.Width);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B1, section.Width - (2 * section.WebThickness));
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B2, section.Width);
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_H, section.Height);
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_TW, section.WebThickness);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_H, section.Height - (section.TopFlangeThickness + section.BotFlangeThickness));
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TW, section.WebThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF, section.TopFlangeThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF2, section.BotFlangeThickness);
 
@@ -68,12 +69,12 @@ namespace BH.Engine.Robot
 
             RobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_B1, section.BotFlangeWidth);
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_B2, section.TopFlangeWidth);
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_H, section.Height);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_B1, section.TopFlangeWidth);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_B2, section.BotFlangeWidth);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_H, section.Height - (section.BotFlangeThickness + section.TopFlangeThickness));
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TW, section.WebThickness);
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TF1, section.BotFlangeThickness);
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TF2, section.TopFlangeThickness);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TF1, section.TopFlangeThickness);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TF2, section.BotFlangeThickness);
 
             sectionData.CalcNonstdGeometry();
         }
@@ -89,7 +90,7 @@ namespace BH.Engine.Robot
             RobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B, section.Width);
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H, section.Height);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H, section.Height - (2 * section.FlangeThickness));
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW, section.WebThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF, section.FlangeThickness);
 
@@ -108,7 +109,7 @@ namespace BH.Engine.Robot
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_B, section.Width);
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_H, section.Height);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_H, section.Height - section.FlangeThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_TF, section.FlangeThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_TW, section.WebThickness);
 
@@ -136,10 +137,8 @@ namespace BH.Engine.Robot
 
         private static void SteelSection(this RectangleProfile section, Material material, IRobotBarSectionData sectionData)
         {
-            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_RECT_FILLED;
-            sectionData.CalcNonstdGeometry();
-
             sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_RECT_FILLED;
 
             sectionData.MaterialName = material.Name;
 
@@ -156,7 +155,7 @@ namespace BH.Engine.Robot
         private static void SteelSection(this CircleProfile section, Material material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_TUBE;
-            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_TUBE;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CIRC_FILLED;
 
             sectionData.MaterialName = material.Name;
 
@@ -177,7 +176,7 @@ namespace BH.Engine.Robot
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H, section.Height);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H, section.Height - section.FlangeThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B, section.Width);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF, section.FlangeThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW, section.WebThickness);
@@ -197,7 +196,7 @@ namespace BH.Engine.Robot
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_B, section.FlangeWidth);
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_H, section.Height);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_H, section.Height - (2 * section.FlangeThickness));
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_TW, section.WebThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_TF, section.FlangeThickness);
 
@@ -250,6 +249,7 @@ namespace BH.Engine.Robot
                 switch (secData.ShapeType)
                 {
                     case IRobotBarSectionShapeType.I_BSST_USER_I_BISYM:
+                    //case IRobotBarSectionShapeType.I:
                         sectionProfile = BH.Engine.Structure.Create.ISectionProfile(d, bf, Tw, Tf, ri, r);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
@@ -280,35 +280,46 @@ namespace BH.Engine.Robot
                 double D = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D);
                 double T = 0;
                 double B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B);
+                double B1 = 0;
+                double B2 = 0;
                 double H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H);
                 double TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW);
                 double TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF);
+                double TF2 = 0;
 
 
                 switch (secData.ShapeType)
                 {
                     case IRobotBarSectionShapeType.I_BSST_USER_TUBE:
                         T = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_T);
+                        D = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D);
                         sectionProfile = BH.Engine.Structure.Create.TubeProfile(D, T);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
                     case IRobotBarSectionShapeType.I_BSST_USER_RECT:
-                        T = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_T);
-                        sectionProfile = BH.Engine.Structure.Create.BoxProfile(H, B, T, 0, 0);
+                        B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B);
+                        H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H);
+                        sectionProfile = BH.Engine.Structure.Create.RectangleProfile(H, B, 0);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
                     case IRobotBarSectionShapeType.I_BSST_USER_I_BISYM:
-                        T = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_T);
-                        sectionProfile = BH.Engine.Structure.Create.ISectionProfile(H, B, TW, TF, 0, 0);
+                        B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B);
+                        H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H);
+                        TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW);
+                        TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF);
+                        sectionProfile = BH.Engine.Structure.Create.ISectionProfile(H + (2* TF), B, TW, TF, 0, 0);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
                     case IRobotBarSectionShapeType.I_BSST_USER_BOX_3:
                         B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B);
+                        B1 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B1);
+                        B2 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B2);
                         H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_H);
                         TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TW);
                         TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF);
-                        double TF2 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF2);
-                        sectionProfile = BH.Engine.Structure.Create.FabricatedBoxProfile(H, B, TW, TF, TF2, 0);
+                        TF2 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF2);
+
+                        sectionProfile = BH.Engine.Structure.Create.FabricatedBoxProfile(H + TF + TF2, B1 + (2 * TW), TW, TF2, TF, 0);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
                     default:

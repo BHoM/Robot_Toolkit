@@ -238,18 +238,10 @@ namespace BH.Engine.Robot
                 double ri = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_RI);
                 double s = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_S);
                 double mass = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_WEIGHT);
-                //double ass = secData.GetValue(IRobotBarSectionDataValue.);
-
-                List<double> testVal = new List<double>();
-                for (int i = 0; i < 41; i++)
-                {
-                    testVal.Add(secData.GetValue((IRobotBarSectionDataValue)i));
-                }
 
                 switch (secData.ShapeType)
                 {
                     case IRobotBarSectionShapeType.I_BSST_USER_I_BISYM:
-                    //case IRobotBarSectionShapeType.I:
                         sectionProfile = BH.Engine.Structure.Create.ISectionProfile(d, bf, Tw, Tf, ri, r);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 

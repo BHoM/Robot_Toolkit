@@ -68,9 +68,6 @@ namespace BH.Adapter.Robot
                     else
                     {
                         nonCasheBars.Add(bhomBar);
-                        //barServer.Create(barNum,
-                        //                 System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),
-                        //                 System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]));
                     }
 
                     if (bhomBar.FEAType == BarFEAType.TensionOnly)
@@ -99,6 +96,7 @@ namespace BH.Adapter.Robot
                 barServer.SetTensionCompression(rSelect, IRobotBarTensionCompression.I_BTC_COMPRESSION_ONLY);
                 barServer.SetTrussBar(axialBars, true);
 
+                
                 barServer.EndMultiOperation();
                 m_RobotApplication.Interactive = 1;
 

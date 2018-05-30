@@ -26,11 +26,13 @@ namespace BH.Adapter.Robot
 
         private bool CreateCollection(IEnumerable<ISectionProperty> secProp)
         {
-            IRobotLabel label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, "");
-            IRobotBarSectionData secData = label.Data;
+            //IRobotLabel label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, "");
+            //IRobotBarSectionData secData = label.Data;
 
             foreach (ISectionProperty p in secProp)
             {
+                IRobotLabel label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, p.Name);
+                IRobotBarSectionData secData = label.Data;
                 string match = BH.Engine.Robot.Convert.Match(m_dbSecPropNames, p);
                 if (match != null)
                 {
@@ -40,12 +42,15 @@ namespace BH.Adapter.Robot
                     
                     secData.LoadFromDBase(match);
                     secData.MaterialName = matName;
-                    m_RobotApplication.Project.Structure.Labels.StoreWithName(label, match);
+                    //m_RobotApplication.Project.Structure.Labels.StoreWithName(label, match);
+                    m_RobotApplication.Project.Structure.Labels.Store(label);
                 }
+
                 else
                 {
                     BH.Engine.Robot.Convert.ISectionProperty(p, secData);
-                    m_RobotApplication.Project.Structure.Labels.StoreWithName(label, p.Name);
+                    m_RobotApplication.Project.Structure.Labels.Store(label);
+                   // m_RobotApplication.Project.Structure.Labels.StoreWithName(label, p.Name);
                 }
             }
             return true;

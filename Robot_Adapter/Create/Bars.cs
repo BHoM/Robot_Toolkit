@@ -42,7 +42,7 @@ namespace BH.Adapter.Robot
                 int freeNum = m_RobotApplication.Project.Structure.Bars.FreeNumber;
                 Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
 
-                List<Bar> nonCasheBars = new List<Bar>();
+                List<Bar> nonCacheBars = new List<Bar>();
                 foreach (Bar bhomBar in bars)
                 {
                     barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterId]);
@@ -67,7 +67,7 @@ namespace BH.Adapter.Robot
 
                     else
                     {
-                        nonCasheBars.Add(bhomBar);
+                        nonCacheBars.Add(bhomBar);
                     }
 
                     if (bhomBar.FEAType == BarFEAType.TensionOnly)
@@ -83,7 +83,7 @@ namespace BH.Adapter.Robot
 
                 m_RobotApplication.Project.Structure.ApplyCache(rcache as RobotStructureCache);
 
-                foreach (Bar bhomBar in nonCasheBars)
+                foreach (Bar bhomBar in nonCacheBars)
                 {
                     barServer.Create(System.Convert.ToInt32(bhomBar.CustomData[AdapterId]),
                                      System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),

@@ -31,10 +31,7 @@ namespace BH.Adapter.Robot
                 var watch = new System.Diagnostics.Stopwatch();
                 if (objects.First() is Constraint6DOF)
                 {
-                    watch = System.Diagnostics.Stopwatch.StartNew();
                     success = CreateCollection(objects as IEnumerable<Constraint6DOF>);
-                    watch.Stop();
-                    var elapsedMs = watch.ElapsedMilliseconds;
                 }
 
                 if (objects.First() is RigidLink)
@@ -54,18 +51,12 @@ namespace BH.Adapter.Robot
 
                 if (typeof(ISectionProperty).IsAssignableFrom(objects.First().GetType()))
                 {
-                    watch = System.Diagnostics.Stopwatch.StartNew();
                     success = CreateCollection(objects as IEnumerable<ISectionProperty>);
-                    watch.Stop();
-                    var elapsedMs = watch.ElapsedMilliseconds;
                 }
 
                 if (objects.First() is Material)
                 {
-                    watch = System.Diagnostics.Stopwatch.StartNew();
                     success = CreateCollection(objects as IEnumerable<Material>);
-                    watch.Stop();
-                    var elapsedMs = watch.ElapsedMilliseconds;
                 }
 
                 if (objects.First() is Loadcase)
@@ -80,18 +71,12 @@ namespace BH.Adapter.Robot
 
                 if (objects.First() is Node)
                 {
-                    watch = System.Diagnostics.Stopwatch.StartNew();
                     success = CreateCollection(objects as IEnumerable<Node>);
-                    watch.Stop();
-                    var elapsedMs = watch.ElapsedMilliseconds;
                 }
 
                 if (objects.First() is Bar)
                 {
-                    watch = System.Diagnostics.Stopwatch.StartNew();
                     success = CreateCollection(objects as IEnumerable<Bar>);
-                    watch.Stop();
-                    var elapsedMs = watch.ElapsedMilliseconds;
                 }
 
                 if (typeof(ILoad).IsAssignableFrom(objects.First().GetType()))

@@ -21,61 +21,67 @@ namespace BH.Engine.Robot
         private static string DataBaseStringFormat(ISectionProperty sectionProperty)
         {
             string objName = sectionProperty.Name;
-            char[] charArray = objName.ToCharArray();
-            string result = "";
-
-            if (string.IsNullOrEmpty(objName) || charArray.Length < 3 || ContainsNumber(objName) == -1)
-                return objName;
-
-            else
+            try
             {
-                List<string> name = new List<string>();
-                objName = objName.Replace(" ", "");
-                objName = objName.ToUpper();
-                objName = objName.Insert(ContainsNumber(objName), " ");
-                string[] secSizeArray = objName.Split(' ');
-                if (secSizeArray.Length < 2)
+                char[] charArray = objName.ToCharArray();
+                string result = "";
+
+                if (string.IsNullOrEmpty(objName) || charArray.Length < 3 || ContainsNumber(objName) == -1)
                     return objName;
+
                 else
                 {
-                    name.Add(secSizeArray[0] + " ");
-                    string[] dimArray = secSizeArray[1].Split('X');
-                    if (dimArray.Length > 1)
-                    {
-                        foreach (string s in dimArray)
-                        {
-                            string endChar = s.TrimEnd('0');
-                            endChar = endChar.TrimEnd('.');
-                            string[] array2 = endChar.Split('.');
-                            if (array2.Length == 2)
-                            {
-
-                                if (System.Convert.ToInt32(array2[1]) > 0)
-                                    name.Add(endChar + "x");
-                                else
-                                    name.Add(array2[0] + "x");
-                            }
-                            else
-                            {
-                                name.Add(array2[0] + "x");
-                            }
-                        }
-                    }
+                    List<string> name = new List<string>();
+                    objName = objName.Replace(" ", "");
+                    objName = objName.ToUpper();
+                    objName = objName.Insert(ContainsNumber(objName), " ");
+                    string[] secSizeArray = objName.Split(' ');
+                    if (secSizeArray.Length < 2)
+                        return objName;
                     else
                     {
-                        name.Add(dimArray[0]);
-                    }
+                        name.Add(secSizeArray[0] + " ");
+                        string[] dimArray = secSizeArray[1].Split('X');
+                        if (dimArray.Length > 1)
+                        {
+                            foreach (string s in dimArray)
+                            {
+                                string endChar = s.TrimEnd('0');
+                                endChar = endChar.TrimEnd('.');
+                                string[] array2 = endChar.Split('.');
+                                if (array2.Length == 2)
+                                {
 
-                    for (int i = 0; i < name.Count; i++)
-                    {
-                        result = result + name[i];
-                    }
-                    result = result.TrimEnd('x');
+                                    if (System.Convert.ToInt32(array2[1]) > 0)
+                                        name.Add(endChar + "x");
+                                    else
+                                        name.Add(array2[0] + "x");
+                                }
+                                else
+                                {
+                                    name.Add(array2[0] + "x");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            name.Add(dimArray[0]);
+                        }
 
-                    return result;
+                        for (int i = 0; i < name.Count; i++)
+                        {
+                            result = result + name[i];
+                        }
+                        result = result.TrimEnd('x');
+
+                        return result;
+                    }
                 }
             }
-
+            catch (Exception)
+            {
+                return objName;
+            }
         }
 
         private static string DataBaseStringFormat(Material material)

@@ -37,6 +37,7 @@ namespace BH.Adapter.Robot
             Dictionary<string, BarRelease> bhombarReleases = ReadBarRelease().ToDictionary(x => x.Name.ToString());
             Dictionary<string, ISectionProperty> bhomSections = ReadSectionProperties().ToDictionary(x => x.Name.ToString());
             Dictionary<string, Material> bhomMaterial = ReadMaterial().ToDictionary(x => x.Name.ToString());
+            Dictionary<string, FramingElementDesignProperties> bhomFramEleDesProps = ReadFramingElementDesignProperties().ToDictionary(x => x.Name.ToString());
             Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
             HashSet<string> tags = new HashSet<string>();
 
@@ -46,7 +47,12 @@ namespace BH.Adapter.Robot
                 for (int i = 1; i <= robotBars.Count; i++)
                 {
                     RobotBar robotBar = robotBars.Get(i);
-                    Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections, bhomMaterial, bhombarReleases);
+                    Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject( robotBar, 
+                                                                        bhomNodes, 
+                                                                        bhomSections, 
+                                                                        bhomMaterial, 
+                                                                        bhombarReleases,
+                                                                        bhomFramEleDesProps);
                     bhomBar.CustomData[AdapterId] = robotBar.Number;
                     if (barTags != null && !barTags.TryGetValue(robotBar.Number, out tags))
                         bhomBar.Tags = tags;
@@ -58,7 +64,12 @@ namespace BH.Adapter.Robot
                 for (int i = 0; i < ids.Count; i++)
                 {
                     RobotBar robotBar = m_RobotApplication.Project.Structure.Bars.Get(System.Convert.ToInt32(ids[i])) as RobotBar;
-                    Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject(robotBar, bhomNodes, bhomSections, bhomMaterial, bhombarReleases);
+                    Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject( robotBar, 
+                                                                        bhomNodes, 
+                                                                        bhomSections, 
+                                                                        bhomMaterial,
+                                                                        bhombarReleases,
+                                                                        bhomFramEleDesProps);
                     bhomBar.CustomData[AdapterId] = robotBar.Number;
                     if (barTags != null && !barTags.TryGetValue(robotBar.Number, out tags))
                         bhomBar.Tags = tags;

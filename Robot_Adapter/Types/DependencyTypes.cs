@@ -5,6 +5,7 @@ using BH.oM.Structural.Loads;
 using BH.oM.Base;
 using System;
 using System.Collections.Generic;
+using BH.oM.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {
@@ -43,7 +44,7 @@ namespace BH.Adapter.Robot
 
         private static Dictionary<Type, List<Type>> m_DependencyTypes = new Dictionary<Type, List<Type>>
         {
-            {typeof(Bar), new List<Type> { typeof(ISectionProperty), typeof(Node), typeof(BarRelease) } },
+            {typeof(Bar), new List<Type> { typeof(ISectionProperty), typeof(Node), typeof(BarRelease), typeof(FramingElementDesignProperties)}},
             {typeof(ISectionProperty), new List<Type> { typeof(Material) } },
             {typeof(Node), new List<Type> { typeof(Constraint6DOF) } },
             {typeof(ILoad), new List<Type> { typeof(Loadcase) } },

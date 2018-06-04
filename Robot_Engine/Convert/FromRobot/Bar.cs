@@ -18,7 +18,12 @@ namespace BH.Engine.Robot
     {
         /***************************************/
 
-        public static Bar ToBHoMObject(this RobotBar robotBar, Dictionary<string,Node> bhomNodes, Dictionary<string, ISectionProperty> bhomSections, Dictionary<string, Material> bhomMaterials, Dictionary<string, BarRelease> barReleases)
+        public static Bar ToBHoMObject( this RobotBar robotBar, 
+                                        Dictionary<string,Node> bhomNodes, 
+                                        Dictionary<string, ISectionProperty> bhomSections, 
+                                        Dictionary<string, Material> bhomMaterials, 
+                                        Dictionary<string, BarRelease> barReleases,
+                                        Dictionary<string, FramingElementDesignProperties> bhomFramEleDesPropList)
         {
             Node startNode = null;  bhomNodes.TryGetValue(robotBar.StartNode.ToString(), out startNode);
             Node endNode = null; bhomNodes.TryGetValue(robotBar.EndNode.ToString(), out endNode);
@@ -26,6 +31,7 @@ namespace BH.Engine.Robot
             ISectionProperty secProp = null;
             Material barMaterial = null;
             BarRelease bhomBarRel = null;
+            FramingElementDesignProperties bhomFramEleDesignProps = null;
 
             if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_SECTION) == -1)
             {
@@ -46,6 +52,20 @@ namespace BH.Engine.Robot
                 }
            }
 
+            if (robotBar.HasLabel(IRobotLabelType.I_LT_MEMBER_TYPE) == -1)
+            {
+                string framEleDesPropsName = robotBar.GetLabelName(IRobotLabelType.I_LT_MEMBER_TYPE);
+                if (bhomFramEleDesPropList.TryGetValue(framEleDesPropsName, out bhomFramEleDesignProps))
+                {
+                    bhomBar.CustomData.Add("FramingElementDesignProperties", bhomFramEleDesignProps);
+                }
+                else
+                { 
+                    BH.Engine.Reflection.Compute.RecordEvent("Framing element design property is not supported", oM.Reflection.Debuging.EventType.Warning);
+                }
+                    
+            }
+
             if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_RELEASE) == -1)
             {
 
@@ -57,6 +77,7 @@ namespace BH.Engine.Robot
             bhomBar.SectionProperty = secProp;
             bhomBar.OrientationAngle = robotBar.Gamma * Math.PI / 180;
             bhomBar.CustomData[AdapterID] = robotBar.Number;
+            bhomBar.CustomData["FramingElementDesignProperties"] = bhomFramEleDesignProps;
 
             if (robotBar.TensionCompression == IRobotBarTensionCompression.I_BTC_COMPRESSION_ONLY)
             {
@@ -70,22 +91,6 @@ namespace BH.Engine.Robot
             {
                 bhomBar.FEAType = BarFEAType.Axial;
             }
-
-            //Custom properties inserted into the custom property dictionary
-            if (robotBar.HasLabel(IRobotLabelType.I_LT_MEMBER_TYPE) == -1)
-            {
-                string memberTypeName = robotBar.GetLabelName(IRobotLabelType.I_LT_MEMBER_TYPE);
-                try
-                {
-                    //bhomBar.CustomData.Add("FramingElementDesignProperties", framingElementDesignProperties[memberTypeName]);
-                }
-                catch
-                {
-                    Compute.RecordEvent("Member type not present in the BHoM list", EventType.Error);
-                }
-            }
-
-
             return bhomBar;       
         }       
         }        

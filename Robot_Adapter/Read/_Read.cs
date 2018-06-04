@@ -55,6 +55,8 @@ namespace BH.Adapter.Robot
                 return new List<ILoad>(); //TODO: Implement load extraction
             if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
                 return new List<BHoMGroup<IBHoMObject>>();
+            if (typeof(FramingElementDesignProperties).IsAssignableFrom(type))
+                return ReadFramingElementDesignProperties();
 
             if (type == typeof(BHoMObject))
             {

@@ -31,8 +31,9 @@ namespace BH.Adapter.Robot
             {
                 IRobotStructure rStructure = m_RobotApplication.Project.Structure;
                 IRobotBarServer barServer = rStructure.Bars;
+
                 m_RobotApplication.Interactive = 0;
-                barServer.BeginMultiOperation();
+
                 List<Bar> bars = bhomBars.ToList();
                 IRobotStructureCache rcache = rStructure.CreateCache();
                 RobotSelection rSelect = rStructure.Selections.Create(IRobotObjectType.I_OT_BAR);
@@ -48,36 +49,45 @@ namespace BH.Adapter.Robot
                 {
                     barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterId]);
 
+                    //if (bhomBar.SectionProperty != null)
+                    //{
+                    string sectionName = "";
+                    string materialName = "";
                     if (bhomBar.SectionProperty != null)
                     {
-                        string sectionName = BH.Engine.Robot.Convert.Match(m_dbSecPropNames, bhomBar.SectionProperty);
-                        string materialName = BH.Engine.Robot.Convert.Match(m_dbMaterialNames, bhomBar.SectionProperty.Material);
+                        sectionName = BH.Engine.Robot.Convert.Match(m_dbSecPropNames, bhomBar.SectionProperty);
+                        materialName = BH.Engine.Robot.Convert.Match(m_dbMaterialNames, bhomBar.SectionProperty.Material);
                         if (sectionName == null)
                             sectionName = bhomBar.SectionProperty.Name;
                         if (materialName == null)
                             materialName = bhomBar.SectionProperty.Material.Name;
-                        
-                        rcache.AddBar(barNum,
-                                      System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),
-                                      System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]),
-                                      sectionName,
-                                      materialName,
-                                      bhomBar.OrientationAngle * 180 / Math.PI);
-                        rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_RELEASE, bhomBar.Release.Name);
-                        if (bhomBar.CustomData.ContainsKey("MemberType"))
-                        {
-                            FramingElementDesignProperties designProps = bhomBar.CustomData["MemberType"] as FramingElementDesignProperties;
-                            if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, designProps.Name) != -1)
-                                Create(designProps);
-                           rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_MEMBER_TYPE, designProps.Name);
-                         }
-                        
                     }
+                    rcache.AddBar(barNum,
+                                  System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),
+                                  System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]),
+                                  sectionName,
+                                  materialName,
+                                  bhomBar.OrientationAngle * 180 / Math.PI);
 
-                    else
+                    rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_RELEASE, bhomBar.Release.Name);
+
+                    
+                    if (bhomBar.CustomData.ContainsKey("FramingElementDesignProperties"));
                     {
-                        nonCacheBars.Add(bhomBar);
-                    }
+                        FramingElementDesignProperties framEleDesProps = bhomBar.CustomData["FramingElementDesignProperties"] as FramingElementDesignProperties;
+                        if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name)!=-1)
+                        {
+                            Create(framEleDesProps);
+                        }
+                        else
+                        {
+                            List<FramingElementDesignProperties> framEleDesPropsList = new List<FramingElementDesignProperties>();
+                            framEleDesPropsList.Add(framEleDesProps);
+                            Update(framEleDesPropsList);
+                        }
+                        rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name);
+                    }                  
+
 
                     if (bhomBar.FEAType == BarFEAType.TensionOnly)
                         tensionBars = tensionBars + barNum.ToString() + ",";
@@ -86,28 +96,20 @@ namespace BH.Adapter.Robot
                     else if (bhomBar.FEAType == BarFEAType.Axial)
                         axialBars = axialBars + barNum.ToString() + ",";
                 }
+                
                 tensionBars.TrimEnd(',');
                 compressionBars.TrimEnd(',');
                 axialBars.TrimEnd(',');
 
                 m_RobotApplication.Project.Structure.ApplyCache(rcache as RobotStructureCache);
 
-                foreach (Bar bhomBar in nonCacheBars)
-                {
-                    barServer.Create(System.Convert.ToInt32(bhomBar.CustomData[AdapterId]),
-                                     System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterId]),
-                                     System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterId]));
-                }
-
                 rSelect.FromText(tensionBars);
                 barServer.SetTensionCompression(rSelect, IRobotBarTensionCompression.I_BTC_TENSION_ONLY);
                 rSelect.FromText(compressionBars);
                 barServer.SetTensionCompression(rSelect, IRobotBarTensionCompression.I_BTC_COMPRESSION_ONLY);
                 barServer.SetTrussBar(axialBars, true);
-
                 
-                barServer.EndMultiOperation();
-                m_RobotApplication.Interactive = 1;
+                
 
                 foreach (Bar bhomBar in bars)
                 {
@@ -117,6 +119,9 @@ namespace BH.Adapter.Robot
                     BH.Engine.Robot.Convert.SetFEAType(rBar, bhomBar);
                 }
                 m_tags[typeof(Bar)] = barTags;
+
+                m_RobotApplication.Interactive = 1;
+
             }
             return true;
         }

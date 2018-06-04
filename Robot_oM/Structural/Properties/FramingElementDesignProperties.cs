@@ -11,8 +11,8 @@ namespace BH.oM.Adapters.Robot
 {
     public class FramingElementDesignProperties : BHoMObject
     {
-        double BucklingLengthCoefficientY { get; set; } = 1;
-        double BucklingLengthCoefficientZ { get; set; } = 1;
+        public double EulerBucklingLengthCoefficientY { get; set; } = 1;
+        public double EulerBucklingLengthCoefficientZ { get; set; } = 1;
 
 
         //IRobotLabel rMemberType = memberTypes.Get(i);

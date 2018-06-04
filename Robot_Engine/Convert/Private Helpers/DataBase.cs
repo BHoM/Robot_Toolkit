@@ -45,6 +45,7 @@ namespace BH.Engine.Robot
                         foreach (string s in dimArray)
                         {
                             string endChar = s.TrimEnd('0');
+                            endChar = endChar.TrimEnd('.');
                             string[] array2 = endChar.Split('.');
                             if (array2.Length == 2)
                             {

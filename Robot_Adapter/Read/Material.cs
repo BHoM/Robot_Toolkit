@@ -40,7 +40,7 @@ namespace BH.Adapter.Robot
                 IRobotLabel rMatLable = rMaterials.Get(i);
                 IRobotMaterialData mData = rMatLable.Data as IRobotMaterialData;
                 MaterialType bhomMatType = BH.Engine.Robot.Convert.GetMaterialType(mData.Type);
-                Material bhomMat = BH.Engine.Common.Create.Material(mData.Name, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO);
+                Material bhomMat = BH.Engine.Common.Create.Material(mData.Name, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO * 0.1);
                 bhomMat.CustomData.Add(AdapterId, mData.Name);
                 bhomMaterials.Add(bhomMat);
             }

@@ -39,7 +39,7 @@ namespace BH.Adapter.Robot
                 if (bar.CustomData.ContainsKey("FramingElementDesignProperties"))
                 {
                     FramingElementDesignProperties framEleDesProps = bar.CustomData["FramingElementDesignProperties"] as FramingElementDesignProperties;
-                    if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name) == -1)
+                    if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name) != -1)
                         Create(framEleDesProps);
                     robotBar.SetLabel(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name);
                 }

@@ -48,32 +48,7 @@ namespace BH.Adapter.Robot
             }
             m_tags[typeof(Node)] = nodeTags;
             return true;
-        }
-
-        protected bool Update(IEnumerable<Bar> bars)
-        {
-            Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
-            foreach (Bar bar in bars)
-            {
-                RobotBar robotBar = m_RobotApplication.Project.Structure.Bars.Get((int)bar.CustomData[AdapterId]) as RobotBar;
-                if (robotBar == null)
-                    return false;
-
-                robotBar.StartNode = System.Convert.ToInt32(bar.StartNode.CustomData[AdapterId]);
-                robotBar.EndNode = System.Convert.ToInt32(bar.EndNode.CustomData[AdapterId]);
-                barTags[System.Convert.ToInt32(bar.CustomData[AdapterId])] = bar.Tags;
-
-
-                if (bar.SectionProperty != null && !string.IsNullOrWhiteSpace(bar.SectionProperty.Name))
-                    robotBar.SetSection(bar.SectionProperty.Name, false);
-
-                robotBar.Gamma = bar.OrientationAngle * Math.PI / 180;
-                BH.Engine.Robot.Convert.SetFEAType(robotBar, bar);
-
-            }
-            m_tags[typeof(Bar)] = barTags;
-            return true;
-        }
+        }     
 
         protected bool Update(IEnumerable<Material> materials)
         {
@@ -149,5 +124,5 @@ namespace BH.Adapter.Robot
             success = Create(nodeConst);
             return success;
         }
-    }
+        }
 }

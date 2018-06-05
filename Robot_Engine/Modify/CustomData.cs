@@ -16,6 +16,8 @@ namespace BH.Engine.Adapters.Robot
 
         public static BHoMObject CutomData(this BHoMObject bhomObj, string key = "", object obj = null)
         {
+            if (bhomObj.Tags == null)
+                bhomObj.Tags = new HashSet<string>();
             BHoMObject new_bhomObj = bhomObj.GetShallowClone() as BHoMObject;
             Dictionary<string, object> customData = bhomObj.CustomData;
             if (key != "" && obj != null)

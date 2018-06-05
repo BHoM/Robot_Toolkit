@@ -106,6 +106,7 @@
     <Compile Include="Read\_Read.cs" />
     <Compile Include="Read\Results.cs" />
     <Compile Include="Update\FramingElementDesignProperties.cs" />
+    <Compile Include="Update\Bars.cs" />
     <Compile Include="Update\UpdateObjects.cs" />
     <Compile Include="Update\UpdateProperty.cs" />
     <Compile Include="Types\Comparer.cs" />

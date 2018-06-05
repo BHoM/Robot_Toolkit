@@ -33,8 +33,7 @@ namespace BH.Adapter.Robot
                 Config.MergeWithComparer = true;
                 Config.ProcessInMemory = false;
 
-                if (robotConfig != null)
-                    RobotConfig = robotConfig;
+                RobotConfig = (robotConfig == null) ? new RobotConfig() : robotConfig;
 
                 if (IsApplicationRunning())
                 {
@@ -63,7 +62,7 @@ namespace BH.Adapter.Robot
                     m_RobotApplication.Project.Open(filePath);
                 }
 
-                SetProjectPreferences(m_RobotApplication, robotConfig);
+                SetProjectPreferences(m_RobotApplication, RobotConfig);
             }
         }
 
@@ -101,7 +100,9 @@ namespace BH.Adapter.Robot
 
         public static bool SetProjectPreferences(RobotApplication robotApp, RobotConfig robotConfig)
         {
-            robotApp.Project.Preferences.SetActiveCode(IRobotCodeType.I_CT_STEEL_STRUCTURES, Query.GetStringFromEnum(robotConfig.DatabaseSettings.SteelDesignCode));
+            if (robotConfig.DatabaseSettings.SteelDesignCode != DesignCode_Steel.Default)
+                robotApp.Project.Preferences.SetActiveCode(IRobotCodeType.I_CT_STEEL_STRUCTURES, Query.GetStringFromEnum(robotConfig.DatabaseSettings.SteelDesignCode));
+
             robotApp.Project.Preferences.SetCurrentDatabase(IRobotDatabaseType.I_DT_SECTIONS, Query.GetStringFromEnum(robotConfig.DatabaseSettings.SectionDatabase));
             return true;
         }

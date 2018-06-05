@@ -42,7 +42,8 @@ namespace BH.oM.Adapters.Robot
 
     public enum DesignCode_Steel
     {
-        BS5950 = 0,
+        Default = 0,
+        BS5950,
         BS5950_2000,
         BS_EN_1993_1_2005_NA_2008_A1_2014   
     }

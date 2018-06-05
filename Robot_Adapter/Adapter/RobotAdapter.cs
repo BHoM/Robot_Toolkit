@@ -44,10 +44,10 @@ namespace BH.Adapter.Robot
                 {
                     try
                     {
+                        m_RobotApplication = new RobotApplication();
                         m_RobotApplication.Visible = 1;
                         m_RobotApplication.Interactive = 1;
-                        m_RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
-                        m_RobotApplication = new RobotApplication();
+                        m_RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);                        
                     }
                     catch
                     {

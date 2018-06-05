@@ -7,6 +7,7 @@ using BH.oM.Structural.Loads;
 using RobotOM;
 using System.Diagnostics;
 using BH.oM.Adapters.Robot;
+using BH.Engine.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {
@@ -54,13 +55,15 @@ namespace BH.Adapter.Robot
                     }
                 }
 
-                ReadMaterialNamesFromDB(RobotConfig.DatabaseSettings.materialDatabase.ToString());
-                ReadSecPropNamesFromDB(RobotConfig.DatabaseSettings.sectionDatabase.ToString());
+                ReadMaterialNamesFromDB(RobotConfig.DatabaseSettings.MaterialDatabase.ToString());
+                ReadSecPropNamesFromDB(RobotConfig.DatabaseSettings.SectionDatabase.ToString());
 
                 if (!string.IsNullOrWhiteSpace(filePath))
                 {
                     m_RobotApplication.Project.Open(filePath);
                 }
+
+                SetProjectPreferences(m_RobotApplication, robotConfig);
             }
         }
 
@@ -96,24 +99,10 @@ namespace BH.Adapter.Robot
             return typeTags;
         }
 
-        public static string getNameFromEnum(DesignCode_SteelFramingElements designCode)
-        {
-            switch (designCode)
-            {
-                case DesignCode_SteelFramingElements.BS5950:
-                    return "BS 5950";
-                case DesignCode_SteelFramingElements.BS5950_2000:
-                    return "BS5950:2000";
-                case DesignCode_SteelFramingElements.BS_EN_1993_1_2005_NA_2008_A1_2014:
-                    return "BS-EN 1993-1:2005/NA:2008/A1:2014";
-                default:
-                    return "BS-EN 1993-1:2005/NA:2008/A1:2014";
-            }
-        }
-
         public static bool SetProjectPreferences(RobotApplication robotApp, RobotConfig robotConfig)
         {
-            robotApp.Project.Preferences.SetActiveCode(IRobotCodeType.I_CT_STEEL_STRUCTURES, getNameFromEnum(robotConfig.DatabaseSettings.designCode_SteelFramingElements));
+            robotApp.Project.Preferences.SetActiveCode(IRobotCodeType.I_CT_STEEL_STRUCTURES, Query.GetStringFromEnum(robotConfig.DatabaseSettings.SteelDesignCode));
+            robotApp.Project.Preferences.SetCurrentDatabase(IRobotDatabaseType.I_DT_SECTIONS, Query.GetStringFromEnum(robotConfig.DatabaseSettings.SectionDatabase));
             return true;
         }
         /***************************************************/

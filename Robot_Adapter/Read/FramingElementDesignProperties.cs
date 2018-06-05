@@ -49,7 +49,7 @@ namespace BH.Adapter.Robot
 
                 string steelMembersCodeType = m_RobotApplication.Project.Preferences.GetActiveCode(IRobotCodeType.I_CT_STEEL_STRUCTURES);
 
-                if (steelMembersCodeType == "BS-EN 1993-1:2005/NA:2008/A1:2014")
+                if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.BS_EN_1993_1_2005_NA_2008_A1_2014))
                 {
                     IRDimMembParamsE32 memberDesignParams_EC3 = memberDef.CodeParams;
                     bhomDesignProps.EulerBucklingLengthCoefficientY = memberDesignParams_EC3.BuckLengthCoeffY;
@@ -97,7 +97,7 @@ namespace BH.Adapter.Robot
                     double yieldStrengthValue = memberDesignParams_EC3.YieldStrengthValue;
                 }
 
-                if (steelMembersCodeType == "BS5950")
+                if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.BS5950))
                 {
                     IRDimMembParamsBS59 memberDesignParams_BS5950 = memberDef.CodeParams;
                     bhomDesignProps.EulerBucklingLengthCoefficientY = memberDesignParams_BS5950.BuckLengthCoeffY;
@@ -105,7 +105,7 @@ namespace BH.Adapter.Robot
                 }
 
 
-                if (steelMembersCodeType == "BS 5950:2000")
+                if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.BS5950_2000))
                 {
                     IRDimMembParamsBS59_2000 memberDesignParams_BS5950_2000 = memberDef.CodeParams;
                     bhomDesignProps.EulerBucklingLengthCoefficientY = memberDesignParams_BS5950_2000.BuckLengthCoeffY;

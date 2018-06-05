@@ -9,7 +9,8 @@ namespace BH.Engine.Adapters.Robot
 {
     public static partial class Create
     {
-        public static RobotConfig RobotConfig(AdvancedSettings advancedSettings = null, DatabaseSettings databaseSettings = null)
+        public static RobotConfig RobotConfig(  AdvancedSettings advancedSettings = null, 
+                                                DatabaseSettings databaseSettings = null)
         {
             RobotConfig robotConfig = new oM.Adapters.Robot.RobotConfig();
             if (advancedSettings != null)

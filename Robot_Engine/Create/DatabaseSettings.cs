@@ -9,12 +9,12 @@ namespace BH.Engine.Adapters.Robot
 {
     public static partial class Create
     {
-        public static DatabaseSettings DatabaseSettings(MaterialDB materialDB = 0, 
-                                                        SectionDB sectionDB = 0)
+        public static DatabaseSettings DatabaseSettings(MaterialDB materialDB = MaterialDB.British, 
+                                                        SectionDB sectionDB = SectionDB.UKST)
         {
             DatabaseSettings databaseSettings = new DatabaseSettings();
-            databaseSettings.materialDatabase = materialDB;
-            databaseSettings.sectionDatabase = sectionDB;
+            databaseSettings.MaterialDatabase = materialDB;
+            databaseSettings.SectionDatabase = sectionDB;
                       
             return databaseSettings;
         }
@@ -26,11 +26,11 @@ namespace BH.Engine.Adapters.Robot
 
             MaterialDB mat_enum = 0;
             if (Enum.TryParse(materialDB, true, out mat_enum))
-                databaseSettings.materialDatabase = (MaterialDB)mat_enum;
+                databaseSettings.MaterialDatabase = (MaterialDB)mat_enum;
 
             SectionDB sec_enum = 0;
             if (Enum.TryParse(sectionDB, true, out sec_enum))
-                databaseSettings.sectionDatabase = (SectionDB)sec_enum;
+                databaseSettings.SectionDatabase = (SectionDB)sec_enum;
 
             return databaseSettings;
         }

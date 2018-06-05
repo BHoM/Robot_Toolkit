@@ -40,7 +40,7 @@ namespace BH.oM.Adapters.Robot
 
     }
 
-    public enum DesignCode_SteelFramingElements
+    public enum DesignCode_Steel
     {
         BS5950 = 0,
         BS5950_2000,

@@ -43,10 +43,10 @@ namespace BH.Adapter.Robot
                 {
                     try
                     {
-                        m_RobotApplication = new RobotApplication();
                         m_RobotApplication.Visible = 1;
                         m_RobotApplication.Interactive = 1;
                         m_RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
+                        m_RobotApplication = new RobotApplication();
                     }
                     catch
                     {
@@ -96,42 +96,26 @@ namespace BH.Adapter.Robot
             return typeTags;
         }
 
-        private void ReadMaterialNamesFromDB(string dbName)
+        public static string getNameFromEnum(DesignCode_SteelFramingElements designCode)
         {
-            m_RobotApplication.Project.Preferences.Materials.Load(dbName);
-            RobotNamesArray defaultMaterial = m_RobotApplication.Project.Preferences.Materials.GetAll();
-            for (int i = 1; i <= defaultMaterial.Count; i++)
+            switch (designCode)
             {
-                if (!m_dbMaterialNames.Contains(defaultMaterial.Get(i)))
-                    m_dbMaterialNames.Add(defaultMaterial.Get(i));
+                case DesignCode_SteelFramingElements.BS5950:
+                    return "BS 5950";
+                case DesignCode_SteelFramingElements.BS5950_2000:
+                    return "BS5950:2000";
+                case DesignCode_SteelFramingElements.BS_EN_1993_1_2005_NA_2008_A1_2014:
+                    return "BS-EN 1993-1:2005/NA:2008/A1:2014";
+                default:
+                    return "BS-EN 1993-1:2005/NA:2008/A1:2014";
             }
         }
 
-        private void ReadSecPropNamesFromDB(string dbName)
+        public static bool SetProjectPreferences(RobotApplication robotApp, RobotConfig robotConfig)
         {
-            m_RobotApplication.Project.Preferences.SetCurrentDatabase(IRobotDatabaseType.I_DT_SECTIONS, dbName);
-            RobotSectionDatabaseList dbList = m_RobotApplication.Project.Preferences.SectionsActive;
-            List<string> secNames = new List<string>();
-            RobotSectionDatabase rDataBase = null;
-
-            for (int i = 1; i < dbList.Count; i++)
-            {
-                if (dbList.GetDatabase(i).Name == "UKST")
-                {
-                    rDataBase = dbList.GetDatabase(i);
-                    break;
-                }
-            }
-
-            RobotNamesArray sections = rDataBase.GetAll();
-
-            for (int i = 1; i < sections.Count; i++)
-            {
-                if (!m_dbSecPropNames.Contains(sections.Get(i)))
-                    m_dbSecPropNames.Add(sections.Get(i));
-            }
+            robotApp.Project.Preferences.SetActiveCode(IRobotCodeType.I_CT_STEEL_STRUCTURES, getNameFromEnum(robotConfig.DatabaseSettings.designCode_SteelFramingElements));
+            return true;
         }
-
         /***************************************************/
         /**** Private Fields                            ****/
         /***************************************************/
@@ -145,5 +129,12 @@ namespace BH.Adapter.Robot
         //private Dictionary<string, string> m_MaterialTaggs = new Dictionary<string, string>();
         //private Dictionary<string, string> m_SectionPropertyTaggs = new Dictionary<string, string>();
         //private Dictionary<string, string> m_SupportTaggs = new Dictionary<string, string>();
+
+
+        /***************************************************/
+        /**** Private Helper Methods                    ****/
+        /***************************************************/
+
+        
     }
 }

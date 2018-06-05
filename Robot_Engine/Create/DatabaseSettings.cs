@@ -9,7 +9,8 @@ namespace BH.Engine.Adapters.Robot
 {
     public static partial class Create
     {
-        public static DatabaseSettings DatabaseSettings(MaterialDB materialDB = 0, SectionDB sectionDB = 0)
+        public static DatabaseSettings DatabaseSettings(MaterialDB materialDB = 0, 
+                                                        SectionDB sectionDB = 0)
         {
             DatabaseSettings databaseSettings = new DatabaseSettings();
             databaseSettings.materialDatabase = materialDB;
@@ -18,7 +19,8 @@ namespace BH.Engine.Adapters.Robot
             return databaseSettings;
         }
 
-        public static DatabaseSettings DatabaseSettings(string materialDB = "British", string sectionDB = "UKST")
+        public static DatabaseSettings DatabaseSettings(string materialDB = "British", 
+                                                        string sectionDB = "UKST")
         {
             DatabaseSettings databaseSettings = new DatabaseSettings();
 

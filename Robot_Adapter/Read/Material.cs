@@ -47,8 +47,19 @@ namespace BH.Adapter.Robot
             return bhomMaterials;
         }
 
-        /***************************************************/      
-        
+        private void ReadMaterialNamesFromDB(string dbName)
+        {
+            m_RobotApplication.Project.Preferences.Materials.Load(dbName);
+            RobotNamesArray defaultMaterial = m_RobotApplication.Project.Preferences.Materials.GetAll();
+            for (int i = 1; i <= defaultMaterial.Count; i++)
+            {
+                if (!m_dbMaterialNames.Contains(defaultMaterial.Get(i)))
+                    m_dbMaterialNames.Add(defaultMaterial.Get(i));
+            }
+        }
+
+        /***************************************************/
+
 
         /***************************************************/
         /**** Private Fields                            ****/

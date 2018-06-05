@@ -41,7 +41,6 @@ namespace BH.Adapter.Robot
                 memberDesignParams_EC3.BuckLengthCoeffY = framEleDesProps.EulerBucklingLengthCoefficientY;
                 memberDesignParams_EC3.BuckLengthCoeffZ = framEleDesProps.EulerBucklingLengthCoefficientZ;
                 memberDef.CodeParams = memberDesignParams_EC3;
-
             }
 
             if (steelMembersCodeType == "BS5950")

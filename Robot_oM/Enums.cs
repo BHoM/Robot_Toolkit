@@ -26,7 +26,7 @@ namespace BH.oM.Adapters.Robot
 
     public enum BarProperties
     {
-        MemberType,
+        FramingElementDesignProperties,
         StructureObjectType                
     }
 
@@ -38,5 +38,12 @@ namespace BH.oM.Adapters.Robot
     public enum Commands
     {
 
+    }
+
+    public enum DesignCode_SteelFramingElements
+    {
+        BS5950 = 0,
+        BS5950_2000,
+        BS_EN_1993_1_2005_NA_2008_A1_2014   
     }
 }

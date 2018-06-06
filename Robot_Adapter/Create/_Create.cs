@@ -103,14 +103,6 @@ namespace BH.Adapter.Robot
                 {
                     success = CreateCollection(objects as IEnumerable<FramingElementDesignProperties>);
                 }
-
-                if (objects.First() is Dictionary<string,object>)
-                {
-                    Dictionary<string, object> customData = objects.First() as Dictionary<string, object>;
-                    if (customData.ContainsKey("FramingElementDesignProperties"))
-                        success = CreateCollection(objects as IEnumerable<FramingElementDesignProperties>);
-                }
-
             }
             //success = CreateObjects(objects as dynamic);
             updateview();

@@ -93,7 +93,6 @@
     <Compile Include="Create\_Create.cs" />
     <Compile Include="Execute\_Execute.cs" />
     <Compile Include="Adapter\NextId.cs" />
-    <Compile Include="Read\CustomData.cs" />
     <Compile Include="Read\Bar.cs" />
     <Compile Include="Read\Node.cs" />
     <Compile Include="Read\Constraint.cs" />

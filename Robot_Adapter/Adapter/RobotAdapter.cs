@@ -62,7 +62,7 @@ namespace BH.Adapter.Robot
                     m_RobotApplication.Project.Open(filePath);
                 }
 
-                SetProjectPreferences(m_RobotApplication, RobotConfig);
+                SetProjectPreferences(RobotConfig);
             }
         }
 
@@ -98,13 +98,12 @@ namespace BH.Adapter.Robot
             return typeTags;
         }
 
-        public static bool SetProjectPreferences(RobotApplication robotApp, RobotConfig robotConfig)
+        private void SetProjectPreferences(RobotConfig robotConfig)
         {
             if (robotConfig.DatabaseSettings.SteelDesignCode != DesignCode_Steel.Default)
-                robotApp.Project.Preferences.SetActiveCode(IRobotCodeType.I_CT_STEEL_STRUCTURES, Query.GetStringFromEnum(robotConfig.DatabaseSettings.SteelDesignCode));
-
-            robotApp.Project.Preferences.SetCurrentDatabase(IRobotDatabaseType.I_DT_SECTIONS, Query.GetStringFromEnum(robotConfig.DatabaseSettings.SectionDatabase));
-            return true;
+                m_RobotApplication.Project.Preferences.SetActiveCode(IRobotCodeType.I_CT_STEEL_STRUCTURES, Query.GetStringFromEnum(robotConfig.DatabaseSettings.SteelDesignCode));
+            
+            m_RobotApplication.Project.Preferences.SetCurrentDatabase(IRobotDatabaseType.I_DT_SECTIONS, Query.GetStringFromEnum(robotConfig.DatabaseSettings.SectionDatabase));
         }
         /***************************************************/
         /**** Private Fields                            ****/

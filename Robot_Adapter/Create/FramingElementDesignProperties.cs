@@ -26,7 +26,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        public bool Create(FramingElementDesignProperties framEleDesProps)
+        public bool Create(FramingElementDesignProperties framEleDesProps) //TODO: move the label part to convert such that duplicate code in Update can be removed
         {
 
             IRobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;

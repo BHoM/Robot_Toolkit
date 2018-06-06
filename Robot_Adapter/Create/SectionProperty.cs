@@ -28,11 +28,13 @@ namespace BH.Adapter.Robot
         {
             foreach (ISectionProperty p in secProp)
             {
-                IRobotLabel label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, p.Name);
-                IRobotBarSectionData secData = label.Data;
+                IRobotLabel label;
+                IRobotBarSectionData secData;
                 string match = BH.Engine.Robot.Convert.Match(m_dbSecPropNames, p);
                 if (match != null)
                 {
+                    label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, match);
+                    secData = label.Data;
                     string matName = BH.Engine.Robot.Convert.Match(m_dbMaterialNames, p.Material);
                     if (matName == null)
                         matName = p.Material.Name;
@@ -44,6 +46,8 @@ namespace BH.Adapter.Robot
 
                 else
                 {
+                    label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, p.Name);
+                    secData = label.Data;
                     BH.Engine.Robot.Convert.ISectionProperty(p, secData);
                     m_RobotApplication.Project.Structure.Labels.Store(label);
                 }

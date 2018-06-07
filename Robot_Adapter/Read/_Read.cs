@@ -51,11 +51,11 @@ namespace BH.Adapter.Robot
                 return ReadLoadCase();
             if (typeof(ISectionProperty).IsAssignableFrom(type))
                 return ReadSectionProperties();
-            else if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
+            if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
                 return new List<ILoad>(); //TODO: Implement load extraction
             if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
                 return new List<BHoMGroup<IBHoMObject>>();
-            if (typeof(FramingElementDesignProperties).IsAssignableFrom(type))
+            if (type == typeof(FramingElementDesignProperties))
                 return ReadFramingElementDesignProperties();
 
             if (type == typeof(BHoMObject))

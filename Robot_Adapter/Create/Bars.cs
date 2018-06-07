@@ -72,7 +72,7 @@ namespace BH.Adapter.Robot
                     rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_RELEASE, bhomBar.Release.Name);
 
                     
-                    if (bhomBar.CustomData.ContainsKey("FramingElementDesignProperties"));
+                    if (bhomBar.CustomData.ContainsKey("FramingElementDesignProperties"))
                     {
                         FramingElementDesignProperties framEleDesProps = bhomBar.CustomData["FramingElementDesignProperties"] as FramingElementDesignProperties;
                         if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name)!=-1)

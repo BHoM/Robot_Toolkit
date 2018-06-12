@@ -33,17 +33,35 @@ namespace BH.Adapter.Robot
         {
             IRobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotCollection rMaterials = labelServer.GetMany(IRobotLabelType.I_LT_MATERIAL);
+            IRobotMaterialData mData;
+            Material bhomMat = null;
             List<Material> bhomMaterials = new List<Material>();
+
+            foreach (string matName in m_dbMaterialNames)
+            {
+                IRobotLabel label = labelServer.Create(IRobotLabelType.I_LT_MATERIAL, "");
+                mData = label.Data;
+                mData.LoadFromDBase(matName);
+                MaterialType bhomMatType = BH.Engine.Robot.Convert.GetMaterialType(mData.Type);
+                bhomMat = BH.Engine.Common.Create.Material(matName, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO);
+                if (bhomMat != null)
+                    bhomMaterials.Add(bhomMat);
+            }
 
             for (int i = 1; i <= rMaterials.Count; i++)
             {
                 IRobotLabel rMatLable = rMaterials.Get(i);
-                IRobotMaterialData mData = rMatLable.Data as IRobotMaterialData;
-                MaterialType bhomMatType = BH.Engine.Robot.Convert.GetMaterialType(mData.Type);
-                Material bhomMat = BH.Engine.Common.Create.Material(mData.Name, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO * 0.1);
-                bhomMat.CustomData.Add(AdapterId, mData.Name);
-                bhomMaterials.Add(bhomMat);
+                mData = rMatLable.Data as IRobotMaterialData;
+                if (!m_dbMaterialNames.Contains(mData.Name))
+                {
+                    MaterialType bhomMatType = BH.Engine.Robot.Convert.GetMaterialType(mData.Type);
+                    bhomMat = BH.Engine.Common.Create.Material(mData.Name, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO * 0.1);
+                    bhomMat.CustomData.Add(AdapterId, mData.Name);
+                    if (bhomMat != null)
+                        bhomMaterials.Add(bhomMat);
+                }
             }
+
             return bhomMaterials;
         }
 

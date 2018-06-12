@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using BH.oM.DataManipulation.Queries;
@@ -57,10 +58,11 @@ namespace BH.Adapter.Robot
                 ReadMaterialNamesFromDB(RobotConfig.DatabaseSettings.MaterialDatabase.ToString());
                 ReadSecPropNamesFromDB(RobotConfig.DatabaseSettings.SectionDatabase.ToString());
 
-                if (!string.IsNullOrWhiteSpace(filePath))
+                if (!string.IsNullOrWhiteSpace(filePath) && File.Exists(filePath))
                 {
                     m_RobotApplication.Project.Open(filePath);
                 }
+
 
                 SetProjectPreferences(RobotConfig);
             }

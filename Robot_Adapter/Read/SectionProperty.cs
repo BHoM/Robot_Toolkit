@@ -47,15 +47,6 @@ namespace BH.Adapter.Robot
                    bhomMat = materials[secData.MaterialName];
                 }
 
-                else if(m_dbMaterialNames.Contains(secData.MaterialName))
-                {
-                    IRobotLabel label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_MATERIAL, "");
-                    IRobotMaterialData matData = label.Data;
-                    matData.LoadFromDBase(secData.MaterialName);
-                    MaterialType bhomMatType = BH.Engine.Robot.Convert.GetMaterialType(matData.Type);
-                    bhomMat = BH.Engine.Common.Create.Material(secData.MaterialName, bhomMatType, matData.E, matData.NU, matData.LX, matData.RO);
-                    bhomSec = BH.Engine.Robot.Convert.IBHoMSection(secData, bhomMat);
-                }
                 if (bhomSec != null)
                 {
                     bhomSec.Material = bhomMat;

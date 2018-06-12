@@ -242,13 +242,7 @@ namespace BH.Engine.Robot
                 switch (secData.ShapeType)
                 {
                     case IRobotBarSectionShapeType.I_BSST_USER_I_BISYM:
-                        sectionProfile = BH.Engine.Structure.Create.ISectionProfile(d, bf, Tw, Tf, ri, r);
-                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
-
                     case IRobotBarSectionShapeType.I_BSST_IPE:
-                        sectionProfile = BH.Engine.Structure.Create.ISectionProfile(d, bf, Tw, Tf, ri, r);
-                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
-
                     case IRobotBarSectionShapeType.I_BSST_HEA:
                         sectionProfile = BH.Engine.Structure.Create.ISectionProfile(d, bf, Tw, Tf, ri, r);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);

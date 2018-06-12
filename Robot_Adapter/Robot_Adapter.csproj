@@ -96,6 +96,8 @@
     <Compile Include="Read\Bar.cs" />
     <Compile Include="Read\Node.cs" />
     <Compile Include="Read\Constraint.cs" />
+    <Compile Include="Read\Panel.cs" />
+    <Compile Include="Read\Property2D.cs" />
     <Compile Include="Read\SectionProperty.cs" />
     <Compile Include="Read\Material.cs" />
     <Compile Include="Read\Release.cs" />

@@ -59,6 +59,10 @@ namespace BH.Adapter.Robot
                 {
                     index = m_RobotApplication.Project.Structure.Cases.FreeNumber;
                 }
+                if (type == typeof(PanelPlanar))
+                {
+                    index = m_RobotApplication.Project.Structure.Objects.FreeNumber;
+                }
                 if (type == typeof(LoadCombination))
                 {
                     index = m_RobotApplication.Project.Structure.Cases.FreeNumber;

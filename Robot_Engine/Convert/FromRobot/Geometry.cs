@@ -5,6 +5,7 @@ using GeometryEngine = BH.Engine.Geometry;
 using RobotOM;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
 using BH.Engine.Reflection;
@@ -18,7 +19,7 @@ namespace BH.Engine.Robot
     {
         /***************************************/
 
-        public static Point ToBHoMGeometry(RobotGeoPoint3D point)
+        public static Point ToBHoMGeometry(this RobotGeoPoint3D point)
         {
             return new Point { X = point.X, Y = point.Y, Z = point.Z };
         }
@@ -28,7 +29,7 @@ namespace BH.Engine.Robot
             return (GeometryEngine.Create.Circle(ToBHoMGeometry(circle.P1 as dynamic), ToBHoMGeometry(circle.P2 as dynamic), ToBHoMGeometry(circle.P3 as dynamic)));
         }
 
-        public static Arc ToBHoMGeometry(this RobotGeoArc arc)
+        public static Arc ToBHoMGeometry(this IRobotGeoArc arc)
         {
             return new Arc { Start = ToBHoMGeometry(arc.P1 as dynamic), Middle = ToBHoMGeometry(arc.P2 as dynamic), End = ToBHoMGeometry(arc.P3 as dynamic) };
         }
@@ -55,10 +56,12 @@ namespace BH.Engine.Robot
             {
                 segment1 = contour.Segments.Get(j) as RobotGeoSegment;
                 segment2 = contour.Segments.Get(j % contour.Segments.Count + 1) as RobotGeoSegment;
-
                 if (segment1.Type == IRobotGeoSegmentType.I_GST_ARC)
                 {
-                    polycurve.Curves.Add(ToBHoMGeometry(segment1 as dynamic));
+                    RobotGeoSegmentArc arcSeg = segment1 as RobotGeoSegmentArc;
+
+                    BH.oM.Geometry.Arc bhomArc = GeometryEngine.Create.Arc(arcSeg.P1.ToBHoMGeometry(), arcSeg.P2.ToBHoMGeometry(), segment2.P1.ToBHoMGeometry());
+                    polycurve.Curves.Add(bhomArc);
                 }
                 else
                 {

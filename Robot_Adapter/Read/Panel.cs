@@ -46,9 +46,9 @@ namespace BH.Adapter.Robot
                     RobotObjObject rpanel = (RobotObjObject)rPanels.Get(i);
                     PanelPlanar BHoMPanel = null;
 
-                    if (rpanel.Main.GetGeometry().Type == IRobotGeoObjectType.I_GOT_CONTOUR && rpanel.Main.Attribs.Meshed == 1)
+                    if (rpanel.Main.Attribs.Meshed == 1)
                     {
-                        ICurve outline = BH.Engine.Robot.Convert.ToBHoMGeometry(rpanel.Main.GetGeometry() as RobotGeoContour);
+                        ICurve outline = BH.Engine.Robot.Convert.ToBHoMGeometry(rpanel.Main.GetGeometry() as dynamic);
                         List<Opening> openings = new List<Opening>();
                         BHoMPanel = BH.Engine.Structure.Create.PanelPlanar(outline, openings);
 
@@ -60,7 +60,6 @@ namespace BH.Adapter.Robot
                         }
                         BHoMPanel.CustomData[AdapterId] = rpanel.Number;
                     }
-
                     BHoMPanels.Add(BHoMPanel);
                 }
             }

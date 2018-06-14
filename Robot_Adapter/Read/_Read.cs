@@ -34,7 +34,7 @@ namespace BH.Adapter.Robot
             if (type == typeof(Material))
                 return ReadMaterial();
             if (type == typeof(PanelPlanar))
-                return ReadPanel();
+                return ReadPanels();
             if (type == typeof(MeshFace))
                 return new List<MeshFace>();
             if (type == typeof(IProperty2D))
@@ -68,7 +68,7 @@ namespace BH.Adapter.Robot
                 objects.AddRange(ReadSectionProperties());
                 objects.AddRange(ReadNodes());
                 objects.AddRange(ReadBars());
-                objects.AddRange(ReadPanel());
+                objects.AddRange(ReadPanels());
                 //objects.AddRange(ReadDesignGroups());
                 //objects.AddRange(ReadFramingElementDesignProperties());
                 return objects;

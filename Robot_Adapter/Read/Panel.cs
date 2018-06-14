@@ -29,7 +29,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        public List<PanelPlanar> ReadPanel(List<string> ids = null)
+        public List<PanelPlanar> ReadPanels(List<string> ids = null)
         {
             Dictionary<string, IProperty2D> BHoMProperties = ReadProperty2D().ToDictionary(x => x.Name);
             List<PanelPlanar> BHoMPanels = new List<PanelPlanar>();

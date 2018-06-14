@@ -142,6 +142,26 @@ namespace BH.Engine.Robot
             return name;          
         }
 
+        public static List<Opening> FindOpening(ICurve panelOutline, List<Opening> openings)
+        {
+            List<Opening> openingsInPanel = new List<Opening>();
+
+            foreach (Opening o in openings)
+            {
+                List<ICurve> crvsOpening = new List<ICurve>();
+                foreach (Edge e in o.Edges)
+                {
+                    crvsOpening.Add(e.Curve);
+                }
+                PolyCurve crv = BH.Engine.Geometry.Modify.IJoin(crvsOpening)[0];
+                List<Point> pts = new List<Point>();
+                pts.Add(crv.Bounds().Centre());
+                if (panelOutline.IIsContaining(pts))
+                    openingsInPanel.Add(o);
+            }
+            return openingsInPanel;
+        }
+
 
     }
 }

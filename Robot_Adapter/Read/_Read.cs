@@ -29,6 +29,8 @@ namespace BH.Adapter.Robot
                 return ReadNodes();
             if (type == typeof(Bar))
                 return ReadBars();
+            if (type == typeof(Opening))
+                return ReadOpenings();
             if (type == typeof(Constraint6DOF))
                 return ReadConstraints6DOF();
             if (type == typeof(Material))

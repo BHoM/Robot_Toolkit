@@ -35,6 +35,7 @@ namespace BH.Adapter.Robot
             List<PanelPlanar> BHoMPanels = new List<PanelPlanar>();
             IRobotStructure rStructure = m_RobotApplication.Project.Structure;
             List<Material> bhomMaterials = new List<Material>();
+            List<Opening> allOpenings = ReadOpenings();
 
             if (ids == null)
             {
@@ -49,7 +50,7 @@ namespace BH.Adapter.Robot
                     if (rpanel.Main.Attribs.Meshed == 1)
                     {
                         ICurve outline = BH.Engine.Robot.Convert.ToBHoMGeometry(rpanel.Main.GetGeometry() as dynamic);
-                        List<Opening> openings = new List<Opening>();
+                        List<Opening> openings = BH.Engine.Robot.Convert.FindOpening(outline, allOpenings);
                         BHoMPanel = BH.Engine.Structure.Create.PanelPlanar(outline, openings);
                         BHoMPanel.CustomData[AdapterId] = rpanel.Number;
 

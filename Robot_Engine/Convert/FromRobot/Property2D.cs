@@ -35,8 +35,9 @@ namespace BH.Engine.Robot
                     switch (homoData.Type)
                     {
                         case IRobotThicknessHomoType.I_THT_CONSTANT:
-                        case IRobotThicknessHomoType.I_THT_VARIABLE_ON_PLANE:
                             BHoMProperty = new ConstantThickness { Name = rLabel.Name, Thickness = homoData.ThickConst, Material = mat};
+                            break;
+                        case IRobotThicknessHomoType.I_THT_VARIABLE_ON_PLANE:                            
                             break;
                     }
                     break;

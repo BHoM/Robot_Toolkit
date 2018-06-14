@@ -25,8 +25,10 @@ namespace BH.Engine.Robot
             Material mat = null;
             if (Material.ContainsKey(data.MaterialName))
                 mat = Material[data.MaterialName];
+            else
+                BH.Engine.Reflection.Compute.RecordEvent("Property2D " + rLabel.Name + "has no material assigned", oM.Reflection.Debuging.EventType.Warning);
 
-                IProperty2D BHoMProperty = null;
+            IProperty2D BHoMProperty = null;
 
             switch (data.ThicknessType)
             {

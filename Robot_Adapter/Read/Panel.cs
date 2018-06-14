@@ -51,14 +51,20 @@ namespace BH.Adapter.Robot
                         ICurve outline = BH.Engine.Robot.Convert.ToBHoMGeometry(rpanel.Main.GetGeometry() as dynamic);
                         List<Opening> openings = new List<Opening>();
                         BHoMPanel = BH.Engine.Structure.Create.PanelPlanar(outline, openings);
+                        BHoMPanel.CustomData[AdapterId] = rpanel.Number;
 
                         if (rpanel.HasLabel(IRobotLabelType.I_LT_PANEL_THICKNESS) != 0)
                         {
                             string propName = rpanel.GetLabelName(IRobotLabelType.I_LT_PANEL_THICKNESS);
                             if (BHoMProperties.ContainsKey(propName))
                                 BHoMPanel.Property = BHoMProperties[propName];
+                            else
+                                BH.Engine.Reflection.Compute.RecordEvent("Failed to convert/create ConstantThickness property for panel " + rpanel.Number.ToString(), oM.Reflection.Debuging.EventType.Warning);
                         }
-                        BHoMPanel.CustomData[AdapterId] = rpanel.Number;
+                        else
+                        {
+                            BH.Engine.Reflection.Compute.RecordEvent("Panel " + rpanel.Number.ToString() + " either has no property-label or the Property2D for this Robot label is not implemented", oM.Reflection.Debuging.EventType.Warning);
+                        }
                     }
                     BHoMPanels.Add(BHoMPanel);
                 }

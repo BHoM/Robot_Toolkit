@@ -39,7 +39,6 @@ namespace BH.Adapter.Robot
 
             for (int i = 1; i <= rThicknessProps.Count; i++)
             {
-
                 IRobotLabel rThicknessProp = rThicknessProps.Get(i);
                 BHoMProps.Add(BH.Engine.Robot.Convert.ToBHoMObject(rThicknessProp, BHoMMat));
             }

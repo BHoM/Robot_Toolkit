@@ -246,8 +246,9 @@ namespace BH.Engine.Robot
                     case IRobotBarSectionShapeType.I_BSST_HEA:
                         sectionProfile = BH.Engine.Structure.Create.ISectionProfile(d, bf, Tw, Tf, ri, r);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
-
+                        
                     case IRobotBarSectionShapeType.I_BSST_USER_RECT:
+                    case IRobotBarSectionShapeType.I_BSST_TREC:
                         sectionProfile = BH.Engine.Structure.Create.BoxProfile(d, bf, Tf, 0, 0);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
@@ -261,6 +262,7 @@ namespace BH.Engine.Robot
 
                     case IRobotBarSectionShapeType.I_BSST_USER_TUBE:
                     case IRobotBarSectionShapeType.I_BSST_TRON:
+                    case IRobotBarSectionShapeType.I_BSST_TCAR:
                         sectionProfile = BH.Engine.Structure.Create.TubeProfile(d, Tf);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
@@ -305,6 +307,7 @@ namespace BH.Engine.Robot
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
                     case IRobotBarSectionShapeType.I_BSST_USER_BOX_3:
+                    case IRobotBarSectionShapeType.I_BSST_BOX:
                         B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B);
                         B1 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B1);
                         B2 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B2);

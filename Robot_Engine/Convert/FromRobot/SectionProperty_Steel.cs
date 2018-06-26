@@ -249,8 +249,13 @@ namespace BH.Engine.Robot
                         
                     case IRobotBarSectionShapeType.I_BSST_USER_RECT:
                     case IRobotBarSectionShapeType.I_BSST_TREC:
-                        sectionProfile = BH.Engine.Structure.Create.BoxProfile(d, bf, Tf, 0, 0);
-                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
+                    case IRobotBarSectionShapeType.I_BSST_TRON:
+                    case IRobotBarSectionShapeType.I_BSST_TCAR:
+                        if (r != 0)
+                        { sectionProfile = BH.Engine.Structure.Create.BoxProfile(d, bf, Tf, r + Tf, r); }
+                        else
+                        { sectionProfile = BH.Engine.Structure.Create.BoxProfile(d, bf, Tf, 0,0); }
+                            return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
                     case IRobotBarSectionShapeType.I_BSST_RECT_FILLED:
                         sectionProfile = BH.Engine.Structure.Create.RectangleProfile(d, bf, 0);
@@ -261,11 +266,9 @@ namespace BH.Engine.Robot
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
                     case IRobotBarSectionShapeType.I_BSST_USER_TUBE:
-                    case IRobotBarSectionShapeType.I_BSST_TRON:
-                    case IRobotBarSectionShapeType.I_BSST_TCAR:
                         sectionProfile = BH.Engine.Structure.Create.TubeProfile(d, Tf);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
-
+              
                     default:
                         return null;
                 }

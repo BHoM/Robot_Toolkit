@@ -31,7 +31,7 @@ namespace BH.Engine.Robot
 
         public static Arc ToBHoMGeometry(this IRobotGeoArc arc)
         {
-            return new Arc { Start = ToBHoMGeometry(arc.P1 as dynamic), Middle = ToBHoMGeometry(arc.P2 as dynamic), End = ToBHoMGeometry(arc.P3 as dynamic) };
+            return GeometryEngine.Create.Arc(ToBHoMGeometry(arc.P1 as dynamic), ToBHoMGeometry(arc.P2 as dynamic), ToBHoMGeometry(arc.P3 as dynamic));
         }
 
         public static Polyline ToBHoMGeometry(this RobotGeoPolyline polyline)

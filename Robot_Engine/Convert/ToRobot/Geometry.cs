@@ -49,9 +49,13 @@ namespace BH.Engine.Robot
                             segment = robotapp.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_ARC);
 
                             RobotGeoArc arc = segment as RobotGeoArc;
-                            arc.P1.Set(bhomArc.Start.X, bhomArc.Start.Y, bhomArc.Start.Z);
-                            arc.P2.Set(bhomArc.Middle.X, bhomArc.Middle.Y, bhomArc.Middle.Z);
-                            arc.P3.Set(bhomArc.End.X, bhomArc.End.Y, bhomArc.End.Z);
+                            Point start = bhomArc.StartPoint();
+                            Point middle = bhomArc.PointAtParameter(0.5);
+                            Point end = bhomArc.EndPoint();
+
+                            arc.P1.Set(start.X, start.Y, start.Z);
+                            arc.P2.Set(middle.X, middle.Y, middle.Z);
+                            arc.P3.Set(end.X, end.Y, end.Z);
                             contour.Add(segment);
                         }
                         else

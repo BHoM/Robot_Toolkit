@@ -31,8 +31,11 @@ namespace BH.Engine.Robot
             {
                 Arc bhomArc = curve as Arc;
                 RobotGeoSegmentArc arc = segment as RobotGeoSegmentArc;
-                arc.P1.Set(bhomArc.Start.X, bhomArc.Start.Y, bhomArc.Start.Z);
-                arc.P2.Set(bhomArc.Middle.X, bhomArc.Middle.Y, bhomArc.Middle.Z);
+                Point start = bhomArc.StartPoint();
+                Point middle = bhomArc.PointAtParameter(0.5);
+
+                arc.P1.Set(start.X, start.Y, start.Z);
+                arc.P2.Set(middle.X, middle.Y, middle.Z);
                 return segment;
             }
 

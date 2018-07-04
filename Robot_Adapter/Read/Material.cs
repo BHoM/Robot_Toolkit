@@ -36,6 +36,8 @@ namespace BH.Adapter.Robot
             IRobotMaterialData mData;
             Material bhomMat = null;
             List<Material> bhomMaterials = new List<Material>();
+            int counter = 0;
+            bool refresh = false;
 
             foreach (string matName in m_dbMaterialNames)
             {
@@ -44,8 +46,16 @@ namespace BH.Adapter.Robot
                 mData.LoadFromDBase(matName);
                 MaterialType bhomMatType = BH.Engine.Robot.Convert.GetMaterialType(mData.Type);
                 bhomMat = BH.Engine.Common.Create.Material(matName, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO);
+                if (m_indexDict.ContainsKey(bhomMat.GetType()) && counter == 0)
+                    m_indexDict[bhomMat.GetType()] = 0;
+                bhomMat.CustomData.Add(AdapterId, NextId(bhomMat.GetType(), refresh));
+
+                //if (refresh)
+                //    refresh = false;
+
                 if (bhomMat != null)
                     bhomMaterials.Add(bhomMat);
+                counter++;
             }
 
             for (int i = 1; i <= rMaterials.Count; i++)
@@ -56,7 +66,7 @@ namespace BH.Adapter.Robot
                 {
                     MaterialType bhomMatType = BH.Engine.Robot.Convert.GetMaterialType(mData.Type);
                     bhomMat = BH.Engine.Common.Create.Material(mData.Name, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO * 0.1);
-                    bhomMat.CustomData.Add(AdapterId, mData.Name);
+                    bhomMat.CustomData.Add(AdapterId, NextId(bhomMat.GetType(), false));
                     if (bhomMat != null)
                         bhomMaterials.Add(bhomMat);
                 }

@@ -39,8 +39,8 @@ namespace BH.Adapter.Robot
                 return ReadPanels();
             if (type == typeof(MeshFace))
                 return new List<MeshFace>();
-            if (type == typeof(IProperty2D))
-                return new List<IProperty2D>();
+            if (typeof(IProperty2D).IsAssignableFrom(type))
+                return ReadProperty2D();
             if (type == typeof(RigidLink))
                 return new List<RigidLink>();
             if (type == typeof(LoadCombination))
@@ -53,8 +53,8 @@ namespace BH.Adapter.Robot
                 return ReadLoadCase();
             if (typeof(ISectionProperty).IsAssignableFrom(type))
                 return ReadSectionProperties();
-            if (type == typeof(ILoad) || type.GetInterfaces().Contains(typeof(ILoad)))
-                return new List<ILoad>(); //TODO: Implement load extraction
+            if (typeof(ILoad).IsAssignableFrom(type))
+                return ReadLoads(); //TODO: Implement load extraction
             if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
                 return new List<BHoMGroup<IBHoMObject>>();
             if (type == typeof(FramingElementDesignProperties))

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
 using System;
 using BH.oM.Base;
 using BH.oM.Structural.Elements;
@@ -149,19 +150,25 @@ namespace BH.Adapter.Robot
             return true;
         }
 
-        public List<int> GetCases(IList cases)
+        private List<int> GetCases(IList cases)
         {
             List<int> caseNums = new List<int>();
 
-            if(cases[0] is Loadcase)
+            if (cases is List<string>)
+                return (cases as List<string>).Select(x => int.Parse(x)).ToList();
+            else if (cases is List<int>)
+                return cases as List<int>;
+            else if (cases is List<double>)
+                return (cases as List<double>).Select(x => (int)Math.Round(x)).ToList();
+
+            else if (cases is List<Loadcase>)
             {
                 for (int i = 0; i < cases.Count; i++)
                 {
                     caseNums.Add(System.Convert.ToInt32((cases[i] as Loadcase).Number));
                 }
             }
-
-            if (cases[0] is LoadCombination)
+            else if (cases is List<LoadCombination>)
             {
                 foreach (object lComb in cases)
                 {
@@ -175,11 +182,18 @@ namespace BH.Adapter.Robot
 
             else
             {
-                for (int i = 0; i < cases.Count; i++)
+                List<int> idsOut = new List<int>();
+                foreach (object o in cases)
                 {
-                    caseNums.Add(System.Convert.ToInt32(cases[i]));
+                    int id;
+                    if (int.TryParse(o.ToString(), out id))
+                    {
+                        idsOut.Add(id);
+                    }
                 }
+                return idsOut;
             }
+
 
             return caseNums;
         }

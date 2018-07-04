@@ -20,6 +20,7 @@ namespace BH.Adapter.Robot
         protected override object NextId(Type type, bool refresh)
         {
             int index = 1;
+
             if (!refresh && m_indexDict.TryGetValue(type, out index))
             {
                 index++;
@@ -55,6 +56,13 @@ namespace BH.Adapter.Robot
                 //    else
                 //        index = 1;
                 //}
+                if (type == typeof(Material))
+                {
+                    if (m_indexDict.ContainsKey(type))
+                        index = m_indexDict[type] + 1;
+                    else
+                        index = 1;
+                }
                 if (type == typeof(Loadcase))
                 {
                     index = m_RobotApplication.Project.Structure.Cases.FreeNumber;

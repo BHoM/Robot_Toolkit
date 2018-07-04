@@ -2,17 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using BH.oM.Structural.Elements;
 using RobotOM;
-using BH.Engine.Serialiser;
 using BH.oM.Structural.Properties;
-using BH.oM.Structural.Loads;
-using BH.oM.Base;
 using BH.oM.Common.Materials;
-using BH.oM.Structural.Design;
-using BH.oM.Adapters.Robot;
-using BH.oM.Adapters.Robot;
-using BHE = BH.Engine.Adapters.Robot;
+
 
 namespace BH.Adapter.Robot
 {
@@ -40,9 +33,10 @@ namespace BH.Adapter.Robot
             for (int i = 1; i <= rThicknessProps.Count; i++)
             {
                 IRobotLabel rThicknessProp = rThicknessProps.Get(i);
-                BHoMProps.Add(BH.Engine.Robot.Convert.ToBHoMObject(rThicknessProp, BHoMMat));
+                IProperty2D tempProp = BH.Engine.Robot.Convert.ToBHoMObject(rThicknessProp, BHoMMat);
+                tempProp.CustomData.Add(AdapterId, tempProp.Name);
+                BHoMProps.Add(tempProp);
             }
-
             return BHoMProps;
         }
 
@@ -54,5 +48,4 @@ namespace BH.Adapter.Robot
         /***************************************************/
 
     }
-
 }

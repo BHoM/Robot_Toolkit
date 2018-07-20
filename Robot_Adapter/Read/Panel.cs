@@ -36,16 +36,20 @@ namespace BH.Adapter.Robot
             IRobotStructure rStructure = m_RobotApplication.Project.Structure;
             List<Material> bhomMaterials = new List<Material>();
             List<Opening> allOpenings = ReadOpenings();
+            PanelPlanar BHoMPanel = null;
 
             if (ids == null)
             {
-                RobotSelection rSelect = rStructure.Selections.Create(IRobotObjectType.I_OT_PANEL);
-                rSelect.FromText("all");
-                IRobotCollection rPanels = rStructure.Objects.GetMany(rSelect);
+                RobotSelection rPanSelect = rStructure.Selections.Create(IRobotObjectType.I_OT_PANEL);
+                RobotSelection rCladdingSelect = rStructure.Selections.Create(IRobotObjectType.I_OT_GEOMETRY);
+                rPanSelect.FromText("all");
+                rCladdingSelect.FromText("all");
+                IRobotCollection rPanels = rStructure.Objects.GetMany(rPanSelect);                
+                IRobotCollection rCladdings = rStructure.Objects.GetMany(rCladdingSelect);
                 for (int i = 1; i <= rPanels.Count; i++)
                 {
                     RobotObjObject rpanel = (RobotObjObject)rPanels.Get(i);
-                    PanelPlanar BHoMPanel = null;
+                    BHoMPanel = null;
 
                     if (rpanel.Main.Attribs.Meshed == 1)
                     {
@@ -68,6 +72,38 @@ namespace BH.Adapter.Robot
                         }
                     }
                     BHoMPanels.Add(BHoMPanel);
+                }
+
+                List<Opening> emptyOpenings = new List<Opening>();
+                for (int i = 1; i <= rCladdings.Count; i++)
+                {
+                    RobotObjObject rCladding = (RobotObjObject)rCladdings.Get(i);
+
+                    if (rCladding.Main.Attribs.Meshed == 1)
+                    {
+                        ICurve outline = BH.Engine.Robot.Convert.ToBHoMGeometry(rCladding.Main.GetGeometry() as dynamic);
+                        BHoMPanel = BH.Engine.Structure.Create.PanelPlanar(outline, emptyOpenings);
+                    }
+                    if (BHoMPanel != null)
+                    {
+                        BHoMPanel.CustomData[AdapterId] = rCladding.Number;
+
+                        if (rCladding.HasLabel(IRobotLabelType.I_LT_CLADDING) != 0)
+                        {
+                            string propName = rCladding.GetLabelName(IRobotLabelType.I_LT_CLADDING);
+                            if (BHoMProperties.ContainsKey(propName))
+                                BHoMPanel.Property = BHoMProperties[propName];
+                            else
+                                BH.Engine.Reflection.Compute.RecordEvent("Failed to convert/create ConstantThickness property for Cladding " + rCladding.Number.ToString(), oM.Reflection.Debuging.EventType.Warning);
+                        }
+
+                        else
+                        {
+                            BH.Engine.Reflection.Compute.RecordEvent("Cladding " + rCladding.Number.ToString() + " either has no property-label or the Property2D for this Robot label is not implemented", oM.Reflection.Debuging.EventType.Warning);
+                        }
+
+                        BHoMPanels.Add(BHoMPanel);
+                    }
                 }
             }
             return BHoMPanels;

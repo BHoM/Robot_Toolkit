@@ -56,6 +56,10 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Reflection_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BHoM_Engine\Build\Reflection_Engine.dll</HintPath>
+    </Reference>
     <Reference Include="Serialiser_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM_Engine\Build\Serialiser_Engine.dll</HintPath>
@@ -74,51 +78,85 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CRUD\Delete.cs" />
-    <Compile Include="CRUD\Create.cs" />
-    <Compile Include="CRUD\Execute.cs" />
-    <Compile Include="CRUD\NextId.cs" />
-    <Compile Include="CRUD\Read.cs" />
-    <Compile Include="CRUD\ReadResults.cs" />
-    <Compile Include="CRUD\UpdateObjects.cs" />
-    <Compile Include="CRUD\UpdateProperty.cs" />
+    <Compile Include="Create\FramingElementDesignProperties.cs" />
+    <Compile Include="Create\Constraints.cs" />
+    <Compile Include="Create\Bars.cs" />
+    <Compile Include="Create\Release.cs" />
+    <Compile Include="Create\LoadCombination.cs" />
+    <Compile Include="Create\Property2D.cs" />
+    <Compile Include="Create\MeshFaces.cs" />
+    <Compile Include="Create\Groups.cs" />
+    <Compile Include="Create\Panels.cs" />
+    <Compile Include="Create\Loads.cs" />
+    <Compile Include="Create\Nodes.cs" />
+    <Compile Include="Create\Loadcase.cs" />
+    <Compile Include="Create\Material.cs" />
+    <Compile Include="Create\SectionProperty.cs" />
+    <Compile Include="Create\RigidLinks.cs" />
+    <Compile Include="Delete\_Delete.cs" />
+    <Compile Include="Create\_Create.cs" />
+    <Compile Include="Execute\_Execute.cs" />
+    <Compile Include="Adapter\NextId.cs" />
+    <Compile Include="Read\Bar.cs" />
+    <Compile Include="Read\Load.cs" />
+    <Compile Include="Read\Node.cs" />
+    <Compile Include="Read\Constraint.cs" />
+    <Compile Include="Read\Opening.cs" />
+    <Compile Include="Read\Panel.cs" />
+    <Compile Include="Read\Property2D.cs" />
+    <Compile Include="Read\SectionProperty.cs" />
+    <Compile Include="Read\Material.cs" />
+    <Compile Include="Read\Release.cs" />
+    <Compile Include="Read\Loadcase.cs" />
+    <Compile Include="Read\DesignGroups.cs" />
+    <Compile Include="Read\FramingElementDesignProperties.cs" />
+    <Compile Include="Read\_Read.cs" />
+    <Compile Include="Read\Results.cs" />
+    <Compile Include="Update\FramingElementDesignProperties.cs" />
+    <Compile Include="Update\Bars.cs" />
+    <Compile Include="Update\UpdateObjects.cs" />
+    <Compile Include="Update\UpdateProperty.cs" />
     <Compile Include="Types\Comparer.cs" />
     <Compile Include="Types\DependencyTypes.cs" />
-    <Compile Include="RobotAdapter.cs" />
-    <Compile Include="Legacy\Elements\GridIO.cs" />
-    <Compile Include="Legacy\Elements\GroupIO.cs" />
-    <Compile Include="Legacy\Elements\LevelIO.cs" />
-    <Compile Include="Legacy\Elements\MeshIO.cs" />
-    <Compile Include="Legacy\Elements\RigidLinkIO.cs" />
-    <Compile Include="Legacy\Results\NodeResults.cs" />
-    <Compile Include="Legacy\Base\Label.cs" />
-    <Compile Include="Legacy\Elements\FiniteElement.cs" />
-    <Compile Include="Legacy\Loads\LoadIO.cs" />
-    <Compile Include="Legacy\Interface\ResultAdapter.cs" />
-    <Compile Include="Legacy\Properties\SupportIO.cs" />
-    <Compile Include="Legacy\Results\BarResults.cs" />
-    <Compile Include="Legacy\Results\Global.cs" />
-    <Compile Include="Legacy\Results\PanelResults.cs" />
-    <Compile Include="Legacy\Results\SlabReinforcementResults.cs" />
-    <Compile Include="Legacy\Results\Storey.cs" />
-    <Compile Include="Legacy\Interface\ElementAdapter.cs" />
-    <Compile Include="Legacy\Properties\PropertyIO.cs" />
-    <Compile Include="Legacy\Base\Utils.cs" />
-    <Compile Include="Legacy\Wind\WindCFD.cs" />
-    <Compile Include="Legacy\Base\Enums.cs" />
-    <Compile Include="Legacy\Elements\PanelIO.cs" />
-    <Compile Include="Legacy\Elements\NodeIO.cs" />
-    <Compile Include="Legacy\Elements\BarIO.cs" />
+    <Compile Include="Adapter\RobotAdapter.cs" />
+    <Compile Include="XXLegacy\Elements\GridIO.cs" />
+    <Compile Include="XXLegacy\Elements\GroupIO.cs" />
+    <Compile Include="XXLegacy\Elements\LevelIO.cs" />
+    <Compile Include="XXLegacy\Elements\MeshIO.cs" />
+    <Compile Include="XXLegacy\Elements\RigidLinkIO.cs" />
+    <Compile Include="XXLegacy\Results\NodeResults.cs" />
+    <Compile Include="XXLegacy\Base\Label.cs" />
+    <Compile Include="XXLegacy\Elements\FiniteElement.cs" />
+    <Compile Include="XXLegacy\Loads\LoadIO.cs" />
+    <Compile Include="XXLegacy\Interface\ResultAdapter.cs" />
+    <Compile Include="XXLegacy\Properties\SupportIO.cs" />
+    <Compile Include="XXLegacy\Results\BarResults.cs" />
+    <Compile Include="XXLegacy\Results\Global.cs" />
+    <Compile Include="XXLegacy\Results\PanelResults.cs" />
+    <Compile Include="XXLegacy\Results\SlabReinforcementResults.cs" />
+    <Compile Include="XXLegacy\Results\Storey.cs" />
+    <Compile Include="XXLegacy\Interface\ElementAdapter.cs" />
+    <Compile Include="XXLegacy\Properties\PropertyIO.cs" />
+    <Compile Include="XXLegacy\Base\Utils.cs" />
+    <Compile Include="XXLegacy\Wind\WindCFD.cs" />
+    <Compile Include="XXLegacy\Base\Enums.cs" />
+    <Compile Include="XXLegacy\Elements\PanelIO.cs" />
+    <Compile Include="XXLegacy\Elements\NodeIO.cs" />
+    <Compile Include="XXLegacy\Elements\BarIO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Legacy\Properties\Section Properties\Reinforced Concrete\" />
-    <Folder Include="Legacy\Properties\Section Properties\Steel\" />
+    <Folder Include="XXLegacy\Properties\Section Properties\Reinforced Concrete\" />
+    <Folder Include="XXLegacy\Properties\Section Properties\Steel\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Robot_Engine\Robot_Engine.csproj">
       <Project>{45d542cd-79b5-485a-ba39-0163230431f0}</Project>
       <Name>Robot_Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Robot_oM\Robot_oM.csproj">
+      <Project>{0dd05698-6a33-4092-bfad-ff702685feaf}</Project>
+      <Name>Robot_oM</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

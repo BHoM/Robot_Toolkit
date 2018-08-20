@@ -103,6 +103,11 @@ namespace BH.Adapter.Robot
                 {
                     success = CreateCollection(objects as IEnumerable<FramingElementDesignProperties>);
                 }
+
+                if (objects.First() is DesignGroup)
+                {
+                    success = CreateCollection(objects as IEnumerable<BH.oM.Adapters.Robot.DesignGroup>);
+                }
             }
             //success = CreateObjects(objects as dynamic);
             updateview();

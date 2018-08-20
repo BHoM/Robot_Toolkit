@@ -78,6 +78,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Create\DesignGroup.cs" />
     <Compile Include="Create\FramingElementDesignProperties.cs" />
     <Compile Include="Create\Constraints.cs" />
     <Compile Include="Create\Bars.cs" />

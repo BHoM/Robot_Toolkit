@@ -13,7 +13,7 @@ namespace BH.Engine.Robot
     {
         /***************************************/
         
-        internal static string FromSelectionList(List<int> numbers)
+        public static string FromSelectionList(List<int> numbers)
         {
             string selection = "";
             for (int i = 0; i < numbers.Count; i++)
@@ -24,7 +24,7 @@ namespace BH.Engine.Robot
             
         }
 
-        internal static string FromSelectionList(List<string> ids)
+        public static string FromSelectionList(List<string> ids)
         {
             string selection = "";
             for (int i = 0; i < ids.Count; i++)
@@ -34,7 +34,7 @@ namespace BH.Engine.Robot
             return selection.Trim();
         }
 
-        internal static string FromSelectionList<T>(IEnumerable<T> objects) where T : IBHoMObject
+        public static string FromSelectionList<T>(IEnumerable<T> objects) where T : IBHoMObject
         {
             string selection = "";
             foreach (T obj in objects)

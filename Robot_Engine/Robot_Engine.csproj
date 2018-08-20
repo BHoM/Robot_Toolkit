@@ -94,6 +94,7 @@
     <Compile Include="Convert\ToRobot\Geometry.cs" />
     <Compile Include="Convert\ToRobot\DesignGroup.cs" />
     <Compile Include="Convert\ToRobot\Lists.cs" />
+    <Compile Include="Create\DesignGroup.cs" />
     <Compile Include="Create\AdvancedSettings.cs" />
     <Compile Include="Create\RobotConfig.cs" />
     <Compile Include="Create\DatabaseSettings.cs" />

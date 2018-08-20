@@ -59,6 +59,8 @@ namespace BH.Adapter.Robot
                 return new List<BHoMGroup<IBHoMObject>>();
             if (type == typeof(FramingElementDesignProperties))
                 return ReadFramingElementDesignProperties();
+            if (type == typeof(BH.oM.Adapters.Robot.DesignGroup))
+                return ReadDesignGroups();
 
             if (type == typeof(BHoMObject))
             {
@@ -71,7 +73,6 @@ namespace BH.Adapter.Robot
                 objects.AddRange(ReadNodes());
                 objects.AddRange(ReadBars());
                 objects.AddRange(ReadPanels());
-                //objects.AddRange(ReadDesignGroups());
                 //objects.AddRange(ReadFramingElementDesignProperties());
                 return objects;
             }

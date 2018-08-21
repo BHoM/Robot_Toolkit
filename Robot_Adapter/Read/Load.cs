@@ -1,31 +1,21 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Structural.Elements;
 using RobotOM;
 using BH.oM.Geometry;
 using BH.oM.Base;
 using BH.oM.Structural.Loads;
-using BH.oM.Common.Materials;
 
 
 namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
     {
-
         /***************************************************/
-        /**** Adapter Methods                           ****/
-        /***************************************************/
-
-        /***************************************************/
-        /**** Protected Methods                         ****/
+        /****           Private Methods                 ****/
         /***************************************************/
 
-        /***************************************************/
-
-        public List<ILoad> ReadLoads(List<string> ids = null)
+        private List<ILoad> ReadLoads(List<string> ids = null)
         {
             List<ILoad> bhomLoads = new List<ILoad>();
             Dictionary<int, Node> bhomNodes = ReadNodes().ToDictionary(x => System.Convert.ToInt32(x.CustomData[AdapterId]));
@@ -36,8 +26,6 @@ namespace BH.Adapter.Robot
                 if(bhomLoadCases.ContainsKey(lCases[i].Name) == false)
                     bhomLoadCases.Add(lCases[i].Name, lCases[i]);
             }
-
-
 
             //Dictionary<string, Loadcase> bhomLoadCases = ReadLoadCase().ToDictionary(x => x.Name);
             IRobotCaseCollection loadCollection = m_RobotApplication.Project.Structure.Cases.GetAll();
@@ -87,11 +75,6 @@ namespace BH.Adapter.Robot
             return bhomLoads;
         }
 
-        /***************************************************/
-
-
-        /***************************************************/
-        /**** Private Fields                            ****/
         /***************************************************/
 
     }

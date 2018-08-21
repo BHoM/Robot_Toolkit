@@ -1,10 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using BH.oM.DataManipulation.Queries;
-using BH.oM.Structural.Elements;
-using BH.oM.Structural.Loads;
 using RobotOM;
 using System.Diagnostics;
 using BH.oM.Adapters.Robot;

@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BH.oM.Adapters.Robot
+﻿namespace BH.oM.Adapters.Robot
 {
+    /***************************************************/
+    /****               Public Enums                ****/
+    /***************************************************/
+
     public enum MaterialDB
     {
         British,
         American
     }
+
+    /***************************************************/
 
     public enum SectionDB
     {
@@ -18,11 +18,15 @@ namespace BH.oM.Adapters.Robot
         AISC
     }
 
+    /***************************************************/
+
     public enum ObjectProperties
     {
         Name, 
         Number
     }
+
+    /***************************************************/
 
     public enum BarProperties
     {
@@ -30,15 +34,21 @@ namespace BH.oM.Adapters.Robot
         StructureObjectType                
     }
 
+    /***************************************************/
+
     public enum NodeProperties
     {
         CoordinateSystem
     }
 
+    /***************************************************/
+
     public enum Commands
     {
 
     }
+
+    /***************************************************/
 
     public enum DesignCode_Steel
     {
@@ -47,4 +57,7 @@ namespace BH.oM.Adapters.Robot
         BS5950_2000,
         BS_EN_1993_1_2005_NA_2008_A1_2014   
     }
+
+    /***************************************************/
+
 }

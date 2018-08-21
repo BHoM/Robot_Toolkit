@@ -1,16 +1,14 @@
-﻿using BH.oM.Geometry;
-using BH.oM.Common.Materials;
-using GeometryEngine = BH.Engine.Geometry;
-using RobotOM;
-using System;
-using System.Collections.Generic;
-using BH.oM.Structural.Elements;
+﻿using RobotOM;
 using BH.oM.Structural.Loads;
 
 namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
+
         public static IRobotCaseNature RobotLoadNature(Loadcase lCase, out int subNature)
         {
             subNature = -1;
@@ -42,6 +40,8 @@ namespace BH.Engine.Robot
             }
         }
 
+        /***************************************************/
+
         public static LoadNature BHoMLoadNature(IRobotCaseNature nature)
         {
             switch (nature)
@@ -63,6 +63,8 @@ namespace BH.Engine.Robot
             }
         }
 
+        /***************************************************/
+
         public static void IRobotLoad(this ILoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
             RobotLoad(load as dynamic, sCase, rGroupServer);
@@ -77,6 +79,8 @@ namespace BH.Engine.Robot
             loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Z, load.GravityDirection.Z);
             loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_ENTIRE_STRUCTURE, 1);
         }
+
+        /***************************************************/
 
         public static void RobotLoad(this PointForce load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
@@ -93,6 +97,8 @@ namespace BH.Engine.Robot
             }
         }
 
+        /***************************************************/
+
         public static void RobotLoad(this BarUniformlyDistributedLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
             IRobotLoadRecord loadRecordForce = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_UNIFORM);
@@ -107,6 +113,8 @@ namespace BH.Engine.Robot
             loadRecordMoment.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MY, load.Moment.Y);
             loadRecordMoment.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MZ, load.Moment.Z);
         }
+
+        /***************************************************/
 
         public static void RobotLoad(this AreaUniformalyDistributedLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
@@ -123,6 +131,8 @@ namespace BH.Engine.Robot
                 loadRecord.SetValue((short)IRobotUniformRecordValues.I_URV_PROJECTED, 1);
         }
 
+        /***************************************************/
+
         public static void RobotLoad(this BarPointLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_FORCE_CONCENTRATED);
@@ -137,6 +147,8 @@ namespace BH.Engine.Robot
             loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_REL, 0);
         }
 
+        /***************************************************/
+
         public static void RobotLoad(this PointDisplacement load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_DISPLACEMENT);
@@ -149,6 +161,8 @@ namespace BH.Engine.Robot
             loadRecord.SetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_RZ, load.Rotation.Z);
         }
 
+        /***************************************************/
+
         public static void RobotLoad(this PointVelocity load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_VELOCITY);
@@ -157,6 +171,8 @@ namespace BH.Engine.Robot
             loadRecord.SetValue((short)IRobotNodeVelocityRecordValues.I_NVRV_UY, load.TranslationalVelocity.Y);
             loadRecord.SetValue((short)IRobotNodeVelocityRecordValues.I_NVRV_UZ, load.TranslationalVelocity.Z);
         }
+
+        /***************************************************/
 
         public static void RobotLoad(this PointAcceleration load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
@@ -167,6 +183,8 @@ namespace BH.Engine.Robot
             loadRecord.SetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UZ, load.TranslationalAcceleration.Z);
 
         }
+
+        /***************************************************/
 
         public static void RobotLoad(this BarVaryingDistributedLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
@@ -182,6 +200,8 @@ namespace BH.Engine.Robot
             loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_X2, load.DistanceFromB);
         }
 
+        /***************************************************/
+
         public static void RobotLoad(this BarTemperatureLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_THERMAL);
@@ -189,6 +209,8 @@ namespace BH.Engine.Robot
             loadRecord.SetValue((short)IRobotBarThermalRecordValues.I_BTRV_TX, load.TemperatureChange);
 
         }
+
+        /***************************************************/
 
         //public static void RobotLoad(this GeometricalLineLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         //{

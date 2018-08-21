@@ -1,14 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BH.Engine.Robot
+﻿namespace BH.Engine.Robot
 {
     public partial class Convert
     {
+
+    /***************************************************/
+    /****           Public Fields                   ****/
+    /***************************************************/
+
         public const string AdapterID = "Robot_id";
         public const string AdapterName = "Robot_name";
+
+    /***************************************************/
+
     }
+
+
 }

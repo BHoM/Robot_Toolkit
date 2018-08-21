@@ -1,23 +1,14 @@
-﻿using BH.oM.Geometry;
-using BH.oM.Common.Materials;
-using BH.Engine.Reflection;
-using GeometryEngine = BH.Engine.Geometry;
-using RobotOM;
-using System;
-using System.Collections.Generic;
-using BH.oM.Structural.Elements;
-using BH.oM.Structural.Properties;
-using BH.Engine.Reflection;
-using BH.oM.Reflection.Debuging;
-using BH.oM.Adapters.Robot;
+﻿using System.Collections.Generic;
 
 
 namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
-        /***************************************/
-      
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
+
         public static List<int> ToSelectionList(string selection)
         {
             if (selection.Contains("EDGE")) return null;
@@ -55,6 +46,8 @@ namespace BH.Engine.Robot
             }
             return output;
         }
+
+        /***************************************************/
 
     }
 }

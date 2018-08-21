@@ -1,18 +1,14 @@
-﻿using BH.oM.Geometry;
-using BH.Engine.Geometry;
-using BH.oM.Structural.Properties;
-using BH.oM.Structural.Elements;
-using BH.oM.Structural.Design;
+﻿using BH.oM.Structural.Properties;
 using RobotOM;
-using System.Collections.Generic;
-using BH.oM.Base;
 
 namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
-        /***************************************/
-              
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
+
         public static IRobotBarSectionType FromBHoMEnum(ShapeType type)
         {
             switch (type)
@@ -42,6 +38,8 @@ namespace BH.Engine.Robot
                     return IRobotBarSectionType.I_BST_NS_RECT;
 
             }
-        }     
+        }
+
+        /***************************************************/
     }
 }

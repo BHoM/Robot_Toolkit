@@ -1,16 +1,14 @@
-﻿using BH.oM.Geometry;
-using BH.oM.Common.Materials;
-using GeometryEngine = BH.Engine.Geometry;
-using RobotOM;
-using System;
-using System.Collections.Generic;
+﻿using RobotOM;
 using BH.oM.Structural.Elements;
-using BH.oM.Structural.Properties;
 
 namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
+
         public static void SetFEAType(IRobotBar rBar, Bar bhomBar)
         {
             if (bhomBar.FEAType == BarFEAType.CompressionOnly)
@@ -26,5 +24,8 @@ namespace BH.Engine.Robot
                 rBar.TrussBar = true;
             }
         }
+
+        /***************************************************/
+
     }
 }

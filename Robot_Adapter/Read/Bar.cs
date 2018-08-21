@@ -16,18 +16,12 @@ using BHE = BH.Engine.Adapters.Robot;
 namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
-    {         
-        
+    {
         /***************************************************/
-        /**** Adapter Methods                           ****/
-        /***************************************************/
-
-        
-        /***************************************************/
-        /**** Protected Methods                         ****/
+        /****           Private Methods                 ****/
         /***************************************************/
 
-        public List<Bar> ReadBars(List<string> ids = null)
+        private List<Bar> ReadBars(List<string> ids = null)
         {
             IRobotCollection robotBars = m_RobotApplication.Project.Structure.Bars.GetAll();
 
@@ -84,7 +78,7 @@ namespace BH.Adapter.Robot
         /***************************************************/        
 
         //Fast query method - returns basic bar information, not full bar objects
-        public List<Bar> ReadBarsQuery(List<string> ids = null)
+        private List<Bar> ReadBarsQuery(List<string> ids = null)
         {
             List<Bar> bhomBars = new List<Bar>();
             IEnumerable<Node> bhomNodesList = ReadNodesQuery();
@@ -166,11 +160,7 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
-
-        /***************************************************/
-        /**** Private Fields                            ****/
-        /***************************************************/
-
+ 
     }
 
 }

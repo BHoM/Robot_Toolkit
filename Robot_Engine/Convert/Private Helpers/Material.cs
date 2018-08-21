@@ -1,16 +1,13 @@
-﻿using BH.oM.Geometry;
-using BH.oM.Common.Materials;
-using GeometryEngine = BH.Engine.Geometry;
+﻿using BH.oM.Common.Materials;
 using RobotOM;
-using System;
-using System.Collections.Generic;
-using BH.oM.Structural.Elements;
-using BH.oM.Structural.Properties;
 
 namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
 
         public static void RobotMaterial(IRobotMaterialData materialData, Material material)
         {
@@ -24,6 +21,8 @@ namespace BH.Engine.Robot
             materialData.Kirchoff = BH.Engine.Common.Query.ShearModulus(material);
             materialData.DumpCoef = material.DampingRatio;
         }
+
+        /***************************************************/
 
         public static IRobotMaterialType GetMaterialType(Material mat)
         {
@@ -47,6 +46,8 @@ namespace BH.Engine.Robot
             }
         }
 
+        /***************************************************/
+
         public static MaterialType GetMaterialType(IRobotMaterialType mType)
         {
             switch (mType)
@@ -63,5 +64,7 @@ namespace BH.Engine.Robot
                     return MaterialType.Steel;
             }
         }
+
+        /***************************************************/
     }
 }

@@ -55,7 +55,6 @@ namespace BH.Adapter.Robot
             {typeof(MeshFace), new List<Type> { typeof(IProperty2D), typeof(Node) } }
         };
 
-
         /***************************************************/
     }
 }

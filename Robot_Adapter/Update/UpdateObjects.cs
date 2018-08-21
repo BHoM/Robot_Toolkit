@@ -1,20 +1,19 @@
 ﻿using System.Collections.Generic;
-using System;
 using BH.oM.Base;
 using BH.oM.Structural.Elements;
-using BH.oM.Geometry;
 using BH.oM.Structural.Properties;
 using BH.oM.Structural.Loads;
 using BH.oM.Common.Materials;
-using BH.Engine.Serialiser;
 using RobotOM;
-using BH.Engine.Robot;
-using BHEG = BH.Engine.Geometry;
 
 namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
     {
+        /***************************************************/
+        /****           Protected Methods               ****/
+        /***************************************************/
+
         protected override bool UpdateObjects<T>(IEnumerable<T> objects)
         {
             bool success = true;
@@ -23,11 +22,14 @@ namespace BH.Adapter.Robot
             return success;
         }
 
+        /***************************************************/
+
         protected bool Update(IEnumerable<IBHoMObject> bhomObjects)
         {
             return true;
         }
 
+        /***************************************************/
 
         protected bool Update(IEnumerable<Node> nodes)
         {
@@ -48,7 +50,9 @@ namespace BH.Adapter.Robot
             }
             m_tags[typeof(Node)] = nodeTags;
             return true;
-        }     
+        }
+
+        /***************************************************/
 
         protected bool Update(IEnumerable<Material> materials)
         {
@@ -66,6 +70,8 @@ namespace BH.Adapter.Robot
             return success;
         }
 
+        /***************************************************/
+
         protected bool Update(IEnumerable<ISectionProperty> sectionProperties)
         {
             List<ISectionProperty> secPropToCreate = new List<ISectionProperty>();
@@ -82,6 +88,8 @@ namespace BH.Adapter.Robot
             return success;
         }
 
+        /***************************************************/
+
         protected bool Update(IEnumerable<IProperty2D> property2Ds)
         {
             bool success = true;
@@ -89,12 +97,16 @@ namespace BH.Adapter.Robot
             return success;
         }
 
+        /***************************************************/
+
         protected bool Update(IEnumerable<LinkConstraint> linkConstraints)
         {
             bool success = true;
             success = Create(linkConstraints);
             return success;
         }
+
+        /***************************************************/
 
         protected bool Update(IEnumerable<Loadcase> loadCases)
         {
@@ -111,6 +123,8 @@ namespace BH.Adapter.Robot
             return success;
         }
 
+        /***************************************************/
+
         protected bool Update(IEnumerable<LoadCombination> loadCombinations)
         {
             bool success = true;
@@ -118,11 +132,15 @@ namespace BH.Adapter.Robot
             return success;
         }
 
+        /***************************************************/
+
         protected bool Update(IEnumerable<Constraint6DOF> nodeConst)
         {
             bool success = true;
             success = Create(nodeConst);
             return success;
         }
-        }
+
+        /***************************************************/
+    }
 }

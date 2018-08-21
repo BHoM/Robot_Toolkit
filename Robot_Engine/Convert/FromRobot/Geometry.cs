@@ -1,38 +1,36 @@
 ﻿using BH.oM.Geometry;
-using BH.oM.Common.Materials;
-using BH.Engine.Reflection;
 using GeometryEngine = BH.Engine.Geometry;
 using RobotOM;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using BH.oM.Structural.Elements;
-using BH.oM.Structural.Properties;
-using BH.Engine.Reflection;
-using BH.oM.Reflection.Debuging;
-using BH.oM.Adapters.Robot;
 
 
 namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
-        /***************************************/
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
 
         public static Point ToBHoMGeometry(this RobotGeoPoint3D point)
         {
             return new Point { X = point.X, Y = point.Y, Z = point.Z };
         }
 
+        /***************************************************/
+
         public static Circle ToBHoMGeometry(RobotGeoCircle circle)
         {
             return (GeometryEngine.Create.Circle(ToBHoMGeometry(circle.P1 as dynamic), ToBHoMGeometry(circle.P2 as dynamic), ToBHoMGeometry(circle.P3 as dynamic)));
         }
 
+        /***************************************************/
+
         public static Arc ToBHoMGeometry(this IRobotGeoArc arc)
         {
             return GeometryEngine.Create.Arc(ToBHoMGeometry(arc.P1 as dynamic), ToBHoMGeometry(arc.P2 as dynamic), ToBHoMGeometry(arc.P3 as dynamic));
         }
+
+        /***************************************************/
 
         public static Polyline ToBHoMGeometry(this RobotGeoPolyline polyline)
         {
@@ -46,6 +44,8 @@ namespace BH.Engine.Robot
 
             return bhomPolyline;
         }
+
+        /***************************************************/
 
         public static PolyCurve ToBHoMGeometry(this RobotGeoContour contour)
         {            
@@ -69,7 +69,8 @@ namespace BH.Engine.Robot
                 }
             }
             return polycurve;
-        }     
+        }
 
+        /***************************************************/
     }
 }

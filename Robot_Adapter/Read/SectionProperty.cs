@@ -1,34 +1,18 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using BH.oM.Structural.Elements;
 using RobotOM;
-using BH.Engine.Serialiser;
 using BH.oM.Structural.Properties;
-using BH.oM.Structural.Loads;
-using BH.oM.Base;
 using BH.oM.Common.Materials;
-using BH.oM.Structural.Design;
-using BH.oM.Adapters.Robot;
-using BHE = BH.Engine.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
-    {         
-        
+    {
         /***************************************************/
-        /**** Adapter Methods                           ****/
-        /***************************************************/
-        
-        /***************************************************/
-        /**** Protected Methods                         ****/
+        /****           Private Methods                 ****/
         /***************************************************/
         
-        /***************************************************/
-     
-        public List<ISectionProperty> ReadSectionProperties(List<string> ids = null)
+        private List<ISectionProperty> ReadSectionProperties(List<string> ids = null)
         {
             IRobotCollection secProps = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_BAR_SECTION);
             List<ISectionProperty> bhomSectionProps = new List<ISectionProperty>();
@@ -58,6 +42,8 @@ namespace BH.Adapter.Robot
             return bhomSectionProps;
         }
 
+        /***************************************************/
+
         private void ReadSecPropNamesFromDB(string dbName)
         {
             m_RobotApplication.Project.Preferences.SetCurrentDatabase(IRobotDatabaseType.I_DT_SECTIONS, dbName);
@@ -83,10 +69,6 @@ namespace BH.Adapter.Robot
             }
         }
 
-        /***************************************************/
-
-        /***************************************************/
-        /**** Private Fields                            ****/
         /***************************************************/
 
     }

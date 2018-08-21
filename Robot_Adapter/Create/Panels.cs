@@ -1,30 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System;
-using BH.Engine.Serialiser;
-using BH.oM.Base;
 using BH.oM.Structural.Elements;
 using BH.oM.Geometry;
 using BH.oM.Structural.Properties;
-using BH.oM.Structural.Loads;
-using BH.oM.Common.Materials;
 using RobotOM;
-
-using BH.Engine.Robot;
 using BHEG = BH.Engine.Geometry;
 
 namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
     {
+        /***************************************************/
+        /****           Private Methods                 ****/
+        /***************************************************/
 
         /***************************************************/
-        /**** Index Adapter Interface                   ****/
-        /***************************************************/
-              
-        /***************************************************/
-              
-        public bool CreateCollection(IEnumerable<PanelPlanar> panels)
+
+        private bool CreateCollection(IEnumerable<PanelPlanar> panels)
         {
             m_RobotApplication.Interactive = 0;
             m_RobotApplication.Project.Structure.Objects.BeginMultiOperation();
@@ -104,11 +96,6 @@ namespace BH.Adapter.Robot
             return true;
         }
 
-        /***************************************************/
-
-      
-        /***************************************************/
-        /**** Private Fields                            ****/
         /***************************************************/
 
     }

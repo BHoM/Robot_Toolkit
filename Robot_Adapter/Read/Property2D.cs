@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RobotOM;
 using BH.oM.Structural.Properties;
@@ -11,18 +9,11 @@ namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
     {
-
         /***************************************************/
-        /**** Adapter Methods                           ****/
-        /***************************************************/
-
-        /***************************************************/
-        /**** Protected Methods                         ****/
+        /****           Private Methods                 ****/
         /***************************************************/
 
-        /***************************************************/
-
-        public List<IProperty2D> ReadProperty2D(List<string> ids = null)
+        private List<IProperty2D> ReadProperty2D(List<string> ids = null)
         {
             List<IProperty2D> BHoMProps = new List<IProperty2D>();
             IRobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
@@ -49,11 +40,6 @@ namespace BH.Adapter.Robot
             return BHoMProps;
         }
 
-        /***************************************************/
-
-
-        /***************************************************/
-        /**** Private Fields                            ****/
         /***************************************************/
 
     }

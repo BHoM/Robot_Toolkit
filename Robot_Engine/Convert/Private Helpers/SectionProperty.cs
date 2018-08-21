@@ -1,16 +1,15 @@
-﻿using BH.oM.Geometry;
-using BH.oM.Common.Materials;
-using GeometryEngine = BH.Engine.Geometry;
+﻿using BH.oM.Common.Materials;
 using RobotOM;
-using System;
-using System.Collections.Generic;
-using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
 
 namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
+
         public static void ISectionProperty(this ISectionProperty section, IRobotBarSectionData secData)
         {
             SectionProperty(section as dynamic, section.Material, secData);
@@ -63,5 +62,8 @@ namespace BH.Engine.Robot
                     return null;
             }
         }
+
+        /***************************************************/
+
     }
 }

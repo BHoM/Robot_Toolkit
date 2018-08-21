@@ -1,16 +1,14 @@
-﻿using BH.oM.Geometry;
-using BH.oM.Common.Materials;
-using GeometryEngine = BH.Engine.Geometry;
-using RobotOM;
-using System;
-using System.Collections.Generic;
-using BH.oM.Structural.Elements;
+﻿using RobotOM;
 using BH.oM.Structural.Properties;
 
 namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
+
         public static void RobotRelease(IRobotBarEndReleaseData rData, Constraint6DOF bhomRelease)
         {
             rData.UX = GetReleaseType(bhomRelease.TranslationX);
@@ -27,6 +25,8 @@ namespace BH.Engine.Robot
             rData.HY = bhomRelease.RotationalStiffnessY;
             rData.HZ = bhomRelease.RotationalStiffnessZ;
         }
+
+        /***************************************************/
 
         public static Constraint6DOF BHoMRelease(IRobotBarEndReleaseData rData)
         {
@@ -47,6 +47,8 @@ namespace BH.Engine.Robot
 
             return bhomEndRelease;
         }
+
+        /***************************************************/
 
         public static DOFType GetReleaseType(IRobotBarEndReleaseValue endRelease)
         {
@@ -79,6 +81,8 @@ namespace BH.Engine.Robot
             }
         }
 
+        /***************************************************/
+
         public static IRobotBarEndReleaseValue GetReleaseType(DOFType endRelease)
         {
             switch (endRelease)
@@ -109,5 +113,8 @@ namespace BH.Engine.Robot
                     return IRobotBarEndReleaseValue.I_BERV_STD;
             }
         }
+
+        /***************************************************/
+
     }
 }

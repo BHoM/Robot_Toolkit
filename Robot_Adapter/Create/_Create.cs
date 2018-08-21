@@ -1,26 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System;
-using BH.Engine.Serialiser;
-using BH.oM.Base;
 using BH.oM.Structural.Elements;
-using BH.oM.Geometry;
 using BH.oM.Structural.Properties;
 using BH.oM.Structural.Loads;
 using BH.oM.Common.Materials;
-using RobotOM;
-
-using BH.Engine.Robot;
-using BHEG = BH.Engine.Geometry;
 using BH.oM.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
     {
-
         /***************************************************/
-        /**** Index Adapter Interface                   ****/
+        /****           Adapter Methods                 ****/
         /***************************************************/
 
         protected override bool Create<T>(IEnumerable<T> objects, bool replaceAll = false)
@@ -109,16 +100,11 @@ namespace BH.Adapter.Robot
                     success = CreateCollection(objects as IEnumerable<BH.oM.Adapters.Robot.DesignGroup>);
                 }
             }
-            //success = CreateObjects(objects as dynamic);
+            
             updateview();
             return success;
         }          
       
-        /***************************************************/
-        
-
-        /***************************************************/
-        /**** Private Fields                            ****/
         /***************************************************/
 
     }

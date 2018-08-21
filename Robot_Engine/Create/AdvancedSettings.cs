@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BH.oM.Adapters.Robot;
+﻿using BH.oM.Adapters.Robot;
 
 namespace BH.Engine.Adapters.Robot
 {
     public static partial class Create
     {
+        /***************************************************/
+        /****           Public Constructors             ****/
+        /***************************************************/
+
         public static AdvancedSettings AdvancedSettings(bool readNodesByQuery = false, bool readBarsByQuery = false)
         {
             AdvancedSettings advancedSettings = new AdvancedSettings();
@@ -17,6 +16,8 @@ namespace BH.Engine.Adapters.Robot
             advancedSettings.readNodesByQuery = readNodesByQuery;
 
             return advancedSettings;
-        }     
+        }
+
+        /***************************************************/
     }
 }

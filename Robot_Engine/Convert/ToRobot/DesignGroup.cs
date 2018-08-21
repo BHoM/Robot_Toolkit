@@ -1,17 +1,14 @@
-﻿using BH.oM.Geometry;
-using BH.Engine.Geometry;
-using BH.oM.Structural.Properties;
-using BH.oM.Structural.Elements;
-using BH.oM.Structural.Design;
+﻿using BH.oM.Structural.Design;
 using RobotOM;
 using System.Collections.Generic;
-using BH.oM.Base;
 
 namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
-        /***************************************/
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
 
         public static IList<RDimGroup> FromBHoMObjects(RobotApplication robot, List<DesignGroup> bhomdesignGroups)
         {
@@ -34,7 +31,10 @@ namespace BH.Engine.Robot
                 robotSteelDesignGroups.Add(designGroup);
             }
             return robotSteelDesignGroups;
-        }        
+        }
+
+        /***************************************************/
+
     }
 
 }

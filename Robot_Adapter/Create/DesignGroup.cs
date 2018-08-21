@@ -21,12 +21,10 @@ namespace BH.Adapter.Robot
     {
 
         /***************************************************/
-        /**** Index Adapter Interface                   ****/
-        /***************************************************/
-        
+        /****           Private Methods                 ****/
         /***************************************************/
 
-        public bool CreateCollection(IEnumerable<BH.oM.Adapters.Robot.DesignGroup> bhomdesignGroups)
+        private bool CreateCollection(IEnumerable<BH.oM.Adapters.Robot.DesignGroup> bhomdesignGroups)
         {
             foreach (DesignGroup bhomdesignGroup in bhomdesignGroups)
             {
@@ -46,8 +44,10 @@ namespace BH.Adapter.Robot
             }
             return true;
         }
+                
+        /***************************************************/
     }
-    
-    }
+
+}
 
 

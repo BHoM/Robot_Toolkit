@@ -11,13 +11,13 @@ namespace BH.Engine.Adapters.Robot
     {
         public static DesignGroup DesignGroup(int number = 0, string materialName = "", List<int> elementIds = null)
         {
-            DesignGroup _designGroup = new DesignGroup();
-            _designGroup.Number = number;
-            _designGroup.MaterialName = materialName;
+            DesignGroup designGroup = new DesignGroup();
+            designGroup.Number = number;
+            designGroup.MaterialName = materialName;
             if (elementIds != null)
-                _designGroup.MemberIds = elementIds;
+                designGroup.MemberIds = elementIds;
 
-            return _designGroup;
+            return designGroup;
         }     
     }
 }

@@ -11,7 +11,7 @@ namespace BH.Adapter.Robot
     {
 
         /***************************************************/
-        /**** Adapter Methods                           ****/
+        /****           Adapter Methods                 ****/
         /***************************************************/
 
         protected override int Delete(Type type, IEnumerable<object> ids)
@@ -30,7 +30,9 @@ namespace BH.Adapter.Robot
             updateview();
             return success;
         }
-        
+
+        /***************************************************/
+
         public int DeleteNodes(IEnumerable<object> ids)
         {
             int sucess = 1;
@@ -69,6 +71,8 @@ namespace BH.Adapter.Robot
             return sucess;
         }
 
+        /***************************************************/
+
         public int DeleteBars(IEnumerable<object> ids)
         {
             int sucess = 1;
@@ -106,6 +110,8 @@ namespace BH.Adapter.Robot
             return sucess;
         }
 
+        /***************************************************/
+
         public int DeleteLoadcases(IEnumerable<object> ids)
         {
             int sucess = 1;
@@ -139,13 +145,14 @@ namespace BH.Adapter.Robot
             return sucess;
         }
 
+        /***************************************************/
+
         public int DeleteAll()
         {
             int success = 1;
             m_RobotApplication.Project.Structure.Clear();
             return success;
         }
-
 
         /***************************************************/
         /**** Protected Methods                         ****/
@@ -178,6 +185,8 @@ namespace BH.Adapter.Robot
             return success;
         }
 
+        /***************************************************/
+
         private void _DeleteSteelDesignGroup(int designGroupNumber)
         {
             RobotApplication robot = m_RobotApplication;
@@ -186,9 +195,7 @@ namespace BH.Adapter.Robot
             RDimGroups RDGroups = RDServer.GroupsService;
             RDGroups.Delete(designGroupNumber);
         }
-        
-        /***************************************************/
-        /**** Private Fields                            ****/
+
         /***************************************************/
 
     }

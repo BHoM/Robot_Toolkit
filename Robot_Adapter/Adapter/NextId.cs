@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Common.Materials;
-using BH.oM.Structural.Properties;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Loads;
-using RobotOM;
-using System.Diagnostics;
 
 namespace BH.Adapter.Robot
 {
@@ -28,16 +25,16 @@ namespace BH.Adapter.Robot
             }
             else
             {
-                //if (type == typeof(DesignGroup))
-                //{
-                //    List<int> groupNumbers = new List<int>();
-                //    foreach (DesignGroup designGroup in ReadDesignGroups())
-                //    {
-                //        groupNumbers.Add(designGroup.Number);
-                //    }
-                //    groupNumbers.Sort();
-                //    index = groupNumbers.Count > 0 ? groupNumbers.Last() + 1 : 1;
-                //}
+                if (type == typeof(BH.oM.Adapters.Robot.DesignGroup))
+                {
+                    List<int> groupNumbers = new List<int>();
+                    foreach (BH.oM.Adapters.Robot.DesignGroup designGroup in ReadDesignGroups())
+                    {
+                        groupNumbers.Add(designGroup.Number);
+                    }
+                    groupNumbers.Sort();
+                    index = groupNumbers.Count > 0 ? groupNumbers.Last() + 1 : 1;
+                }
                 if (type == typeof(Bar))
                 {
                     index = m_RobotApplication.Project.Structure.Bars.FreeNumber;

@@ -1,25 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System;
-using BH.Engine.Serialiser;
-using BH.oM.Base;
-using BH.oM.Structural.Elements;
-using BH.oM.Geometry;
-using BH.oM.Structural.Properties;
-using BH.oM.Structural.Loads;
-using BH.oM.Common.Materials;
 using RobotOM;
 using BH.oM.Adapters.Robot;
-
-using BH.Engine.Robot;
-using BHEG = BH.Engine.Geometry;
-using BHE = BH.Engine.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
     {
-
         /***************************************************/
         /****           Private Methods                 ****/
         /***************************************************/

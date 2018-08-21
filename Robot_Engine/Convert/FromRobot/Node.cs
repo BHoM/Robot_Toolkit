@@ -1,22 +1,15 @@
 ﻿using BH.oM.Geometry;
-using BH.oM.Common.Materials;
-using BH.Engine.Reflection;
-using GeometryEngine = BH.Engine.Geometry;
 using RobotOM;
-using System;
-using System.Collections.Generic;
 using BH.oM.Structural.Elements;
-using BH.oM.Structural.Properties;
-using BH.Engine.Reflection;
-using BH.oM.Reflection.Debuging;
-using BH.oM.Adapters.Robot;
 
 
 namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
-        /***************************************/
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
 
         public static Node ToBHoMObject(this RobotNode robotNode)
         {
@@ -27,5 +20,7 @@ namespace BH.Engine.Robot
             }
             return bhomNode;
         }
-            }
+
+        /***************************************************/
+    }
 }

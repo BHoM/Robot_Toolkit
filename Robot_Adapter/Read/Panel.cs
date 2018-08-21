@@ -1,35 +1,20 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Structural.Elements;
 using RobotOM;
-using BH.Engine.Serialiser;
 using BH.oM.Structural.Properties;
-using BH.oM.Structural.Loads;
-using BH.oM.Base;
 using BH.oM.Common.Materials;
-using BH.oM.Structural.Design;
-using BH.oM.Adapters.Robot;
 using BH.oM.Geometry;
-using BHE = BH.Engine.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
     {
-
         /***************************************************/
-        /**** Adapter Methods                           ****/
-        /***************************************************/
-
-        /***************************************************/
-        /**** Protected Methods                         ****/
+        /****           Private Methods                 ****/
         /***************************************************/
 
-        /***************************************************/
-
-        public List<PanelPlanar> ReadPanels(List<string> ids = null)
+        private List<PanelPlanar> ReadPanels(List<string> ids = null)
         {
             Dictionary<string, IProperty2D> BHoMProperties = ReadProperty2D().ToDictionary(x => x.Name);
             List<PanelPlanar> BHoMPanels = new List<PanelPlanar>();

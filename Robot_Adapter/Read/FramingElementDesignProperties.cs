@@ -1,35 +1,17 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using BH.oM.Structural.Elements;
+﻿using System.Collections.Generic;
 using RobotOM;
-using BH.Engine.Serialiser;
-using BH.oM.Structural.Properties;
-using BH.oM.Structural.Loads;
-using BH.oM.Base;
-using BH.oM.Common.Materials;
-using BH.oM.Structural.Design;
-using BH.oM.Adapters.Robot;
 using BH.oM.Adapters.Robot;
 using BHE = BH.Engine.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
-    {         
-        
+    {
         /***************************************************/
-        /**** Adapter Methods                           ****/
-        /***************************************************/       
-
-        /***************************************************/
-        /**** Protected Methods                         ****/
-        /***************************************************/
-             
+        /****           Private Methods                 ****/
         /***************************************************/
 
-        public List<FramingElementDesignProperties> ReadFramingElementDesignProperties(List<string> ids = null)
+        private List<FramingElementDesignProperties> ReadFramingElementDesignProperties(List<string> ids = null)
         {
             IRobotCollection r_memberTypes = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_MEMBER_TYPE);
             List<FramingElementDesignProperties> bhomDesignPropsList = new List<FramingElementDesignProperties>();
@@ -117,11 +99,6 @@ namespace BH.Adapter.Robot
         }
         
 
-        /***************************************************/
-
-
-        /***************************************************/
-        /**** Private Fields                            ****/
         /***************************************************/
 
     }

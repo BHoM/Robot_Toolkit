@@ -1,15 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Base;
-using BH.oM.Structural.Elements;
 using BH.oM.Structural.Results;
-using BH.oM.Geometry;
-using BH.oM.Structural.Properties;
-using BH.oM.Structural.Loads;
-using BH.oM.Common.Materials;
 using RobotOM;
-using BH.Engine.Robot;
-using BHEG = BH.Engine.Geometry;
 using BH.oM.Common;
 using System;
 using System.Collections;
@@ -18,6 +11,10 @@ namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
     {
+        /***************************************************/
+        /****           Protected Methods               ****/
+        /***************************************************/
+
         protected override IEnumerable<IResult> ReadResults(Type type, IList ids = null, IList cases = null, int divisions = 5)
         {
             if (type == typeof(BarForce))
@@ -28,8 +25,14 @@ namespace BH.Adapter.Robot
                 return ReadNodeReactions(ids, cases, divisions);
             return base.ReadResults(type, ids, cases, divisions);
         }
-        
-        public List<BarForce> ReadBarForce(IList ids = null, IList cases = null, int divisions = 5)
+
+        /***************************************************/
+
+        /***************************************************/
+        /****           Private Methods                 ****/
+        /***************************************************/
+
+        private List<BarForce> ReadBarForce(IList ids = null, IList cases = null, int divisions = 5)
         {
             List<BarForce> barforces = new List<BarForce>();
             RobotResultQueryParams queryParams = (RobotResultQueryParams)m_RobotApplication.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
@@ -112,7 +115,9 @@ namespace BH.Adapter.Robot
             return barforces;
         }
 
-        public List<NodeDisplacement> ReadNodeDisplacement(IList ids = null, IList cases = null, int divisions = 5)
+        /***************************************************/
+
+        private List<NodeDisplacement> ReadNodeDisplacement(IList ids = null, IList cases = null, int divisions = 5)
         {
             List<NodeDisplacement> nodeDisplacements = new List<NodeDisplacement>();
 
@@ -190,7 +195,9 @@ namespace BH.Adapter.Robot
             return nodeDisplacements;
         }
 
-        public List<NodeReaction> ReadNodeReactions(IList ids = null, IList cases = null, int divisions = 5)
+        /***************************************************/
+
+        private List<NodeReaction> ReadNodeReactions(IList ids = null, IList cases = null, int divisions = 5)
         {
             List<NodeReaction> nodeReactions = new List<NodeReaction>();
 
@@ -267,6 +274,8 @@ namespace BH.Adapter.Robot
             }
             return nodeReactions;
         }
+
+        /***************************************************/
 
         private List<int> CheckAndGetIds(IList ids)
         {

@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BH.oM.Adapters.Robot;
+﻿using BH.oM.Adapters.Robot;
 
 namespace BH.Engine.Adapters.Robot
 {
     public static partial class Create
     {
+        /***************************************************/
+        /****           Public Constructors             ****/
+        /***************************************************/
+
         public static FramingElementDesignProperties FramingElementDesignProperties(string name)
         {
             FramingElementDesignProperties framingElementDesignProperties = new FramingElementDesignProperties();
@@ -16,6 +15,8 @@ namespace BH.Engine.Adapters.Robot
 
             return framingElementDesignProperties;
         }
+
+        /***************************************************/
 
         public static FramingElementDesignProperties FramingElementDesignProperties(string name,
                                                                                     double eulerBucklingLengthCoeffY = 1,
@@ -28,5 +29,7 @@ namespace BH.Engine.Adapters.Robot
 
             return framEleDesignProps;
         }
+
+        /***************************************************/
     }
 }

@@ -1,17 +1,18 @@
 ﻿using BH.oM.Geometry;
-using BH.oM.Common.Materials;
 using BH.Engine.Geometry;
 using RobotOM;
 using System;
 using System.Collections.Generic;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
-using BH.oM.Structural.Loads;
 
 namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
 
         public static IRobotComponentType SegmentType(ICurve curve)
         {
@@ -24,6 +25,8 @@ namespace BH.Engine.Robot
             else
                 throw new Exception("Geometry is only valid for Line, Arc and Circle");              
         }
+
+        /***************************************************/
 
         public static RobotGeoSegment Segment(ICurve curve, RobotGeoSegment segment)
         {
@@ -50,6 +53,8 @@ namespace BH.Engine.Robot
                 return null;
         }
 
+        /***************************************************/
+
         public static void SingleContourGeometry(ICurve curve, RobotGeoObject contourGeo)
         {
                 Circle bhomCircle = curve as Circle;
@@ -61,6 +66,8 @@ namespace BH.Engine.Robot
                 circle.P2.Set(bhomPoint2.X, bhomPoint2.Y, bhomPoint2.Z);
                 circle.P3.Set(bhomPoint3.X, bhomPoint3.Y, bhomPoint3.Z);
         }
+
+        /***************************************************/
 
         public static string ThicknessProperty(IRobotLabel rLabel, IProperty2D property)
         {
@@ -145,6 +152,8 @@ namespace BH.Engine.Robot
             return name;          
         }
 
+        /***************************************************/
+
         public static List<Opening> FindOpening(ICurve panelOutline, List<Opening> openings)
         {
             List<Opening> openingsInPanel = new List<Opening>();
@@ -165,6 +174,7 @@ namespace BH.Engine.Robot
             return openingsInPanel;
         }
 
+        /***************************************************/
 
     }
 }

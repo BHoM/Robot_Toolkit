@@ -1,17 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System;
-using BH.Engine.Serialiser;
-using BH.oM.Base;
-using BH.oM.Structural.Elements;
-using BH.oM.Geometry;
-using BH.oM.Structural.Properties;
-using BH.oM.Structural.Loads;
 using BH.oM.Common.Materials;
 using RobotOM;
-
-using BH.Engine.Robot;
-using BHEG = BH.Engine.Geometry;
 
 namespace BH.Adapter.Robot
 {
@@ -19,9 +8,9 @@ namespace BH.Adapter.Robot
     {
 
         /***************************************************/
-        /**** Index Adapter Interface                   ****/
+        /****           Private Methods                 ****/
         /***************************************************/
-        
+
         /***************************************************/
 
         private bool CreateCollection(IEnumerable<Material> mat)
@@ -46,11 +35,6 @@ namespace BH.Adapter.Robot
             return true;
         }
 
-        /***************************************************/
-
-      
-        /***************************************************/
-        /**** Private Fields                            ****/
         /***************************************************/
 
     }

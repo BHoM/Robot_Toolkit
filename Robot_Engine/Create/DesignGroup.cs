@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using BH.oM.Adapters.Robot;
 
 namespace BH.Engine.Adapters.Robot
@@ -10,7 +6,7 @@ namespace BH.Engine.Adapters.Robot
     public static partial class Create
     {
         /***************************************************/
-        /****           Public Methods                  ****/
+        /****           Public Constructors             ****/
         /***************************************************/
 
         public static DesignGroup DesignGroup(int number = 0, string materialName = "", List<int> elementIds = null)
@@ -22,6 +18,8 @@ namespace BH.Engine.Adapters.Robot
                 designGroup.MemberIds = elementIds;
 
             return designGroup;
-        }     
+        }
+
+        /***************************************************/
     }
 }

@@ -1,15 +1,5 @@
 ﻿using System.Collections.Generic;
-using System;
-using BH.oM.Base;
-using BH.oM.Structural.Elements;
-using BH.oM.Geometry;
-using BH.oM.Structural.Properties;
-using BH.oM.Structural.Loads;
-using BH.oM.Common.Materials;
-using BH.Engine.Serialiser;
 using RobotOM;
-using BH.Engine.Robot;
-using BHEG = BH.Engine.Geometry;
 using BH.oM.Adapters.Robot;
 using BHE = BH.Engine.Adapters.Robot;
 
@@ -17,6 +7,10 @@ namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
     {
+        /***************************************************/
+        /****           Protected Methods               ****/
+        /***************************************************/
+
         protected bool Update(IEnumerable<FramingElementDesignProperties> framingElementDesignPropertiesList)
         {
 
@@ -53,11 +47,11 @@ namespace BH.Adapter.Robot
                     memberDef.CodeParams = memberDesignParams_BS5950_2000;
                 }
                 
-                m_RobotApplication.Project.Structure.Labels.Store(memberType);                
-   }
-            
+                m_RobotApplication.Project.Structure.Labels.Store(memberType);
+            }            
             return true;
-    }
-      
+        }
+
+        /***************************************************/
     }
 }

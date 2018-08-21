@@ -1,17 +1,15 @@
 ﻿using BH.oM.Geometry;
 using BH.Engine.Geometry;
-using BH.oM.Structural.Properties;
-using BH.oM.Structural.Elements;
-using BH.oM.Structural.Design;
 using RobotOM;
 using System.Collections.Generic;
-using BH.oM.Base;
 
 namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
-        /***************************************/
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
 
         public static RobotGeoPoint3D FromBHoMGeometry(RobotApplication robotapp, Point point)
         {
@@ -19,7 +17,9 @@ namespace BH.Engine.Robot
             robotPoint.Set(point.X, point.Y, point.Z);
             return robotPoint;                        
         }
-        
+
+        /***************************************************/
+
         public static RobotPointsArray FromBHoMGeometry(Polyline segments)
         {
             RobotPointsArray contour = new RobotPointsArray();
@@ -31,6 +31,8 @@ namespace BH.Engine.Robot
             }    
             return contour;
         }
+
+        /***************************************************/
 
         public static RobotGeoContour FromBHoMGeometry(RobotApplication robotapp, ICurve perimeter)
         {           
@@ -70,7 +72,10 @@ namespace BH.Engine.Robot
                                                             
             }
             return contour;
-        }        
+        }
+
+        /***************************************************/
+
     }
 
 }

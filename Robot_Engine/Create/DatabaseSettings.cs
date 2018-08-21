@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BH.oM.Adapters.Robot;
 
 namespace BH.Engine.Adapters.Robot
 {
     public static partial class Create
     {
+        /***************************************************/
+        /****           Public Constructors             ****/
+        /***************************************************/
+
         public static DatabaseSettings DatabaseSettings(MaterialDB materialDB = MaterialDB.British, 
                                                         SectionDB sectionDB = SectionDB.UKST)
         {
@@ -18,6 +18,8 @@ namespace BH.Engine.Adapters.Robot
                       
             return databaseSettings;
         }
+
+        /***************************************************/
 
         public static DatabaseSettings DatabaseSettings(string materialDB = "British", 
                                                         string sectionDB = "UKST")
@@ -34,5 +36,8 @@ namespace BH.Engine.Adapters.Robot
 
             return databaseSettings;
         }
+
+        /***************************************************/
+
     }
 }

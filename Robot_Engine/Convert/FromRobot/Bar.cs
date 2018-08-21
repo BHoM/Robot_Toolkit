@@ -1,14 +1,9 @@
-﻿using BH.oM.Geometry;
-using BH.oM.Common.Materials;
-using BH.Engine.Reflection;
-using GeometryEngine = BH.Engine.Geometry;
+﻿using BH.oM.Common.Materials;
 using RobotOM;
 using System;
 using System.Collections.Generic;
 using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
-using BH.Engine.Reflection;
-using BH.oM.Reflection.Debuging;
 using BH.oM.Adapters.Robot;
 
 
@@ -16,7 +11,9 @@ namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
-        /***************************************/
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
 
         public static Bar ToBHoMObject( this RobotBar robotBar, 
                                         Dictionary<string,Node> bhomNodes, 
@@ -92,7 +89,9 @@ namespace BH.Engine.Robot
                 bhomBar.FEAType = BarFEAType.Axial;
             }
             return bhomBar;       
-        }       
-        }        
-    
+        }
+
+        /***************************************************/
+    }
+
 }

@@ -2,21 +2,17 @@
 using System.Collections;
 using System.Linq;
 using System;
-using BH.oM.Base;
-using BH.oM.Structural.Elements;
-using BH.oM.Geometry;
-using BH.oM.Structural.Properties;
 using BH.oM.Structural.Loads;
-using BH.oM.Common.Materials;
 using RobotOM;
-
-using BH.Engine.Robot;
-using BHEG = BH.Engine.Geometry;
 
 namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
     {
+        /***************************************************/
+        /****           Adapter Methods                 ****/
+        /***************************************************/
+
         public override bool Execute(string command, Dictionary<string, object> parameters = null, Dictionary<string, object> config = null)
         {
             string commandUpper = command.ToUpper();
@@ -94,11 +90,15 @@ namespace BH.Adapter.Robot
                 return false;
         }
 
+        /***************************************************/
+
         public bool Close()
         {
             m_RobotApplication.Quit(IRobotQuitOption.I_QO_PROMPT_TO_SAVE_CHANGES);
             return true;
         }
+
+        /***************************************************/
 
         public bool Save(string fileName = null)
         {
@@ -113,6 +113,8 @@ namespace BH.Adapter.Robot
                 return true;
             }
         }
+
+        /***************************************************/
 
         public bool Analyse(IList cases = null)
         {
@@ -149,6 +151,8 @@ namespace BH.Adapter.Robot
 
             return true;
         }
+
+        /***************************************************/
 
         private List<int> GetCases(IList cases)
         {
@@ -198,6 +202,8 @@ namespace BH.Adapter.Robot
             return caseNums;
         }
 
+        /***************************************************/
+
         public void SetAux(RobotSelection CSelection, bool yn)
         {
             RobotCaseCollection Caux = m_RobotApplication.Project.Structure.Cases.GetMany(CSelection);
@@ -208,5 +214,7 @@ namespace BH.Adapter.Robot
                 CServer.SetAuxiliary(Caux.Get(i).Number, yn);
             }
         }
+
+        /***************************************************/
     }
 }

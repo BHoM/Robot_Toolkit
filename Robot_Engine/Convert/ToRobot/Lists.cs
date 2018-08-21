@@ -1,18 +1,14 @@
-﻿using BH.oM.Geometry;
-using BH.Engine.Geometry;
-using BH.oM.Structural.Properties;
-using BH.oM.Structural.Elements;
-using BH.oM.Structural.Design;
-using RobotOM;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BH.oM.Base;
 
 namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
-        /***************************************/
-        
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
+
         public static string FromSelectionList(List<int> numbers)
         {
             string selection = "";
@@ -20,9 +16,10 @@ namespace BH.Engine.Robot
             {
                 selection += numbers[i] + " ";
             }
-            return selection.Trim();
-            
+            return selection.Trim();            
         }
+
+        /***************************************************/
 
         public static string FromSelectionList(List<string> ids)
         {
@@ -33,6 +30,8 @@ namespace BH.Engine.Robot
             }
             return selection.Trim();
         }
+
+        /***************************************************/
 
         public static string FromSelectionList<T>(IEnumerable<T> objects) where T : IBHoMObject
         {
@@ -45,5 +44,7 @@ namespace BH.Engine.Robot
             }
             return selection.Trim();
         }
+
+        /***************************************************/
     }
 }

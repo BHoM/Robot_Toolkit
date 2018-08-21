@@ -1,30 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System;
-using BH.Engine.Serialiser;
-using BH.oM.Base;
 using BH.oM.Structural.Elements;
-using BH.oM.Geometry;
 using BH.oM.Structural.Properties;
-using BH.oM.Structural.Loads;
-using BH.oM.Common.Materials;
 using RobotOM;
-
-using BH.Engine.Robot;
-using BHEG = BH.Engine.Geometry;
 
 namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
     {
-
         /***************************************************/
-        /**** Index Adapter Interface                   ****/
-        /***************************************************/
-
+        /****           Private Methods                 ****/
         /***************************************************/
 
-        public bool CreateCollection(IEnumerable<MeshFace> meshFaces)
+        /***************************************************/
+
+        private bool CreateCollection(IEnumerable<MeshFace> meshFaces)
         {
             int nbOfDistinctProps = meshFaces.Select(x => x.Property).Distinct(Comparer<IProperty2D>()).Count();
             if (nbOfDistinctProps == 1)
@@ -77,10 +68,6 @@ namespace BH.Adapter.Robot
             }
         }
 
-        /***************************************************/
-
-        /***************************************************/
-        /**** Private Fields                            ****/
         /***************************************************/
 
     }

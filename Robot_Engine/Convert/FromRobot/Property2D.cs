@@ -1,23 +1,17 @@
-﻿using BH.oM.Geometry;
-using BH.oM.Common.Materials;
-using BH.Engine.Reflection;
-using GeometryEngine = BH.Engine.Geometry;
+﻿using BH.oM.Common.Materials;
 using RobotOM;
 using System;
 using System.Collections.Generic;
-using BH.oM.Structural.Elements;
 using BH.oM.Structural.Properties;
-using BH.Engine.Reflection;
 using BH.Engine.Structure;
-using BH.oM.Reflection.Debuging;
-using BH.oM.Adapters.Robot;
-
 
 namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
-        /***************************************/
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
 
         public static IProperty2D ToBHoMObject(this IRobotLabel rLabel, Dictionary<string, Material> Material)
         {
@@ -120,5 +114,8 @@ namespace BH.Engine.Robot
             }
             return BHoMProperty;
         }
+
+        /***************************************************/
+
     }
 }

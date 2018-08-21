@@ -1,35 +1,17 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using BH.oM.Structural.Elements;
 using RobotOM;
-using BH.Engine.Serialiser;
 using BH.oM.Structural.Properties;
-using BH.oM.Structural.Loads;
-using BH.oM.Base;
-using BH.oM.Common.Materials;
-using BH.oM.Structural.Design;
-using BH.oM.Adapters.Robot;
-using BH.oM.Adapters.Robot;
-using BHE = BH.Engine.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
-    {         
-        
+    {
         /***************************************************/
-        /**** Adapter Methods                           ****/
-        /***************************************************/
-        
-        /***************************************************/
-        /**** Protected Methods                         ****/
-        /***************************************************/
-        
+        /****           Private Methods                 ****/
         /***************************************************/
 
-        public List<Node> ReadNodes(List<string> ids = null)
+        private List<Node> ReadNodes(List<string> ids = null)
         {
             IRobotCollection robotNodes = m_RobotApplication.Project.Structure.Nodes.GetAll();
             List<Node> bhomNodes = new List<Node>();
@@ -68,7 +50,7 @@ namespace BH.Adapter.Robot
         /***************************************************/              
 
         //Fast query method - only returns basic node information, not full node objects
-        public List<Node> ReadNodesQuery(List<string> ids = null)
+        private List<Node> ReadNodesQuery(List<string> ids = null)
         {
             List<Node> bhomNodes = new List<Node>();
 
@@ -121,10 +103,6 @@ namespace BH.Adapter.Robot
             return bhomNodes;
         }
         
-        /***************************************************/
-
-        /***************************************************/
-        /**** Private Fields                            ****/
         /***************************************************/
 
     }

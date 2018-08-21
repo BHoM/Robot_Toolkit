@@ -1,7 +1,4 @@
-﻿using BH.oM.Geometry;
-using BH.oM.Base;
-using BH.oM.Common.Materials;
-using GeometryEngine = BH.Engine.Geometry;
+﻿using BH.oM.Base;
 using RobotOM;
 using System;
 using System.Collections.Generic;
@@ -13,6 +10,10 @@ namespace BH.Engine.Robot
 {
     public static partial class Convert
     {
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
+
         public static IRobotObjectType RobotObjectType(Type type)
         {
             if (type == typeof(Bar))
@@ -27,6 +28,8 @@ namespace BH.Engine.Robot
             else
                 return IRobotObjectType.I_OT_OBJECT;
         }
+
+        /***************************************************/
 
         public static string CreateIdListOrGroupName<T>(this Load<T> load, RobotGroupServer rServer) where T : IBHoMObject
         {
@@ -43,6 +46,8 @@ namespace BH.Engine.Robot
             return load.Objects.Elements.Select(x => int.Parse(x.CustomData[AdapterID].ToString())).GeterateIdString();
 
         }
+
+        /***************************************************/
 
         public static string GeterateIdString(this IEnumerable<int> ids)
         {
@@ -78,6 +83,8 @@ namespace BH.Engine.Robot
 
             return str;
         }
+
+        /***************************************************/
 
         public static List<int> GetNumbersFromText(string selection)
         {
@@ -116,6 +123,8 @@ namespace BH.Engine.Robot
             }
             return output;
         }
+
+        /***************************************************/
 
 
         //public static IRobotObjectType ElementType(this BHoMGroup<Node> group)

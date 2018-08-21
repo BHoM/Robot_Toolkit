@@ -9,6 +9,10 @@ namespace BH.Engine.Adapters.Robot
 {
     public static partial class Create
     {
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
+
         public static DesignGroup DesignGroup(int number = 0, string materialName = "", List<int> elementIds = null)
         {
             DesignGroup designGroup = new DesignGroup();

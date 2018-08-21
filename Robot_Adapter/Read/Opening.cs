@@ -40,5 +40,8 @@ namespace BH.Adapter.Robot
             }
             return openings;
         }
+
+        /***************************************************/
+
     }
 }

@@ -13,9 +13,7 @@ namespace BH.Adapter.Robot
         /***************************************************/
         /****           Private Methods                 ****/
         /***************************************************/
-
-        /***************************************************/
-
+        
         private bool CreateCollection(IEnumerable<PanelPlanar> panels)
         {
             m_RobotApplication.Interactive = 0;

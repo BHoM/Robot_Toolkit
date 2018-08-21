@@ -5,10 +5,10 @@
 //using System.Threading.Tasks;
 //using RobotOM;
 //using BHoMB = BH.oM.Base;
-//using BHoME = BH.oM.Structural.Elements;
-//using BHoMP = BH.oM.Structural.Properties;
+//using BHoME = BH.oM.Structure.Elements;
+//using BHoMP = BH.oM.Structure.Properties;
 //using Robot_Adapter.Base;
-//using BH.oM.Structural.Interface;
+//using BH.oM.Structure.Interface;
 
 //namespace Robot_Adapter.Structural.Elements
 //{

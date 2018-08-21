@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BH.oM.Structural;
+using BH.oM.Structure;
 using System.Reflection;
 using System.IO;
-using BH.oM.Structural.Results;
-using BH.oM.Structural.Elements;
+using BH.oM.Structure.Results;
+using BH.oM.Structure.Elements;
 using BH.oM.Geometry;
-using BH.oM.Structural.Loads;
+using BH.oM.Structure.Loads;
 using BH.oM.Base;
 using BH.Engine.Structure;
 using BH.oM.Geometry;
@@ -44,7 +44,7 @@ namespace Robot_Test
         //{
         //    Node n = new Node(60.086, 3.392, 38.5);
         //    n.CustomData.Add("Robot Number", 62828);
-        //    n.Constraint = new BHoM.Structural.Properties.NodeConstraint("Test", new double[] {  200,200,556300,0,0,0});
+        //    n.Constraint = new BHoM.Structure.Properties.NodeConstraint("Test", new double[] {  200,200,556300,0,0,0});
 
         //    List<string> ids = null;
         //    List<Bar> bars = null;
@@ -58,7 +58,7 @@ namespace Robot_Test
         //    RobotAdapter app = new RobotAdapter();
         //    Polyline p = new Polyline(new List<Point>() { new Point(0, 0, 0), new Point(0, 5, 0), new Point(5, 5, 0), new Point(5, 0, 0), new Point(0, 0, 0) });
 
-        //    BHoM.Structural.Loads.Loadcase lC = new BHoM.Structural.Loads.Loadcase("DL2", LoadNature.Dead, 1);
+        //    BHoM.Structure.Loads.Loadcase lC = new BHoM.Structure.Loads.Loadcase("DL2", LoadNature.Dead, 1);
         //    //lC.CustomData[Utils.NUM_KEY] = "1";
         //    GeometricalAreaLoad aL = new GeometricalAreaLoad(p, new Vector(0, 0, -5000));
         //    aL.Loadcase = lC;

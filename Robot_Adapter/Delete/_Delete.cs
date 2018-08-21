@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BH.oM.Structural.Elements;
+using BH.oM.Structure.Elements;
 using RobotOM;
-using BH.oM.Structural.Design;
+using BH.oM.Structure.Design;
 
 namespace BH.Adapter.Robot
 {
@@ -23,7 +23,7 @@ namespace BH.Adapter.Robot
                 success = DeleteNodes(ids);
             if (type == typeof(Bar))
                 success = DeleteBars(ids);
-            if (type == typeof(BH.oM.Structural.Loads.Loadcase)) 
+            if (type == typeof(BH.oM.Structure.Loads.Loadcase)) 
                 success = DeleteLoadcases(ids);
             if (type == null)
                 success = DeleteAll();
@@ -117,7 +117,7 @@ namespace BH.Adapter.Robot
             int sucess = 1;
             string caseIds = "";
             RobotSelection caseSel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
-            Dictionary<int, HashSet<string>> caseTags = GetTypeTags(typeof(BH.oM.Structural.Loads.Loadcase));
+            Dictionary<int, HashSet<string>> caseTags = GetTypeTags(typeof(BH.oM.Structure.Loads.Loadcase));
             if (ids != null)
             {
                 List<int> indicies = ids.Cast<int>().ToList();

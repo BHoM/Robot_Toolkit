@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using RobotOM;
-using BH.oM.Structural.Loads;
+using BH.oM.Structure.Loads;
 
 namespace BH.Adapter.Robot
 {

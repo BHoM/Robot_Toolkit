@@ -4,7 +4,7 @@
 //using System.Text;
 //using System.Threading.Tasks;
 //using RobotOM;
-//using BHoMP = BH.oM.Structural.Properties;
+//using BHoMP = BH.oM.Structure.Properties;
 
 //namespace Robot_Adapter.Labels
 //{

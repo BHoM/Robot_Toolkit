@@ -5,8 +5,8 @@
 //using System.Threading.Tasks;
 //using BH.oM.Base;
 //using RobotOM;
-//using BH.oM.Structural.Elements;
-//using BH.oM.Structural.Loads;
+//using BH.oM.Structure.Elements;
+//using BH.oM.Structure.Loads;
 //namespace Robot_Adapter.Structural.Elements
 //{
 //    public class GroupIO

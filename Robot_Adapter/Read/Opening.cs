@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using BH.oM.Structural.Elements;
+using BH.oM.Structure.Elements;
 using RobotOM;
 using BH.oM.Geometry;
 

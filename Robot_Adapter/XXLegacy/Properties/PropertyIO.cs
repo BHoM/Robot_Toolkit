@@ -1,9 +1,9 @@
 ﻿//using System;
-//using BH.oM.Structural;
+//using BH.oM.Structure;
 //using RobotOM;
 //using BHoM.Materials;
-//using BHoMP = BH.oM.Structural.Properties;
-//using BHD = BH.oM.Structural.Databases;
+//using BHoMP = BH.oM.Structure.Properties;
+//using BHD = BH.oM.Structure.Databases;
 
 //namespace Robot_Adapter
 //{
@@ -112,9 +112,9 @@
 //                case IRobotObjectStructuralType.I_OST_SLAB:
 //                    return BHoMP.PanelType.Slab;
 //                case IRobotObjectStructuralType.I_OST_WALL:
-//                    return BH.oM.Structural.Properties.PanelType.Wall;
+//                    return BH.oM.Structure.Properties.PanelType.Wall;
 //                default:
-//                    return BH.oM.Structural.Properties.PanelType.Undefined;
+//                    return BH.oM.Structure.Properties.PanelType.Undefined;
 //            }
 
 //        }

@@ -4,17 +4,17 @@
 //using System.Text;
 //using System.Threading.Tasks;
 //using BHoM.Global;
-//using BH.oM.Structural;
+//using BH.oM.Structure;
 //using RobotOM;
-//using BHoME = BH.oM.Structural.Elements;
-//using BHoMP = BH.oM.Structural.Properties;
-//using BHoML = BH.oM.Structural.Loads;
-//using BH.oM.Structural.Interface;
+//using BHoME = BH.oM.Structure.Elements;
+//using BHoMP = BH.oM.Structure.Properties;
+//using BHoML = BH.oM.Structure.Loads;
+//using BH.oM.Structure.Interface;
 //using BH.oM.Base;
 
 //namespace Robot_Adapter.Structural.Interface
 //{
-//    public partial class RobotAdapter : BH.oM.Structural.Interface.IElementAdapter
+//    public partial class RobotAdapter : BH.oM.Structure.Interface.IElementAdapter
 //    {
 //        private RobotApplication Robot;
 //        private string Settings;

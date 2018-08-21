@@ -1,6 +1,6 @@
 ﻿using BH.oM.Common.Materials;
 using RobotOM;
-using BH.oM.Structural.Properties;
+using BH.oM.Structure.Properties;
 
 namespace BH.Engine.Robot
 {

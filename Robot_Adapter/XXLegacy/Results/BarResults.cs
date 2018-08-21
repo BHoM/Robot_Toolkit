@@ -4,9 +4,9 @@
 //using System.Text;
 //using System.Threading.Tasks;
 //using RobotOM;
-//using BH.oM.Structural;
+//using BH.oM.Structure;
 //using BH.oM.Base.Results;
-//using BH.oM.Structural.Results;
+//using BH.oM.Structure.Results;
 //using Robot_Adapter.Base;
 
 //namespace Robot_Adapter.Structural.Results
@@ -107,12 +107,12 @@
 
 
 
-//            //public static BH.oM.Structural.Results.Bars.BarForceCollection GetBarForcesQuery(BHoM.Global.Project project, string selection = "all", string filePath = "")
+//            //public static BH.oM.Structure.Results.Bars.BarForceCollection GetBarForcesQuery(BHoM.Global.Project project, string selection = "all", string filePath = "")
 //            //{
-//            //    BH.oM.Structural.LoadcaseFactory loadcases = project.Structure.Loadcases;
+//            //    BH.oM.Structure.LoadcaseFactory loadcases = project.Structure.Loadcases;
 //            //    loadcases.ForceUniqueByNumber();
 
-//            //    BH.oM.Structural.Results.Bars.BarForceCollection barforcecol = new BH.oM.Structural.Results.Bars.BarForceCollection();
+//            //    BH.oM.Structure.Results.Bars.BarForceCollection barforcecol = new BH.oM.Structure.Results.Bars.BarForceCollection();
 //            //    RobotApplication robot = new RobotApplication();
 
 //            //    if (robot.Project.Structure.Results.Status == IRobotResultStatusType.I_RST_AVAILABLE)
@@ -163,8 +163,8 @@
 //            //                int div_count = (int)result_row.GetParam(IRobotResultParamType.I_RPT_BAR_DIV_COUNT);
 //            //                double length = result_row.GetValue(17);
 
-//            //                BH.oM.Structural.Results.Bars.BarForce barForce = 
-//            //                    new BH.oM.Structural.Results.Bars.BarForce(loadcases.Create(curr_cas, "Temp"), curr_bar, div_pnt);
+//            //                BH.oM.Structure.Results.Bars.BarForce barForce = 
+//            //                    new BH.oM.Structure.Results.Bars.BarForce(loadcases.Create(curr_cas, "Temp"), curr_bar, div_pnt);
 
 //            //                barForce.BarDivisions = div_count;
 //            //                barForce.RelativePosition = div_pnt / (div_count - 1);

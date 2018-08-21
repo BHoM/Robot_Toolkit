@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Common.Materials;
-using BH.oM.Structural.Elements;
-using BH.oM.Structural.Loads;
+using BH.oM.Structure.Elements;
+using BH.oM.Structure.Loads;
 
 namespace BH.Adapter.Robot
 {
@@ -80,7 +80,7 @@ namespace BH.Adapter.Robot
                 {
                     index = m_RobotApplication.Project.Structure.FiniteElems.FreeNumber;
                 }
-                if (type == typeof(BH.oM.Structural.Elements.PanelPlanar)) //TODO: Check that this is the right rtype of panel
+                if (type == typeof(BH.oM.Structure.Elements.PanelPlanar)) //TODO: Check that this is the right rtype of panel
                 {
                     index = m_RobotApplication.Project.Structure.Objects.FreeNumber;
                 }

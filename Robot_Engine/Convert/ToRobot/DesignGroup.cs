@@ -1,4 +1,4 @@
-﻿using BH.oM.Structural.Design;
+﻿using BH.oM.Structure.Design;
 using RobotOM;
 using System.Collections.Generic;
 

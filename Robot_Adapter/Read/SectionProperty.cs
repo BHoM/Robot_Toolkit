@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using RobotOM;
-using BH.oM.Structural.Properties;
+using BH.oM.Structure.Properties;
 using BH.oM.Common.Materials;
 
 namespace BH.Adapter.Robot

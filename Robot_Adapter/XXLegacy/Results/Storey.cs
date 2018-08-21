@@ -10,15 +10,15 @@
 //    class Storey
 //    {
 //        public void GetStoreyResults(
-//            BH.oM.Structural.Loads.Loadcase loadcase,
-//            BH.oM.Structural.Elements.Storey storey,
-//            out BH.oM.Structural.Results.StoreyResult storeyResult,  
+//            BH.oM.Structure.Loads.Loadcase loadcase,
+//            BH.oM.Structure.Elements.Storey storey,
+//            out BH.oM.Structure.Results.StoreyResult storeyResult,  
 //            string FilePath = "LiveLink")
 //        {
 //            RobotApplication robot = null;
 //            if (FilePath == "LiveLink") robot = new RobotApplication();
 
-//            storeyResult = new BH.oM.Structural.Results.StoreyResult(loadcase);
+//            storeyResult = new BH.oM.Structure.Results.StoreyResult(loadcase);
 //            RobotStoreyResultServer robotResult = robot.Project.Structure.Results.Storeys;
 //            //RobotStoreyDisplacements robotDisplacements = robotResult.Displacements(storey.Number, loadcase.Number);
 //            //RobotStoreyReducedForces robotForces = robotResult.ReducedForces(storey.Number, loadcase.Number);

@@ -2,8 +2,8 @@
 using RobotOM;
 using System;
 using System.Collections.Generic;
-using BH.oM.Structural.Elements;
-using BH.oM.Structural.Loads;
+using BH.oM.Structure.Elements;
+using BH.oM.Structure.Loads;
 using System.Linq;
 
 namespace BH.Engine.Robot

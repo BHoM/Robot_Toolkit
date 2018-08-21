@@ -5,11 +5,11 @@
 //using System.Threading.Tasks;
 //using System.IO;
 //using RobotOM;
-//using BHoMR = BH.oM.Structural.Results;
+//using BHoMR = BH.oM.Structure.Results;
 //using BHoMBR = BH.oM.Base.Results;
 //using Robot_Adapter.Base;
 //using Robot_Adapter.Structural.Results;
-//using BH.oM.Structural.Interface;
+//using BH.oM.Structure.Interface;
 //using BHoM.Databases;
 
 //namespace Robot_Adapter.Structural.Interface

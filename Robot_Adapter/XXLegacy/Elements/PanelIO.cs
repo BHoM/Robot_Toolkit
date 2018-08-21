@@ -6,11 +6,11 @@
 //using RobotOM;
 //using BHoMB = BH.oM.Base;
 //using BHoMG = BH.oM.Geometry;
-//using BHoME = BH.oM.Structural.Elements;
-//using BHoMP = BH.oM.Structural.Properties;
+//using BHoME = BH.oM.Structure.Elements;
+//using BHoMP = BH.oM.Structure.Properties;
 //using BHoMM = BHoM.Materials;
 //using Robot_Adapter.Base;
-//using BH.oM.Structural.Interface;
+//using BH.oM.Structure.Interface;
 //using System.Windows.Forms;
 //using static System.Net.Mime.MediaTypeNames;
 
@@ -413,7 +413,7 @@
 //            robot.Project.Structure.Objects.BeginMultiOperation();
 //            RobotObjObjectServer objServer = robot.Project.Structure.Objects;
 //            ids = new List<string>();
-//            foreach (BH.oM.Structural.Elements.Opening panel in panels)
+//            foreach (BH.oM.Structure.Elements.Opening panel in panels)
 //            {
 //                try
 //                {

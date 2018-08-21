@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using BH.oM.Structural.Loads;
+using BH.oM.Structure.Loads;
 using RobotOM;
 
 namespace BH.Adapter.Robot

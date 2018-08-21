@@ -1,6 +1,6 @@
 ﻿//using Robot_Adapter.Base;
 //using BH.oM.Base.Results;
-//using BH.oM.Structural.Results;
+//using BH.oM.Structure.Results;
 //using RobotOM;
 //using System;
 //using System.Collections.Generic;

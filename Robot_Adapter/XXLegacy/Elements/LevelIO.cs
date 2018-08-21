@@ -1,5 +1,5 @@
 ﻿//using BH.oM.Base;
-//using BH.oM.Structural.Elements;
+//using BH.oM.Structure.Elements;
 //using RobotOM;
 //using System;
 //using System.Collections.Generic;

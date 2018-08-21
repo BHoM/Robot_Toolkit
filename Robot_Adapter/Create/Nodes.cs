@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BH.oM.Structural.Elements;
+using BH.oM.Structure.Elements;
 using RobotOM;
 
 namespace BH.Adapter.Robot
@@ -13,7 +13,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private bool CreateCollection(IEnumerable<BH.oM.Structural.Elements.Node> nodes)
+        private bool CreateCollection(IEnumerable<BH.oM.Structure.Elements.Node> nodes)
         {
             if (nodes != null)
             {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Base;
-using BH.oM.Structural.Results;
+using BH.oM.Structure.Results;
 using RobotOM;
 using BH.oM.Common;
 using System;

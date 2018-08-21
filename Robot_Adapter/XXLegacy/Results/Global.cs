@@ -10,14 +10,14 @@
 //    class Global
 //    {
 //        public void GetGlobalResults(
-//            BH.oM.Structural.Loads.Loadcase loadcase,
-//            out BH.oM.Structural.Results.GlobalResult globalResult,
+//            BH.oM.Structure.Loads.Loadcase loadcase,
+//            out BH.oM.Structure.Results.GlobalResult globalResult,
 //            string FilePath = "LiveLink")
 //        {
 //            RobotApplication robot = null;
 //            if (FilePath == "LiveLink") robot = new RobotApplication();
 
-//            globalResult = new BH.oM.Structural.Results.GlobalResult(loadcase);
+//            globalResult = new BH.oM.Structure.Results.GlobalResult(loadcase);
 //            RobotResultServer robotResult = robot.Project.Structure.Results;
 //            RobotMassSumServer robotMass = robotResult.Advanced.MassSum;
 //            RobotStructureValues robotValues = robotResult.Total;

@@ -445,7 +445,7 @@
 //        /// <param name="startRelease"></param>
 //        /// <param name="endRelease"></param>
 //        /// <returns></returns>
-//        public static bool CreateReleaseLabel(RobotApplication robot, BH.oM.Structural.Properties.BarRelease startRelease, BH.oM.Structural.Properties.BarRelease endRelease)
+//        public static bool CreateReleaseLabel(RobotApplication robot, BH.oM.Structure.Properties.BarRelease startRelease, BH.oM.Structure.Properties.BarRelease endRelease)
 //        {
 //            IRobotLabel robot_release = robot.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_RELEASE, startRelease.Name + "-" + endRelease.Name);
 //            if (robot.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_SUPPORT, startRelease.Name + "-" + endRelease.Name) == 1)

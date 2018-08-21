@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Linq;
 using System;
-using BH.oM.Structural.Loads;
+using BH.oM.Structure.Loads;
 using RobotOM;
 
 namespace BH.Adapter.Robot

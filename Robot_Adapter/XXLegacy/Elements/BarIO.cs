@@ -5,11 +5,11 @@
 //using System.Threading.Tasks;
 //using RobotOM;
 //using BHoMB = BH.oM.Base;
-//using BHoME = BH.oM.Structural.Elements;
-//using BHoMP = BH.oM.Structural.Properties;
+//using BHoME = BH.oM.Structure.Elements;
+//using BHoMP = BH.oM.Structure.Properties;
 //using BHoMM = BHoM.Materials;
 //using Robot_Adapter.Base;
-//using BH.oM.Structural.Interface;
+//using BH.oM.Structure.Interface;
 //using BH.Adapter;
 
 //namespace Robot_Adapter.Structural.Elements
@@ -308,9 +308,9 @@
 //            switch (rtype)
 //            {
 //                case IRobotObjectStructuralType.I_OST_BEAM:
-//                    return BH.oM.Structural.Elements.BarStructuralUsage.Beam;
+//                    return BH.oM.Structure.Elements.BarStructuralUsage.Beam;
 //                case IRobotObjectStructuralType.I_OST_COLUMN:
-//                    return BH.oM.Structural.Elements.BarStructuralUsage.Column;
+//                    return BH.oM.Structure.Elements.BarStructuralUsage.Column;
 //                default:
 //                    return BHoME.BarStructuralUsage.Undefined;
 //            }
@@ -321,9 +321,9 @@
 //        {
 //            switch (bhType)
 //            {
-//                case BH.oM.Structural.Elements.BarStructuralUsage.Beam:
+//                case BH.oM.Structure.Elements.BarStructuralUsage.Beam:
 //                    return IRobotObjectStructuralType.I_OST_BEAM;
-//                case BH.oM.Structural.Elements.BarStructuralUsage.Column:
+//                case BH.oM.Structure.Elements.BarStructuralUsage.Column:
 //                    return IRobotObjectStructuralType.I_OST_COLUMN;
 //                default:
 //                    return IRobotObjectStructuralType.I_OST_UNDEFINED;
@@ -477,10 +477,10 @@
 //                    case BHoME.BarFEAType.CompressionOnly:
 //                        robotBar.TensionCompression = IRobotBarTensionCompression.I_BTC_COMPRESSION_ONLY;
 //                        break;
-//                    case BH.oM.Structural.Elements.BarFEAType.TensionOnly:
+//                    case BH.oM.Structure.Elements.BarFEAType.TensionOnly:
 //                        robotBar.TensionCompression = IRobotBarTensionCompression.I_BTC_TENSION_ONLY;
 //                        break;
-//                    case BH.oM.Structural.Elements.BarFEAType.Axial:
+//                    case BH.oM.Structure.Elements.BarFEAType.Axial:
 //                        robotBar.TrussBar = true;
 //                        break;
 //                }

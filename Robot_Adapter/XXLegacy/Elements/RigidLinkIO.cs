@@ -4,9 +4,9 @@
 //using System.Linq;
 //using System.Text;
 //using System.Threading.Tasks;
-//using BH.oM.Structural.Elements;
+//using BH.oM.Structure.Elements;
 //using Robot_Adapter.Base;
-//using BH.oM.Structural.Interface;
+//using BH.oM.Structure.Interface;
 
 //namespace Robot_Adapter.Structural.Elements
 //{

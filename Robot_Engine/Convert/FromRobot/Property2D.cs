@@ -2,7 +2,7 @@
 using RobotOM;
 using System;
 using System.Collections.Generic;
-using BH.oM.Structural.Properties;
+using BH.oM.Structure.Properties;
 using BH.Engine.Structure;
 
 namespace BH.Engine.Robot

@@ -5,8 +5,8 @@
 //using System.Threading.Tasks;
 //using RobotOM;
 //using BHoMG = BH.oM.Geometry;
-//using BHoME = BH.oM.Structural.Elements;
-//using BHoML = BH.oM.Structural.Loads;
+//using BHoME = BH.oM.Structure.Elements;
+//using BHoML = BH.oM.Structure.Loads;
 //using BHoMB = BH.oM.Base;
 //using Robot_Adapter.Base;
 
@@ -198,9 +198,9 @@
 
 //            RobotCaseCollection collection = robot.Project.Structure.Cases.GetAll();
 //            Dictionary<string, BHoML.Loadcase> cases = new BHoMB.ObjectFilter<BHoML.Loadcase>(loadcases).ToDictionary<string>("", BHoMB.FilterOption.Name);
-//            BHoMB.ObjectManager<string, BHoME.Node> nodes = new BH.oM.Base.ObjectManager<string, BH.oM.Structural.Elements.Node>(Utils.NUM_KEY, BH.oM.Base.FilterOption.UserData);
-//            BHoMB.ObjectManager<string, BHoME.Bar> bars = new BH.oM.Base.ObjectManager<string, BH.oM.Structural.Elements.Bar>(Utils.NUM_KEY, BH.oM.Base.FilterOption.UserData);
-//            BHoMB.ObjectManager<string, BHoME.IAreaElement> panels = new BH.oM.Base.ObjectManager<string, BH.oM.Structural.Elements.IAreaElement>(Utils.NUM_KEY, BH.oM.Base.FilterOption.UserData);
+//            BHoMB.ObjectManager<string, BHoME.Node> nodes = new BH.oM.Base.ObjectManager<string, BH.oM.Structure.Elements.Node>(Utils.NUM_KEY, BH.oM.Base.FilterOption.UserData);
+//            BHoMB.ObjectManager<string, BHoME.Bar> bars = new BH.oM.Base.ObjectManager<string, BH.oM.Structure.Elements.Bar>(Utils.NUM_KEY, BH.oM.Base.FilterOption.UserData);
+//            BHoMB.ObjectManager<string, BHoME.IAreaElement> panels = new BH.oM.Base.ObjectManager<string, BH.oM.Structure.Elements.IAreaElement>(Utils.NUM_KEY, BH.oM.Base.FilterOption.UserData);
 //            for (int i = 1; i <= collection.Count; i++)
 //            {
 //                IRobotCase lCase = collection.Get(i) as IRobotCase;
@@ -368,11 +368,11 @@
 //                switch (bhCase.CaseType)
 //                {
 //                    case BHoML.CaseType.Simple:
-//                        BH.oM.Structural.Loads.Loadcase simpleCase = bhCase as BH.oM.Structural.Loads.Loadcase;                   
+//                        BH.oM.Structure.Loads.Loadcase simpleCase = bhCase as BH.oM.Structure.Loads.Loadcase;                   
 //                        caseServer.CreateSimple(caseNum, loadcase.Name, GetLoadNature(simpleCase.Nature), IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
 //                        break;
 //                    case BHoML.CaseType.Combination:
-//                        BH.oM.Structural.Loads.LoadCombination combo = loadcase as BH.oM.Structural.Loads.LoadCombination;
+//                        BH.oM.Structure.Loads.LoadCombination combo = loadcase as BH.oM.Structure.Loads.LoadCombination;
 
 //                        RobotCaseCombination cCase = robot.Project.Structure.Cases.CreateCombination(caseNum, loadcase.Name, IRobotCombinationType.I_CBT_ULS, IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_COMB);
 //                        RobotCaseCollection collection = robot.Project.Structure.Cases.GetAll();
@@ -466,7 +466,7 @@
 //            RobotApp.Project.Structure.Cases.BeginMultiOperation();
 //            RobotCaseCollection collection = RobotApp.Project.Structure.Cases.GetAll();
 //            IRobotCase currentCase;
-//            cases = new List<BH.oM.Structural.Loads.ICase>();
+//            cases = new List<BH.oM.Structure.Loads.ICase>();
 //            List<string> outIds = new List<string>();
 //            List<int> nums = new List<int>();
 //            for (int i = 1; i <= collection.Count; i++)

@@ -66,7 +66,7 @@ namespace BH.Adapter.Robot
                 objects.AddRange(ReadNodes());
                 objects.AddRange(ReadBars());
                 objects.AddRange(ReadPanels());
-                //objects.AddRange(ReadFramingElementDesignProperties());
+                objects.AddRange(ReadFramingElementDesignProperties());
                 return objects;
             }
 

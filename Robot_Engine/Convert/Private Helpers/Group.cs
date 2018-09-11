@@ -43,13 +43,13 @@ namespace BH.Engine.Robot
             }
 
             //Otherwise apply to the corresponding indecies
-            return load.Objects.Elements.Select(x => int.Parse(x.CustomData[AdapterID].ToString())).GeterateIdString();
+            return load.Objects.Elements.Select(x => int.Parse(x.CustomData[AdapterID].ToString())).ToRobotSelectionString();
 
         }
 
         /***************************************************/
 
-        public static string GeterateIdString(this IEnumerable<int> ids)
+        public static string ToRobotSelectionString(this IEnumerable<int> ids)
         {
             string str = "";
 
@@ -86,7 +86,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        public static List<int> GetNumbersFromText(string selection)
+        public static List<int> FromRobotSelectionString(string selection)
         {
             if (selection.Contains("EDGE")) return null;
             List<int> output = new List<int>();

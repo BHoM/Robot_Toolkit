@@ -23,6 +23,8 @@ namespace BH.Adapter.Robot
                 return ReadNodeDisplacement(ids, cases, divisions);
             if (type == typeof(NodeReaction))
                 return ReadNodeReactions(ids, cases, divisions);
+            if (type == typeof(MeshNodeStress))
+                return ReadMeshNodeStresses(ids, cases);
             return base.ReadResults(type, ids, cases, divisions);
         }
 

@@ -130,7 +130,7 @@ namespace BH.Adapter.Robot
             
             if (cases != null && cases.Count > 0)
             {
-                List<int> caseNums = GetCases(cases);
+                List<int> caseNums = GetCaseNumbers(cases);
                 string str = "";
                 for (int i = 1; i < index; i++)
                 {
@@ -154,7 +154,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private List<int> GetCases(IList cases)
+        private List<int> GetCaseNumbers(IList cases)
         {
             List<int> caseNums = new List<int>();
 
@@ -182,7 +182,7 @@ namespace BH.Adapter.Robot
                     }
                     caseNums.Add(System.Convert.ToInt32((lComb as LoadCombination).CustomData[AdapterId]));
                 }
-            }
+            }          
 
             else
             {

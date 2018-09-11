@@ -41,7 +41,7 @@ namespace BH.Adapter.Robot
                         for (int j = 1; j <= sCase.Records.Count; j++)
                         {
                             IRobotLoadRecord loadRecord = sCase.Records.Get(j);
-                            List<int> elementIds = BH.Engine.Robot.Convert.GetNumbersFromText(loadRecord.Objects.ToText());
+                            List<int> elementIds = BH.Engine.Robot.Convert.FromRobotSelectionString(loadRecord.Objects.ToText());
                             List<Node> objects = new List<Node>();
                             for (int k = 0; k < elementIds.Count; k++)
                             {

@@ -42,12 +42,12 @@ namespace BH.Adapter.Robot
             if (ids == null || ids.Count == 0)
                 barSelection.FromText("all");
             else
-                barSelection.FromText(BH.Engine.Robot.Convert.GeterateIdString(CheckAndGetIds(ids)));
+                barSelection.FromText(BH.Engine.Robot.Convert.ToRobotSelectionString(CheckAndGetIds(ids)));
 
             if (cases == null || cases.Count == 0)
                 caseSelection.FromText("all");
             else
-                caseSelection.FromText(BH.Engine.Robot.Convert.GeterateIdString(GetCases(cases)));
+                caseSelection.FromText(BH.Engine.Robot.Convert.ToRobotSelectionString(GetCaseNumbers(cases)));
 
             queryParams.Selection.Set(IRobotObjectType.I_OT_CASE, caseSelection);
             queryParams.Selection.Set(IRobotObjectType.I_OT_BAR, barSelection);

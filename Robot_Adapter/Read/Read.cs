@@ -15,7 +15,7 @@ namespace BH.Adapter.Robot
         /***************************************************/
         /**** Adapter Methods                           ****/
         /***************************************************/
-
+        
         protected override IEnumerable<IBHoMObject> Read(Type type, IList indices = null)
         {
             if (type == typeof(Node))
@@ -30,8 +30,8 @@ namespace BH.Adapter.Robot
                 return ReadMaterial();
             if (type == typeof(PanelPlanar))
                 return ReadPanels();
-            if (type == typeof(MeshFace))
-                return new List<MeshFace>();
+            if (type == typeof(Mesh))
+                return ReadMeshes();
             if (typeof(IProperty2D).IsAssignableFrom(type))
                 return ReadProperty2D();
             if (type == typeof(RigidLink))

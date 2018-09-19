@@ -41,29 +41,32 @@ namespace BH.Engine.Robot
             }
         }
 
-        public static IRobotFeLayerType FromBHoMEnum(MeshResultType bhomMeshLayer)
+        public static IRobotFeLayerType FromBHoMEnum(MeshResultLayer bhomMeshLayer)
         {
             IRobotFeLayerType robotLayerType = new IRobotFeLayerType();
 
             switch (bhomMeshLayer)
             {
-                case (MeshResultType.AbsoluteMaximum):
+                case (MeshResultLayer.AbsoluteMaximum):
                     robotLayerType = IRobotFeLayerType.I_FLT_ABSOLUTE_MAXIMUM;
                     break;
-                case (MeshResultType.Lower):
+                case (MeshResultLayer.Lower):
                     robotLayerType = IRobotFeLayerType.I_FLT_LOWER;
                     break;
-                case (MeshResultType.Maximum):
+                case (MeshResultLayer.Maximum):
                     robotLayerType = IRobotFeLayerType.I_FLT_MAXIMUM;
                     break;
-                case (MeshResultType.Middle):
+                case (MeshResultLayer.Middle):
                     robotLayerType = IRobotFeLayerType.I_FLT_MIDDLE;
                     break;
-                case (MeshResultType.Minimum):
+                case (MeshResultLayer.Minimum):
                     robotLayerType = IRobotFeLayerType.I_FLT_MINIMUM;
                     break;
-                case (MeshResultType.Upper):
+                case (MeshResultLayer.Upper):
                     robotLayerType = IRobotFeLayerType.I_FLT_UPPER;
+                    break;
+                case (MeshResultLayer.Arbitrary):
+                    robotLayerType = IRobotFeLayerType.I_FLT_ARBITRARY;
                     break;
             }
             return robotLayerType;
@@ -83,15 +86,15 @@ namespace BH.Engine.Robot
                 case (MeshResultSmoothingType.ByPanel):
                     robotSmoothingType = IRobotFeResultSmoothing.I_FRS_SMOOTHING_WITHIN_A_PANEL;
                     break;
-                case (MeshResultSmoothingType.ByFiniteElementCentres):
-                    robotSmoothingType = IRobotFeResultSmoothing.I_FRS_IN_ELEMENT_CENTER;
-                    break;
                 case (MeshResultSmoothingType.BySelection):
                     robotSmoothingType = IRobotFeResultSmoothing.I_FRS_SMOOTHING_ACCORDING_TO_SELECTION;
                     break;
                 case (MeshResultSmoothingType.Global):
                     robotSmoothingType = IRobotFeResultSmoothing.I_FRS_GLOBAL_SMOOTHING;
-                    break;                
+                    break;
+                case (MeshResultSmoothingType.ByFiniteElementCentres):
+                    robotSmoothingType = IRobotFeResultSmoothing.I_FRS_IN_ELEMENT_CENTER;
+                    break;           
             }
             return robotSmoothingType;
         }

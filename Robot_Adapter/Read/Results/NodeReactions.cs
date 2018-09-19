@@ -76,7 +76,7 @@ namespace BH.Adapter.Robot
 
                     NodeReaction nodeReaction = new NodeReaction
                     {
-                        Case = idCase.ToString(),
+                        ResultCase = idCase.ToString(),
                         ObjectId = idNode.ToString(),
                         FX = fx,
                         FY = fy,

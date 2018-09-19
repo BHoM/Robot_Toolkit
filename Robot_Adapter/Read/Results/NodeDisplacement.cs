@@ -76,7 +76,7 @@ namespace BH.Adapter.Robot
 
                     NodeDisplacement nodeDisp = new NodeDisplacement
                     {
-                        Case = idCase.ToString(),
+                        ResultCase = idCase.ToString(),
                         ObjectId = idNode.ToString(),
                         UX = ux,
                         UY = uy,

@@ -78,7 +78,7 @@ namespace BH.Adapter.Robot
 
                     BarForce barForce = new BarForce
                     {
-                        Case = idCase.ToString(),
+                        ResultCase = idCase.ToString(),
                         ObjectId = idBar.ToString(),
                         Divisions = division,
                         Position = position,

@@ -113,11 +113,10 @@
     <Compile Include="Read\Elements\DesignGroups.cs" />
     <Compile Include="Read\Properties\FramingElementDesignProperties.cs" />
     <Compile Include="Read\Results\BarForce.cs" />
+    <Compile Include="Read\Results\MeshResults.cs" />
     <Compile Include="Read\Results\NodeDisplacement.cs" />
-    <Compile Include="Read\Results\PanelStresses.cs" />
     <Compile Include="Read\Results\NodeReactions.cs" />
     <Compile Include="Read\Read.cs" />
-    <Compile Include="Read\Results\_Results.cs" />
     <Compile Include="Update\FramingElementDesignProperties.cs" />
     <Compile Include="Update\Bars.cs" />
     <Compile Include="Update\UpdateObjects.cs" />
@@ -125,6 +124,7 @@
     <Compile Include="Types\Comparer.cs" />
     <Compile Include="Types\DependencyTypes.cs" />
     <Compile Include="Adapter\RobotAdapter.cs" />
+    <Compile Include="XXLegacy\ResultEnums_for Reference.cs" />
     <Compile Include="XXLegacy\Elements\GridIO.cs" />
     <Compile Include="XXLegacy\Elements\GroupIO.cs" />
     <Compile Include="XXLegacy\Elements\LevelIO.cs" />

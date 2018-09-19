@@ -13,20 +13,22 @@ namespace BH.Adapter.Robot
                      
 
         //Fast query method - only returns basic node information, not full node objects
-        private List<Mesh> ReadMeshes(List<string> ids = null)
+        private List<FEMesh> ReadMeshes(List<string> ids = null)
         {
-            //List<List<MeshFace>> bhomMeshes = new List<List<MeshFace>>();
-            //Dictionary<string, List<MeshFace>> bhomMeshesDictionary = new Dictionary<string, List<MeshFace>>();
+            SortedDictionary<int, FEMesh> bhomMeshes = new SortedDictionary<int, FEMesh>();
 
-            Dictionary<string, Mesh> bhomMeshes = new Dictionary<string, Mesh>();
+            List<FEMeshFace> meshFaces = new List<FEMeshFace>();
 
-            Dictionary<string, Node> bhomNodes = ReadNodesQuery().ToDictionary(x => x.CustomData[AdapterId].ToString());
+            Dictionary<int, Node> bhomNodes = ReadNodesQuery().ToDictionary(x => System.Convert.ToInt32(x.CustomData[AdapterId]));
+
+            Dictionary<int, List<Node>> meshNodes_allMeshes = new Dictionary<int, List<Node>>();
+
+            Dictionary<int, List<int>> meshNodeIds_allMeshes = new Dictionary<int, List<int>>();
 
             RobotResultQueryParams queryParams = m_RobotApplication.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
 
-            RobotSelection fe_sel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_FINITE_ELEMENT);
+            RobotSelection fe_sel = m_RobotApplication.Project.Structure.Selections.CreateFull(IRobotObjectType.I_OT_FINITE_ELEMENT);
             
-            fe_sel.FromText("all");
             queryParams.ResultIds.SetSize(5);
             queryParams.ResultIds.Set(1, 564);    //Corresponds to first node number of the mesh face topology          
             queryParams.ResultIds.Set(2, 565);    //Corresponds to second node number of the mesh face topology
@@ -34,9 +36,10 @@ namespace BH.Adapter.Robot
             queryParams.ResultIds.Set(4, 567);    //Corresponds to fourth node number of the mesh face topology (if it exists/mesh face is 4 node)
             queryParams.ResultIds.Set(5, 1252);   //Corresponds to the panel number to which the mesh face belongs
 
-            queryParams.Selection.Set(IRobotObjectType.I_OT_NODE, fe_sel);
+            queryParams.Selection.Set(IRobotObjectType.I_OT_FINITE_ELEMENT, fe_sel);
             queryParams.SetParam(IRobotResultParamType.I_RPT_MULTI_THREADS, true);
             queryParams.SetParam(IRobotResultParamType.I_RPT_THREAD_COUNT, 4);
+            queryParams.SetParam(IRobotResultParamType.I_RPT_SMOOTHING, IRobotFeResultSmoothing.I_FRS_IN_ELEMENT_CENTER);
             
             RobotResultRowSet rowSet = new RobotResultRowSet();
             IRobotResultQueryReturnType ret = IRobotResultQueryReturnType.I_RQRT_MORE_AVAILABLE;
@@ -48,56 +51,65 @@ namespace BH.Adapter.Robot
                 bool isOk = rowSet.MoveFirst();
                 while (isOk)
                 {
-                    Node node1 = new Node();
-                    Node node2 = new Node();
-                    Node node3 = new Node();
-                    Node node4 = new Node();
-                    List<Node> meshFaceNodes = new List<Node>();
-
                     RobotResultRow row = rowSet.CurrentRow;
 
-                    meshFaceNodes.Add(bhomNodes.TryGetValue(row.GetValue(564), out node1));
-                    meshFaceNodes.Add(bhomNodes.TryGetValue(row.GetValue(565), out node2));
-                    meshFaceNodes.Add(bhomNodes.TryGetValue(row.GetValue(566), out node3));
+                    int panelNumber = System.Convert.ToInt32(row.GetValue(1252));
+
+                    List<int> meshNodeIds = (meshNodeIds_allMeshes.ContainsKey(panelNumber)? meshNodeIds_allMeshes[panelNumber] : new List<int>());
+                    List<int> meshFaceNodeIds = new List<int>();
+
+                    if (!meshNodeIds.Contains(System.Convert.ToInt32(row.GetValue(564))))
+                        meshNodeIds.Add(System.Convert.ToInt32(row.GetValue(564)));
+                    meshFaceNodeIds.Add(meshNodeIds.IndexOf(System.Convert.ToInt32(row.GetValue(564))));
+
+                    if (!meshNodeIds.Contains(System.Convert.ToInt32(row.GetValue(565))))
+                        meshNodeIds.Add(System.Convert.ToInt32(row.GetValue(565)));
+                    meshFaceNodeIds.Add(meshNodeIds.IndexOf(System.Convert.ToInt32(row.GetValue(565))));
+
+                    if (!meshNodeIds.Contains(System.Convert.ToInt32(row.GetValue(566))))
+                        meshNodeIds.Add(System.Convert.ToInt32(row.GetValue(566)));
+                    meshFaceNodeIds.Add(meshNodeIds.IndexOf(System.Convert.ToInt32(row.GetValue(566))));
+
 
                     if (row.IsAvailable(567))
-                    {                     
-                        meshFaceNodes.Add(bhomNodes.TryGetValue(row.GetValue(567), out node4));
+                    {
+                        if (!meshNodeIds.Contains(System.Convert.ToInt32(row.GetValue(567))))
+                            meshNodeIds.Add(System.Convert.ToInt32(row.GetValue(567)));
+                        meshFaceNodeIds.Add(meshNodeIds.IndexOf(System.Convert.ToInt32(row.GetValue(567))));
                     }
 
-                    MeshFace meshFace = BH.Engine.Structure.Create.MeshFace(meshFaceNodes);
+                    if (!meshNodeIds_allMeshes.ContainsKey(panelNumber))
+                        meshNodeIds_allMeshes.Add(panelNumber, meshNodeIds);
 
-                    int panelNumber = row.GetValue(1252);
+                    FEMeshFace meshFace = new FEMeshFace();
+                    meshFace.NodeListPositions = meshFaceNodeIds;
 
-                    if (bhomMeshes.ContainsKey(panelNumber.ToString()))
+                    meshFaces.Add(meshFace);                    
+
+                    if (bhomMeshes.ContainsKey(panelNumber))
                     {
-                        bhomMeshes[panelNumber.ToString()].MeshFaces.Add(meshFace);
+                        bhomMeshes[panelNumber].MeshFaces.Add(meshFace);
+                        bhomMeshes[panelNumber].CustomData[AdapterId] = panelNumber;
                     }
                     else
                     {
-                        Mesh mesh = new Mesh();
+                        FEMesh mesh = new FEMesh();
                         mesh.MeshFaces.Add(meshFace);
-                        bhomMeshes.Add(panelNumber.ToString(), mesh);
-                    }
-
-                    //if (bhomMeshesDictionary.ContainsKey(panelNumber.ToString()))
-                    //{
-                    //    bhomMeshesDictionary[panelNumber.ToString()].Add(meshFace);
-                    //}
-                    //else
-                    //{
-                    //    bhomMeshesDictionary.Add(panelNumber.ToString(), new List<MeshFace> { meshFace });
-                    //}                    
-                                      
+                        mesh.CustomData[AdapterId] = panelNumber;
+                        bhomMeshes.Add(panelNumber, mesh);
+                    }                   
                     isOk = rowSet.MoveNext();
                 }
-                //foreach (string key in bhomMeshesDictionary.Keys)
-                //{
-                //    bhomMeshes.Add(bhomMeshesDictionary[key]);
-                //}
-                rowSet.Clear();                
+                 rowSet.Clear();       
             }            
             queryParams.Reset();
+            foreach (int panelId in meshNodeIds_allMeshes.Keys)
+                {
+                    foreach (int nodeId in meshNodeIds_allMeshes[panelId])
+                    {
+                        bhomMeshes[panelId].Nodes.Add(bhomNodes[nodeId]);
+                    }
+                }
             return bhomMeshes.Values.ToList();
         }
         

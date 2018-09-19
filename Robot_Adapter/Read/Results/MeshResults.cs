@@ -23,9 +23,16 @@ namespace BH.Adapter.Robot
             IList cases = (IList)query.Equalities["Cases"];
             MeshResultLayer layer = (MeshResultLayer)query.Equalities["Layer"];
             MeshResultSmoothingType smoothing = (MeshResultSmoothingType)query.Equalities["Smoothing"];
-            double layerPosition = (double)query.Equalities["LayerPosition"];
+            double layerPosition = (double)query.Equalities["LayerPosition"];            
             MeshResultType resultType = (MeshResultType)query.Equalities["ResultType"];
             IRobotFeLayerType robotMeshLayer = Convert.FromBHoMEnum(layer);
+            if (robotMeshLayer == IRobotFeLayerType.I_FLT_LOWER)
+                layerPosition = 0;
+            if (robotMeshLayer == IRobotFeLayerType.I_FLT_MIDDLE)
+                layerPosition = 0.5;
+            if (robotMeshLayer == IRobotFeLayerType.I_FLT_UPPER)
+                layerPosition = 1;
+
             IRobotFeResultSmoothing robotFESmoothing = Convert.FromBHoMEnum(smoothing);
 
             IRobotStructure robotStructureServer = m_RobotApplication.Project.Structure;

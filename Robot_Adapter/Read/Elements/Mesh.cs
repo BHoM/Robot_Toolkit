@@ -82,7 +82,7 @@ namespace BH.Adapter.Robot
                         meshNodeIds_allMeshes.Add(panelNumber, meshNodeIds);
 
                     FEMeshFace meshFace = new FEMeshFace();
-                    meshFace.NodeListPositions = meshFaceNodeIds;
+                    meshFace.NodeListIndices = meshFaceNodeIds;
 
                     meshFaces.Add(meshFace);                    
 

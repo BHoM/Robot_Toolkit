@@ -85,6 +85,7 @@ namespace BH.Adapter.Robot
             List<MeshResults> meshResultsCollection = new List<MeshResults>();
             foreach (BH.oM.Structure.Elements.PanelPlanar panel in panels)
             {
+                
                 CoordinateSystem coordinateSystem = null;
                 List<MeshResult> meshResults = new List<MeshResult>();
 
@@ -218,6 +219,25 @@ namespace BH.Adapter.Robot
                                                                             row.GetValue((int)IRobotFeResultType.I_FRT_COMPLEX_N_MISES),
                                                                             row.GetValue((int)IRobotFeResultType.I_FRT_COMPLEX_M_MISES));
                                 meshResults.Add(meshVonMises);
+                                break;
+
+                            case MeshResultType.Displacements:
+                                MeshDisplacement meshDisplacement = new MeshDisplacement(idPanel.ToString(),
+                                                                            idNode.ToString(),
+                                                                            idFiniteElement.ToString(),
+                                                                            idCase.ToString(),
+                                                                            0,
+                                                                            layer,
+                                                                            layerPosition,
+                                                                            smoothing,
+                                                                            null,
+                                                                            row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_UXX),
+                                                                            row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_UYY),
+                                                                            row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_WNORM),                                                     
+                                                                            0,
+                                                                            0,
+                                                                            0);
+                                meshResults.Add(meshDisplacement);
                                 break;
 
                         }

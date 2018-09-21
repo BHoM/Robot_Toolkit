@@ -69,6 +69,17 @@ namespace BH.Adapter.Robot
                     BHoMPanel.CustomData["RobotFiniteElementIds"] = rpanel.FiniteElems;
                     BHoMPanel.CustomData["RobotNodeIds"] = rpanel.Nodes;
 
+                    //Get the coordinate system for the panel
+                    BH.oM.Geometry.Point coordPoint = BH.Engine.Geometry.Query.StartPoint(outline as dynamic);
+
+                    double x, y, z; rpanel.Main.Attribs.GetDirX(out x, out y, out z);
+                    BH.oM.Geometry.Vector coordXAxis = BH.Engine.Geometry.Create.Vector(x, y, z);
+                    BH.oM.Geometry.Vector coordZAxis = BH.Engine.Geometry.Compute.FitPlane(outline as dynamic).Normal;
+
+                    BH.oM.Geometry.CoordinateSystem coordinateSystem = BH.Engine.Geometry.Create.CoordinateSystem(coordPoint, coordXAxis, coordZAxis);
+
+                    BHoMPanel.CustomData["CoordinateSystem"] = coordinateSystem;
+
                     if (rpanel.HasLabel(IRobotLabelType.I_LT_PANEL_THICKNESS) != 0)
                     {
                         string propName = rpanel.GetLabelName(IRobotLabelType.I_LT_PANEL_THICKNESS);

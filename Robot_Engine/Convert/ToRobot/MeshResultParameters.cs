@@ -38,7 +38,17 @@ namespace BH.Engine.Robot
                     results.Add((int)IRobotFeResultType.I_FRT_COMPLEX_S_MISES);
                     results.Add((int)IRobotFeResultType.I_FRT_COMPLEX_N_MISES);
                     results.Add((int)IRobotFeResultType.I_FRT_COMPLEX_M_MISES);
-                    break;                    
+                    break;
+
+                case MeshResultType.Displacements:
+                    results.Add((int)IRobotFeResultType.I_FRT_DETAILED_UXX);
+                    results.Add((int)IRobotFeResultType.I_FRT_DETAILED_UYY);
+                    results.Add((int)IRobotFeResultType.I_FRT_DETAILED_WNORM);
+                    results.Add((int)IRobotFeResultType.I_FRT_DETAILED_RXX);
+                    results.Add((int)IRobotFeResultType.I_FRT_DETAILED_RYY);
+                    results.Add((int)IRobotFeResultType.I_FRT_DETAILED_RNORM);
+
+                    break;
             }
             meshResultParams.Add("ResultsToInclude", results);
             return meshResultParams;

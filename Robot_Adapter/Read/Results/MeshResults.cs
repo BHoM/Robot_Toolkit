@@ -26,6 +26,7 @@ namespace BH.Adapter.Robot
             double layerPosition = (double)query.Equalities["LayerPosition"];            
             MeshResultType resultType = (MeshResultType)query.Equalities["ResultType"];
             IRobotFeLayerType robotMeshLayer = Convert.FromBHoMEnum(layer);
+            CoordinateSystem userCoordinateSystem = (CoordinateSystem)query.Equalities["CoordinateSystem"];
             if (robotMeshLayer == IRobotFeLayerType.I_FLT_LOWER)
                 layerPosition = 0;
             if (robotMeshLayer == IRobotFeLayerType.I_FLT_MIDDLE)
@@ -85,8 +86,8 @@ namespace BH.Adapter.Robot
             List<MeshResults> meshResultsCollection = new List<MeshResults>();
             foreach (BH.oM.Structure.Elements.PanelPlanar panel in panels)
             {
-                
-                CoordinateSystem coordinateSystem = null;
+
+                CoordinateSystem coordinateSystem = (userCoordinateSystem != null) ? userCoordinateSystem : panel.CustomData["CoordinateSystem"] as dynamic;
                 List<MeshResult> meshResults = new List<MeshResult>();
 
                 RobotSelection caseSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_CASE);
@@ -170,7 +171,7 @@ namespace BH.Adapter.Robot
                                                                         layer,
                                                                         layerPosition,
                                                                         smoothing,
-                                                                        null,
+                                                                        coordinateSystem,
                                                                         row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_SXX),
                                                                         row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_SYY),
                                                                         row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_SXY),
@@ -192,7 +193,7 @@ namespace BH.Adapter.Robot
                                                                         layer,
                                                                         layerPosition,
                                                                         smoothing,
-                                                                        null,
+                                                                        coordinateSystem,
                                                                         row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_NXX),
                                                                         row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_NYY),
                                                                         row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_NXY),
@@ -214,7 +215,7 @@ namespace BH.Adapter.Robot
                                                                             layer,
                                                                             layerPosition,
                                                                             smoothing,
-                                                                            null,
+                                                                            coordinateSystem,
                                                                             row.GetValue((int)IRobotFeResultType.I_FRT_COMPLEX_S_MISES),
                                                                             row.GetValue((int)IRobotFeResultType.I_FRT_COMPLEX_N_MISES),
                                                                             row.GetValue((int)IRobotFeResultType.I_FRT_COMPLEX_M_MISES));
@@ -230,7 +231,7 @@ namespace BH.Adapter.Robot
                                                                             layer,
                                                                             layerPosition,
                                                                             smoothing,
-                                                                            null,
+                                                                            coordinateSystem,
                                                                             row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_UXX),
                                                                             row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_UYY),
                                                                             row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_WNORM),                                                     

@@ -75,8 +75,16 @@ namespace BH.Adapter.Robot
                     double x, y, z; rpanel.Main.Attribs.GetDirX(out x, out y, out z);
                     BH.oM.Geometry.Vector coordXAxis = BH.Engine.Geometry.Create.Vector(x, y, z);
                     BH.oM.Geometry.Vector coordZAxis = BH.Engine.Geometry.Compute.FitPlane(outline as dynamic).Normal;
+                    if (coordZAxis.Z == 0)
+                    {
+                        if ((coordZAxis.X > coordZAxis.Y && coordZAxis.X < 1) || (coordZAxis.Y > coordZAxis.X && coordZAxis.Y < 1))
+                            coordZAxis = BH.Engine.Geometry.Modify.Reverse(coordZAxis);
+                    }
+                    if (rpanel.Main.Attribs.DirZ == 0)
+                        coordZAxis = BH.Engine.Geometry.Modify.Reverse(coordZAxis);
 
-                    BH.oM.Geometry.CoordinateSystem coordinateSystem = BH.Engine.Geometry.Create.CoordinateSystem(coordPoint, coordXAxis, coordZAxis);
+                    BH.oM.Geometry.CoordinateSystem tempCoordSys = BH.Engine.Geometry.Create.CoordinateSystem(coordPoint, coordXAxis, coordZAxis);
+                    BH.oM.Geometry.CoordinateSystem coordinateSystem = BH.Engine.Geometry.Create.CoordinateSystem(coordPoint, coordXAxis, tempCoordSys.Z);                    
 
                     BHoMPanel.CustomData["CoordinateSystem"] = coordinateSystem;
 

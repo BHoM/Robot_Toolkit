@@ -10,7 +10,7 @@ namespace BH.Adapter.Robot
         /***************************************************/
         /****           Private Methods                 ****/
         /***************************************************/
-                     
+
 
         //Fast query method - only returns basic node information, not full node objects
         private List<FEMesh> ReadMeshes(List<string> ids = null)
@@ -28,7 +28,7 @@ namespace BH.Adapter.Robot
             RobotResultQueryParams queryParams = m_RobotApplication.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
 
             RobotSelection fe_sel = m_RobotApplication.Project.Structure.Selections.CreateFull(IRobotObjectType.I_OT_FINITE_ELEMENT);
-            
+
             queryParams.ResultIds.SetSize(5);
             queryParams.ResultIds.Set(1, 564);    //Corresponds to first node number of the mesh face topology          
             queryParams.ResultIds.Set(2, 565);    //Corresponds to second node number of the mesh face topology
@@ -40,7 +40,7 @@ namespace BH.Adapter.Robot
             queryParams.SetParam(IRobotResultParamType.I_RPT_MULTI_THREADS, true);
             queryParams.SetParam(IRobotResultParamType.I_RPT_THREAD_COUNT, 4);
             queryParams.SetParam(IRobotResultParamType.I_RPT_SMOOTHING, IRobotFeResultSmoothing.I_FRS_IN_ELEMENT_CENTER);
-            
+
             RobotResultRowSet rowSet = new RobotResultRowSet();
             IRobotResultQueryReturnType ret = IRobotResultQueryReturnType.I_RQRT_MORE_AVAILABLE;
 
@@ -55,36 +55,56 @@ namespace BH.Adapter.Robot
 
                     int panelNumber = System.Convert.ToInt32(row.GetValue(1252));
 
-                    List<int> meshNodeIds = (meshNodeIds_allMeshes.ContainsKey(panelNumber)? meshNodeIds_allMeshes[panelNumber] : new List<int>());
+                    List<int> meshNodeIds = (meshNodeIds_allMeshes.ContainsKey(panelNumber) ? meshNodeIds_allMeshes[panelNumber] : new List<int>());
                     List<int> meshFaceNodeIds = new List<int>();
+                    FEMeshFace meshFace = new FEMeshFace();
 
-                    if (!meshNodeIds.Contains(System.Convert.ToInt32(row.GetValue(564))))
-                        meshNodeIds.Add(System.Convert.ToInt32(row.GetValue(564)));
-                    meshFaceNodeIds.Add(meshNodeIds.IndexOf(System.Convert.ToInt32(row.GetValue(564))));
+                    int[] robotNodeIds = new int[3];
 
-                    if (!meshNodeIds.Contains(System.Convert.ToInt32(row.GetValue(565))))
-                        meshNodeIds.Add(System.Convert.ToInt32(row.GetValue(565)));
-                    meshFaceNodeIds.Add(meshNodeIds.IndexOf(System.Convert.ToInt32(row.GetValue(565))));
-
-                    if (!meshNodeIds.Contains(System.Convert.ToInt32(row.GetValue(566))))
-                        meshNodeIds.Add(System.Convert.ToInt32(row.GetValue(566)));
-                    meshFaceNodeIds.Add(meshNodeIds.IndexOf(System.Convert.ToInt32(row.GetValue(566))));
-
-
+                    robotNodeIds[0] = System.Convert.ToInt32(row.GetValue(564));
+                    robotNodeIds[1] = System.Convert.ToInt32(row.GetValue(565));
+                    robotNodeIds[2] = System.Convert.ToInt32(row.GetValue(566));
                     if (row.IsAvailable(567))
                     {
-                        if (!meshNodeIds.Contains(System.Convert.ToInt32(row.GetValue(567))))
-                            meshNodeIds.Add(System.Convert.ToInt32(row.GetValue(567)));
-                        meshFaceNodeIds.Add(meshNodeIds.IndexOf(System.Convert.ToInt32(row.GetValue(567))));
+                        System.Array.Resize(ref robotNodeIds, 4);
+                        robotNodeIds[3] = System.Convert.ToInt32(row.GetValue(567));
                     }
+
+                    for (int i = 0; i < robotNodeIds.Count(); i++)
+                    {
+                        if (!meshNodeIds.Contains(robotNodeIds[i]))
+                        {
+                            meshNodeIds.Add(robotNodeIds[i]);                            
+                        }
+                        meshFace.NodeListIndices.Add(meshNodeIds.IndexOf(robotNodeIds[i]));
+                    }
+
+
+                    //if (!meshNodeIds.Contains(System.Convert.ToInt32(row.GetValue(564))))
+                    //    meshNodeIds.Add(System.Convert.ToInt32(row.GetValue(564)));
+                    //meshFaceNodeIds.Add(meshNodeIds.IndexOf(System.Convert.ToInt32(row.GetValue(564))));
+
+                    //if (!meshNodeIds.Contains(System.Convert.ToInt32(row.GetValue(565))))
+                    //    meshNodeIds.Add(System.Convert.ToInt32(row.GetValue(565)));
+                    //meshFaceNodeIds.Add(meshNodeIds.IndexOf(System.Convert.ToInt32(row.GetValue(565))));
+
+                    //if (!meshNodeIds.Contains(System.Convert.ToInt32(row.GetValue(566))))
+                    //    meshNodeIds.Add(System.Convert.ToInt32(row.GetValue(566)));
+                    //meshFaceNodeIds.Add(meshNodeIds.IndexOf(System.Convert.ToInt32(row.GetValue(566))));
+
+
+                    //if (row.IsAvailable(567))
+                    //{
+                    //    if (!meshNodeIds.Contains(System.Convert.ToInt32(row.GetValue(567))))
+                    //        meshNodeIds.Add(System.Convert.ToInt32(row.GetValue(567)));
+                    //    meshFaceNodeIds.Add(meshNodeIds.IndexOf(System.Convert.ToInt32(row.GetValue(567))));
+                    //}
 
                     if (!meshNodeIds_allMeshes.ContainsKey(panelNumber))
                         meshNodeIds_allMeshes.Add(panelNumber, meshNodeIds);
 
-                    FEMeshFace meshFace = new FEMeshFace();
-                    meshFace.NodeListIndices = meshFaceNodeIds;
 
-                    meshFaces.Add(meshFace);                    
+                    meshFaces.Add(meshFace);
 
                     if (bhomMeshes.ContainsKey(panelNumber))
                     {
@@ -97,22 +117,22 @@ namespace BH.Adapter.Robot
                         mesh.MeshFaces.Add(meshFace);
                         mesh.CustomData[AdapterId] = panelNumber;
                         bhomMeshes.Add(panelNumber, mesh);
-                    }                   
+                    }
                     isOk = rowSet.MoveNext();
                 }
-                 rowSet.Clear();       
-            }            
+                rowSet.Clear();
+            }
             queryParams.Reset();
             foreach (int panelId in meshNodeIds_allMeshes.Keys)
+            {
+                foreach (int nodeId in meshNodeIds_allMeshes[panelId])
                 {
-                    foreach (int nodeId in meshNodeIds_allMeshes[panelId])
-                    {
-                        bhomMeshes[panelId].Nodes.Add(bhomNodes[nodeId]);
-                    }
+                    bhomMeshes[panelId].Nodes.Add(bhomNodes[nodeId]);
                 }
+            }
             return bhomMeshes.Values.ToList();
         }
-        
+
         /***************************************************/
 
     }

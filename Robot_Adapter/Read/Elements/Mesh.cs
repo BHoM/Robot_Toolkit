@@ -77,28 +77,7 @@ namespace BH.Adapter.Robot
                             meshNodeIds.Add(robotNodeIds[i]);                            
                         }
                         meshFace.NodeListIndices.Add(meshNodeIds.IndexOf(robotNodeIds[i]));
-                    }
-
-
-                    //if (!meshNodeIds.Contains(System.Convert.ToInt32(row.GetValue(564))))
-                    //    meshNodeIds.Add(System.Convert.ToInt32(row.GetValue(564)));
-                    //meshFaceNodeIds.Add(meshNodeIds.IndexOf(System.Convert.ToInt32(row.GetValue(564))));
-
-                    //if (!meshNodeIds.Contains(System.Convert.ToInt32(row.GetValue(565))))
-                    //    meshNodeIds.Add(System.Convert.ToInt32(row.GetValue(565)));
-                    //meshFaceNodeIds.Add(meshNodeIds.IndexOf(System.Convert.ToInt32(row.GetValue(565))));
-
-                    //if (!meshNodeIds.Contains(System.Convert.ToInt32(row.GetValue(566))))
-                    //    meshNodeIds.Add(System.Convert.ToInt32(row.GetValue(566)));
-                    //meshFaceNodeIds.Add(meshNodeIds.IndexOf(System.Convert.ToInt32(row.GetValue(566))));
-
-
-                    //if (row.IsAvailable(567))
-                    //{
-                    //    if (!meshNodeIds.Contains(System.Convert.ToInt32(row.GetValue(567))))
-                    //        meshNodeIds.Add(System.Convert.ToInt32(row.GetValue(567)));
-                    //    meshFaceNodeIds.Add(meshNodeIds.IndexOf(System.Convert.ToInt32(row.GetValue(567))));
-                    //}
+                    }                    
 
                     if (!meshNodeIds_allMeshes.ContainsKey(panelNumber))
                         meshNodeIds_allMeshes.Add(panelNumber, meshNodeIds);

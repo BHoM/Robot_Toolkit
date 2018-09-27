@@ -358,6 +358,30 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
+        private static void SteelSection(this GeneralisedFabricatedBoxProfile section, Material material, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_BOX_3;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_BOX_3;
+
+            sectionData.MaterialName = material.Name;
+
+            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+
+
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B, section.Width + section.BotLeftCorbelWidth + section.BotRightCorbelWidth);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B1, section.Width - (2 * section.WebThickness));
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B2, section.Width);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_H, section.Height - (section.TopFlangeThickness + section.BotFlangeThickness));
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TW, section.WebThickness);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF, section.TopFlangeThickness);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF2, section.BotFlangeThickness);
+
+            sectionData.CalcNonstdGeometry();
+
+        }
+
+        /***************************************************/
+
         private static void SteelSection(this KiteProfile section, Material material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;

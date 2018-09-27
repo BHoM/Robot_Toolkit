@@ -358,5 +358,22 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
+        private static void SteelSection(this KiteProfile section, Material material, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_RECT;
+
+            sectionData.MaterialName = material.Name;
+
+            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H, section.Width1);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B, section.Width1);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_T, section.Thickness);
+
+            sectionData.CalcNonstdGeometry();
+        }
+
+        /***************************************************/
     }
 }

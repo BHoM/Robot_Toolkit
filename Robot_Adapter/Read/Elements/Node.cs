@@ -25,7 +25,7 @@ namespace BH.Adapter.Robot
                     RobotNode robotNode = robotNodes.Get(i);
                     Node bhomNode = BH.Engine.Robot.Convert.ToBHoMObject(robotNode);
                     bhomNode.CustomData[AdapterId] = robotNode.Number;
-                    if (nodeTags != null && !nodeTags.TryGetValue(robotNode.Number, out tags))
+                    if (nodeTags != null && nodeTags.TryGetValue(robotNode.Number, out tags))
                         bhomNode.Tags = tags;
 
                     bhomNodes.Add(bhomNode);
@@ -38,7 +38,7 @@ namespace BH.Adapter.Robot
                     RobotNode robotNode = m_RobotApplication.Project.Structure.Nodes.Get(System.Convert.ToInt32(ids[i])) as RobotNode;
                     Node bhomNode = BH.Engine.Robot.Convert.ToBHoMObject(robotNode);
                     bhomNode.CustomData[AdapterId] = robotNode.Number;
-                    if (nodeTags != null && !nodeTags.TryGetValue(robotNode.Number, out tags))
+                    if (nodeTags != null && nodeTags.TryGetValue(robotNode.Number, out tags))
                         bhomNode.Tags = tags;
 
                     bhomNodes.Add(bhomNode);

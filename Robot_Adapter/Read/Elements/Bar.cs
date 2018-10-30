@@ -48,7 +48,7 @@ namespace BH.Adapter.Robot
                                                                         bhombarReleases,
                                                                         bhomFramEleDesProps);
                     bhomBar.CustomData[AdapterId] = robotBar.Number;
-                    if (barTags != null && !barTags.TryGetValue(robotBar.Number, out tags))
+                    if (barTags != null && barTags.TryGetValue(robotBar.Number, out tags))
                         bhomBar.Tags = tags;
                     bhomBars.Add(bhomBar);
                 }
@@ -65,7 +65,7 @@ namespace BH.Adapter.Robot
                                                                         bhombarReleases,
                                                                         bhomFramEleDesProps);
                     bhomBar.CustomData[AdapterId] = robotBar.Number;
-                    if (barTags != null && !barTags.TryGetValue(robotBar.Number, out tags))
+                    if (barTags != null && barTags.TryGetValue(robotBar.Number, out tags))
                         bhomBar.Tags = tags;
                     bhomBars.Add(bhomBar);
                 }

@@ -68,18 +68,7 @@ namespace BH.Adapter.Robot
                 if (objects.First() is Bar)
                 {
                     success = CreateCollection(objects as IEnumerable<Bar>);
-                }
-
-                if (objects.First() is FramingElement)
-                {
-                    List<Bar> bars = new List<Bar>();
-                    foreach (FramingElement framingElement in objects as dynamic)
-                    {
-                        ConstantFramingElementProperty elementProp = framingElement.Property as dynamic;
-                        bars.Add(BH.Engine.Structure.Create.Bar(framingElement.LocationCurve, elementProp.SectionProperty, 0));
-                    }
-                    success = CreateCollection(bars as IEnumerable<Bar>);
-                }
+                }              
 
                 if (typeof(ILoad).IsAssignableFrom(objects.First().GetType()))
                 {

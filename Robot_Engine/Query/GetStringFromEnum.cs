@@ -19,6 +19,8 @@ namespace BH.Engine.Adapters.Robot
                     return "BS 5950:2000";
                 case DesignCode_Steel.BS_EN_1993_1_2005_NA_2008_A1_2014:
                     return "BS-EN 1993-1:2005/NA:2008/A1:2014";
+                case DesignCode_Steel.ANSI_AISC_360_10:
+                    return "ANSI/AISC 360-10";
                 default:
                     return "BS-EN 1993-1:2005/NA:2008/A1:2014";
             }
@@ -32,6 +34,8 @@ namespace BH.Engine.Adapters.Robot
                     return "American";
                 case MaterialDB.British:
                     return "British";
+                case MaterialDB.Eurocode:
+                    return "Eurocode";
                 default:
                     return "British";
             }

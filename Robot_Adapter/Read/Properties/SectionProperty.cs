@@ -53,7 +53,7 @@ namespace BH.Adapter.Robot
 
             for (int i = 1; i < dbList.Count; i++)
             {
-                if (dbList.GetDatabase(i).Name == "UKST")
+                if (dbList.GetDatabase(i).Name == dbName)
                 {
                     rDataBase = dbList.GetDatabase(i);
                     break;

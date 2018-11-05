@@ -51,6 +51,8 @@ namespace BH.Adapter.Robot
                     }
                 }
 
+                SetProjectPreferences(RobotConfig);
+
                 ReadMaterialNamesFromDB(RobotConfig.DatabaseSettings.MaterialDatabase.ToString());
                 ReadSecPropNamesFromDB(RobotConfig.DatabaseSettings.SectionDatabase.ToString());
 
@@ -60,7 +62,7 @@ namespace BH.Adapter.Robot
                 }
 
 
-                SetProjectPreferences(RobotConfig);
+                
             }
         }
 
@@ -102,6 +104,7 @@ namespace BH.Adapter.Robot
                 m_RobotApplication.Project.Preferences.SetActiveCode(IRobotCodeType.I_CT_STEEL_STRUCTURES, Query.GetStringFromEnum(robotConfig.DatabaseSettings.SteelDesignCode));
             
             m_RobotApplication.Project.Preferences.SetCurrentDatabase(IRobotDatabaseType.I_DT_SECTIONS, Query.GetStringFromEnum(robotConfig.DatabaseSettings.SectionDatabase));
+            m_RobotApplication.Project.Preferences.Materials.Load(Query.GetStringFromEnum(robotConfig.DatabaseSettings.MaterialDatabase));
         }
         /***************************************************/
         /**** Private Fields                            ****/
@@ -110,6 +113,7 @@ namespace BH.Adapter.Robot
         private RobotApplication m_RobotApplication;
         private Dictionary<Type, Dictionary<int, HashSet<string>>> m_tags = new Dictionary<Type, Dictionary<int, HashSet<string>>>();
         private List<string> m_dbMaterialNames = new List<string>();
+        private Dictionary<string, BH.oM.Common.Materials.Material> m_dbMaterials = new Dictionary<string, oM.Common.Materials.Material>();
         private List<string> m_dbSecPropNames = new List<string>();
         private RobotConfig m_robotConfig = new RobotConfig();
         //private Dictionary<int, string> m_NodeTaggs = new Dictionary<int, string>();

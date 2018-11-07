@@ -12,7 +12,7 @@ namespace BH.Engine.Robot
         /****           Public Constructors             ****/
         /***************************************************/
 
-        public const double RobotGravityConstant = 77010.0 / 7850.0;
+        public const double RobotGravityConstant = 77010.0 / 7850.0;    //Robot standards steel density in [N/m3] / BHoM standard steel density in [kg/m3]
 
         /***************************************************/
     }

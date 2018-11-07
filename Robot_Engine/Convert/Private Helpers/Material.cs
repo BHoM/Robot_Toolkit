@@ -16,7 +16,7 @@ namespace BH.Engine.Robot
             materialData.E = material.YoungsModulus;
             materialData.RE = material.StrainAtYield;
             materialData.NU = material.PoissonsRatio;
-            materialData.RO = material.Density * 10;
+            materialData.RO = material.Density * Engine.Robot.Query.RobotGravityConstant;
             materialData.LX = material.CoeffThermalExpansion;
             materialData.Kirchoff = BH.Engine.Common.Query.ShearModulus(material);
             materialData.DumpCoef = material.DampingRatio;

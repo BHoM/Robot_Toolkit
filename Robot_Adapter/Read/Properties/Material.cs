@@ -26,7 +26,7 @@ namespace BH.Adapter.Robot
             //    mData = label.Data;
             //    mData.LoadFromDBase(matName);
             //    MaterialType bhomMatType = BH.Engine.Robot.Convert.GetMaterialType(mData.Type);
-            //    bhomMat = BH.Engine.Common.Create.Material(matName, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO);
+            //    bhomMat = BH.Engine.Common.Create.Material(matName, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO / Engine.Robot.Query.RobotGravityConstant);
             //    if (m_indexDict.ContainsKey(bhomMat.GetType()) && counter == 0)
             //        m_indexDict[bhomMat.GetType()] = 0;
             //    bhomMat.CustomData.Add(AdapterId, NextId(bhomMat.GetType(), refresh));
@@ -43,14 +43,14 @@ namespace BH.Adapter.Robot
             {
                 IRobotLabel rMatLable = rMaterials.Get(i);
                 mData = rMatLable.Data as IRobotMaterialData;
-                if (!m_dbMaterialNames.Contains(mData.Name))
-                {
-                    MaterialType bhomMatType = BH.Engine.Robot.Convert.GetMaterialType(mData.Type);
-                    bhomMat = BH.Engine.Common.Create.Material(mData.Name, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO * 0.1);
-                    bhomMat.CustomData.Add(AdapterId, NextId(bhomMat.GetType(), false));
-                    if (bhomMat != null)
-                        bhomMaterials.Add(bhomMat);
-                }
+                //if (!m_dbMaterialNames.Contains(mData.Name))
+                //{
+                MaterialType bhomMatType = BH.Engine.Robot.Convert.GetMaterialType(mData.Type);
+                bhomMat = BH.Engine.Common.Create.Material(mData.Name, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO / Engine.Robot.Query.RobotGravityConstant);
+                bhomMat.CustomData.Add(AdapterId, NextId(bhomMat.GetType(), false));
+                if (bhomMat != null)
+                    bhomMaterials.Add(bhomMat);
+                //}
             }
 
             return bhomMaterials;

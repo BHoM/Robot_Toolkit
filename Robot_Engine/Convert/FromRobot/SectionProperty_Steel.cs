@@ -44,7 +44,7 @@ namespace BH.Engine.Robot
                     case IRobotBarSectionShapeType.I_BSST_USER_I_BISYM:
                     case IRobotBarSectionShapeType.I_BSST_IPE:
                     case IRobotBarSectionShapeType.I_BSST_HEA:
-                        sectionProfile = BH.Engine.Structure.Create.ISectionProfile(d, bf, Tw, Tf, ri, r);
+                        sectionProfile = BH.Engine.Structure.Create.ISectionProfile(d, bf, Tw, Tf, r, ri);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
                     case IRobotBarSectionShapeType.I_BSST_USER_RECT:

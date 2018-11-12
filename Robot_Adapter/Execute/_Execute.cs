@@ -20,6 +20,11 @@ namespace BH.Adapter.Robot
             if (commandUpper == "CLOSE")
                 return Close();
 
+            else if (commandUpper == "Design Steel")
+            {
+                return designSteel();
+            }
+
             else if (commandUpper == "SAVE")
             {
                 string fileName = default(string);
@@ -215,6 +220,23 @@ namespace BH.Adapter.Robot
             }
         }
 
+        public bool designSteel()
+        {
+            IRobotKernel RDMServer = m_RobotApplication.Kernel.GetExtension("RDimServer");
+            IRDimCalcEngine RDmEngine = (IRDimCalcEngine) RDMServer.CalcEngine;
+            IRDimAllRes RdmAllRes = RDmEngine.Results();
+
+            IRDimGrpRes RDmGrpRes = (IRDimGrpRes)RdmAllRes.Get(0);
+
+            IRDimDetailedRes RdmDetRes = RDmGrpRes.Get(0, IRDimGrpResCurrProf.I_DGRCP_GOVERNING);
+            string opt_profils = RdmDetRes.ProfileName;
+            return true;
+
+        }
+
+
+        //https://forums.autodesk.com/t5/robot-structural-analysis-forum/api-rsa-design/m-p/4834505
+        //https://forums.autodesk.com/t5/robot-structural-analysis-forum/api-steel-design-how-to-change-sections-to-designed-ones/m-p/3919830#M13555
         /***************************************************/
     }
 }

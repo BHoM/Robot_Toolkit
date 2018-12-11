@@ -67,7 +67,9 @@ namespace BH.Engine.Robot
             {
 
                 string releaseName = robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_RELEASE);
-                if (!barReleases.TryGetValue(releaseName, out bhomBarRel))
+                if (barReleases.TryGetValue(releaseName, out bhomBarRel))
+                    bhomBar.Release = bhomBarRel;
+                else
                     BH.Engine.Reflection.Compute.RecordEvent("Bars with auto-generated releases will not have releases", oM.Reflection.Debuging.EventType.Warning);
             }
 

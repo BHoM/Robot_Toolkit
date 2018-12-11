@@ -24,12 +24,9 @@ namespace BH.Adapter.Robot
                 Material bhomMat = null;
                 IRobotLabel rSection = secProps.Get(i);
                 IRobotBarSectionData secData = rSection.Data as IRobotBarSectionData;
+                materials.TryGetValue(secData.MaterialName, out bhomMat);
 
-                if (materials.ContainsKey(secData.MaterialName))
-                {
-                   bhomSec = BH.Engine.Robot.Convert.IBHoMSection(secData, materials[secData.MaterialName]);
-                   bhomMat = materials[secData.MaterialName];
-                }
+                   bhomSec = BH.Engine.Robot.Convert.IBHoMSection(secData, bhomMat);
 
                 if (bhomSec != null)
                 {

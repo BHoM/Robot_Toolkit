@@ -4,7 +4,7 @@ using RobotOM;
 using System;
 using System.Collections.Generic;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Surface;
 
 namespace BH.Engine.Robot
 {
@@ -69,7 +69,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        public static string ThicknessProperty(IRobotLabel rLabel, IProperty2D property)
+        public static string ThicknessProperty(IRobotLabel rLabel, ISurfaceProperty property)
         {
             string name = "";
 

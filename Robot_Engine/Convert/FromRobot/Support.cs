@@ -1,6 +1,6 @@
 ﻿using RobotOM;
 using System.Collections.Generic;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Constraint;
 
 
 namespace BH.Engine.Robot

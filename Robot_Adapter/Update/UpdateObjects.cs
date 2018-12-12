@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using BH.oM.Base;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Section;
+using BH.oM.Structure.Properties.Surface;
+using BH.oM.Structure.Properties.Constraint;
 using BH.oM.Structure.Loads;
 using BH.oM.Common.Materials;
 using RobotOM;
@@ -90,7 +92,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        protected bool Update(IEnumerable<IProperty2D> property2Ds)
+        protected bool Update(IEnumerable<ISurfaceProperty> property2Ds)
         {
             bool success = true;
             success = Create(property2Ds);

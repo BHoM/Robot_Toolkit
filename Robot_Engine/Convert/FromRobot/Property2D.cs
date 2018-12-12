@@ -2,7 +2,7 @@
 using RobotOM;
 using System;
 using System.Collections.Generic;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Surface;
 using BH.Engine.Structure;
 
 namespace BH.Engine.Robot
@@ -13,9 +13,9 @@ namespace BH.Engine.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static IProperty2D ToBHoMObject(this IRobotLabel rLabel, Dictionary<string, Material> Material)
+        public static ISurfaceProperty ToBHoMObject(this IRobotLabel rLabel, Dictionary<string, Material> Material)
         {
-            IProperty2D BHoMProperty = null;
+            ISurfaceProperty BHoMProperty = null;
             Material mat = null;
             if (rLabel.Type == IRobotLabelType.I_LT_PANEL_THICKNESS)
             {

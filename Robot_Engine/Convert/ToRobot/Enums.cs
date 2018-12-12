@@ -1,4 +1,4 @@
-﻿using BH.oM.Structure.Properties;
+﻿using BH.oM.Structure.Properties.Section;
 using RobotOM;
 using BH.oM.Structure.Results;
 

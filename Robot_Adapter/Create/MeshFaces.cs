@@ -2,7 +2,7 @@
 using System.Linq;
 using System;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Surface;
 using RobotOM;
 
 namespace BH.Adapter.Robot
@@ -17,7 +17,7 @@ namespace BH.Adapter.Robot
 
         private bool CreateCollection(IEnumerable<MeshFace> meshFaces)
         {
-            int nbOfDistinctProps = meshFaces.Select(x => x.Property).Distinct(Comparer<IProperty2D>()).Count();
+            int nbOfDistinctProps = meshFaces.Select(x => x.Property).Distinct(Comparer<ISurfaceProperty>()).Count();
             if (nbOfDistinctProps == 1)
             {
                 string faceList = "";

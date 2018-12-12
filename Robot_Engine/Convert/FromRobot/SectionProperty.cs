@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.Properties;
 using BH.Engine.Reflection;
-using BH.oM.Reflection.Debuging;
+using BH.oM.Reflection.Debugging;
 using BH.oM.Adapters.Robot;
 
 

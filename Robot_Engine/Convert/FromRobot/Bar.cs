@@ -34,7 +34,7 @@ namespace BH.Engine.Robot
             {
                 string secName = robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION);
                 if (!bhomSections.TryGetValue(secName, out secProp))
-                    BH.Engine.Reflection.Compute.RecordEvent("Section property type" + secName + "is not supported", oM.Reflection.Debuging.EventType.Warning);
+                    BH.Engine.Reflection.Compute.RecordEvent("Section property type" + secName + "is not supported", oM.Reflection.Debugging.EventType.Warning);
             }
 
             if (robotBar.HasLabel(IRobotLabelType.I_LT_MATERIAL) == -1)
@@ -45,7 +45,7 @@ namespace BH.Engine.Robot
                     if (bhomMaterials.TryGetValue(matName, out barMaterial))
                         secProp.Material = barMaterial;
                     else
-                        BH.Engine.Reflection.Compute.RecordEvent("Section property has no material assigned", oM.Reflection.Debuging.EventType.Warning);
+                        BH.Engine.Reflection.Compute.RecordEvent("Section property has no material assigned", oM.Reflection.Debugging.EventType.Warning);
                 }
            }
 
@@ -58,7 +58,7 @@ namespace BH.Engine.Robot
                 }
                 else
                 { 
-                    BH.Engine.Reflection.Compute.RecordEvent("Framing element design property" + framEleDesPropsName + "is not supported", oM.Reflection.Debuging.EventType.Warning);
+                    BH.Engine.Reflection.Compute.RecordEvent("Framing element design property" + framEleDesPropsName + "is not supported", oM.Reflection.Debugging.EventType.Warning);
                 }
                     
             }
@@ -70,7 +70,7 @@ namespace BH.Engine.Robot
                 if (barReleases.TryGetValue(releaseName, out bhomBarRel))
                     bhomBar.Release = bhomBarRel;
                 else
-                    BH.Engine.Reflection.Compute.RecordEvent("Bars with auto-generated releases will not have releases", oM.Reflection.Debuging.EventType.Warning);
+                    BH.Engine.Reflection.Compute.RecordEvent("Bars with auto-generated releases will not have releases", oM.Reflection.Debugging.EventType.Warning);
             }
 
             bhomBar.SectionProperty = secProp;

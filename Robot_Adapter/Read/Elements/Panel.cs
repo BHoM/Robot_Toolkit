@@ -94,11 +94,11 @@ namespace BH.Adapter.Robot
                         if (BHoMProperties.ContainsKey(propName))
                             BHoMPanel.Property = BHoMProperties[propName];
                         else
-                            BH.Engine.Reflection.Compute.RecordEvent("Failed to convert/create ConstantThickness property for panel " + rpanel.Number.ToString(), oM.Reflection.Debuging.EventType.Warning);
+                            BH.Engine.Reflection.Compute.RecordEvent("Failed to convert/create ConstantThickness property for panel " + rpanel.Number.ToString(), oM.Reflection.Debugging.EventType.Warning);
                     }
                     else
                     {
-                        BH.Engine.Reflection.Compute.RecordEvent("Panel " + rpanel.Number.ToString() + " either has no property-label or the Property2D for this Robot label is not implemented", oM.Reflection.Debuging.EventType.Warning);
+                        BH.Engine.Reflection.Compute.RecordEvent("Panel " + rpanel.Number.ToString() + " either has no property-label or the Property2D for this Robot label is not implemented", oM.Reflection.Debugging.EventType.Warning);
                     }
                 }
                 BHoMPanels.Add(BHoMPanel);
@@ -125,12 +125,12 @@ namespace BH.Adapter.Robot
                         if (BHoMProperties.ContainsKey(propName))
                             BHoMPanel.Property = BHoMProperties[propName];
                         else
-                            BH.Engine.Reflection.Compute.RecordEvent("Failed to convert/create ConstantThickness property for Cladding " + rCladding.Number.ToString(), oM.Reflection.Debuging.EventType.Warning);
+                            BH.Engine.Reflection.Compute.RecordEvent("Failed to convert/create ConstantThickness property for Cladding " + rCladding.Number.ToString(), oM.Reflection.Debugging.EventType.Warning);
                     }
 
                     else
                     {
-                        BH.Engine.Reflection.Compute.RecordEvent("Cladding " + rCladding.Number.ToString() + " either has no property-label or the Property2D for this Robot label is not implemented", oM.Reflection.Debuging.EventType.Warning);
+                        BH.Engine.Reflection.Compute.RecordEvent("Cladding " + rCladding.Number.ToString() + " either has no property-label or the Property2D for this Robot label is not implemented", oM.Reflection.Debugging.EventType.Warning);
                     }
 
                     BHoMPanels.Add(BHoMPanel);

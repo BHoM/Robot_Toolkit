@@ -1,6 +1,7 @@
 ﻿using BH.oM.Common.Materials;
 using RobotOM;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Section;
+using BH.oM.Structure.Properties.Section.ShapeProfiles;
 
 namespace BH.Engine.Robot
 {

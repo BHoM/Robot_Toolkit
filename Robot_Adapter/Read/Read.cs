@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Section;
+using BH.oM.Structure.Properties.Surface;
+using BH.oM.Structure.Properties.Constraint;
 using BH.oM.Structure.Loads;
 using BH.oM.Base;
 using BH.oM.Common.Materials;
@@ -43,7 +45,7 @@ namespace BH.Adapter.Robot
             if (type == typeof(FEMesh))
                 return ReadMeshes();
 
-            if (typeof(IProperty2D).IsAssignableFrom(type))
+            if (typeof(ISurfaceProperty).IsAssignableFrom(type))
                 return ReadProperty2D();
 
             if (type == typeof(RigidLink))

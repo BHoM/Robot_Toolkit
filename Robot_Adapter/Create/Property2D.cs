@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Surface;
 using RobotOM;
 
 namespace BH.Adapter.Robot
@@ -10,12 +10,12 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
 
-        private bool CreateCollection(IEnumerable<IProperty2D> properties)
+        private bool CreateCollection(IEnumerable<ISurfaceProperty> properties)
         {
             RobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotLabel lable = null;
             string name = "";
-            foreach (IProperty2D property in properties)
+            foreach (ISurfaceProperty property in properties)
             {
                 if (property is LoadingPanelProperty)
                 {

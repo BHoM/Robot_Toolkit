@@ -2,7 +2,7 @@
 using System.Linq;
 using BH.oM.Structure.Elements;
 using RobotOM;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Surface;
 using BH.oM.Common.Materials;
 using BH.oM.Geometry;
 using System.Collections;
@@ -17,7 +17,7 @@ namespace BH.Adapter.Robot
 
         private List<PanelPlanar> ReadPanels(IList ids = null)
         {
-            Dictionary<string, IProperty2D> BHoMProperties = ReadProperty2D().ToDictionary(x => x.Name);
+            Dictionary<string, ISurfaceProperty> BHoMProperties = ReadProperty2D().ToDictionary(x => x.Name);
             List<PanelPlanar> BHoMPanels = new List<PanelPlanar>();
             IRobotStructure robotStructureServer = m_RobotApplication.Project.Structure;
             IRobotObjObjectServer robotPanelServer = m_RobotApplication.Project.Structure.Objects;

@@ -2,7 +2,7 @@
 using System.Linq;
 using BH.oM.Structure.Elements;
 using BH.oM.Geometry;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Surface;
 using RobotOM;
 using BHEG = BH.Engine.Geometry;
 

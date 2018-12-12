@@ -1,6 +1,8 @@
 ﻿using BH.oM.Common.Materials;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Section;
+using BH.oM.Structure.Properties.Surface;
+using BH.oM.Structure.Properties.Constraint;
 using BH.oM.Structure.Loads;
 using BH.oM.Base;
 using System;
@@ -49,10 +51,10 @@ namespace BH.Adapter.Robot
             {typeof(Node), new List<Type> { typeof(Constraint6DOF) } },
             {typeof(ILoad), new List<Type> { typeof(Loadcase) } },
             {typeof(LoadCombination), new List<Type> { typeof(Loadcase) } },
-            {typeof(PanelPlanar), new List<Type> { typeof(IProperty2D) } },
-            {typeof(IProperty2D), new List<Type> { typeof(Material) } },
+            {typeof(PanelPlanar), new List<Type> { typeof(ISurfaceProperty) } },
+            {typeof(ISurfaceProperty), new List<Type> { typeof(Material) } },
             {typeof(RigidLink), new List<Type> { typeof(LinkConstraint), typeof(Node) } },
-            {typeof(MeshFace), new List<Type> { typeof(IProperty2D), typeof(Node) } }
+            {typeof(MeshFace), new List<Type> { typeof(ISurfaceProperty), typeof(Node) } }
         };
 
         /***************************************************/

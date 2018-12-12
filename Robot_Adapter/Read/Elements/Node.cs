@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using BH.oM.Structure.Elements;
 using RobotOM;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Constraint;
 
 namespace BH.Adapter.Robot
 {

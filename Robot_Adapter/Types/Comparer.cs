@@ -1,7 +1,9 @@
 ﻿using BH.oM.Common.Materials;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.Loads;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Section;
+using BH.oM.Structure.Properties.Surface;
+using BH.oM.Structure.Properties.Constraint;
 using BH.Engine.Structure;
 using System;
 using System.Collections.Generic;
@@ -41,7 +43,7 @@ namespace BH.Adapter.Robot
             {typeof(Constraint6DOF), new BHoMObjectNameComparer() },
             {typeof(Loadcase), new BHoMObjectNameComparer() },
             {typeof(LinkConstraint), new BHoMObjectNameComparer() },
-            {typeof(IProperty2D), new BHoMObjectNameComparer() },
+            {typeof(ISurfaceProperty), new BHoMObjectNameComparer() },
             {typeof(BarRelease), new BHoMObjectNameComparer() }
         };
 

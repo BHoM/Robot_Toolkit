@@ -3,7 +3,7 @@ using BH.oM.Common.Materials;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Section;
 
 namespace BH.Engine.Robot
 {

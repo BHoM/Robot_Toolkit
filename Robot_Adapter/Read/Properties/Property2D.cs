@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using RobotOM;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Surface;
 using BH.oM.Common.Materials;
 
 
@@ -13,9 +13,9 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
 
-        private List<IProperty2D> ReadProperty2D(List<string> ids = null)
+        private List<ISurfaceProperty> ReadProperty2D(List<string> ids = null)
         {
-            List<IProperty2D> BHoMProps = new List<IProperty2D>();
+            List<ISurfaceProperty> BHoMProps = new List<ISurfaceProperty>();
             IRobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotCollection rThicknessProps = labelServer.GetMany(IRobotLabelType.I_LT_PANEL_THICKNESS);
             IRobotCollection rCladdingProps = labelServer.GetMany(IRobotLabelType.I_LT_CLADDING);
@@ -25,7 +25,7 @@ namespace BH.Adapter.Robot
             for (int i = 1; i <= rThicknessProps.Count; i++)
             {
                 IRobotLabel rThicknessProp = rThicknessProps.Get(i);
-                IProperty2D tempProp = BH.Engine.Robot.Convert.ToBHoMObject(rThicknessProp, BHoMMat);
+                ISurfaceProperty tempProp = BH.Engine.Robot.Convert.ToBHoMObject(rThicknessProp, BHoMMat);
                 tempProp.CustomData.Add(AdapterId, tempProp.Name);
                 BHoMProps.Add(tempProp);
             }
@@ -33,7 +33,7 @@ namespace BH.Adapter.Robot
             for (int i = 1; i <= rCladdingProps.Count; i++)
             {
                 IRobotLabel rCladdingProp = rCladdingProps.Get(i);
-                IProperty2D tempProp = BH.Engine.Robot.Convert.ToBHoMObject(rCladdingProp, BHoMMat);
+                ISurfaceProperty tempProp = BH.Engine.Robot.Convert.ToBHoMObject(rCladdingProp, BHoMMat);
                 tempProp.CustomData.Add(AdapterId, tempProp.Name);
                 BHoMProps.Add(tempProp);
             }

@@ -1,5 +1,5 @@
 ﻿using RobotOM;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure.Properties.Constraint;
 
 namespace BH.Engine.Robot
 {

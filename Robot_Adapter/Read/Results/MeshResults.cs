@@ -3,7 +3,7 @@ using BH.oM.Structure.Results;
 using RobotOM;
 using System.Collections;
 using BH.Engine.Robot;
-using BH.oM.Geometry;
+using BH.oM.Geometry.CoordinateSystem;
 using System.Linq;
 using BH.oM.DataManipulation.Queries;
 using System.Collections.ObjectModel;
@@ -26,7 +26,7 @@ namespace BH.Adapter.Robot
             double layerPosition = (double)query.Equalities["LayerPosition"];            
             MeshResultType resultType = (MeshResultType)query.Equalities["ResultType"];
             IRobotFeLayerType robotMeshLayer = Convert.FromBHoMEnum(layer);
-            CoordinateSystem userCoordinateSystem = (CoordinateSystem)query.Equalities["CoordinateSystem"];
+            Cartesian userCoordinateSystem = (Cartesian)query.Equalities["CoordinateSystem"];
             if (robotMeshLayer == IRobotFeLayerType.I_FLT_LOWER)
                 layerPosition = 0;
             if (robotMeshLayer == IRobotFeLayerType.I_FLT_MIDDLE)
@@ -87,7 +87,7 @@ namespace BH.Adapter.Robot
             foreach (BH.oM.Structure.Elements.PanelPlanar panel in panels)
             {
 
-                CoordinateSystem coordinateSystem = (userCoordinateSystem != null) ? userCoordinateSystem : panel.CustomData["CoordinateSystem"] as dynamic;
+                Cartesian coordinateSystem = (userCoordinateSystem != null) ? userCoordinateSystem : panel.CustomData["CoordinateSystem"] as dynamic;
                 List<MeshResult> meshResults = new List<MeshResult>();
 
                 RobotSelection caseSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_CASE);

@@ -83,8 +83,8 @@ namespace BH.Adapter.Robot
                     if (rpanel.Main.Attribs.DirZ == 0)
                         coordZAxis = BH.Engine.Geometry.Modify.Reverse(coordZAxis);
 
-                    BH.oM.Geometry.CoordinateSystem tempCoordSys = BH.Engine.Geometry.Create.CoordinateSystem(coordPoint, coordXAxis, coordZAxis);
-                    BH.oM.Geometry.CoordinateSystem coordinateSystem = BH.Engine.Geometry.Create.CoordinateSystem(coordPoint, coordXAxis, tempCoordSys.Z);                    
+                    BH.oM.Geometry.CoordinateSystem.Cartesian tempCoordSys = BH.Engine.Geometry.Create.CartesianCoordinateSystem(coordPoint, coordXAxis, coordZAxis);
+                    BH.oM.Geometry.CoordinateSystem.Cartesian coordinateSystem = BH.Engine.Geometry.Create.CartesianCoordinateSystem(coordPoint, coordXAxis, tempCoordSys.Z);                    
 
                     BHoMPanel.CustomData["CoordinateSystem"] = coordinateSystem;
 

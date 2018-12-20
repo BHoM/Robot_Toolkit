@@ -30,27 +30,27 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BHoM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="BHoM">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM\Build\BHoM.dll</HintPath>
     </Reference>
-    <Reference Include="BHoM_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="BHoM_Engine">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM_Engine\Build\BHoM_Engine.dll</HintPath>
     </Reference>
-    <Reference Include="Common_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Common_Engine">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM_Engine\Build\Common_Engine.dll</HintPath>
     </Reference>
-    <Reference Include="Common_oM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Common_oM">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM\Build\Common_oM.dll</HintPath>
     </Reference>
-    <Reference Include="Geometry_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Geometry_Engine">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM_Engine\Build\Geometry_Engine.dll</HintPath>
     </Reference>
-    <Reference Include="Geometry_oM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Geometry_oM">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM\Build\Geometry_oM.dll</HintPath>
     </Reference>
@@ -58,7 +58,7 @@
       <HintPath>C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2017\System\Exe\Interop.RobotOM.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Reflection_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Reflection_Engine">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM_Engine\Build\Reflection_Engine.dll</HintPath>
     </Reference>
@@ -68,11 +68,11 @@
     <Reference Include="Serialiser_Engine">
       <HintPath>..\..\BHoM_Engine\Build\Serialiser_Engine.dll</HintPath>
     </Reference>
-    <Reference Include="Structure_Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Structure_Engine">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM_Engine\Build\Structure_Engine.dll</HintPath>
     </Reference>
-    <Reference Include="Structure_oM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Structure_oM">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM\Build\Structure_oM.dll</HintPath>
     </Reference>

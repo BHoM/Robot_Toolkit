@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="Convert\AdapterID.cs" />
     <Compile Include="Convert\FromRobot\Property2D.cs" />
+    <Compile Include="Convert\FromRobot\RigidLink.cs" />
     <Compile Include="Convert\Private Helpers\Bar.cs" />
     <Compile Include="Convert\FromRobot\SectionProperty_Concrete.cs" />
     <Compile Include="Convert\Private Helpers\Constraint.cs" />

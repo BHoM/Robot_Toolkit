@@ -20,8 +20,8 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Geometry;
 using RobotOM;
+using System.Collections.Generic;
 using BH.oM.Structure.Elements;
 
 
@@ -33,20 +33,14 @@ namespace BH.Engine.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static Node ToBHoMObject(this RobotNode robotNode)
-        {
-            Node bhomNode = new Node { Position = new Point { X = robotNode.X, Y = robotNode.Y, Z = robotNode.Z } };
-            if (robotNode.HasLabel(IRobotLabelType.I_LT_SUPPORT) == 1)
-            {
-                bhomNode.Constraint = BH.Engine.Robot.Convert.ToBHoMObject((RobotNodeSupport)robotNode.GetLabel(IRobotLabelType.I_LT_SUPPORT));
-            }
-            if (robotNode.HasLabel(IRobotLabelType.I_LT_NODE_RIGID_LINK) == 1)
-            {
-                var result = (RobotNodeRigidLinkData)robotNode.GetLabel(IRobotLabelType.I_LT_NODE_RIGID_LINK);
-            }
-            return bhomNode;
-        }
+        //public static RigidLink ToBHoMObject(this RobotNodeRigidLink robotRigidLink)
+        //{
+        //    Node masterNode =
+        //    RigidLink rigidLink = BH.Engine.Structure.Create.RigidLink(masterNode, slaveNodes, linkConstraint);
+        //    return const6DOF;
+        //}
 
         /***************************************************/
+
     }
 }

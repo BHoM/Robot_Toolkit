@@ -20,33 +20,39 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Geometry;
+using System.Collections.Generic;
 using RobotOM;
 using BH.oM.Structure.Elements;
 
-
-namespace BH.Engine.Robot
+namespace BH.Adapter.Robot
 {
-    public static partial class Convert
+    public partial class RobotAdapter
     {
         /***************************************************/
-        /****           Public Methods                  ****/
+        /****           Private Methods                 ****/
         /***************************************************/
 
-        public static Node ToBHoMObject(this RobotNode robotNode)
+        private List<RigidLink> ReadRigidLinks(List<string> ids = null)
         {
-            Node bhomNode = new Node { Position = new Point { X = robotNode.X, Y = robotNode.Y, Z = robotNode.Z } };
-            if (robotNode.HasLabel(IRobotLabelType.I_LT_SUPPORT) == 1)
+            IRobotCollection robotRigidLinks = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_NODE_RIGID_LINK);
+            List<RigidLink> rigidLinks = new List<RigidLink>();
+
+            for (int i = 1; i <= robotRigidLinks.Count; i++)
             {
-                bhomNode.Constraint = BH.Engine.Robot.Convert.ToBHoMObject((RobotNodeSupport)robotNode.GetLabel(IRobotLabelType.I_LT_SUPPORT));
+                // RobotNodeSupport 
+                var result = robotRigidLinks.Get(i);
+                RobotOM.RobotNodeRigidLinkData robotRigidLink = robotRigidLinks.Get(i);
+                RigidLink bhomRigidLink = null; // = BH.Engine.Robot.Convert.ToBHoMObject(robotRigidLink);
+                // bhomRigidLink.CustomData.Add(AdapterId, robotRigidLink.Name);
+
+                rigidLinks.Add(bhomRigidLink);
             }
-            if (robotNode.HasLabel(IRobotLabelType.I_LT_NODE_RIGID_LINK) == 1)
-            {
-                var result = (RobotNodeRigidLinkData)robotNode.GetLabel(IRobotLabelType.I_LT_NODE_RIGID_LINK);
-            }
-            return bhomNode;
+            return rigidLinks;
         }
 
         /***************************************************/
+
     }
+
 }
+

@@ -71,7 +71,7 @@ namespace BH.Adapter.Robot
                 return ReadProperty2D();
 
             if (type == typeof(RigidLink))
-                return new List<RigidLink>();
+                return ReadRigidLinks();
 
             if (type == typeof(LoadCombination))
                 return new List<LoadCombination>();
@@ -112,6 +112,7 @@ namespace BH.Adapter.Robot
                 objects.AddRange(ReadBars());
                 objects.AddRange(ReadPanels());
                 objects.AddRange(ReadFramingElementDesignProperties());
+                objects.AddRange(ReadRigidLinks());
                 return objects;
             }
 

@@ -1,33 +1,61 @@
-# RobotToolkit
-Tools for Robot Structural Analysis
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
+# BHoM
+
+A great place to start is reading our Wiki [here](https://github.com/BHoM/documentation/wiki) including pages like the [Structure of the BHoM](https://github.com/BHoM/documentation/wiki/Structure-of-the-BHoM) and [Using the BHoM](https://github.com/BHoM/documentation/wiki/Using-the-BHoM).
+
+## Quick start ##
+
+Try the [installer](http://bhom.xyz/assets/installers/v2.1/BHoM%20Alpha%20v2.1.0.5%20Installer.exe) and a selection of [sample scripts](https://github.com/BHoM/samples).
 
 
-### Build RobotToolkit from Source ###
-You will need the following to build Basilisk:
+
+## Building the BHoM and the Toolkits from Source ##
+You will need the following to build BHoM:
 
 - Microsoft Visual Studio 2013 or higher
-- [GitHub for Windows](https://windows.github.com/)
 - Microsoft .NET Framework 4.0 and above (included with Visual Studio 2013)
-- BHoM version 0.0.1
-- Ensure post-build folders are accessible:
- 
-## Contribute ##
+- Note that there are no software - specific dependencies (only operating system relevant), this is specific: BHoM is a software agnostic object model.
 
-RobotToolkit is a BuroHappold open-source project and would be nothing without its community.  You can submit your own code to the RobotToolkit project via a Github [pull request](https://help.github.com/articles/using-pull-requests).
 
-## Releases ##
-###0.0.1 ###
-Known Issues
- - A lot of the code is legacy utilities code that circumvents the BHoM in favour of lists and arrays of numbers. We're in the process of switching the input/output to BHoM objects, so please note that functional
- programming methods currently called in your code will definitely break in future releases. Bear with us..!
- 
-Bug fixes
- - Visibility of Robot when accessing bars by filename is fixed
+### Clone and build the Core BHoM Repos
 
-New features
- - Bar force extraction and conversion to BHoM bar force added
+In the following build order:
+- [BHoM](https://github.com/BHoM/BHoM)
+- [BHoM_Engine](https://github.com/BHoM/BHoM_Engine)
+- [BHoM_Adapter](https://github.com/BHoM/BHoM_Adapter)
+- [BHoM_UI](https://github.com/BHoM/BHoM_UI)
 
-## License ##
+- [Socket_Toolkit](https://github.com/BHoM/Socket_Toolkit)
+- [Mongo_Toolkit](https://github.com/BHoM/Mongo_Toolkit)
 
-RobotToolkit is licensed under the Apache License. RobotToolkit also uses a number of third party libraries, some with different licenses.
 
+Build as many as you like of your chosen Interop Toolkits:
+- [Revit_Toolkit](https://github.com/BHoM/Revit_Toolkit)
+- [Robot_Toolkit](https://github.com/BHoM/Robot_Toolkit)
+- [ETABS_Toolkit](https://github.com/BHoM/ETABS_Toolkit)
+- [Lusas_Toolkit](https://github.com/BHoM/Lusas_Toolkit)
+- [GSA_Toolkit](https://github.com/BHoM/GSA_Toolkit)
+- [TAS_Toolkit](https://github.com/BHoM/TAS_Toolkit)
+- [XML_Toolkit](https://github.com/BHoM/XML_Toolkit)
+
+Then build as many User Interface Repositories as you like:
+- [Rhinoceros_Toolkit](https://github.com/BHoM/Rhinoceros_Toolkit) & [Grasshopper_Toolkit](https://github.com/BHoM/Grasshopper_Toolkit) (you need both)
+- [Dynamo_Toolkit](https://github.com/BHoM/Dynamo_Toolkit)
+- [Excel_Toolkit](https://github.com/BHoM/Excel_Toolkit)
+
+
+You are good to go! 
+
+
+
+## Want to contribute? ##
+
+BHoM is an open-source project and would be nothing without its community. Take a look at our contributing guidelines and tips [here](https://github.com/BHoM/BHoM/blob/master/CONTRIBUTING.md).
+
+
+## Licence ##
+
+BHoM is free software licenced under GNU Lesser General Public Licence - [https://www.gnu.org/licenses/lgpl-3.0.html](https://www.gnu.org/licenses/lgpl-3.0.html)  
+Each contributor holds copyright over their respective contributions.
+The project versioning (Git) records all such contribution source information.
+See [LICENSE](https://github.com/BHoM/BHoM/blob/master/LICENSE) and [COPYRIGHT_HEADER](https://github.com/BHoM/BHoM/blob/master/COPYRIGHT_HEADER.txt).

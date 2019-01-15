@@ -66,10 +66,10 @@ namespace BH.Adapter.Robot
 
                 if (node.Constraint != null && !string.IsNullOrWhiteSpace(node.Constraint.Name))
                     robotNode.SetLabel(IRobotLabelType.I_LT_SUPPORT, node.Constraint.Name);
-
-                robotNode.X = node.Position.X;
-                robotNode.Y = node.Position.Y;
-                robotNode.Z = node.Position.Z;
+                oM.Geometry.Point position = Engine.Structure.Query.Position(node);
+                robotNode.X = position.X;
+                robotNode.Y = position.Y;
+                robotNode.Z = position.Z;
                 nodeTags[System.Convert.ToInt32(node.CustomData[AdapterId])] = node.Tags;
             }
             m_tags[typeof(Node)] = nodeTags;

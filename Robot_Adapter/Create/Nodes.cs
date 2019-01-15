@@ -49,7 +49,8 @@ namespace BH.Adapter.Robot
                 foreach (Node node in nodes)
                 {
                     nodeNum = System.Convert.ToInt32(node.CustomData[AdapterId]);
-                    rcache.AddNode(nodeNum, node.Position.X, node.Position.Y, node.Position.Z);
+                    oM.Geometry.Point position = Engine.Structure.Query.Position(node);
+                    rcache.AddNode(nodeNum, position.X, position.Y, position.Z);
                 }
                 m_RobotApplication.Project.Structure.ApplyCache(rcache as RobotStructureCache);
                 IRobotNodeServer robotNodeCol = m_RobotApplication.Project.Structure.Nodes;
@@ -63,6 +64,7 @@ namespace BH.Adapter.Robot
 
                     if (node.Constraint != null)
                         robotNodeCol.Get(nodeNum).SetLabel(IRobotLabelType.I_LT_SUPPORT, node.Constraint.Name);
+
                 }
 
                 m_tags[typeof(Node)] = nodeTags;

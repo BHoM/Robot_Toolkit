@@ -20,8 +20,13 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using System.Collections.Generic;
+using System.Linq;
 using RobotOM;
 using BH.oM.Structure.Loads;
+using BH.oM.Adapters.Robot;
+using BH.oM.Geometry;
+using BH.Engine.Geometry;
 
 namespace BH.Engine.Robot
 {
@@ -230,6 +235,38 @@ namespace BH.Engine.Robot
             loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
             loadRecord.SetValue((short)IRobotBarThermalRecordValues.I_BTRV_TX, load.TemperatureChange);
 
+        }
+
+        /***************************************************/
+
+        public static void RobotLoad(this ContourLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
+        {
+
+            RobotLoadRecordInContour loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_IN_CONTOUR) as RobotLoadRecordInContour;
+
+            List<Point> points = load.Contour.ControlPoints.ToList();
+
+            //Remove last point in case of duplicant with start point
+            if (points.First().SquareDistance(points.Last()) < Tolerance.Distance * Tolerance.Distance)
+                points.RemoveAt(points.Count - 1);
+
+            loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PX1, load.Force.X);
+            loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PY1, load.Force.Y);
+            loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PZ1, load.Force.Z);
+            loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_NPOINTS, points.Count);
+            loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_AUTO_DETECT_OBJECTS, 1);
+            loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_LOCAL, (load.Axis == LoadAxis.Global) ? 0 : 1);
+            loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PROJECTION, load.Projected ? 1 : 0);
+
+            Vector normal = load.Contour.FitPlane().Normal;
+            loadRecord.SetVector(normal.X, normal.Y, normal.Z);
+
+            for (int cp = 0; cp < points.Count; cp++)
+            {
+                loadRecord.SetContourPoint(cp +1, points[cp].X, points[cp].Y, points[cp].Z);
+            }
+
+            
         }
 
         /***************************************************/

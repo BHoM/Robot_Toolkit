@@ -115,7 +115,7 @@ namespace BH.Adapter.Robot
                 return objects;
             }
 
-            return null;         
+            return new List<IBHoMObject>();         
         }
 
         /***************************************************/

@@ -35,6 +35,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM\Build\BHoM.dll</HintPath>
     </Reference>
+    <Reference Include="Geometry_oM, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BHoM\Build\Geometry_oM.dll</HintPath>
+    </Reference>
     <Reference Include="Structure_oM">
       <HintPath>..\..\BHoM\Build\Structure_oM.dll</HintPath>
     </Reference>
@@ -55,12 +59,12 @@
     <Compile Include="Enums.cs" />
     <Compile Include="Settings\DatabaseSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Structural\Loads\ContourLoad.cs" />
     <Compile Include="Structural\Properties\FramingElementDesignProperties.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Structural\Design\" />
     <Folder Include="Structural\Elements\" />
-    <Folder Include="Structural\Loads\" />
     <Folder Include="Structural\Results\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

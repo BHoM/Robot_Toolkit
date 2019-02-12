@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2018, the respective contributors. All rights reserved.
  *
@@ -21,37 +21,29 @@
  */
 
 using System.Collections.Generic;
+using BH.oM.Base;
 using BH.oM.Structure.Loads;
-using RobotOM;
+using BH.oM.Structure.Elements;
+using BH.oM.Geometry;
 
-namespace BH.Adapter.Robot
+namespace BH.oM.Adapters.Robot
 {
-    public partial class RobotAdapter
+    public class ContourLoad : BHoMObject, ILoad
     {
-
         /***************************************************/
-        /****           Private Methods                 ****/
-        /***************************************************/
-
-        private bool CreateCollection(IEnumerable<ILoad> loads)
-        {
-            RobotCaseServer caseServer = m_RobotApplication.Project.Structure.Cases;
-            RobotGroupServer rGroupServer = m_RobotApplication.Project.Structure.Groups;
-
-            foreach (ILoad load in loads)
-            {
-                IRobotCase rCase = caseServer.Get(load.Loadcase.Number);
-                RobotSimpleCase sCase = rCase as RobotSimpleCase;
-                BH.Engine.Robot.Convert.IRobotLoad(load, sCase, rGroupServer);
-                
-            }
-            
-            return true;
-        }
-
+        /****            Public Properties              ****/
         /***************************************************/
 
+        public LoadAxis Axis { get; set; } = LoadAxis.Global;
+
+        public Loadcase Loadcase { get; set; } = null;
+
+        public bool Projected { get; set; } = false;
+
+        public Vector Force { get; set; } = new Vector();
+
+        public Polyline Contour { get; set; } = null;
+
+        /***************************************************/
     }
-
 }
-

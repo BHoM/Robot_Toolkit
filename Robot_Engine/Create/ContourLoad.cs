@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2018, the respective contributors. All rights reserved.
  *
@@ -20,38 +20,34 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using System.Collections.Generic;
+using System;
+using BH.oM.Adapters.Robot;
 using BH.oM.Structure.Loads;
-using RobotOM;
+using BH.oM.Geometry;
+using BH.Engine.Geometry;
+using BH.Engine.Reflection;
 
-namespace BH.Adapter.Robot
+namespace BH.Engine.Adapters.Robot
 {
-    public partial class RobotAdapter
+    public static partial class Create
     {
-
         /***************************************************/
-        /****           Private Methods                 ****/
+        /****           Public Constructors             ****/
         /***************************************************/
 
-        private bool CreateCollection(IEnumerable<ILoad> loads)
+        public static ContourLoad ContourLoad(Polyline contour, Vector loadVector, Loadcase loadcase, LoadAxis axis = LoadAxis.Global, bool projected = false, string name = "")
         {
-            RobotCaseServer caseServer = m_RobotApplication.Project.Structure.Cases;
-            RobotGroupServer rGroupServer = m_RobotApplication.Project.Structure.Groups;
-
-            foreach (ILoad load in loads)
+            return new ContourLoad
             {
-                IRobotCase rCase = caseServer.Get(load.Loadcase.Number);
-                RobotSimpleCase sCase = rCase as RobotSimpleCase;
-                BH.Engine.Robot.Convert.IRobotLoad(load, sCase, rGroupServer);
-                
-            }
-            
-            return true;
+                Contour = contour,
+                Force = loadVector,
+                Loadcase = loadcase,
+                Axis = axis,
+                Projected = projected,
+                Name = name
+            };
         }
 
         /***************************************************/
-
     }
-
 }
-

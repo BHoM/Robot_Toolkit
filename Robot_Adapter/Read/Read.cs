@@ -50,7 +50,7 @@ namespace BH.Adapter.Robot
                 return ReadNodes(indices);
 
             if (type == typeof(Bar))
-                return ReadBars();
+                return ReadBars(indices);
 
             if (type == typeof(Opening))
                 return ReadOpenings();

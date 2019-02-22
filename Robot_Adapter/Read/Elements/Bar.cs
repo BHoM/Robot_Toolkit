@@ -44,9 +44,9 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
 
-        private List<Bar> ReadBars(List<string> ids = null)
+        private List<Bar> ReadBars(IList ids = null)
         {
-            IRobotCollection robotBars = m_RobotApplication.Project.Structure.Bars.GetAll();
+            List<int> barIds = CheckAndGetIds(ids);
 
             List<Bar> bhomBars = new List<Bar>();
             IEnumerable<Node> bhomNodesList = ReadNodes();
@@ -59,8 +59,9 @@ namespace BH.Adapter.Robot
             HashSet<string> tags = new HashSet<string>();
 
             m_RobotApplication.Project.Structure.Bars.BeginMultiOperation();
-            if (ids == null)
+            if (barIds == null)
             {
+                IRobotCollection robotBars = m_RobotApplication.Project.Structure.Bars.GetAll();
                 for (int i = 1; i <= robotBars.Count; i++)
                 {
                     RobotBar robotBar = robotBars.Get(i);
@@ -76,11 +77,11 @@ namespace BH.Adapter.Robot
                     bhomBars.Add(bhomBar);
                 }
             }
-            else if (ids != null && ids.Count > 0)
+            else if (barIds != null && barIds.Count > 0)
             {
-                for (int i = 0; i < ids.Count; i++)
+                for (int i = 0; i < barIds.Count; i++)
                 {
-                    RobotBar robotBar = m_RobotApplication.Project.Structure.Bars.Get(System.Convert.ToInt32(ids[i])) as RobotBar;
+                    RobotBar robotBar = m_RobotApplication.Project.Structure.Bars.Get(barIds[i]) as RobotBar;
                     Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject( robotBar, 
                                                                         bhomNodes, 
                                                                         bhomSections, 

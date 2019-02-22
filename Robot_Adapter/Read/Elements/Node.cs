@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using BH.oM.Structure.Elements;
 using RobotOM;
 using BH.oM.Structure.Properties.Constraint;
+using System.Collections;
 
 namespace BH.Adapter.Robot
 {
@@ -33,14 +34,15 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
 
-        private List<Node> ReadNodes(List<string> ids = null)
+        private List<Node> ReadNodes(IList ids = null)
         {
+            List<int> nodeIds = CheckAndGetIds(ids);
             IRobotCollection robotNodes = m_RobotApplication.Project.Structure.Nodes.GetAll();
             List<Node> bhomNodes = new List<Node>();
             List<Constraint6DOF> constraints = ReadConstraints6DOF();
             Dictionary<int, HashSet<string>> nodeTags = GetTypeTags(typeof(Node));
             HashSet<string> tags = new HashSet<string>();
-            if (ids == null)
+            if (nodeIds == null)
             {
                 for (int i = 1; i <= robotNodes.Count; i++)
                 {
@@ -53,11 +55,11 @@ namespace BH.Adapter.Robot
                     bhomNodes.Add(bhomNode);
                 }
             }
-            else if (ids != null && ids.Count > 0)
+            else if (nodeIds != null && nodeIds.Count > 0)
             {
-                for (int i = 0; i < ids.Count; i++)
+                for (int i = 0; i < nodeIds.Count; i++)
                 {
-                    RobotNode robotNode = m_RobotApplication.Project.Structure.Nodes.Get(System.Convert.ToInt32(ids[i])) as RobotNode;
+                    RobotNode robotNode = m_RobotApplication.Project.Structure.Nodes.Get(System.Convert.ToInt32(nodeIds[i])) as RobotNode;
                     Node bhomNode = BH.Engine.Robot.Convert.ToBHoMObject(robotNode);
                     bhomNode.CustomData[AdapterId] = robotNode.Number;
                     if (nodeTags != null && nodeTags.TryGetValue(robotNode.Number, out tags))

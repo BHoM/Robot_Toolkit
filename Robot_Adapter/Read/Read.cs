@@ -47,7 +47,7 @@ namespace BH.Adapter.Robot
         protected override IEnumerable<IBHoMObject> Read(Type type, IList indices = null)
         {
             if (type == typeof(Node))
-                return ReadNodes();
+                return ReadNodes(indices);
 
             if (type == typeof(Bar))
                 return ReadBars();

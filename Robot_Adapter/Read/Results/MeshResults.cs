@@ -80,7 +80,7 @@ namespace BH.Adapter.Robot
                         panelIds.Add(System.Convert.ToInt32(obj));
                     }
                 }
-                if (panelIds.Count > 1)
+                if (panelIds.Count > 0)
                 {
                     panels.AddRange(ReadPanels(panelIds as dynamic));
                 }

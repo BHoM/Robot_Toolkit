@@ -59,7 +59,7 @@ namespace BH.Adapter.Robot
             HashSet<string> tags = new HashSet<string>();
 
             m_RobotApplication.Project.Structure.Bars.BeginMultiOperation();
-            if (barIds == null)
+            if (barIds == null || barIds.Count == 0)
             {
                 IRobotCollection robotBars = m_RobotApplication.Project.Structure.Bars.GetAll();
                 for (int i = 1; i <= robotBars.Count; i++)

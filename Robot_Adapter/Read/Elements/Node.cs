@@ -37,13 +37,13 @@ namespace BH.Adapter.Robot
         private List<Node> ReadNodes(IList ids = null)
         {
             List<int> nodeIds = CheckAndGetIds(ids);
-            IRobotCollection robotNodes = m_RobotApplication.Project.Structure.Nodes.GetAll();
             List<Node> bhomNodes = new List<Node>();
             List<Constraint6DOF> constraints = ReadConstraints6DOF();
             Dictionary<int, HashSet<string>> nodeTags = GetTypeTags(typeof(Node));
             HashSet<string> tags = new HashSet<string>();
             if (nodeIds == null || nodeIds.Count == 0)
             {
+                IRobotCollection robotNodes = m_RobotApplication.Project.Structure.Nodes.GetAll();
                 for (int i = 1; i <= robotNodes.Count; i++)
                 {
                     RobotNode robotNode = robotNodes.Get(i);
@@ -55,7 +55,7 @@ namespace BH.Adapter.Robot
                     bhomNodes.Add(bhomNode);
                 }
             }
-            else if (nodeIds != null && nodeIds.Count > 0)
+            else
             {
                 for (int i = 0; i < nodeIds.Count; i++)
                 {

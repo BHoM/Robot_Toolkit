@@ -77,7 +77,7 @@ namespace BH.Adapter.Robot
                     bhomBars.Add(bhomBar);
                 }
             }
-            else if (barIds != null && barIds.Count > 0)
+            else
             {
                 for (int i = 0; i < barIds.Count; i++)
                 {

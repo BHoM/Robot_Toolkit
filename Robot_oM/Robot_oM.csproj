@@ -60,6 +60,7 @@
     <Compile Include="Settings\DatabaseSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Structural\Loads\ContourLoad.cs" />
+    <Compile Include="Structural\Loads\GeometricalLineLoad.cs" />
     <Compile Include="Structural\Properties\FramingElementDesignProperties.cs" />
   </ItemGroup>
   <ItemGroup>

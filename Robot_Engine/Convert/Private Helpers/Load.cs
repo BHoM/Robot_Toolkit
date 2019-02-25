@@ -271,28 +271,29 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        //public static void RobotLoad(this GeometricalLineLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
-        //{
-        //    IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_IN_CONTOUR);
-        //    IRobotLoadRecordLinear3D loadLin3D = loadRecord as IRobotLoadRecordLinear3D;
+        public static void RobotLoad(this GeometricalLineLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
+        {
+            IRobotLoadRecordLinear3D loadLin3D = sCase.Records.Create(IRobotLoadRecordType.I_LRT_LINEAR_3D) as IRobotLoadRecordLinear3D;
 
-        //    loadLin3D.SetPoint(1, load.Location.Start.X, load.Location.Start.Y, load.Location.Start.Z);
-        //    loadLin3D.SetPoint(2, load.Location.End.X, load.Location.End.Y, load.Location.End.Z);
+            loadLin3D.SetPoint(1, load.Location.Start.X, load.Location.Start.Y, load.Location.Start.Z);
+            loadLin3D.SetPoint(2, load.Location.End.X, load.Location.End.Y, load.Location.End.Z);
 
-        //    loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PX1, load.ForceA.X);
-        //    loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PY1, load.ForceA.Y);
-        //    loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PZ1, load.ForceA.Z);
-        //    loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PX2, load.ForceB.X);
-        //    loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PY2, load.ForceB.Y);
-        //    loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PZ2, load.ForceB.Z);
+            loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PX1, load.ForceA.X);
+            loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PY1, load.ForceA.Y);
+            loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PZ1, load.ForceA.Z);
+            loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PX2, load.ForceB.X);
+            loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PY2, load.ForceB.Y);
+            loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PZ2, load.ForceB.Z);
 
-        //    loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MX1, load.MomentA.X);
-        //    loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MY1, load.MomentA.Y);
-        //    loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MZ1, load.MomentA.Z);
-        //    loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MX2, load.MomentB.X);
-        //    loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MY2, load.MomentB.Y);
-        //    loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MZ2, load.MomentB.Z);
-        //}
+            loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MX1, load.MomentA.X);
+            loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MY1, load.MomentA.Y);
+            loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MZ1, load.MomentA.Z);
+            loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MX2, load.MomentB.X);
+            loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MY2, load.MomentB.Y);
+            loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MZ2, load.MomentB.Z);
+        }
+
+        /***************************************************/
 
     }
 }

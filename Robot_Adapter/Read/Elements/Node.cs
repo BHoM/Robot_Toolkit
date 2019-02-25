@@ -42,7 +42,7 @@ namespace BH.Adapter.Robot
             List<Constraint6DOF> constraints = ReadConstraints6DOF();
             Dictionary<int, HashSet<string>> nodeTags = GetTypeTags(typeof(Node));
             HashSet<string> tags = new HashSet<string>();
-            if (nodeIds == null)
+            if (nodeIds == null || nodeIds.Count == 0)
             {
                 for (int i = 1; i <= robotNodes.Count; i++)
                 {

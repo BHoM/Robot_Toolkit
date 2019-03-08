@@ -51,6 +51,11 @@ namespace BH.Adapter.Robot
 
             RobotSelection fe_sel = m_RobotApplication.Project.Structure.Selections.CreateFull(IRobotObjectType.I_OT_FINITE_ELEMENT);
 
+            //Setting case selection to only pull the mesh faces once
+            RobotSelection caseSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
+            IRobotCase rLoadCases = m_RobotApplication.Project.Structure.Cases.Get(1);         
+            caseSelection.FromText(rLoadCases.Number.ToString());
+
             queryParams.ResultIds.SetSize(5);
             queryParams.ResultIds.Set(1, 564);    //Corresponds to first node number of the mesh face topology          
             queryParams.ResultIds.Set(2, 565);    //Corresponds to second node number of the mesh face topology
@@ -59,6 +64,7 @@ namespace BH.Adapter.Robot
             queryParams.ResultIds.Set(5, 1252);   //Corresponds to the panel number to which the mesh face belongs
 
             queryParams.Selection.Set(IRobotObjectType.I_OT_FINITE_ELEMENT, fe_sel);
+            queryParams.Selection.Set(IRobotObjectType.I_OT_CASE, caseSelection);
             queryParams.SetParam(IRobotResultParamType.I_RPT_MULTI_THREADS, true);
             queryParams.SetParam(IRobotResultParamType.I_RPT_THREAD_COUNT, 4);
             queryParams.SetParam(IRobotResultParamType.I_RPT_SMOOTHING, IRobotFeResultSmoothing.I_FRS_IN_ELEMENT_CENTER);

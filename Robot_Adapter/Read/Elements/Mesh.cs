@@ -33,8 +33,6 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
 
-
-        //Fast query method - only returns basic node information, not full node objects
         private List<FEMesh> ReadMeshes(List<string> ids = null)
         {
             SortedDictionary<int, FEMesh> bhomMeshes = new SortedDictionary<int, FEMesh>();

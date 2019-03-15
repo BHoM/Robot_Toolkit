@@ -71,7 +71,8 @@ namespace BH.Adapter.Robot
                 return ReadProperty2D();
 
             if (type == typeof(RigidLink))
-                return new List<RigidLink>();
+                return ReadRigidLinks();
+                //return new List<RigidLink>();
 
             if (type == typeof(LoadCombination))
                 return new List<LoadCombination>();

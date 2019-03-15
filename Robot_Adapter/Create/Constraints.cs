@@ -63,14 +63,14 @@ namespace BH.Adapter.Robot
 
             foreach (LinkConstraint lConst in linkConstraints)
             {
-                m_RobotApplication.Project.Structure.Labels.StoreWithName(rigidLink, lConst.Name);
-
                 rLinkData.UX = lConst.XtoX;
                 rLinkData.UY = lConst.YtoY;
                 rLinkData.UZ = lConst.ZtoZ;
                 rLinkData.RX = lConst.XXtoXX;
                 rLinkData.RY = lConst.YYtoYY;
                 rLinkData.RZ = lConst.ZZtoZZ;
+
+                m_RobotApplication.Project.Structure.Labels.StoreWithName(rigidLink, lConst.Name);
             }
             return true;
         }

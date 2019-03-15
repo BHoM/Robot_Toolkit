@@ -56,6 +56,8 @@
     </Reference>
     <Reference Include="Interop.RobotOM">
       <HintPath>C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2017\System\Exe\Interop.RobotOM.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2018\System\Exe\Interop.RobotOM.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2019\System\Exe\Interop.RobotOM.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Reflection_Engine">
@@ -88,6 +90,7 @@
   <ItemGroup>
     <Compile Include="Convert\AdapterID.cs" />
     <Compile Include="Convert\FromRobot\Property2D.cs" />
+    <Compile Include="Convert\FromRobot\RigidLink.cs" />
     <Compile Include="Convert\Private Helpers\Bar.cs" />
     <Compile Include="Convert\FromRobot\SectionProperty_Concrete.cs" />
     <Compile Include="Convert\Private Helpers\Constraint.cs" />

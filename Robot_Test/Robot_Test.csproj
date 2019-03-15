@@ -55,6 +55,8 @@
     </Reference>
     <Reference Include="Interop.RobotOM">
       <HintPath>C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2017\System\Exe\Interop.RobotOM.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2018\System\Exe\Interop.RobotOM.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2019\System\Exe\Interop.RobotOM.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Reflection_oM">

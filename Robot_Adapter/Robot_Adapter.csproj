@@ -65,6 +65,8 @@
     </Reference>
     <Reference Include="Interop.RobotOM">
       <HintPath>C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2017\System\Exe\Interop.RobotOM.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2018\System\Exe\Interop.RobotOM.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2019\System\Exe\Interop.RobotOM.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <Private>True</Private>
     </Reference>
@@ -120,11 +122,13 @@
     <Compile Include="Adapter\NextId.cs" />
     <Compile Include="Read\Elements\Bar.cs" />
     <Compile Include="Read\Elements\Mesh.cs" />
+    <Compile Include="Read\Elements\RigidLink.cs" />
     <Compile Include="Read\Loads\Load.cs" />
     <Compile Include="Read\Elements\Node.cs" />
     <Compile Include="Read\Properties\Constraint.cs" />
     <Compile Include="Read\Elements\Opening.cs" />
     <Compile Include="Read\Elements\Panel.cs" />
+    <Compile Include="Read\Properties\LinkConstraint.cs" />
     <Compile Include="Read\Properties\Property2D.cs" />
     <Compile Include="Read\Properties\SectionProperty.cs" />
     <Compile Include="Read\Properties\Material.cs" />

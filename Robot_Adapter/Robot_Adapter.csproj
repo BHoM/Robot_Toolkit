@@ -64,9 +64,9 @@
       <HintPath>..\..\BHoM\Build\Geometry_oM.dll</HintPath>
     </Reference>
     <Reference Include="Interop.RobotOM">
-      <HintPath>C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2017\System\Exe\Interop.RobotOM.dll</HintPath>
-      <HintPath>C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2018\System\Exe\Interop.RobotOM.dll</HintPath>
-      <HintPath>C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2019\System\Exe\Interop.RobotOM.dll</HintPath>
+      <HintPath Condition="Exists('C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2017\System\Exe\Interop.RobotOM.dll')">C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2017\System\Exe\Interop.RobotOM.dll</HintPath>
+      <HintPath Condition="Exists('C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2018\System\Exe\Interop.RobotOM.dll')">C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2018\System\Exe\Interop.RobotOM.dll</HintPath>
+      <HintPath Condition="Exists('C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2019\System\Exe\Interop.RobotOM.dll')">C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2019\System\Exe\Interop.RobotOM.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <Private>True</Private>
     </Reference>

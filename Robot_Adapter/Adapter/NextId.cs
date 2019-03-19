@@ -102,6 +102,10 @@ namespace BH.Adapter.Robot
                 {
                     index = m_RobotApplication.Project.Structure.FiniteElems.FreeNumber;
                 }
+                if (type == typeof(FEMesh))
+                {
+                    index = m_RobotApplication.Project.Structure.Objects.FreeNumber;
+                }
                 if (type == typeof(BH.oM.Structure.Elements.PanelPlanar)) //TODO: Check that this is the right rtype of panel
                 {
                     index = m_RobotApplication.Project.Structure.Objects.FreeNumber;

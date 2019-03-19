@@ -51,8 +51,15 @@ namespace BH.Adapter.Robot
 
             //Setting case selection to only pull the mesh faces once
             RobotSelection caseSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
-            IRobotCase rLoadCases = m_RobotApplication.Project.Structure.Cases.Get(1);         
-            caseSelection.FromText(rLoadCases.Number.ToString());
+            try
+            {
+                caseSelection.FromText(m_RobotApplication.Project.Structure.Cases.Get(1).Number.ToString());
+            }
+            catch
+            {
+                m_RobotApplication.Project.Structure.Cases.CreateSimple(1, "Dead Load", IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
+                caseSelection.FromText(m_RobotApplication.Project.Structure.Cases.Get(1).Number.ToString());
+            }
 
             queryParams.ResultIds.SetSize(5);
             queryParams.ResultIds.Set(1, 564);    //Corresponds to first node number of the mesh face topology          

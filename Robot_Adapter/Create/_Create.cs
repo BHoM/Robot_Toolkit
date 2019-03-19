@@ -84,6 +84,11 @@ namespace BH.Adapter.Robot
                     success = CreateCollection(objects as IEnumerable<MeshFace>);
                 }
 
+                if (objects.First() is FEMesh)
+                {
+                    success = CreateCollection(objects as IEnumerable<FEMesh>);
+                }
+
                 if (objects.First() is Node)
                 {
                     success = CreateCollection(objects as IEnumerable<Node>);

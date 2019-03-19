@@ -104,6 +104,7 @@
     <Compile Include="Create\FramingElementDesignProperties.cs" />
     <Compile Include="Create\Constraints.cs" />
     <Compile Include="Create\Bars.cs" />
+    <Compile Include="Create\FEMeshes.cs" />
     <Compile Include="Create\Release.cs" />
     <Compile Include="Create\LoadCombination.cs" />
     <Compile Include="Create\Property2D.cs" />

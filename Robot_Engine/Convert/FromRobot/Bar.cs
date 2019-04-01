@@ -86,7 +86,7 @@ namespace BH.Engine.Robot
                         }
                         else
                         {
-                            BH.Engine.Reflection.Compute.RecordEvent("Section property type" + secName + "is not supported", oM.Reflection.Debugging.EventType.Warning);
+                            BH.Engine.Reflection.Compute.RecordEvent("Section property type " + secName + " is not supported", oM.Reflection.Debugging.EventType.Warning);
                         }
                     }
                 }
@@ -108,7 +108,7 @@ namespace BH.Engine.Robot
                     }
                     else
                     {
-                        BH.Engine.Reflection.Compute.RecordEvent("Section property type" + secName + "is not supported", oM.Reflection.Debugging.EventType.Warning);
+                        BH.Engine.Reflection.Compute.RecordEvent("Section property type " + secName + " is not supported", oM.Reflection.Debugging.EventType.Warning);
                     }
                 }
             }            

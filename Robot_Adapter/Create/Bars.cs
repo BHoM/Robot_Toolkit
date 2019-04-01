@@ -79,7 +79,10 @@ namespace BH.Adapter.Robot
                                   materialName,
                                   bhomBar.OrientationAngle * 180 / Math.PI);
 
-                    rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_RELEASE, bhomBar.Release.Name);
+                    if (bhomBar.Release != null)
+                        rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_RELEASE, bhomBar.Release.Name);
+                    else
+                        Engine.Reflection.Compute.RecordWarning("Bar with id " + barNum + " did not have any release assigned. Default in Robot will be used");
 
                     
                     if (bhomBar.CustomData.ContainsKey("FramingElementDesignProperties"))

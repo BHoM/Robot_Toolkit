@@ -165,6 +165,11 @@ namespace BH.Engine.Robot
             double l1 = 0;
             double l2 = 0;
 
+            if (!secData.IsConcrete)
+            {
+                Engine.Reflection.Compute.RecordWarning("The section with the name " + secData.Name + " has a concrete material assigned but is not a concrete section type. The section will not be read, please check the material assignment");
+                return null;
+            }
             RobotBarSectionConcreteData concMember = secData.Concrete;
             IProfile sectionProfile;
 

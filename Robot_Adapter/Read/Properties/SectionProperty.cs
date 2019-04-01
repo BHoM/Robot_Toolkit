@@ -33,7 +33,7 @@ namespace BH.Adapter.Robot
         /***************************************************/
         /****           Private Methods                 ****/
         /***************************************************/
-        
+
         private List<ISectionProperty> ReadSectionProperties(List<string> ids = null)
         {
             IRobotCollection secProps = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_BAR_SECTION);
@@ -46,18 +46,21 @@ namespace BH.Adapter.Robot
                 Material bhomMat = null;
                 IRobotLabel rSection = secProps.Get(i);
                 IRobotBarSectionData secData = rSection.Data as IRobotBarSectionData;
-
-                if (materials.ContainsKey(secData.MaterialName))
+                
+                //If material not yet read out, read it by label and stor
+                if (!materials.TryGetValue(secData.MaterialName, out bhomMat))
                 {
-                   bhomSec = BH.Engine.Robot.Convert.IBHoMSection(secData, materials[secData.MaterialName]);
-                   bhomMat = materials[secData.MaterialName];
+                    bhomMat = ReadMaterialByLabelName(secData.MaterialName);
+                    materials[bhomMat.Name] = bhomMat;
                 }
+
+                bhomSec = BH.Engine.Robot.Convert.IBHoMSection(secData, materials[secData.MaterialName]);
 
                 if (bhomSec != null)
                 {
                     bhomSec.Material = bhomMat;
                     bhomSec.Name = rSection.Name;
-                    bhomSec.CustomData.Add(AdapterId, rSection.Name);
+                    bhomSec.CustomData[AdapterId] = rSection.Name;
                     bhomSectionProps.Add(bhomSec);
                 }
             }

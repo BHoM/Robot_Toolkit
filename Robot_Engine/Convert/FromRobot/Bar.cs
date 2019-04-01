@@ -43,7 +43,8 @@ namespace BH.Engine.Robot
                                         Dictionary<string, ISectionProperty> bhomSections, 
                                         Dictionary<string, Material> bhomMaterials, 
                                         Dictionary<string, BarRelease> barReleases,
-                                        Dictionary<string, FramingElementDesignProperties> bhomFramEleDesPropList)
+                                        Dictionary<string, FramingElementDesignProperties> bhomFramEleDesPropList,
+                                        ref Dictionary<string, Dictionary<string, ISectionProperty>> sectionWithMaterial)
         {
             Node startNode = null;  bhomNodes.TryGetValue(robotBar.StartNode.ToString(), out startNode);
             Node endNode = null; bhomNodes.TryGetValue(robotBar.EndNode.ToString(), out endNode);
@@ -55,22 +56,63 @@ namespace BH.Engine.Robot
 
             if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_SECTION) == -1)
             {
+                //Get section name
                 string secName = robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION);
-                if (!bhomSections.TryGetValue(secName, out secProp))
-                    BH.Engine.Reflection.Compute.RecordEvent("Section property type" + secName + "is not supported", oM.Reflection.Debugging.EventType.Warning);
-            }
 
-            if (robotBar.HasLabel(IRobotLabelType.I_LT_MATERIAL) == -1)
-            {
-                string matName = robotBar.GetLabelName(IRobotLabelType.I_LT_MATERIAL);
-                if (secProp != null)
+                if (robotBar.HasLabel(IRobotLabelType.I_LT_MATERIAL) == -1)
                 {
-                    if (bhomMaterials.TryGetValue(matName, out barMaterial))
-                        secProp.Material = barMaterial;
-                    else
-                        BH.Engine.Reflection.Compute.RecordEvent("Section property has no material assigned", oM.Reflection.Debugging.EventType.Warning);
+                    //Get material name and material
+                    string matName = robotBar.GetLabelName(IRobotLabelType.I_LT_MATERIAL);
+                    barMaterial = bhomMaterials[matName];
+
+                    Dictionary<string, ISectionProperty> innerDict;
+                    //Check of a section of the specified type has allready been pulled
+                    if (!sectionWithMaterial.TryGetValue(secName, out innerDict))
+                    {
+                        innerDict = new Dictionary<string, ISectionProperty>();
+                    }
+
+                    //Check if a section of the specified type with the material has allready been added
+                    if (!innerDict.TryGetValue(matName, out secProp))
+                    {
+                        //If not, get out the section from the basic dictionary
+                        if (bhomSections.TryGetValue(secName, out secProp))
+                        {
+                            //Construct and store a copy of the section, with new material
+                            secProp = secProp.GetShallowClone(true) as ISectionProperty;
+                            secProp.Material = barMaterial;
+                            innerDict[matName] = secProp;
+                            sectionWithMaterial[secName] = innerDict;
+                        }
+                        else
+                        {
+                            BH.Engine.Reflection.Compute.RecordEvent("Section property type" + secName + "is not supported", oM.Reflection.Debugging.EventType.Warning);
+                        }
+                    }
                 }
-           }
+                else
+                {
+                    //No material label appended to the bar. The default section is used, if found
+                    if (bhomSections.TryGetValue(secName, out secProp))
+                    {
+                        Dictionary<string, ISectionProperty> innerDict;
+                        if (!sectionWithMaterial.TryGetValue(secName, out innerDict))
+                        {
+                            innerDict = new Dictionary<string, ISectionProperty>();
+                        }
+                        if (!innerDict.ContainsKey(secProp.Material.Name))
+                        {
+                            innerDict[secProp.Material.Name] = secProp;
+                            sectionWithMaterial[secName] = innerDict;
+                        }
+                    }
+                    else
+                    {
+                        BH.Engine.Reflection.Compute.RecordEvent("Section property type" + secName + "is not supported", oM.Reflection.Debugging.EventType.Warning);
+                    }
+                }
+            }            
+
 
             if (robotBar.HasLabel(IRobotLabelType.I_LT_MEMBER_TYPE) == -1)
             {

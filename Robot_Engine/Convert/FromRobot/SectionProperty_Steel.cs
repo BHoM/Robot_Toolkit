@@ -74,6 +74,7 @@ namespace BH.Engine.Robot
                     case IRobotBarSectionShapeType.I_BSST_TREC:
                     case IRobotBarSectionShapeType.I_BSST_TRON:
                     case IRobotBarSectionShapeType.I_BSST_TCAR:
+                    case IRobotBarSectionShapeType.I_BSST_TRND:
                         if (r != 0)
                         {
                             sectionProfile = BH.Engine.Structure.Create.BoxProfile(d, bf, Tf, r + Tf, r);
@@ -165,6 +166,9 @@ namespace BH.Engine.Robot
                         sectionProfile = BH.Engine.Structure.Create.ISectionProfile(H + (2 * TF), B, TW, TF, 0, 0);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
+                    case IRobotBarSectionShapeType.I_BSST_USER_CIRC_FILLED:
+                        sectionProfile = BH.Engine.Structure.Create.CircleProfile(D);
+                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
                     default:
                         return null;

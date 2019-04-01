@@ -64,18 +64,34 @@ namespace BH.Adapter.Robot
             for (int i = 1; i <= rMaterials.Count; i++)
             {
                 IRobotLabel rMatLable = rMaterials.Get(i);
-                mData = rMatLable.Data as IRobotMaterialData;
-                //if (!m_dbMaterialNames.Contains(mData.Name))
-                //{
-                MaterialType bhomMatType = BH.Engine.Robot.Convert.GetMaterialType(mData.Type);
-                bhomMat = BH.Engine.Common.Create.Material(mData.Name, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO / Engine.Robot.Query.RobotGravityConstant);
-                bhomMat.CustomData.Add(AdapterId, NextId(bhomMat.GetType(), false));
+
+                bhomMat = MaterialFromLabel(rMatLable);
+
                 if (bhomMat != null)
                     bhomMaterials.Add(bhomMat);
                 //}
             }
 
             return bhomMaterials;
+        }
+
+        /***************************************************/
+
+        private Material ReadMaterialByLabelName(string labelName)
+        {
+            IRobotLabel materialLabel = m_RobotApplication.Project.Structure.Labels.Get(IRobotLabelType.I_LT_MATERIAL, labelName);
+            return MaterialFromLabel(materialLabel);
+        }
+
+        /***************************************************/
+
+        private Material MaterialFromLabel(IRobotLabel materialLabel)
+        {
+            IRobotMaterialData mData = materialLabel.Data as IRobotMaterialData;
+            MaterialType bhomMatType = BH.Engine.Robot.Convert.GetMaterialType(mData.Type);
+            Material bhomMat = BH.Engine.Common.Create.Material(mData.Name, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO / Engine.Robot.Query.RobotGravityConstant);
+            bhomMat.CustomData.Add(AdapterId, NextId(bhomMat.GetType(), false));
+            return bhomMat;
         }
 
         /***************************************************/

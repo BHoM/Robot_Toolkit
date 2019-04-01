@@ -35,6 +35,7 @@ using BH.oM.Common.Materials;
 using BH.oM.Structure.Design;
 using BH.oM.Adapters.Robot;
 using BHE = BH.Engine.Adapters.Robot;
+using BH.Engine.Base.Objects;
 
 namespace BH.Adapter.Robot
 {
@@ -52,10 +53,11 @@ namespace BH.Adapter.Robot
             IEnumerable<Node> bhomNodesList = ReadNodes();
             Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionary(x => x.CustomData[AdapterId].ToString());
             Dictionary<string, BarRelease> bhombarReleases = ReadBarRelease().ToDictionary(x => x.Name.ToString());
-            Dictionary<string, ISectionProperty> bhomSections = ReadSectionProperties().ToDictionary(x => x.Name.ToString());
+            Dictionary<string, ISectionProperty> bhomSections = ReadSectionProperties().Distinct<ISectionProperty>(new BHoMObjectNameOrToStringComparer()).ToDictionary(x => x.Name.ToString());
             Dictionary<string, Material> bhomMaterial = ReadMaterial().ToDictionary(x => x.Name.ToString());
             Dictionary<string, FramingElementDesignProperties> bhomFramEleDesProps = ReadFramingElementDesignProperties().ToDictionary(x => x.Name.ToString());
             Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
+            Dictionary<string, Dictionary<string,ISectionProperty>> sectionWithMaterial = new Dictionary<string, Dictionary<string, ISectionProperty>>();  //Used to store sections where the material differs from the default
             HashSet<string> tags = new HashSet<string>();
 
             m_RobotApplication.Project.Structure.Bars.BeginMultiOperation();
@@ -70,7 +72,8 @@ namespace BH.Adapter.Robot
                                                                         bhomSections, 
                                                                         bhomMaterial, 
                                                                         bhombarReleases,
-                                                                        bhomFramEleDesProps);
+                                                                        bhomFramEleDesProps,
+                                                                        ref sectionWithMaterial);
                     bhomBar.CustomData[AdapterId] = robotBar.Number;
                     if (barTags != null && barTags.TryGetValue(robotBar.Number, out tags))
                         bhomBar.Tags = tags;
@@ -87,7 +90,8 @@ namespace BH.Adapter.Robot
                                                                         bhomSections, 
                                                                         bhomMaterial,
                                                                         bhombarReleases,
-                                                                        bhomFramEleDesProps);
+                                                                        bhomFramEleDesProps,
+                                                                        ref sectionWithMaterial);
                     bhomBar.CustomData[AdapterId] = robotBar.Number;
                     if (barTags != null && barTags.TryGetValue(robotBar.Number, out tags))
                         bhomBar.Tags = tags;
@@ -96,10 +100,33 @@ namespace BH.Adapter.Robot
             }
             m_RobotApplication.Project.Structure.Bars.EndMultiOperation();
 
+            //Postprocess the used sections
+            PostProcessBarSections(sectionWithMaterial);
+
             return bhomBars;
         }
 
-        /***************************************************/        
+        /***************************************************/
+
+        private void PostProcessBarSections(Dictionary<string, Dictionary<string, ISectionProperty>> sectionsWithMaterial)
+        {
+            //If more than one material is used for a specific section, append the material name to the
+            //end of the name of the section
+            foreach (KeyValuePair<string,Dictionary<string, ISectionProperty>> outerKvp in sectionsWithMaterial)
+            {
+
+                if (outerKvp.Value.Count == 1)
+                    continue;
+
+                foreach (KeyValuePair<string,ISectionProperty> innerKvp in outerKvp.Value)
+                {
+                    innerKvp.Value.Name = innerKvp.Value.Name + "-" + innerKvp.Value.Material.Name;
+                }
+
+            }
+        }
+
+        /***************************************************/
 
         //Fast query method - returns basic bar information, not full bar objects
         private List<Bar> ReadBarsQuery(List<string> ids = null)

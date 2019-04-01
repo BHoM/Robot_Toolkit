@@ -66,7 +66,7 @@ namespace BH.Engine.Robot
                     barMaterial = bhomMaterials[matName];
 
                     Dictionary<string, ISectionProperty> innerDict;
-                    //Check of a section of the specified type has allready been pulled
+                    //Check if a section of the specified type has allready been pulled
                     if (!sectionWithMaterial.TryGetValue(secName, out innerDict))
                     {
                         innerDict = new Dictionary<string, ISectionProperty>();

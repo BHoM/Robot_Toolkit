@@ -25,6 +25,8 @@ using RobotOM;
 using BH.oM.Adapters.Robot;
 using BHE = BH.Engine.Adapters.Robot;
 
+using System.Linq;
+
 namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
@@ -38,17 +40,21 @@ namespace BH.Adapter.Robot
             IRobotCollection r_memberTypes = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_MEMBER_TYPE);
             List<FramingElementDesignProperties> bhomDesignPropsList = new List<FramingElementDesignProperties>();
 
-
-            
             for (int i = 1; i <= r_memberTypes.Count; i++)
             {
                 IRobotLabel r_MemberType = r_memberTypes.Get(i);
-                
-                string name = r_MemberType.Name;
-                object rMemberTypeData = r_MemberType.Data;
-                FramingElementDesignProperties bhomDesignProps = BHE.Create.FramingElementDesignProperties(r_MemberType.Name);
 
-                IRDimMembDef memberDef = r_MemberType.Data;
+                string name = r_MemberType.Name;
+                IRDimMembDef memberDef = r_MemberType.Data as IRDimMembDef;
+
+                if (memberDef == null)
+                {
+                    Engine.Reflection.Compute.RecordWarning("Failed to extract design properties with label name " + name);
+                    continue;
+                }
+
+                FramingElementDesignProperties bhomDesignProps = BHE.Create.FramingElementDesignProperties(name);
+
                 double length = memberDef.Length;
 
                 string steelMembersCodeType = m_RobotApplication.Project.Preferences.GetActiveCode(IRobotCodeType.I_CT_STEEL_STRUCTURES);
@@ -115,11 +121,11 @@ namespace BH.Adapter.Robot
                     bhomDesignProps.EulerBucklingLengthCoefficientY = memberDesignParams_BS5950_2000.BuckLengthCoeffY;
                     bhomDesignProps.EulerBucklingLengthCoefficientZ = memberDesignParams_BS5950_2000.BuckLengthCoeffZ;
                 }
-                    bhomDesignPropsList.Add(bhomDesignProps);
+                bhomDesignPropsList.Add(bhomDesignProps);
             }
             return bhomDesignPropsList;
         }
-        
+
 
         /***************************************************/
 

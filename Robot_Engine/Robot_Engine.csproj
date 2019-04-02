@@ -123,6 +123,7 @@
     <Compile Include="Convert\ToRobot\Enums.cs" />
     <Compile Include="Query\GetStringFromEnum.cs" />
     <Compile Include="Query\RobotGravityConstant.cs" />
+    <Compile Include="Query\ToDictionaryWithDistinctCheck.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Robot_oM\Robot_oM.csproj">

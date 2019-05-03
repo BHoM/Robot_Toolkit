@@ -66,7 +66,10 @@ namespace BH.Engine.Robot
                 {
                     case IRobotBarSectionShapeType.I_BSST_USER_I_BISYM:
                     case IRobotBarSectionShapeType.I_BSST_IPE:
+                    case IRobotBarSectionShapeType.I_BSST_HEAA:
                     case IRobotBarSectionShapeType.I_BSST_HEA:
+                    case IRobotBarSectionShapeType.I_BSST_HEB:
+                    case IRobotBarSectionShapeType.I_BSST_HEC:
                         sectionProfile = BH.Engine.Structure.Create.ISectionProfile(d, bf, Tw, Tf, r, ri);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
@@ -155,7 +158,7 @@ namespace BH.Engine.Robot
                         TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_TW);
                         TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_TF);
 
-                        sectionProfile = BH.Engine.Structure.Create.FabricatedBoxProfile(H, B, TW, TF, TF, 0);
+                        sectionProfile = BH.Engine.Structure.Create.FabricatedBoxProfile(H + (2 * TF), B, TW, TF, TF, 0);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
                     case IRobotBarSectionShapeType.I_BSST_USER_I_MONOSYM:

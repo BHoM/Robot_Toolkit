@@ -116,7 +116,6 @@
     <Compile Include="Create\Release.cs" />
     <Compile Include="Create\LoadCombination.cs" />
     <Compile Include="Create\Property2D.cs" />
-    <Compile Include="Create\MeshFaces.cs" />
     <Compile Include="Create\Groups.cs" />
     <Compile Include="Create\Panels.cs" />
     <Compile Include="Create\Loads.cs" />

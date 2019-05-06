@@ -52,7 +52,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Geometry\CoordinateSystem.cs" />
     <Compile Include="Settings\DesignGroup.cs" />
     <Compile Include="Settings\RobotConfig.cs" />
     <Compile Include="Settings\AdvancedSettings.cs" />

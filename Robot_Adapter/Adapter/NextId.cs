@@ -98,10 +98,6 @@ namespace BH.Adapter.Robot
                 {
                     index = m_RobotApplication.Project.Structure.Nodes.FreeNumber;
                 }
-                //if (type == typeof(MeshFace))
-                //{
-                //    index = m_RobotApplication.Project.Structure.FiniteElems.FreeNumber;
-                //}
                 if (type == typeof(FEMesh))
                 {
                     index = m_RobotApplication.Project.Structure.Objects.FreeNumber;

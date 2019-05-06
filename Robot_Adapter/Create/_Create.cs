@@ -79,11 +79,6 @@ namespace BH.Adapter.Robot
                     success = CreateCollection(objects as IEnumerable<Loadcase>);
                 }
 
-                //if (objects.First() is MeshFace)
-                //{
-                //    success = CreateCollection(objects as IEnumerable<MeshFace>);
-                //}
-
                 if (objects.First() is FEMesh)
                 {
                     success = CreateCollection(objects as IEnumerable<FEMesh>);

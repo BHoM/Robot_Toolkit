@@ -23,7 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BH.oM.Common.Materials;
+using BH.oM.Physical.Materials;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.Loads;
 
@@ -86,7 +86,7 @@ namespace BH.Adapter.Robot
                 {
                     index = m_RobotApplication.Project.Structure.Cases.FreeNumber;
                 }
-                if (type == typeof(PanelPlanar))
+                if (type == typeof(Panel))
                 {
                     index = m_RobotApplication.Project.Structure.Objects.FreeNumber;
                 }
@@ -98,15 +98,15 @@ namespace BH.Adapter.Robot
                 {
                     index = m_RobotApplication.Project.Structure.Nodes.FreeNumber;
                 }
-                if (type == typeof(MeshFace))
-                {
-                    index = m_RobotApplication.Project.Structure.FiniteElems.FreeNumber;
-                }
+                //if (type == typeof(MeshFace))
+                //{
+                //    index = m_RobotApplication.Project.Structure.FiniteElems.FreeNumber;
+                //}
                 if (type == typeof(FEMesh))
                 {
                     index = m_RobotApplication.Project.Structure.Objects.FreeNumber;
                 }
-                if (type == typeof(BH.oM.Structure.Elements.PanelPlanar)) //TODO: Check that this is the right rtype of panel
+                if (type == typeof(BH.oM.Structure.Elements.Panel)) //TODO: Check that this is the right rtype of panel
                 {
                     index = m_RobotApplication.Project.Structure.Objects.FreeNumber;
                 }

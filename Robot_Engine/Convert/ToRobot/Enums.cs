@@ -20,9 +20,10 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Structure.Properties.Section;
+using BH.oM.Structure.SectionProperties;
 using RobotOM;
 using BH.oM.Structure.Results;
+
 
 namespace BH.Engine.Robot
 {
@@ -31,37 +32,6 @@ namespace BH.Engine.Robot
         /***************************************************/
         /****           Public Methods                  ****/
         /***************************************************/
-
-        public static IRobotBarSectionType FromBHoMEnum(ShapeType type)
-        {
-            switch (type)
-            {
-                case ShapeType.Angle:
-                    return IRobotBarSectionType.I_BST_NS_L;
-                case ShapeType.Box:
-                    return IRobotBarSectionType.I_BST_NS_BOX;
-                case ShapeType.Channel:
-                    return IRobotBarSectionType.I_BST_NS_C;
-                case ShapeType.Circle:
-                    return IRobotBarSectionType.I_BST_NS_C;
-                case ShapeType.DoubleAngle:
-                    return IRobotBarSectionType.I_BST_NS_LP;
-                case ShapeType.ISection:
-                    return IRobotBarSectionType.I_BST_NS_I;
-                case ShapeType.Rectangle:
-                    return IRobotBarSectionType.I_BST_NS_RECT;
-                case ShapeType.Tee:
-                    return IRobotBarSectionType.I_BST_NS_T;
-                case ShapeType.Tube:
-                case ShapeType.Cable:
-                    return IRobotBarSectionType.I_BST_NS_TUBE;
-                case ShapeType.FreeForm:
-                    return IRobotBarSectionType.I_BST_NS_POLYGONAL;
-                default:
-                    return IRobotBarSectionType.I_BST_NS_RECT;
-
-            }
-        }
 
         public static IRobotFeLayerType FromBHoMEnum(MeshResultLayer bhomMeshLayer)
         {

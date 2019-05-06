@@ -135,7 +135,7 @@ namespace BH.Adapter.Robot
         private RobotApplication m_RobotApplication;
         private Dictionary<Type, Dictionary<int, HashSet<string>>> m_tags = new Dictionary<Type, Dictionary<int, HashSet<string>>>();
         private List<string> m_dbMaterialNames = new List<string>();
-        private Dictionary<string, BH.oM.Common.Materials.Material> m_dbMaterials = new Dictionary<string, oM.Common.Materials.Material>();
+        private Dictionary<string, oM.Physical.Materials.Material> m_dbMaterials = new Dictionary<string, oM.Physical.Materials.Material>();
         private List<string> m_dbSecPropNames = new List<string>();
         private RobotConfig m_robotConfig = new RobotConfig();
         //private Dictionary<int, string> m_NodeTaggs = new Dictionary<int, string>();

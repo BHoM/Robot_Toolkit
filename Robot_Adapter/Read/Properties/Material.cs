@@ -22,7 +22,7 @@
 
 using System.Collections.Generic;
 using RobotOM;
-using BH.oM.Common.Materials;
+using BH.oM.Physical.Materials;
 
 namespace BH.Adapter.Robot
 {
@@ -88,8 +88,27 @@ namespace BH.Adapter.Robot
         private Material MaterialFromLabel(IRobotLabel materialLabel)
         {
             IRobotMaterialData mData = materialLabel.Data as IRobotMaterialData;
-            MaterialType bhomMatType = BH.Engine.Robot.Convert.GetMaterialType(mData.Type);
-            Material bhomMat = BH.Engine.Common.Create.Material(mData.Name, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO / Engine.Robot.Query.RobotGravityConstant);
+
+            Material bhomMat;
+
+            switch (mData.Type)
+            {
+                case IRobotMaterialType.I_MT_STEEL:
+                    bhomMat = Engine.Structure.Create.SteelMaterial(mData.Name, mData.E, mData.NU, mData.LX, mData.RO / Engine.Robot.Query.RobotGravityConstant, mData.DumpCoef, mData.RE, mData.RT);
+                    break;
+                case IRobotMaterialType.I_MT_CONCRETE:
+                    bhomMat = Engine.Structure.Create.ConcreteMaterial(mData.Name, mData.E, mData.NU, mData.LX, mData.RO / Engine.Robot.Query.RobotGravityConstant, mData.DumpCoef, 0, 0);
+                    break;
+                case IRobotMaterialType.I_MT_OTHER:
+                case IRobotMaterialType.I_MT_TIMBER:
+                case IRobotMaterialType.I_MT_ALUMINIUM:
+                case IRobotMaterialType.I_MT_ALL:
+                default:
+                    bhomMat = new Material() { Density = mData.RO / Engine.Robot.Query.RobotGravityConstant, Name = mData.Name };
+                    Engine.Reflection.Compute.RecordWarning("Material of Robot type " + mData.Type + " not yet suported. Empty material will be provided");
+                    break;
+            }
+           
             bhomMat.CustomData.Add(AdapterId, NextId(bhomMat.GetType(), false));
             return bhomMat;
         }

@@ -20,7 +20,9 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Common.Materials;
+using BH.oM.Physical.Materials;
+using BH.oM.Structure.MaterialFragments;
+using BH.Engine.Structure;
 using RobotOM;
 
 namespace BH.Engine.Robot
@@ -35,20 +37,34 @@ namespace BH.Engine.Robot
         {
             materialData.Type = GetMaterialType(material);
             materialData.Name = material.Name;
-            materialData.E = material.YoungsModulus;
-            materialData.RE = material.StrainAtYield;
-            materialData.NU = material.PoissonsRatio;
-            materialData.RO = material.Density * Engine.Robot.Query.RobotGravityConstant;
-            materialData.LX = material.CoeffThermalExpansion;
-            materialData.Kirchoff = BH.Engine.Common.Query.ShearModulus(material);
-            materialData.DumpCoef = material.DampingRatio;
+
+            if (!material.IsStructural())
+            {
+                Engine.Reflection.Compute.RecordWarning("Material with name " + material.Name + " is does not contain structural properties. Please check the material");
+                return;
+            }
+
+            if (material.IsIsotropic())
+            {
+                materialData.E = material.YoungsModulusIsotropic();
+                materialData.NU = material.PoissonsRatioIsotropic();
+                materialData.RO = material.Density * Engine.Robot.Query.RobotGravityConstant;
+                materialData.LX = material.ThermalExpansionCoeffIsotropic();
+                materialData.Kirchoff = material.ShearModulusIsotropic();
+                materialData.DumpCoef = material.DampingRatio();
+            }
+            else
+            {
+                Engine.Reflection.Compute.RecordWarning("Robot_Toolkit does currently only suport Isotropic material. No structural properties for material with name " + material.Name + " have been pushed");
+                return;
+            }
         }
 
         /***************************************************/
 
         public static IRobotMaterialType GetMaterialType(Material mat)
         {
-            switch (mat.Type)
+            switch (mat.MaterialType())
             {
                 case MaterialType.Aluminium:
                     return IRobotMaterialType.I_MT_ALUMINIUM;
@@ -62,6 +78,7 @@ namespace BH.Engine.Robot
                 case MaterialType.Tendon:
                 case MaterialType.Glass:
                 case MaterialType.Cable:
+                case MaterialType.Undefined:
                     return IRobotMaterialType.I_MT_OTHER;
                 default:
                     return IRobotMaterialType.I_MT_OTHER;

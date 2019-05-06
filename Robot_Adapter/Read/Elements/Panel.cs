@@ -24,8 +24,8 @@ using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Structure.Elements;
 using RobotOM;
-using BH.oM.Structure.Properties.Surface;
-using BH.oM.Common.Materials;
+using BH.oM.Structure.SurfaceProperties;
+using BH.oM.Physical.Materials;
 using BH.oM.Geometry;
 using System.Collections;
 
@@ -37,15 +37,15 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
 
-        private List<PanelPlanar> ReadPanels(IList ids = null)
+        private List<Panel> ReadPanels(IList ids = null)
         {
             Dictionary<string, ISurfaceProperty> BHoMProperties = ReadProperty2D().ToDictionary(x => x.Name);
-            List<PanelPlanar> BHoMPanels = new List<PanelPlanar>();
+            List<Panel> BHoMPanels = new List<Panel>();
             IRobotStructure robotStructureServer = m_RobotApplication.Project.Structure;
             IRobotObjObjectServer robotPanelServer = m_RobotApplication.Project.Structure.Objects;
             List<Material> bhomMaterials = new List<Material>();
             List<Opening> allOpenings = ReadOpenings();
-            PanelPlanar BHoMPanel = null;
+            Panel BHoMPanel = null;
 
             List<int> panelIds = CheckAndGetIds(ids);
 
@@ -81,7 +81,7 @@ namespace BH.Adapter.Robot
                     List<Opening> openings = BH.Engine.Robot.Convert.FindOpening(outline, allOpenings);
                     try
                     {
-                        BHoMPanel = BH.Engine.Structure.Create.PanelPlanar(outline, openings);
+                        BHoMPanel = BH.Engine.Structure.Create.Panel(outline, openings);
                     }
                     catch
                     {
@@ -135,7 +135,7 @@ namespace BH.Adapter.Robot
                 if (rCladding.Main.Attribs.Meshed == 1)
                 {
                     ICurve outline = BH.Engine.Robot.Convert.ToBHoMGeometry(rCladding.Main.GetGeometry() as dynamic);
-                    BHoMPanel = BH.Engine.Structure.Create.PanelPlanar(outline, emptyOpenings);
+                    BHoMPanel = BH.Engine.Structure.Create.Panel(outline, emptyOpenings);
                 }
                 if (BHoMPanel != null)
                 {

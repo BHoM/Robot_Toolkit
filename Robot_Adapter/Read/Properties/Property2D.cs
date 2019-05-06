@@ -23,8 +23,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using RobotOM;
-using BH.oM.Structure.Properties.Surface;
-using BH.oM.Common.Materials;
+using BH.oM.Structure.SurfaceProperties;
+using BH.oM.Physical.Materials;
 
 
 namespace BH.Adapter.Robot

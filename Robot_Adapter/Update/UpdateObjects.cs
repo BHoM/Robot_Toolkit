@@ -23,11 +23,11 @@
 using System.Collections.Generic;
 using BH.oM.Base;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.Properties.Section;
-using BH.oM.Structure.Properties.Surface;
-using BH.oM.Structure.Properties.Constraint;
+using BH.oM.Structure.SectionProperties;
+using BH.oM.Structure.SurfaceProperties;
+using BH.oM.Structure.Constraints;
 using BH.oM.Structure.Loads;
-using BH.oM.Common.Materials;
+using BH.oM.Physical.Materials;
 using RobotOM;
 
 namespace BH.Adapter.Robot

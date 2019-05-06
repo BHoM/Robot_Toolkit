@@ -23,7 +23,7 @@
 using System.Collections.Generic;
 using BH.oM.Structure.Elements;
 using RobotOM;
-using BH.oM.Structure.Properties.Constraint;
+using BH.oM.Structure.Constraints;
 using System.Collections;
 
 namespace BH.Adapter.Robot

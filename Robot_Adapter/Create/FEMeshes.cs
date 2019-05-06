@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.Properties.Surface;
+using BH.oM.Structure.SurfaceProperties;
 using RobotOM;
 
 namespace BH.Adapter.Robot
@@ -45,11 +45,11 @@ namespace BH.Adapter.Robot
 
                 IRobotStructure objServer = m_RobotApplication.Project.Structure;
                 RobotObjObject mesh = null;
-                fEMesh.MeshFaces = new List<FEMeshFace>(fEMesh.MeshFaces);
+                fEMesh.Faces = new List<FEMeshFace>(fEMesh.Faces);
 
-                for (int i = 0; i < fEMesh.MeshFaces.Count; i++)
+                for (int i = 0; i < fEMesh.Faces.Count; i++)
                 {
-                    FEMeshFace fMeshFace = fEMesh.MeshFaces[i];
+                    FEMeshFace fMeshFace = fEMesh.Faces[i];
 
                     IRobotNumbersArray ptarray = new RobotNumbersArray();
                     if (fMeshFace.NodeListIndices.Count == 3)
@@ -70,7 +70,7 @@ namespace BH.Adapter.Robot
 
                     FEMeshFace clone = fMeshFace.GetShallowClone() as FEMeshFace;
                     clone.CustomData[AdapterId] = fMeshFaceIdx;
-                    fEMesh.MeshFaces[i] = clone;
+                    fEMesh.Faces[i] = clone;
 
                     faceList = faceList + fMeshFaceIdx.ToString() + ",";
 

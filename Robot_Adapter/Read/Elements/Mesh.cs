@@ -120,13 +120,13 @@ namespace BH.Adapter.Robot
 
                     if (bhomMeshes.ContainsKey(panelNumber))
                     {
-                        bhomMeshes[panelNumber].MeshFaces.Add(meshFace);
+                        bhomMeshes[panelNumber].Faces.Add(meshFace);
                         bhomMeshes[panelNumber].CustomData[AdapterId] = panelNumber;
                     }
                     else
                     {
                         FEMesh mesh = new FEMesh();
-                        mesh.MeshFaces.Add(meshFace);
+                        mesh.Faces.Add(meshFace);
                         mesh.CustomData[AdapterId] = panelNumber;
                         bhomMeshes.Add(panelNumber, mesh);
                     }

@@ -61,7 +61,7 @@ namespace BH.Adapter.Robot
             IRobotStructure robotStructureServer = m_RobotApplication.Project.Structure;
 
             List<BH.oM.Structure.Elements.Node> nodes = ReadNodesQuery();
-            List<BH.oM.Structure.Elements.PanelPlanar> panels = new List<oM.Structure.Elements.PanelPlanar>();
+            List<BH.oM.Structure.Elements.Panel> panels = new List<oM.Structure.Elements.Panel>();
             if (ids.Count == 0)
             {
                 panels = ReadPanels();
@@ -71,7 +71,7 @@ namespace BH.Adapter.Robot
                 List<int> panelIds = new List<int>();
                 foreach (object obj in ids)
                 {
-                    if (obj.GetType() == typeof(BH.oM.Structure.Elements.PanelPlanar))
+                    if (obj.GetType() == typeof(BH.oM.Structure.Elements.Panel))
                     {
                         panels.Add(obj as dynamic);
                     }
@@ -106,10 +106,10 @@ namespace BH.Adapter.Robot
             }
 
             List<MeshResults> meshResultsCollection = new List<MeshResults>();
-            foreach (BH.oM.Structure.Elements.PanelPlanar panel in panels)
+            foreach (BH.oM.Structure.Elements.Panel panel in panels)
             {
 
-                Cartesian coordinateSystem = (userCoordinateSystem != null) ? userCoordinateSystem : panel.CustomData["CoordinateSystem"] as dynamic;
+                oM.Geometry.Basis orientation = (oM.Geometry.Basis)((userCoordinateSystem != null) ? userCoordinateSystem : panel.CustomData["CoordinateSystem"] as dynamic);
                 List<MeshResult> meshResults = new List<MeshResult>();
 
                 RobotSelection caseSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_CASE);
@@ -140,10 +140,10 @@ namespace BH.Adapter.Robot
                 {
                     queryParams.SetParam(IRobotResultParamType.I_RPT_LAYER_ARBITRARY_VALUE, layerPosition);
                 }
-                if (coordinateSystem != null)
+                if (orientation != null)
                 {
                     queryParams.SetParam(IRobotResultParamType.I_RPT_DIR_X_DEFTYPE, IRobotObjLocalXDirDefinitionType.I_OLXDDT_CARTESIAN);
-                    queryParams.SetParam(IRobotResultParamType.I_RPT_DIR_X, new double[] { coordinateSystem.X.X, coordinateSystem.X.Y, coordinateSystem.X.Z });
+                    queryParams.SetParam(IRobotResultParamType.I_RPT_DIR_X, new double[] { orientation.X.X, orientation.X.Y, orientation.X.Z });
                 }
                 else
                 {
@@ -193,7 +193,7 @@ namespace BH.Adapter.Robot
                                                                         layer,
                                                                         layerPosition,
                                                                         smoothing,
-                                                                        coordinateSystem,
+                                                                        orientation,
                                                                         row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_SXX),
                                                                         row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_SYY),
                                                                         row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_SXY),
@@ -215,7 +215,7 @@ namespace BH.Adapter.Robot
                                                                         layer,
                                                                         layerPosition,
                                                                         smoothing,
-                                                                        coordinateSystem,
+                                                                        orientation,
                                                                         row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_NXX),
                                                                         row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_NYY),
                                                                         row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_NXY),
@@ -237,7 +237,7 @@ namespace BH.Adapter.Robot
                                                                             layer,
                                                                             layerPosition,
                                                                             smoothing,
-                                                                            coordinateSystem,
+                                                                            orientation,
                                                                             row.GetValue((int)IRobotFeResultType.I_FRT_COMPLEX_S_MISES),
                                                                             row.GetValue((int)IRobotFeResultType.I_FRT_COMPLEX_N_MISES),
                                                                             row.GetValue((int)IRobotFeResultType.I_FRT_COMPLEX_M_MISES));
@@ -253,7 +253,7 @@ namespace BH.Adapter.Robot
                                                                             layer,
                                                                             layerPosition,
                                                                             smoothing,
-                                                                            coordinateSystem,
+                                                                            orientation,
                                                                             row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_UXX),
                                                                             row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_UYY),
                                                                             row.GetValue((int)IRobotFeResultType.I_FRT_DETAILED_WNORM),                                                     

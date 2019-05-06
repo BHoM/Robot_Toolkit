@@ -20,9 +20,11 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Common.Materials;
+using BH.oM.Physical.Materials;
+using BH.oM.Structure.MaterialFragments;
 using RobotOM;
-using BH.oM.Structure.Properties.Section;
+using BH.oM.Structure.SectionProperties;
+using BH.Engine.Structure;
 
 namespace BH.Engine.Robot
 {
@@ -62,7 +64,7 @@ namespace BH.Engine.Robot
 
         public static ISectionProperty IBHoMSection(IRobotBarSectionData secData, Material material)
         {
-            switch (material.Type)
+            switch (material.MaterialType())
             {
                 case MaterialType.Aluminium:
                     return null;

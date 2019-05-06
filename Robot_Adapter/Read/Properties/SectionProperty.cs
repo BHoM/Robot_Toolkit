@@ -23,8 +23,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using RobotOM;
-using BH.oM.Structure.Properties.Section;
-using BH.oM.Common.Materials;
+using BH.oM.Structure.SectionProperties;
+using BH.oM.Physical.Materials;
 
 namespace BH.Adapter.Robot
 {

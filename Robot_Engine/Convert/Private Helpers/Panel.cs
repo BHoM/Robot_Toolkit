@@ -26,7 +26,7 @@ using RobotOM;
 using System;
 using System.Collections.Generic;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.Properties.Surface;
+using BH.oM.Structure.SurfaceProperties;
 
 namespace BH.Engine.Robot
 {

@@ -109,7 +109,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        public static void RobotLoad(this PointForce load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
+        public static void RobotLoad(this PointLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_FORCE);
             loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
@@ -143,7 +143,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        public static void RobotLoad(this AreaUniformalyDistributedLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
+        public static void RobotLoad(this AreaUniformlyDistributedLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_UNIFORM);
             loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));

@@ -126,10 +126,17 @@ namespace BH.Adapter.Robot
 
                 foreach (Bar bhomBar in bars)
                 {
-                    barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterId]);
-                    RobotBar rBar = barServer.Get(barNum) as RobotBar;
-                    barTags[barNum] = bhomBar.Tags;
-                    BH.Engine.Robot.Convert.SetFEAType(rBar, bhomBar);
+                    try
+                    {
+                        barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterId]);
+                        RobotBar rBar = barServer.Get(barNum) as RobotBar;
+                        barTags[barNum] = bhomBar.Tags;
+                        BH.Engine.Robot.Convert.SetFEAType(rBar, bhomBar);
+                    }
+                    catch
+                    {
+                        Engine.Reflection.Compute.RecordWarning("Failed to set FEA type for at least one bar");
+                    }
                 }
                 m_tags[typeof(Bar)] = barTags;
 

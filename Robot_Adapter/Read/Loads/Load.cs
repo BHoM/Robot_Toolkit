@@ -80,7 +80,7 @@ namespace BH.Adapter.Robot
                                     double mx = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_CX);
                                     double my = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_CY);
                                     double mz = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_CZ);
-                                    PointForce nodeForce = new PointForce
+                                    PointLoad nodeForce = new PointLoad
                                     {
                                         Force = new Vector {X = fx, Y = fy,  Z = fz},
                                         Moment = new Vector { X = mx, Y = my, Z = mz },

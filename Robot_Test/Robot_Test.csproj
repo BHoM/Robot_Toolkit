@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Analytical_oM">
+      <HintPath>..\..\BHoM\Build\Analytical_oM.dll</HintPath>
+    </Reference>
     <Reference Include="BHoM">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM\build\BHoM.dll</HintPath>
@@ -58,6 +61,9 @@
       <HintPath Condition="Exists('C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2018\System\Exe\Interop.RobotOM.dll')">C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2018\System\Exe\Interop.RobotOM.dll</HintPath>
       <HintPath Condition="Exists('C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2019\System\Exe\Interop.RobotOM.dll')">C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2019\System\Exe\Interop.RobotOM.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Physical_oM">
+      <HintPath>..\..\BHoM\Build\Physical_oM.dll</HintPath>
     </Reference>
     <Reference Include="Reflection_oM">
       <HintPath>..\..\BHoM\Build\Reflection_oM.dll</HintPath>

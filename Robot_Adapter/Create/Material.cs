@@ -21,7 +21,7 @@
  */
 
 using System.Collections.Generic;
-using BH.oM.Common.Materials;
+using BH.oM.Physical.Materials;
 using RobotOM;
 
 namespace BH.Adapter.Robot

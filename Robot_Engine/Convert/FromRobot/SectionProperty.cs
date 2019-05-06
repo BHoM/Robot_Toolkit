@@ -21,14 +21,14 @@
  */
 
 using BH.oM.Geometry;
-using BH.oM.Common.Materials;
+using BH.oM.Physical.Materials;
 using BH.Engine.Reflection;
 using GeometryEngine = BH.Engine.Geometry;
 using RobotOM;
 using System;
 using System.Collections.Generic;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.Properties;
+using BH.oM.Structure;
 using BH.Engine.Reflection;
 using BH.oM.Reflection.Debugging;
 using BH.oM.Adapters.Robot;

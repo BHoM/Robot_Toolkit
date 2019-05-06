@@ -21,11 +21,11 @@
  */
 
 using BH.oM.Base;
-using BH.oM.Common.Materials;
+using BH.oM.Physical.Materials;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BH.oM.Structure.Properties.Section;
+using BH.oM.Structure.SectionProperties;
 
 namespace BH.Engine.Robot
 {

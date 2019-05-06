@@ -22,7 +22,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using BH.oM.Structure.Properties.Constraint;
+using BH.oM.Structure.Constraints;
 using RobotOM;
 
 namespace BH.Adapter.Robot

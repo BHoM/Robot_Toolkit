@@ -20,10 +20,10 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Common.Materials;
+using BH.oM.Physical.Materials;
 using RobotOM;
-using BH.oM.Structure.Properties.Section;
-using BH.oM.Structure.Properties.Section.ShapeProfiles;
+using BH.oM.Structure.SectionProperties;
+using BH.oM.Geometry.ShapeProfiles;
 
 namespace BH.Engine.Robot
 {
@@ -178,7 +178,7 @@ namespace BH.Engine.Robot
                 case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_RECT:
                     h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_H);
                     b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_B);
-                    sectionProfile = BH.Engine.Structure.Create.RectangleProfile(b, h, 0);
+                    sectionProfile = BH.Engine.Geometry.Create.RectangleProfile(b, h, 0);
                     return BH.Engine.Structure.Create.ConcreteSectionFromProfile(sectionProfile);
 
                 case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_I:
@@ -188,7 +188,7 @@ namespace BH.Engine.Robot
                     HF2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF2);
                     h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_H);
                     b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B);
-                    sectionProfile = BH.Engine.Structure.Create.FabricatedISectionProfile(h, b1, b2, b, HF1, HF2, 0);
+                    sectionProfile = BH.Engine.Geometry.Create.FabricatedISectionProfile(h, b1, b2, b, HF1, HF2, 0);
                     return BH.Engine.Structure.Create.ConcreteSectionFromProfile(sectionProfile);
 
                 case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_T:
@@ -196,13 +196,13 @@ namespace BH.Engine.Robot
                     b1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_B);
                     HF = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_HF);
                     b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_BF);
-                    sectionProfile = BH.Engine.Structure.Create.TSectionProfile(h, b, b1, HF, 0, 0);
+                    sectionProfile = BH.Engine.Geometry.Create.TSectionProfile(h, b, b1, HF, 0, 0);
                     return BH.Engine.Structure.Create.ConcreteSectionFromProfile(sectionProfile);
 
                 case IRobotBarSectionShapeType.I_BSST_CONCR_COL_R:
                     h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H);
                     b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_B);
-                    sectionProfile = BH.Engine.Structure.Create.RectangleProfile(b, h, 0);
+                    sectionProfile = BH.Engine.Geometry.Create.RectangleProfile(b, h, 0);
                     return BH.Engine.Structure.Create.ConcreteSectionFromProfile(sectionProfile);
 
                 case IRobotBarSectionShapeType.I_BSST_CONCR_COL_T:
@@ -212,12 +212,12 @@ namespace BH.Engine.Robot
                     h2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H2);
                     l1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_L1);
                     l2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_L2);
-                    sectionProfile = BH.Engine.Structure.Create.TSectionProfile(h, b, b - l1 - l2, h - h1, 0, 0);
+                    sectionProfile = BH.Engine.Geometry.Create.TSectionProfile(h, b, b - l1 - l2, h - h1, 0, 0);
                     return BH.Engine.Structure.Create.ConcreteSectionFromProfile(sectionProfile);
 
                 case IRobotBarSectionShapeType.I_BSST_CONCR_COL_C:
                     h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_DE);
-                    sectionProfile = BH.Engine.Structure.Create.CircleProfile(h);
+                    sectionProfile = BH.Engine.Geometry.Create.CircleProfile(h);
                     return BH.Engine.Structure.Create.ConcreteSectionFromProfile(sectionProfile);
 
                 case IRobotBarSectionShapeType.I_BSST_CONCR_COL_L:
@@ -225,7 +225,7 @@ namespace BH.Engine.Robot
                     b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_B);
                     h1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H1);
                     l1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_L1);
-                    sectionProfile = BH.Engine.Structure.Create.AngleProfile(h, b, b - l1, h - h1, 0, 0);
+                    sectionProfile = BH.Engine.Geometry.Create.AngleProfile(h, b, b - l1, h - h1, 0, 0);
                     return BH.Engine.Structure.Create.ConcreteSectionFromProfile(sectionProfile);
 
                 default:

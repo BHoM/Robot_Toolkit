@@ -24,7 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Structure.Elements;
 using BH.oM.Geometry;
-using BH.oM.Structure.Properties.Surface;
+using BH.oM.Structure.SurfaceProperties;
 using RobotOM;
 using BHEG = BH.Engine.Geometry;
 
@@ -36,13 +36,13 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
         
-        private bool CreateCollection(IEnumerable<PanelPlanar> panels)
+        private bool CreateCollection(IEnumerable<Panel> panels)
         {
             m_RobotApplication.Interactive = 0;
             m_RobotApplication.Project.Structure.Objects.BeginMultiOperation();
             RobotObjObjectServer objServer = m_RobotApplication.Project.Structure.Objects;
 
-            foreach (PanelPlanar panel in panels)
+            foreach (Panel panel in panels)
             {
                 List<ICurve> segmentsPanel = new List<ICurve>();
                 foreach (Edge edge in panel.ExternalEdges)

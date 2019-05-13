@@ -33,25 +33,20 @@ namespace BH.Engine.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static void RobotMaterial(IRobotMaterialData materialData, Material material)
+        public static void RobotMaterial(IRobotMaterialData materialData, IStructuralMaterial material)
         {
             materialData.Type = GetMaterialType(material);
             materialData.Name = material.Name;
 
-            if (!material.IsStructural())
+            if (material is IIsotropic)
             {
-                Engine.Reflection.Compute.RecordWarning("Material with name " + material.Name + " is does not contain structural properties. Please check the material");
-                return;
-            }
-
-            if (material.IsIsotropic())
-            {
-                materialData.E = material.YoungsModulusIsotropic();
-                materialData.NU = material.PoissonsRatioIsotropic();
-                materialData.RO = material.Density * Engine.Robot.Query.RobotGravityConstant;
-                materialData.LX = material.ThermalExpansionCoeffIsotropic();
-                materialData.Kirchoff = material.ShearModulusIsotropic();
-                materialData.DumpCoef = material.DampingRatio();
+                IIsotropic isotropic = material as IIsotropic;
+                materialData.E = isotropic.YoungsModulus;
+                materialData.NU = isotropic.PoissonsRatio;
+                materialData.RO = isotropic.Density * Engine.Robot.Query.RobotGravityConstant;
+                materialData.LX = isotropic.ThermalExpansionCoeff;
+                materialData.Kirchoff = isotropic.ShearModulus();
+                materialData.DumpCoef = isotropic.DampingRatio;
             }
             else
             {
@@ -62,28 +57,20 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        public static IRobotMaterialType GetMaterialType(Material mat)
+        public static IRobotMaterialType GetMaterialType(IStructuralMaterial mat)
         {
-            switch (mat.MaterialType())
-            {
-                case MaterialType.Aluminium:
-                    return IRobotMaterialType.I_MT_ALUMINIUM;
-                case MaterialType.Steel:
-                    return IRobotMaterialType.I_MT_STEEL;
-                case MaterialType.Concrete:
-                    return IRobotMaterialType.I_MT_CONCRETE;
-                case MaterialType.Timber:
-                    return IRobotMaterialType.I_MT_TIMBER;
-                case MaterialType.Rebar:
-                case MaterialType.Tendon:
-                case MaterialType.Glass:
-                case MaterialType.Cable:
-                case MaterialType.Undefined:
-                    return IRobotMaterialType.I_MT_OTHER;
-                default:
-                    return IRobotMaterialType.I_MT_OTHER;
-            }
+            if (mat is Steel)
+                return IRobotMaterialType.I_MT_STEEL;
+            else if (mat is Concrete)
+                return IRobotMaterialType.I_MT_CONCRETE;
+            else if (mat is Aluminium)
+                return IRobotMaterialType.I_MT_ALUMINIUM;
+            else if (mat is Timber)
+                return IRobotMaterialType.I_MT_TIMBER;
+            else
+                return IRobotMaterialType.I_MT_OTHER;
         }
+
 
         /***************************************************/
 

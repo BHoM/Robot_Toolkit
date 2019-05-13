@@ -20,7 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Physical.Materials;
+using BH.oM.Structure.MaterialFragments;
 using RobotOM;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Geometry.ShapeProfiles;
@@ -33,14 +33,14 @@ namespace BH.Engine.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static void SectionProperty(this SteelSection section, Material material, IRobotBarSectionData secData)
+        public static void SectionProperty(this SteelSection section, IStructuralMaterial material, IRobotBarSectionData secData)
         {
             ISteelSection(section.SectionProfile, material, secData);
         }
 
         /***************************************************/
 
-        public static void ISteelSection(this IProfile section, Material material, IRobotBarSectionData secData)
+        public static void ISteelSection(this IProfile section, IStructuralMaterial material, IRobotBarSectionData secData)
         {
             SteelSection(section as dynamic, material, secData);
         }
@@ -185,7 +185,7 @@ namespace BH.Engine.Robot
         /****           Private Methods                  ****/
         /***************************************************/
 
-        private static void SteelSection(this BoxProfile section, Material material, IRobotBarSectionData sectionData)
+        private static void SteelSection(this BoxProfile section, IStructuralMaterial material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_RECT;
@@ -203,7 +203,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static void SteelSection(this FabricatedBoxProfile section, Material material, IRobotBarSectionData sectionData)
+        private static void SteelSection(this FabricatedBoxProfile section, IStructuralMaterial material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_BOX_3;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_BOX_3;
@@ -225,7 +225,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static void SteelSection(this FabricatedISectionProfile section, Material material, IRobotBarSectionData sectionData)
+        private static void SteelSection(this FabricatedISectionProfile section, IStructuralMaterial material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_II;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_I_MONOSYM;
@@ -245,7 +245,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static void SteelSection(this ISectionProfile section, Material material, IRobotBarSectionData sectionData)
+        private static void SteelSection(this ISectionProfile section, IStructuralMaterial material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_I;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_I_BISYM;
@@ -263,7 +263,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static void SteelSection(this TSectionProfile section, Material material, IRobotBarSectionData sectionData)
+        private static void SteelSection(this TSectionProfile section, IStructuralMaterial material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_T;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_T_SHAPE;
@@ -282,7 +282,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static void SteelSection(this TubeProfile section, Material material, IRobotBarSectionData sectionData)
+        private static void SteelSection(this TubeProfile section, IStructuralMaterial material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_TUBE;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_TUBE;
@@ -299,7 +299,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static void SteelSection(this RectangleProfile section, Material material, IRobotBarSectionData sectionData)
+        private static void SteelSection(this RectangleProfile section, IStructuralMaterial material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_RECT_FILLED;
@@ -316,7 +316,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static void SteelSection(this CircleProfile section, Material material, IRobotBarSectionData sectionData)
+        private static void SteelSection(this CircleProfile section, IStructuralMaterial material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_TUBE;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CIRC_FILLED;
@@ -331,7 +331,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static void SteelSection(this AngleProfile section, Material material, IRobotBarSectionData sectionData)
+        private static void SteelSection(this AngleProfile section, IStructuralMaterial material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_L;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_UUAP;
@@ -350,7 +350,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static void SteelSection(this ChannelProfile section, Material material, IRobotBarSectionData sectionData)
+        private static void SteelSection(this ChannelProfile section, IStructuralMaterial material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_C;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_C_SHAPE;
@@ -369,10 +369,10 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static void SteelSection(this FreeFormProfile section, Material material, IRobotBarSectionData sectionData)
+        private static void SteelSection(this FreeFormProfile section, IStructuralMaterial material, IRobotBarSectionData sectionData)
         {
             sectionData.MaterialName = material.Name;
-            SteelSection steelSection = BH.Engine.Structure.Create.SteelSectionFromProfile(section, material);
+            SteelSection steelSection = BH.Engine.Structure.Create.SteelSectionFromProfile(section, material as Steel);
 
             sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, steelSection.Area);
             sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IX, steelSection.J);
@@ -388,7 +388,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static void SteelSection(this GeneralisedFabricatedBoxProfile section, Material material, IRobotBarSectionData sectionData)
+        private static void SteelSection(this GeneralisedFabricatedBoxProfile section, IStructuralMaterial material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_BOX_3;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_BOX_3;
@@ -412,10 +412,10 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static void SteelSection(this KiteProfile section, Material material, IRobotBarSectionData sectionData)
+        private static void SteelSection(this KiteProfile section, IStructuralMaterial material, IRobotBarSectionData sectionData)
         {
             sectionData.MaterialName = material.Name;
-            SteelSection steelSection = BH.Engine.Structure.Create.SteelSectionFromProfile(section, material);
+            SteelSection steelSection = BH.Engine.Structure.Create.SteelSectionFromProfile(section, material as Steel);
 
             sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, steelSection.Area);
             sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IX, steelSection.J);

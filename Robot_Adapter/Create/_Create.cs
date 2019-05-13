@@ -27,7 +27,7 @@ using BH.oM.Structure.Constraints;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Structure.Loads;
-using BH.oM.Physical.Materials;
+using BH.oM.Structure.MaterialFragments;
 using BH.oM.Adapters.Robot;
 
 namespace BH.Adapter.Robot
@@ -69,9 +69,9 @@ namespace BH.Adapter.Robot
                     success = CreateCollection(objects as IEnumerable<ISectionProperty>);
                 }
 
-                if (objects.First() is Material)
+                if (objects.First() is IStructuralMaterial)
                 {
-                    success = CreateCollection(objects as IEnumerable<Material>);
+                    success = CreateCollection(objects as IEnumerable<IStructuralMaterial>);
                 }
 
                 if (objects.First() is Loadcase)

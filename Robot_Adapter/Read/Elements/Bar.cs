@@ -31,7 +31,7 @@ using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.Constraints;
 using BH.oM.Structure.Loads;
 using BH.oM.Base;
-using BH.oM.Physical.Materials;
+using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.Design;
 using BH.oM.Adapters.Robot;
 using BHE = BH.Engine.Adapters.Robot;
@@ -55,7 +55,7 @@ namespace BH.Adapter.Robot
             Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionaryDistinctCheck(x => x.CustomData[AdapterId].ToString());
             Dictionary<string, BarRelease> bhombarReleases = ReadBarRelease().ToDictionaryDistinctCheck(x => x.Name.ToString());
             Dictionary<string, ISectionProperty> bhomSections = ReadSectionProperties().ToDictionaryDistinctCheck(x => x.Name.ToString());
-            Dictionary<string, Material> bhomMaterial = ReadMaterial().ToDictionaryDistinctCheck(x => x.Name.ToString());
+            Dictionary<string, IStructuralMaterial> bhomMaterial = ReadMaterial().ToDictionaryDistinctCheck(x => x.Name.ToString());
             Dictionary<string, FramingElementDesignProperties> bhomFramEleDesProps = ReadFramingElementDesignProperties().ToDictionaryDistinctCheck(x => x.Name.ToString());
             Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
             Dictionary<string, Dictionary<string,ISectionProperty>> sectionWithMaterial = new Dictionary<string, Dictionary<string, ISectionProperty>>();  //Used to store sections where the material differs from the default

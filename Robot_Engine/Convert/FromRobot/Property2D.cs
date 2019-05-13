@@ -20,7 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Physical.Materials;
+using BH.oM.Structure.MaterialFragments;
 using RobotOM;
 using System;
 using System.Collections.Generic;
@@ -35,10 +35,10 @@ namespace BH.Engine.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static ISurfaceProperty ToBHoMObject(this IRobotLabel rLabel, Dictionary<string, Material> Material)
+        public static ISurfaceProperty ToBHoMObject(this IRobotLabel rLabel, Dictionary<string, IStructuralMaterial> Material)
         {
             ISurfaceProperty BHoMProperty = null;
-            Material mat = null;
+            IStructuralMaterial mat = null;
             if (rLabel.Type == IRobotLabelType.I_LT_PANEL_THICKNESS)
             {
                 IRobotThicknessData data = rLabel.Data;

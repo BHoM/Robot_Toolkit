@@ -24,7 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RobotOM;
 using BH.oM.Structure.SurfaceProperties;
-using BH.oM.Physical.Materials;
+using BH.oM.Structure.MaterialFragments;
 
 
 namespace BH.Adapter.Robot
@@ -41,7 +41,7 @@ namespace BH.Adapter.Robot
             IRobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotCollection rThicknessProps = labelServer.GetMany(IRobotLabelType.I_LT_PANEL_THICKNESS);
             IRobotCollection rCladdingProps = labelServer.GetMany(IRobotLabelType.I_LT_CLADDING);
-            Dictionary<string, Material> BHoMMat = new Dictionary<string, Material>();
+            Dictionary<string, IStructuralMaterial> BHoMMat = new Dictionary<string, IStructuralMaterial>();
             BHoMMat = (ReadMaterial().ToDictionary(x => x.Name));
 
             for (int i = 1; i <= rThicknessProps.Count; i++)

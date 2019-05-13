@@ -24,7 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RobotOM;
 using BH.oM.Structure.SectionProperties;
-using BH.oM.Physical.Materials;
+using BH.oM.Structure.MaterialFragments;
 
 namespace BH.Adapter.Robot
 {
@@ -38,12 +38,12 @@ namespace BH.Adapter.Robot
         {
             IRobotCollection secProps = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_BAR_SECTION);
             List<ISectionProperty> bhomSectionProps = new List<ISectionProperty>();
-            Dictionary<string, Material> materials = ReadMaterial().ToDictionary(x => x.Name);
+            Dictionary<string, IStructuralMaterial> materials = ReadMaterial().ToDictionary(x => x.Name);
 
             for (int i = 1; i <= secProps.Count; i++)
             {
                 ISectionProperty bhomSec = null;
-                Material bhomMat = null;
+                IStructuralMaterial bhomMat = null;
                 IRobotLabel rSection = secProps.Get(i);
                 IRobotBarSectionData secData = rSection.Data as IRobotBarSectionData;
                 

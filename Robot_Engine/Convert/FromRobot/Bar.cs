@@ -20,7 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Physical.Materials;
+using BH.oM.Structure.MaterialFragments;
 using RobotOM;
 using System;
 using System.Collections.Generic;
@@ -41,7 +41,7 @@ namespace BH.Engine.Robot
         public static Bar ToBHoMObject( this RobotBar robotBar, 
                                         Dictionary<string,Node> bhomNodes, 
                                         Dictionary<string, ISectionProperty> bhomSections, 
-                                        Dictionary<string, Material> bhomMaterials, 
+                                        Dictionary<string, IStructuralMaterial> bhomMaterials, 
                                         Dictionary<string, BarRelease> barReleases,
                                         Dictionary<string, FramingElementDesignProperties> bhomFramEleDesPropList,
                                         ref Dictionary<string, Dictionary<string, ISectionProperty>> sectionWithMaterial)
@@ -50,7 +50,7 @@ namespace BH.Engine.Robot
             Node endNode = null; bhomNodes.TryGetValue(robotBar.EndNode.ToString(), out endNode);
             Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode, Name = robotBar.Name };
             ISectionProperty secProp = null;
-            Material barMaterial = null;
+            IStructuralMaterial barMaterial = null;
             BarRelease bhomBarRel = null;
             FramingElementDesignProperties bhomFramEleDesignProps = null;
 

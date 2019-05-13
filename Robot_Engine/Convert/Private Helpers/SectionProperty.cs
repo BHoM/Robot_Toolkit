@@ -62,29 +62,19 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        public static ISectionProperty IBHoMSection(IRobotBarSectionData secData, Material material)
+        public static ISectionProperty IBHoMSection(IRobotBarSectionData secData, IStructuralMaterial material)
         {
-            switch (material.MaterialType())
+
+            if (material is Steel)
+                return BHoMSteelSection(secData);
+            else if (material is Concrete)
+                return BHoMConcreteSection(secData);
+            else
             {
-                case MaterialType.Aluminium:
-                    return null;
-                case MaterialType.Steel:
-                    return BHoMSteelSection(secData);
-                case MaterialType.Concrete:
-                    return BHoMConcreteSection(secData);
-                case MaterialType.Timber:
-                    return null;
-                case MaterialType.Rebar:
-                    return null;
-                case MaterialType.Tendon:
-                    return null;
-                case MaterialType.Glass:
-                    return null;
-                case MaterialType.Cable:
-                    return null;
-                default:
-                    return null;
+                Engine.Reflection.Compute.RecordWarning("Section proeprty of material type " + material.GetType().Name + " currently not supported. Section with label " + secData.Name + " was not extracted from the model");
+                return null;
             }
+            
         }
 
         /***************************************************/

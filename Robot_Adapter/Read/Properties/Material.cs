@@ -32,13 +32,13 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
 
-        private List<IStructuralMaterial> ReadMaterial(List<string> ids = null)
+        private List<IMaterialFragment> ReadMaterial(List<string> ids = null)
         {
             IRobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotCollection rMaterials = labelServer.GetMany(IRobotLabelType.I_LT_MATERIAL);
             IRobotMaterialData mData;
-            IStructuralMaterial bhomMat = null;
-            List<IStructuralMaterial> bhomMaterials = new List<IStructuralMaterial>();
+            IMaterialFragment bhomMat = null;
+            List<IMaterialFragment> bhomMaterials = new List<IMaterialFragment>();
             int counter = 0;
             bool refresh = false;
 
@@ -77,7 +77,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private IStructuralMaterial ReadMaterialByLabelName(string labelName)
+        private IMaterialFragment ReadMaterialByLabelName(string labelName)
         {
             IRobotLabel materialLabel = m_RobotApplication.Project.Structure.Labels.Get(IRobotLabelType.I_LT_MATERIAL, labelName);
             return MaterialFromLabel(materialLabel);
@@ -85,11 +85,11 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private IStructuralMaterial MaterialFromLabel(IRobotLabel materialLabel)
+        private IMaterialFragment MaterialFromLabel(IRobotLabel materialLabel)
         {
             IRobotMaterialData mData = materialLabel.Data as IRobotMaterialData;
 
-            IStructuralMaterial bhomMat;
+            IMaterialFragment bhomMat;
 
             switch (mData.Type)
             {

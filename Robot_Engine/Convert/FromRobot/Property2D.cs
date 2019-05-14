@@ -35,10 +35,10 @@ namespace BH.Engine.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static ISurfaceProperty ToBHoMObject(this IRobotLabel rLabel, Dictionary<string, IStructuralMaterial> Material)
+        public static ISurfaceProperty ToBHoMObject(this IRobotLabel rLabel, Dictionary<string, IMaterialFragment> Material)
         {
             ISurfaceProperty BHoMProperty = null;
-            IStructuralMaterial mat = null;
+            IMaterialFragment mat = null;
             if (rLabel.Type == IRobotLabelType.I_LT_PANEL_THICKNESS)
             {
                 IRobotThicknessData data = rLabel.Data;

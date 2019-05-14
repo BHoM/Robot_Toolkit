@@ -35,12 +35,12 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private bool CreateCollection(IEnumerable<IStructuralMaterial> mat)
+        private bool CreateCollection(IEnumerable<IMaterialFragment> mat)
         {
             IRobotLabel label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_MATERIAL, "");
             IRobotMaterialData matData = label.Data;
 
-            foreach (IStructuralMaterial m in mat)
+            foreach (IMaterialFragment m in mat)
             {
                 string match = BH.Engine.Robot.Convert.Match(m_dbMaterialNames, m);
                 if (match != null)

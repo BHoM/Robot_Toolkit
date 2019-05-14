@@ -33,7 +33,7 @@ namespace BH.Engine.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static void RobotMaterial(IRobotMaterialData materialData, IStructuralMaterial material)
+        public static void RobotMaterial(IRobotMaterialData materialData, IMaterialFragment material)
         {
             materialData.Type = GetMaterialType(material);
             materialData.Name = material.Name;
@@ -57,7 +57,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        public static IRobotMaterialType GetMaterialType(IStructuralMaterial mat)
+        public static IRobotMaterialType GetMaterialType(IMaterialFragment mat)
         {
             if (mat is Steel)
                 return IRobotMaterialType.I_MT_STEEL;

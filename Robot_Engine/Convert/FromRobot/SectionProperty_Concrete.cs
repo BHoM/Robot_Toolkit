@@ -33,21 +33,21 @@ namespace BH.Engine.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static void SectionProperty(this ConcreteSection section, IStructuralMaterial material, IRobotBarSectionData secData)
+        public static void SectionProperty(this ConcreteSection section, IMaterialFragment material, IRobotBarSectionData secData)
         {
                 IConcreteSection(section.SectionProfile, material, secData);
         }
 
         /***************************************************/
 
-        public static void IConcreteSection(this IProfile section, IStructuralMaterial material, IRobotBarSectionData secData)
+        public static void IConcreteSection(this IProfile section, IMaterialFragment material, IRobotBarSectionData secData)
         {
             ConcreteSection(section as dynamic, material, secData);
         }
 
         /***************************************************/
 
-        private static void ConcreteSection(this RectangleProfile section, IStructuralMaterial material, IRobotBarSectionData sectionData)
+        private static void ConcreteSection(this RectangleProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_RECT;
@@ -63,7 +63,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static void ConcreteSection(this TSectionProfile section, IStructuralMaterial material, IRobotBarSectionData sectionData)
+        private static void ConcreteSection(this TSectionProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_T;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_T;
@@ -80,7 +80,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static void ConcreteSection(this FabricatedISectionProfile section, IStructuralMaterial material, IRobotBarSectionData sectionData)
+        private static void ConcreteSection(this FabricatedISectionProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_I;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_I;
@@ -98,7 +98,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static void ConcreteSection(this CircleProfile section, IStructuralMaterial material, IRobotBarSectionData sectionData)
+        private static void ConcreteSection(this CircleProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_C;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_COL_C;
@@ -113,7 +113,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static void ConcreteSection(this ISectionProfile section, IStructuralMaterial material, IRobotBarSectionData sectionData)
+        private static void ConcreteSection(this ISectionProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_I;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_I;
@@ -131,7 +131,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static void ConcreteSection(this FreeFormProfile section, IStructuralMaterial material, IRobotBarSectionData sectionData)
+        private static void ConcreteSection(this FreeFormProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
         {
             sectionData.MaterialName = material.Name;
             ConcreteSection steelSection = BH.Engine.Structure.Create.ConcreteSectionFromProfile(section, material as Concrete);

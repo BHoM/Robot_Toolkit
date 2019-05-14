@@ -41,7 +41,7 @@ namespace BH.Adapter.Robot
             IRobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotCollection rThicknessProps = labelServer.GetMany(IRobotLabelType.I_LT_PANEL_THICKNESS);
             IRobotCollection rCladdingProps = labelServer.GetMany(IRobotLabelType.I_LT_CLADDING);
-            Dictionary<string, IStructuralMaterial> BHoMMat = new Dictionary<string, IStructuralMaterial>();
+            Dictionary<string, IMaterialFragment> BHoMMat = new Dictionary<string, IMaterialFragment>();
             BHoMMat = (ReadMaterial().ToDictionary(x => x.Name));
 
             for (int i = 1; i <= rThicknessProps.Count; i++)

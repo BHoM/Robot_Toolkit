@@ -69,9 +69,9 @@ namespace BH.Adapter.Robot
                     success = CreateCollection(objects as IEnumerable<ISectionProperty>);
                 }
 
-                if (objects.First() is IStructuralMaterial)
+                if (objects.First() is IMaterialFragment)
                 {
-                    success = CreateCollection(objects as IEnumerable<IStructuralMaterial>);
+                    success = CreateCollection(objects as IEnumerable<IMaterialFragment>);
                 }
 
                 if (objects.First() is Loadcase)

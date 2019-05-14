@@ -41,7 +41,7 @@ namespace BH.Engine.Robot
         public static Bar ToBHoMObject( this RobotBar robotBar, 
                                         Dictionary<string,Node> bhomNodes, 
                                         Dictionary<string, ISectionProperty> bhomSections, 
-                                        Dictionary<string, IStructuralMaterial> bhomMaterials, 
+                                        Dictionary<string, IMaterialFragment> bhomMaterials, 
                                         Dictionary<string, BarRelease> barReleases,
                                         Dictionary<string, FramingElementDesignProperties> bhomFramEleDesPropList,
                                         ref Dictionary<string, Dictionary<string, ISectionProperty>> sectionWithMaterial)
@@ -50,7 +50,7 @@ namespace BH.Engine.Robot
             Node endNode = null; bhomNodes.TryGetValue(robotBar.EndNode.ToString(), out endNode);
             Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode, Name = robotBar.Name };
             ISectionProperty secProp = null;
-            IStructuralMaterial barMaterial = null;
+            IMaterialFragment barMaterial = null;
             BarRelease bhomBarRel = null;
             FramingElementDesignProperties bhomFramEleDesignProps = null;
 

@@ -55,7 +55,7 @@ namespace BH.Adapter.Robot
             Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionaryDistinctCheck(x => x.CustomData[AdapterId].ToString());
             Dictionary<string, BarRelease> bhombarReleases = ReadBarRelease().ToDictionaryDistinctCheck(x => x.Name.ToString());
             Dictionary<string, ISectionProperty> bhomSections = ReadSectionProperties().ToDictionaryDistinctCheck(x => x.Name.ToString());
-            Dictionary<string, IStructuralMaterial> bhomMaterial = ReadMaterial().ToDictionaryDistinctCheck(x => x.Name.ToString());
+            Dictionary<string, IMaterialFragment> bhomMaterial = ReadMaterial().ToDictionaryDistinctCheck(x => x.Name.ToString());
             Dictionary<string, FramingElementDesignProperties> bhomFramEleDesProps = ReadFramingElementDesignProperties().ToDictionaryDistinctCheck(x => x.Name.ToString());
             Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
             Dictionary<string, Dictionary<string,ISectionProperty>> sectionWithMaterial = new Dictionary<string, Dictionary<string, ISectionProperty>>();  //Used to store sections where the material differs from the default

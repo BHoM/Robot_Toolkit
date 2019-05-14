@@ -62,7 +62,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        public static ISectionProperty IBHoMSection(IRobotBarSectionData secData, IStructuralMaterial material)
+        public static ISectionProperty IBHoMSection(IRobotBarSectionData secData, IMaterialFragment material)
         {
 
             if (material is Steel)

@@ -69,12 +69,12 @@ namespace BH.Adapter.Robot
         private static Dictionary<Type, List<Type>> m_DependencyTypes = new Dictionary<Type, List<Type>>
         {
             {typeof(Bar), new List<Type> { typeof(ISectionProperty), typeof(Node), typeof(BarRelease), typeof(FramingElementDesignProperties)}},
-            {typeof(ISectionProperty), new List<Type> { typeof(IStructuralMaterial) } },
+            {typeof(ISectionProperty), new List<Type> { typeof(IMaterialFragment) } },
             {typeof(Node), new List<Type> { typeof(Constraint6DOF) } },
             {typeof(ILoad), new List<Type> { typeof(Loadcase) } },
             {typeof(LoadCombination), new List<Type> { typeof(Loadcase) } },
             {typeof(Panel), new List<Type> { typeof(ISurfaceProperty) } },
-            {typeof(ISurfaceProperty), new List<Type> { typeof(IStructuralMaterial) } },
+            {typeof(ISurfaceProperty), new List<Type> { typeof(IMaterialFragment) } },
             {typeof(RigidLink), new List<Type> { typeof(LinkConstraint), typeof(Node) } },
             {typeof(FEMesh), new List<Type> { typeof(Node), typeof(ISurfaceProperty)} }
         };

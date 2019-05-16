@@ -46,7 +46,7 @@ namespace BH.Adapter.Robot
             if (m_DependencyTypes.ContainsKey(type))
                 return m_DependencyTypes[type];
 
-            else if (m_DependencyTypes.ContainsKey(type.BaseType))
+            else if (type.BaseType != null && m_DependencyTypes.ContainsKey(type.BaseType))
                 return m_DependencyTypes[type.BaseType];
 
             else

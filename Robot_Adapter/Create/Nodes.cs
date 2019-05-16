@@ -62,8 +62,8 @@ namespace BH.Adapter.Robot
                     nodeNum = System.Convert.ToInt32(node.CustomData[AdapterId]);
                     nodeTags[nodeNum] = node.Tags;
 
-                    if (node.Constraint != null)
-                        robotNodeCol.Get(nodeNum).SetLabel(IRobotLabelType.I_LT_SUPPORT, node.Constraint.Name);
+                    if (node.Support != null)
+                        robotNodeCol.Get(nodeNum).SetLabel(IRobotLabelType.I_LT_SUPPORT, node.Support.Name);
 
                 }
 

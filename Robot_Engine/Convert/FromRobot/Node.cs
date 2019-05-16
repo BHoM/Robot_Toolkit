@@ -38,7 +38,7 @@ namespace BH.Engine.Robot
             Node bhomNode = Engine.Structure.Create.Node(new Point { X = robotNode.X, Y = robotNode.Y, Z = robotNode.Z } );
             if (robotNode.HasLabel(IRobotLabelType.I_LT_SUPPORT) == 1)
             {
-                bhomNode.Constraint = BH.Engine.Robot.Convert.ToBHoMObject((RobotNodeSupport)robotNode.GetLabel(IRobotLabelType.I_LT_SUPPORT));
+                bhomNode.Support = BH.Engine.Robot.Convert.ToBHoMObject((RobotNodeSupport)robotNode.GetLabel(IRobotLabelType.I_LT_SUPPORT));
             }
             return bhomNode;
         }

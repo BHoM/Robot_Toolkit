@@ -21,7 +21,7 @@
  */
 
 using BH.oM.Base;
-using BH.oM.Physical.Materials;
+using BH.oM.Structure.MaterialFragments;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -110,7 +110,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static string DataBaseStringFormat(Material material)
+        private static string DataBaseStringFormat(IMaterialFragment material)
         {
             string objectName = material.Name;
             objectName = objectName.TrimEnd(' ').TrimStart(' ');

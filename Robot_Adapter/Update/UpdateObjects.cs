@@ -64,8 +64,8 @@ namespace BH.Adapter.Robot
                 if (robotNode == null)
                     return false;
 
-                if (node.Constraint != null && !string.IsNullOrWhiteSpace(node.Constraint.Name))
-                    robotNode.SetLabel(IRobotLabelType.I_LT_SUPPORT, node.Constraint.Name);
+                if (node.Support != null && !string.IsNullOrWhiteSpace(node.Support.Name))
+                    robotNode.SetLabel(IRobotLabelType.I_LT_SUPPORT, node.Support.Name);
                 oM.Geometry.Point position = Engine.Structure.Query.Position(node);
                 robotNode.X = position.X;
                 robotNode.Y = position.Y;

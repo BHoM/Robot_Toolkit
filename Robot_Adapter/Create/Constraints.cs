@@ -46,10 +46,6 @@ namespace BH.Adapter.Robot
             {
                 BH.Engine.Robot.Convert.RobotConstraint(suppData, constList[i]);
                 m_RobotApplication.Project.Structure.Labels.StoreWithName(label, constList[i].Name);
-                //if (m_SupportTaggs.ContainsKey(constList[i].Name))
-                //    m_SupportTaggs[constList[i].Name] = constList[i].TaggedName();
-                //else
-                //    m_SupportTaggs.Add(constList[i].Name, constList[i].TaggedName());
             }
             return true;
         }

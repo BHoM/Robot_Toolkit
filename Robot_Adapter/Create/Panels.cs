@@ -127,6 +127,14 @@ namespace BH.Adapter.Robot
                 }
             }
             m_RobotApplication.Project.Structure.Objects.EndMultiOperation();
+
+            foreach (string supportName in edgeConstraints.Keys)
+            {
+                RobotObjEdgeSelection panelEdgeSel = m_RobotApplication.Project.Structure.Selections.CreateEdgeSelection();
+                panelEdgeSel.FromText(edgeConstraints[supportName]);
+                m_RobotApplication.Project.Structure.Objects.SetLabel((RobotSelection)panelEdgeSel, IRobotLabelType.I_LT_SUPPORT, supportName);
+                //m_RobotApplication.Project.Structure.Objects.SetLabel(panelEdgeSel, IRobotLabelType.I_LT_SUPPORT, supportName);
+            }
             m_RobotApplication.Interactive = 1;
             return true;
         }

@@ -62,6 +62,7 @@ namespace BH.Adapter.Robot
             {typeof(Node), new NodeDistanceComparer(3) },
             {typeof(ISectionProperty), new BHoMObjectNameOrToStringComparer() },
             {typeof(Material), new BHoMObjectNameComparer() },
+            {typeof(Constraint4DOF), new BHoMObjectNameComparer() },
             {typeof(Constraint6DOF), new BHoMObjectNameComparer() },
             {typeof(Loadcase), new BHoMObjectNameComparer() },
             {typeof(LinkConstraint), new BHoMObjectNameComparer() },

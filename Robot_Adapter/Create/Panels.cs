@@ -41,18 +41,33 @@ namespace BH.Adapter.Robot
             m_RobotApplication.Interactive = 0;
             m_RobotApplication.Project.Structure.Objects.BeginMultiOperation();
             RobotObjObjectServer objServer = m_RobotApplication.Project.Structure.Objects;
+            Dictionary<string, string> edgeConstraints = new Dictionary<string, string>();
 
             foreach (Panel panel in panels)
             {
-                List<ICurve> segmentsPanel = new List<ICurve>();
-                foreach (Edge edge in panel.ExternalEdges)
-                {
-                    segmentsPanel.AddRange(BHEG.Query.ISubParts(edge.Curve).ToList());
-                }
-
                 RobotGeoObject contourPanel;
                 int panelNum = System.Convert.ToInt32(panel.CustomData[AdapterId]);
                 RobotObjObject rPanel = objServer.Create(panelNum);
+                List<ICurve> segmentsPanel = new List<ICurve>();
+                int edgeCount = 0;
+
+                foreach (Edge edge in panel.ExternalEdges)
+                {
+                    edgeCount++;
+                    segmentsPanel.AddRange(BHEG.Query.ISubParts(edge.Curve).ToList());
+                    if (edge.Support != null)
+                    {
+                        if (!edgeConstraints.ContainsKey(edge.Support.Name))
+                        {
+                            edgeConstraints.Add(edge.Support.Name, panelNum.ToString() + "_" + "Edge(" + edgeCount.ToString() + ")");
+                        }
+                        else
+                        {
+                            edgeConstraints[edge.Support.Name] = edgeConstraints[edge.Support.Name] + " " + panelNum.ToString() + "_" + "Edge(" + edgeCount.ToString() + ")";
+                        }
+                    }
+                }
+
                 if (segmentsPanel.Count > 1)
                 {
                     contourPanel = m_RobotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_CONTOUR);

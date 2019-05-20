@@ -73,7 +73,8 @@ namespace BH.Adapter.Robot
             {typeof(Node), new List<Type> { typeof(Constraint6DOF) } },
             {typeof(ILoad), new List<Type> { typeof(Loadcase) } },
             {typeof(LoadCombination), new List<Type> { typeof(Loadcase) } },
-            {typeof(Panel), new List<Type> { typeof(ISurfaceProperty) } },
+            {typeof(Panel), new List<Type> { typeof(ISurfaceProperty) , typeof(Constraint6DOF)} },
+            {typeof(Edge), new List<Type> { typeof(Constraint6DOF) } },
             {typeof(ISurfaceProperty), new List<Type> { typeof(IMaterialFragment) } },
             {typeof(RigidLink), new List<Type> { typeof(LinkConstraint), typeof(Node) } },
             {typeof(FEMesh), new List<Type> { typeof(Node), typeof(ISurfaceProperty)} }

@@ -39,13 +39,13 @@ namespace BH.Adapter.Robot
         private bool CreateCollection(IEnumerable<Constraint6DOF> constraints)
         {
             List<Constraint6DOF> constList = constraints.ToList();
-            IRobotLabel lable = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_SUPPORT, "");
-            IRobotNodeSupportData suppData = lable.Data;
+            IRobotLabel label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_SUPPORT, "");
+            IRobotNodeSupportData suppData = label.Data;
 
             for (int i = 0; i < constList.Count; i++)
             {
                 BH.Engine.Robot.Convert.RobotConstraint(suppData, constList[i]);
-                m_RobotApplication.Project.Structure.Labels.StoreWithName(lable, constList[i].Name);
+                m_RobotApplication.Project.Structure.Labels.StoreWithName(label, constList[i].Name);
                 //if (m_SupportTaggs.ContainsKey(constList[i].Name))
                 //    m_SupportTaggs[constList[i].Name] = constList[i].TaggedName();
                 //else

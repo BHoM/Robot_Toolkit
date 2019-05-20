@@ -61,20 +61,7 @@ namespace BH.Adapter.Robot
                 {
                     index = m_RobotApplication.Project.Structure.Bars.FreeNumber;
                 }
-                //if (typeof(ISectionProperty).IsAssignableFrom(type))
-                //{
-                //    if (m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_BAR_SECTION) != null)
-                //        index = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_BAR_SECTION).Count + 1;
-                //    else
-                //        index = 1;
-                //}
-                //if (type == typeof(Material))
-                //{
-                //    if (m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_MATERIAL) != null)
-                //        index = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_MATERIAL).Count + 1;
-                //    else
-                //        index = 1;
-                //}
+
                 if (type == typeof(Material))
                 {
                     if (m_indexDict.ContainsKey(type))
@@ -87,6 +74,10 @@ namespace BH.Adapter.Robot
                     index = m_RobotApplication.Project.Structure.Cases.FreeNumber;
                 }
                 if (type == typeof(Panel))
+                {
+                    index = m_RobotApplication.Project.Structure.Objects.FreeNumber;
+                }
+                if (type == typeof(Opening))
                 {
                     index = m_RobotApplication.Project.Structure.Objects.FreeNumber;
                 }

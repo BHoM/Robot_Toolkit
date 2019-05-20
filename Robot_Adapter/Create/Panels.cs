@@ -45,108 +45,77 @@ namespace BH.Adapter.Robot
 
             foreach (Panel panel in panels)
             {
-                RobotGeoObject contourPanel;
                 int panelNum = System.Convert.ToInt32(panel.CustomData[AdapterId]);
                 RobotObjObject rPanel = objServer.Create(panelNum);
-                List<ICurve> edgeSubCurves = new List<ICurve>();
                 List<Edge> subEdges = new List<Edge>();
-                List<string> edgeSupportNames = new List<string>();
 
-                //Explode Edges into sub edges (as BHoM edges can contain polycurves, polylines etc.)
-                foreach (Edge edge in panel.ExternalEdges)
-                {
-                    edgeSubCurves.AddRange(BHEG.Query.ISubParts(edge.Curve).ToList());
-                    foreach (ICurve crv in edgeSubCurves)
-                    {
-                        subEdges.Add(BH.Engine.Structure.Create.Edge(crv, edge.Support, edge.Release, edge.Name));
-                    }
-                }
-
-                if (subEdges.Count > 1)
-                {
-                    contourPanel = m_RobotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_CONTOUR);
-                    foreach (Edge edge in subEdges)
-                    {
-                        RobotGeoSegment segment = m_RobotApplication.CmpntFactory.Create(BH.Engine.Robot.Convert.SegmentType(edge.Curve));
-                        (contourPanel as RobotGeoContour).Add(BH.Engine.Robot.Convert.Segment(edge.Curve, segment));
-                    }
-                }
-                else
-                {
-                    contourPanel = m_RobotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_CIRCLE);
-                }
-
-                contourPanel.Initialize();
-                rPanel.Main.Geometry = contourPanel;
+                rPanel.Main.Geometry = CreateRobotContour(panel.ExternalEdges, out subEdges);
                 rPanel.Main.Attribs.Meshed = 1;
                 rPanel.Initialize();
                 rPanel.Update();
-
-                IRobotCollection panelEdges = rPanel.Main.Edges;
-                for (int i = 1; i < panelEdges.Count; i++)
-                {
-                    IRobotObjEdge panelEdge = panelEdges.Get(i);
-                    panelEdge.SetLabel(IRobotLabelType.I_LT_SUPPORT, panel.ExternalEdges[0].Support.Name);
-                }
+                SetRobotPanelEdgeSupports(rPanel, subEdges);
 
                 if (panel.Property is LoadingPanelProperty)
                     rPanel.SetLabel(IRobotLabelType.I_LT_CLADDING, panel.Property.Name);
-
                 else
                     rPanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, panel.Property.Name);
 
-                RobotGeoObject contourOpening;
                 foreach (Opening opening in panel.Openings)
-                {
-                    List<ICurve> segmentsOpening = new List<ICurve>();
-                    foreach (Edge edge in opening.Edges)
-                    {
-                        segmentsOpening.AddRange(BHEG.Query.ISubParts(edge.Curve).ToList());
-                    }
-
-                    if (segmentsOpening.Count > 1)
-                    {
-                        contourOpening = m_RobotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_CONTOUR);
-                        foreach (ICurve crv in segmentsOpening)
-                        {
-                            RobotGeoSegment segment = m_RobotApplication.CmpntFactory.Create(BH.Engine.Robot.Convert.SegmentType(crv));
-                            (contourOpening as RobotGeoContour).Add(BH.Engine.Robot.Convert.Segment(crv, segment));
-                        }
-                    }
-                    else
-                    {
-                        contourOpening = m_RobotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_CIRCLE);
-                        BH.Engine.Robot.Convert.SingleContourGeometry(segmentsOpening[0], contourOpening);
-                    }
-                    contourOpening.Initialize();
-                    rPanel = objServer.Create(panelNum);
-                    rPanel.Main.Geometry = contourOpening;
+                { 
+                    int openingNum = System.Convert.ToInt32(panel.CustomData[AdapterId]);
+                    rPanel = objServer.Create(openingNum);
+                    rPanel.Main.Geometry = CreateRobotContour(opening.Edges, out subEdges);                    
                     rPanel.Initialize();
                     rPanel.Update();
-                }
+                    SetRobotPanelEdgeSupports(rPanel, subEdges);
+                }                
             }
             m_RobotApplication.Project.Structure.Objects.EndMultiOperation();
             m_RobotApplication.Interactive = 1;
-
-            //foreach (string supportName in edgeConstraints.Keys)
-            //{
-            //    RobotObjEdgeSelection panelEdgeSel = m_RobotApplication.Project.Structure.Selections.CreateEdgeSelection();
-
-            //    string selText = edgeConstraints[supportName];
-            //    panelEdgeSel.FromText(selText);
-            //    //RobotSelection rsel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_OBJECT);                
-            //    //for (int i = 0; i < panelEdgeSel.Count - 1; i++)
-            //    //{
-            //    //    RobotObjEdge panelEdge = 
-            //    //    panelEdge.SetLabel(IRobotLabelType., supportName);
-            //    //}
-            //}
-
             return true;
         }
 
         /***************************************************/
 
+        private RobotGeoObject CreateRobotContour(List<Edge> edges, out List<Edge> subEdges)
+        {
+            RobotGeoObject contourPanel = null;
+            subEdges = new List<Edge>();
+            foreach (Edge edge in edges) //Explode Edges into sub edges (as BHoM edges can contain polycurves, polylines etc.)
+            {
+                foreach (ICurve crv in BHEG.Query.ISubParts(edge.Curve).ToList())
+                {
+                    subEdges.Add(BH.Engine.Structure.Create.Edge(crv, edge.Support, edge.Release, edge.Name));
+                }
+            }
+            if (subEdges.Count > 1)
+            {
+                contourPanel = m_RobotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_CONTOUR);
+                foreach (Edge edge in subEdges)
+                {
+                    RobotGeoSegment segment = m_RobotApplication.CmpntFactory.Create(BH.Engine.Robot.Convert.SegmentType(edge.Curve));
+                    (contourPanel as RobotGeoContour).Add(BH.Engine.Robot.Convert.Segment(edge.Curve, segment));
+                }
+            }
+            else
+            {
+                contourPanel = m_RobotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_CIRCLE);
+                BH.Engine.Robot.Convert.SingleContourGeometry(subEdges[0].Curve, contourPanel);
+            }
+            contourPanel.Initialize();
+            return contourPanel;
+        }
 
+        /***************************************************/
+
+        private void SetRobotPanelEdgeSupports(RobotObjObject panel, List<Edge> edges)
+        {
+            IRobotCollection panelEdges = panel.Main.Edges;
+            for (int i = 1; i <= panelEdges.Count; i++)
+            {
+                IRobotObjEdge panelEdge = panelEdges.Get(i);
+                panelEdge.SetLabel(IRobotLabelType.I_LT_SUPPORT, edges[i - 1].Support.Name);
+            }
+        }
     }
 }

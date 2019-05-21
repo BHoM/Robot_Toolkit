@@ -42,11 +42,13 @@ namespace BH.Adapter.Robot
             m_RobotApplication.Project.Structure.Objects.BeginMultiOperation();
             RobotObjObjectServer objServer = m_RobotApplication.Project.Structure.Objects;
             Dictionary<string, string> edgeConstraints = new Dictionary<string, string>();
+            int freeObjectNumber = m_RobotApplication.Project.Structure.Objects.FreeNumber;
 
             foreach (Panel panel in panels)
-            {
-                int panelNum = System.Convert.ToInt32(panel.CustomData[AdapterId]);
-                RobotObjObject rPanel = objServer.Create(panelNum);
+            {                
+                panel.CustomData[AdapterId] = freeObjectNumber.ToString();
+                RobotObjObject rPanel = objServer.Create(freeObjectNumber);
+                freeObjectNumber++;
                 List<Edge> subEdges = new List<Edge>();
 
                 rPanel.Main.Geometry = CreateRobotContour(panel.ExternalEdges, out subEdges);
@@ -61,9 +63,10 @@ namespace BH.Adapter.Robot
                     rPanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, panel.Property.Name);
 
                 foreach (Opening opening in panel.Openings)
-                { 
-                    int openingNum = System.Convert.ToInt32(panel.CustomData[AdapterId]);
-                    rPanel = objServer.Create(openingNum);
+                {
+                    opening.CustomData[AdapterId] = freeObjectNumber.ToString();
+                    rPanel = objServer.Create(freeObjectNumber);
+                    freeObjectNumber++;
                     rPanel.Main.Geometry = CreateRobotContour(opening.Edges, out subEdges);                    
                     rPanel.Initialize();
                     rPanel.Update();

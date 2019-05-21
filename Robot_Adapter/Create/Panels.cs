@@ -43,9 +43,9 @@ namespace BH.Adapter.Robot
             RobotObjObjectServer objServer = m_RobotApplication.Project.Structure.Objects;
             Dictionary<string, string> edgeConstraints = new Dictionary<string, string>();
             int freeObjectNumber = m_RobotApplication.Project.Structure.Objects.FreeNumber;
-
+           
             foreach (Panel panel in panels)
-            {                
+            {
                 panel.CustomData[AdapterId] = freeObjectNumber.ToString();
                 RobotObjObject rPanel = objServer.Create(freeObjectNumber);
                 freeObjectNumber++;
@@ -55,7 +55,7 @@ namespace BH.Adapter.Robot
                 rPanel.Main.Attribs.Meshed = 1;
                 rPanel.Initialize();
                 rPanel.Update();
-                SetRobotPanelEdgeSupports(rPanel, subEdges);
+                if (HasEdgeSupports(subEdges)) SetRobotPanelEdgeSupports(rPanel, subEdges);
 
                 if (panel.Property is LoadingPanelProperty)
                     rPanel.SetLabel(IRobotLabelType.I_LT_CLADDING, panel.Property.Name);
@@ -67,11 +67,11 @@ namespace BH.Adapter.Robot
                     opening.CustomData[AdapterId] = freeObjectNumber.ToString();
                     rPanel = objServer.Create(freeObjectNumber);
                     freeObjectNumber++;
-                    rPanel.Main.Geometry = CreateRobotContour(opening.Edges, out subEdges);                    
+                    rPanel.Main.Geometry = CreateRobotContour(opening.Edges, out subEdges);
                     rPanel.Initialize();
                     rPanel.Update();
-                    SetRobotPanelEdgeSupports(rPanel, subEdges);
-                }                
+                    if (HasEdgeSupports(subEdges)) SetRobotPanelEdgeSupports(rPanel, subEdges);
+                }
             }
             m_RobotApplication.Project.Structure.Objects.EndMultiOperation();
             m_RobotApplication.Interactive = 1;
@@ -111,13 +111,32 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
+        private bool HasEdgeSupports(List<Edge> edges)
+        {
+            bool hasSupport = false;
+            foreach (Edge edge in edges)
+            {
+                if (edge.Support != null)
+                {
+                    if (edge.Support.Name != "") hasSupport = true;
+                }
+            }
+            return hasSupport;
+        }
+
+        /***************************************************/
+
         private void SetRobotPanelEdgeSupports(RobotObjObject panel, List<Edge> edges)
         {
             IRobotCollection panelEdges = panel.Main.Edges;
             for (int i = 1; i <= panelEdges.Count; i++)
             {
                 IRobotObjEdge panelEdge = panelEdges.Get(i);
-                panelEdge.SetLabel(IRobotLabelType.I_LT_SUPPORT, edges[i - 1].Support.Name);
+                BH.oM.Structure.Constraints.Constraint6DOF support = edges[i - 1].Support;
+                if (support != null)
+                {
+                    if (support.Name != "") panelEdge.SetLabel(IRobotLabelType.I_LT_SUPPORT, support.Name);
+                }
             }
         }
     }

@@ -51,6 +51,24 @@ namespace BH.Adapter.Robot
                 if (!materials.TryGetValue(secData.MaterialName, out bhomMat))
                 {
                     bhomMat = ReadMaterialByLabelName(secData.MaterialName);
+
+                    if (bhomMat == null)
+                    {
+                        string materialType = "";
+                        if (secData.IsConcrete)
+                        {
+                            bhomMat = new Concrete() { Name = secData.MaterialName };
+                            materialType = "Concrete";
+                        }
+                        else
+                        {
+                            bhomMat = new Steel() { Name = secData.MaterialName };
+                            materialType = "Steel";
+                        }
+
+                        Engine.Reflection.Compute.RecordWarning("Unable to extract material with label " + secData.MaterialName + ". An empty " + materialType + " with the same name has been created in its place");
+                    }
+
                     materials[bhomMat.Name] = bhomMat;
                 }
 

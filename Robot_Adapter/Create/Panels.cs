@@ -113,15 +113,14 @@ namespace BH.Adapter.Robot
 
         private bool HasEdgeSupports(List<Edge> edges)
         {
-            bool hasSupport = false;
             foreach (Edge edge in edges)
             {
                 if (edge.Support != null)
                 {
-                    if (edge.Support.Name != "") hasSupport = true;
+                    if (!string.IsNullOrWhiteSpace(edge.Support.Name)) return true;
                 }
             }
-            return hasSupport;
+            return false;
         }
 
         /***************************************************/
@@ -135,7 +134,7 @@ namespace BH.Adapter.Robot
                 BH.oM.Structure.Constraints.Constraint6DOF support = edges[i - 1].Support;
                 if (support != null)
                 {
-                    if (support.Name != "") panelEdge.SetLabel(IRobotLabelType.I_LT_SUPPORT, support.Name);
+                    if (!string.IsNullOrWhiteSpace(support.Name)) panelEdge.SetLabel(IRobotLabelType.I_LT_SUPPORT, support.Name);
                 }
             }
         }

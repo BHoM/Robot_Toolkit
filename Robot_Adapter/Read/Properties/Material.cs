@@ -80,7 +80,10 @@ namespace BH.Adapter.Robot
         private IMaterialFragment ReadMaterialByLabelName(string labelName)
         {
             IRobotLabel materialLabel = m_RobotApplication.Project.Structure.Labels.Get(IRobotLabelType.I_LT_MATERIAL, labelName);
-            return MaterialFromLabel(materialLabel);
+            if(materialLabel != null)
+                return MaterialFromLabel(materialLabel);
+
+            return null;
         }
 
         /***************************************************/

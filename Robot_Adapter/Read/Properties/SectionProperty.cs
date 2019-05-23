@@ -54,6 +54,8 @@ namespace BH.Adapter.Robot
 
                     if (bhomMat == null)
                     {
+                        //TODO: find a sensible way to get out the type of material that the section in expecting.
+                        //For now resorting to checking for concrete, if not true assume steal.
                         string materialType = "";
                         if (secData.IsConcrete)
                         {

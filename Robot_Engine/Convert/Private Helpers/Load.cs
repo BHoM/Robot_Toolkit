@@ -111,6 +111,11 @@ namespace BH.Engine.Robot
 
         public static void RobotLoad(this PointLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
+            if (load.Force.Length() == 0 & load.Moment.Length() == 0)
+            {
+                Engine.Reflection.Compute.RecordError("Zero forces and moments are not pushed to Robot");
+                return;
+            }
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_FORCE);
             loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
             loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_FX, load.Force.X);
@@ -128,6 +133,11 @@ namespace BH.Engine.Robot
 
         public static void RobotLoad(this BarUniformlyDistributedLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
+            if (load.Force.Length() == 0 & load.Moment.Length() == 0)
+            {
+                Engine.Reflection.Compute.RecordError("Zero forces and moments are not pushed to Robot");
+                return;
+            }
             IRobotLoadRecord loadRecordForce = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_UNIFORM);
             loadRecordForce.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
             loadRecordForce.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PX, load.Force.X);
@@ -145,6 +155,11 @@ namespace BH.Engine.Robot
 
         public static void RobotLoad(this AreaUniformlyDistributedLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
+            if (load.Pressure.Length() == 0)
+            {
+                Engine.Reflection.Compute.RecordError("Zero pressures are not pushed to Robot");
+                return;
+            }
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_UNIFORM);
             loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
             loadRecord.SetValue((short)IRobotUniformRecordValues.I_URV_PX, load.Pressure.X);
@@ -162,6 +177,11 @@ namespace BH.Engine.Robot
 
         public static void RobotLoad(this BarPointLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
+            if (load.Force.Length() == 0 & load.Moment.Length() == 0)
+            {
+                Engine.Reflection.Compute.RecordError("Zero forces and moments are not pushed to Robot");
+                return;
+            }
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_FORCE_CONCENTRATED);
             loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
             loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FX, load.Force.X);
@@ -178,6 +198,11 @@ namespace BH.Engine.Robot
 
         public static void RobotLoad(this PointDisplacement load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
+            if (load.Translation.Length() == 0 & load.Rotation.Length() == 0)
+            {
+                Engine.Reflection.Compute.RecordError("Zero point displacements are not pushed to Robot");
+                return;
+            }
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_DISPLACEMENT);
             loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
             loadRecord.SetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_UX, load.Translation.X);
@@ -192,6 +217,11 @@ namespace BH.Engine.Robot
 
         public static void RobotLoad(this PointVelocity load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
+            if (load.TranslationalVelocity.Length() == 0)
+            {
+                Engine.Reflection.Compute.RecordError("Zero point velocities are not pushed to Robot");
+                return;
+            }
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_VELOCITY);
             loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
             loadRecord.SetValue((short)IRobotNodeVelocityRecordValues.I_NVRV_UX, load.TranslationalVelocity.X);
@@ -203,6 +233,11 @@ namespace BH.Engine.Robot
 
         public static void RobotLoad(this PointAcceleration load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
+            if (load.TranslationalAcceleration.Length() == 0)
+            {
+                Engine.Reflection.Compute.RecordError("Zero point accelerations are not pushed to Robot");
+                return;
+            }
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_ACCELERATION);
             loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
             loadRecord.SetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UX, load.TranslationalAcceleration.X);
@@ -215,6 +250,11 @@ namespace BH.Engine.Robot
 
         public static void RobotLoad(this BarVaryingDistributedLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
+            if (load.ForceA.Length() == 0 & load.ForceB.Length() == 0)
+            {
+                Engine.Reflection.Compute.RecordError("Zero distributed forces are not pushed to Robot");
+                return;
+            }
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_TRAPEZOIDALE);
             loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
             loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PX1, load.ForceA.X);
@@ -231,6 +271,11 @@ namespace BH.Engine.Robot
 
         public static void RobotLoad(this BarTemperatureLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
+            if (load.TemperatureChange == 0)
+            {
+                Engine.Reflection.Compute.RecordError("Zero thermal loads are not pushed to Robot");
+                return;
+            }
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_THERMAL);
             loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
             loadRecord.SetValue((short)IRobotBarThermalRecordValues.I_BTRV_TX, load.TemperatureChange);
@@ -241,6 +286,11 @@ namespace BH.Engine.Robot
 
         public static void RobotLoad(this ContourLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
+            if (load.Force.Length() == 0)
+            {
+                Engine.Reflection.Compute.RecordError("Zero contour forces are not pushed to Robot");
+                return;
+            }
 
             RobotLoadRecordInContour loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_IN_CONTOUR) as RobotLoadRecordInContour;
 
@@ -273,6 +323,11 @@ namespace BH.Engine.Robot
 
         public static void RobotLoad(this GeometricalLineLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
+            if (load.ForceA.Length() == 0 & load.ForceB.Length() == 0 & load.MomentA.Length() == 0 & load.MomentB.Length() == 0)
+            {
+                Engine.Reflection.Compute.RecordError("Zero geometrical forces and moments are not pushed to Robot");
+                return;
+            }
             IRobotLoadRecordLinear3D loadLin3D = sCase.Records.Create(IRobotLoadRecordType.I_LRT_LINEAR_3D) as IRobotLoadRecordLinear3D;
 
             loadLin3D.SetPoint(1, load.Location.Start.X, load.Location.Start.Y, load.Location.Start.Z);

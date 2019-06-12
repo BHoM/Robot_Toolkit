@@ -133,22 +133,37 @@ namespace BH.Engine.Robot
 
         public static void RobotLoad(this BarUniformlyDistributedLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
-            if (load.Force.Length() == 0 & load.Moment.Length() == 0)
+            if (load.Force.Length() == 0 && load.Moment.Length() == 0)
             {
                 Engine.Reflection.Compute.RecordError("Zero forces and moments are not pushed to Robot");
                 return;
             }
-            IRobotLoadRecord loadRecordForce = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_UNIFORM);
-            loadRecordForce.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
-            loadRecordForce.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PX, load.Force.X);
-            loadRecordForce.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PY, load.Force.Y);
-            loadRecordForce.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PZ, load.Force.Z);
 
-            IRobotLoadRecord loadRecordMoment = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_MOMENT_DISTRIBUTED);
-            loadRecordMoment.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
-            loadRecordMoment.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MX, load.Moment.X);
-            loadRecordMoment.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MY, load.Moment.Y);
-            loadRecordMoment.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MZ, load.Moment.Z);
+            if (load.Force.Length() != 0)
+            {
+                IRobotLoadRecord loadRecordForce = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_UNIFORM);
+                loadRecordForce.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
+                loadRecordForce.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PX, load.Force.X);
+                loadRecordForce.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PY, load.Force.Y);
+                loadRecordForce.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PZ, load.Force.Z);
+            }
+            else
+            {
+                Engine.Reflection.Compute.RecordError("Zero forces are not pushed to Robot");
+            }
+            if (load.Moment.Length() != 0)
+            {
+                IRobotLoadRecord loadRecordMoment = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_MOMENT_DISTRIBUTED);
+                loadRecordMoment.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
+                loadRecordMoment.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MX, load.Moment.X);
+                loadRecordMoment.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MY, load.Moment.Y);
+                loadRecordMoment.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MZ, load.Moment.Z);
+            }
+            else
+            {
+                Engine.Reflection.Compute.RecordError("Zero moments are not pushed to Robot");
+            }
+
         }
 
         /***************************************************/

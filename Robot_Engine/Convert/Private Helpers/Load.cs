@@ -147,10 +147,7 @@ namespace BH.Engine.Robot
                 loadRecordForce.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PY, load.Force.Y);
                 loadRecordForce.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PZ, load.Force.Z);
             }
-            else
-            {
-                Engine.Reflection.Compute.RecordError("Zero forces are not pushed to Robot");
-            }
+
             if (load.Moment.Length() != 0)
             {
                 IRobotLoadRecord loadRecordMoment = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_MOMENT_DISTRIBUTED);
@@ -158,10 +155,6 @@ namespace BH.Engine.Robot
                 loadRecordMoment.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MX, load.Moment.X);
                 loadRecordMoment.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MY, load.Moment.Y);
                 loadRecordMoment.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MZ, load.Moment.Z);
-            }
-            else
-            {
-                Engine.Reflection.Compute.RecordError("Zero moments are not pushed to Robot");
             }
 
         }

@@ -111,7 +111,7 @@ namespace BH.Engine.Robot
 
         public static void RobotLoad(this PointLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
-            if (load.Force.Length() == 0 & load.Moment.Length() == 0)
+            if (load.Force.Length() == 0 && load.Moment.Length() == 0)
             {
                 Engine.Reflection.Compute.RecordError("Zero forces and moments are not pushed to Robot");
                 return;
@@ -192,7 +192,7 @@ namespace BH.Engine.Robot
 
         public static void RobotLoad(this BarPointLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
-            if (load.Force.Length() == 0 & load.Moment.Length() == 0)
+            if (load.Force.Length() == 0 && load.Moment.Length() == 0)
             {
                 Engine.Reflection.Compute.RecordError("Zero forces and moments are not pushed to Robot");
                 return;
@@ -213,7 +213,7 @@ namespace BH.Engine.Robot
 
         public static void RobotLoad(this PointDisplacement load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
-            if (load.Translation.Length() == 0 & load.Rotation.Length() == 0)
+            if (load.Translation.Length() == 0 && load.Rotation.Length() == 0)
             {
                 Engine.Reflection.Compute.RecordError("Zero point displacements are not pushed to Robot");
                 return;
@@ -265,7 +265,7 @@ namespace BH.Engine.Robot
 
         public static void RobotLoad(this BarVaryingDistributedLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
-            if (load.ForceA.Length() == 0 & load.ForceB.Length() == 0)
+            if (load.ForceA.Length() == 0 && load.ForceB.Length() == 0)
             {
                 Engine.Reflection.Compute.RecordError("Zero distributed forces are not pushed to Robot");
                 return;
@@ -338,7 +338,7 @@ namespace BH.Engine.Robot
 
         public static void RobotLoad(this GeometricalLineLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
-            if (load.ForceA.Length() == 0 & load.ForceB.Length() == 0 & load.MomentA.Length() == 0 & load.MomentB.Length() == 0)
+            if (load.ForceA.Length() == 0 && load.ForceB.Length() == 0 && load.MomentA.Length() == 0 && load.MomentB.Length() == 0)
             {
                 Engine.Reflection.Compute.RecordError("Zero geometrical forces and moments are not pushed to Robot");
                 return;

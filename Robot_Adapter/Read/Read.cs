@@ -33,7 +33,7 @@ using BH.oM.Physical.Materials;
 using BH.oM.Adapters.Robot;
 using BH.oM.Structure.Results;
 using BH.oM.Common;
-using BH.oM.DataManipulation.Queries;
+using BH.oM.Data.Requests;
 using System.Linq;
 
 namespace BH.Adapter.Robot
@@ -136,7 +136,7 @@ namespace BH.Adapter.Robot
 
         }
 
-        protected override IEnumerable<IResultCollection> ReadResults(FilterQuery query)
+        protected override IEnumerable<IResultCollection> ReadResults(FilterRequest query)
         {
             if (query.Type == typeof(MeshResults))
                 return ReadMeshResults(query);

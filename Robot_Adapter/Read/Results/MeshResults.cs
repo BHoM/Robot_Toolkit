@@ -27,7 +27,7 @@ using System.Collections;
 using BH.Engine.Robot;
 using BH.oM.Geometry.CoordinateSystem;
 using System.Linq;
-using BH.oM.DataManipulation.Queries;
+using BH.oM.Data.Requests;
 using System.Collections.ObjectModel;
 using BH.oM.Base;
 
@@ -39,7 +39,7 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
 
-        private List<MeshResults> ReadMeshResults(FilterQuery query = null)
+        private List<MeshResults> ReadMeshResults(FilterRequest query = null)
         {
             IList ids = (IList)query.Equalities["ObjectIds"];
             IList cases = (IList)query.Equalities["Cases"];

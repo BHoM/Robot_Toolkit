@@ -63,7 +63,13 @@ namespace BH.Engine.Robot
                 {
                     //Get material name and material
                     string matName = robotBar.GetLabelName(IRobotLabelType.I_LT_MATERIAL);
-                    barMaterial = bhomMaterials[matName];
+
+
+                    if (!bhomMaterials.TryGetValue(matName, out barMaterial))
+                    {
+                        BH.Engine.Reflection.Compute.RecordWarning("Could not extract material with name" + matName + "null material will be provided for the crossection for bars with this material.");
+                    }
+
 
                     Dictionary<string, ISectionProperty> innerDict;
                     //Check if a section of the specified type has allready been pulled

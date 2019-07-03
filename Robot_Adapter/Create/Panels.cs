@@ -62,16 +62,19 @@ namespace BH.Adapter.Robot
                 else
                     rPanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, panel.Property.Name);
 
+                RobotSelection rPanelOpenings = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_OBJECT);
                 foreach (Opening opening in panel.Openings)
                 {
-                    opening.CustomData[AdapterId] = freeObjectNumber.ToString();
-                    rPanel = objServer.Create(freeObjectNumber);
+                    RobotObjObject rPanelOpening = objServer.Create(freeObjectNumber);
                     freeObjectNumber++;
-                    rPanel.Main.Geometry = CreateRobotContour(opening.Edges, out subEdges);
-                    rPanel.Initialize();
-                    rPanel.Update();
+                    opening.CustomData[AdapterId] = rPanelOpening.Number.ToString();
+                    rPanelOpening.Main.Geometry = CreateRobotContour(opening.Edges, out subEdges);
+                    rPanelOpening.Initialize();
+                    rPanelOpening.Update();
                     if (HasEdgeSupports(subEdges)) SetRobotPanelEdgeSupports(rPanel, subEdges);
+                    rPanelOpenings.AddOne(rPanelOpening.Number);
                 }
+                rPanel.SetHostedObjects(rPanelOpenings);
             }
             m_RobotApplication.Project.Structure.Objects.EndMultiOperation();
             m_RobotApplication.Interactive = 1;

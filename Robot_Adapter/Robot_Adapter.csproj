@@ -67,12 +67,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM\Build\Geometry_oM.dll</HintPath>
     </Reference>
-    <Reference Include="Interop.RobotOM">
-      <HintPath Condition="Exists('C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2017\System\Exe\Interop.RobotOM.dll')">C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2017\System\Exe\Interop.RobotOM.dll</HintPath>
-      <HintPath Condition="Exists('C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2018\System\Exe\Interop.RobotOM.dll')">C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2018\System\Exe\Interop.RobotOM.dll</HintPath>
-      <HintPath Condition="Exists('C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2019\System\Exe\Interop.RobotOM.dll')">C:\Program Files\Autodesk\Autodesk Robot Structural Analysis Professional 2019\System\Exe\Interop.RobotOM.dll</HintPath>
+    <Reference Include="Interop.RobotOM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BHoM.Interop.Robot2018.1.0.0\lib\net45\Interop.RobotOM.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Physical_oM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -196,6 +193,9 @@
       <Project>{0dd05698-6a33-4092-bfad-ff702685feaf}</Project>
       <Name>Robot_oM</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

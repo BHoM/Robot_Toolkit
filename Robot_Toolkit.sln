@@ -1,10 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 14 for Windows Desktop
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Robot_Test", "Robot_Test\Robot_Test.csproj", "{BB338C79-7ADB-4059-A0F0-0533E120217D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Robot_Adapter", "Robot_Adapter\Robot_Adapter.csproj", "{A4FE6182-A985-44E0-A5BF-3E54C6EA30BF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Robot_Engine", "Robot_Engine\Robot_Engine.csproj", "{45D542CD-79B5-485A-BA39-0163230431F0}"
@@ -17,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BB338C79-7ADB-4059-A0F0-0533E120217D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BB338C79-7ADB-4059-A0F0-0533E120217D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BB338C79-7ADB-4059-A0F0-0533E120217D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BB338C79-7ADB-4059-A0F0-0533E120217D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A4FE6182-A985-44E0-A5BF-3E54C6EA30BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A4FE6182-A985-44E0-A5BF-3E54C6EA30BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4FE6182-A985-44E0-A5BF-3E54C6EA30BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -36,5 +30,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C9AFD2E7-967F-4227-979A-9C4BF57A86B4}
 	EndGlobalSection
 EndGlobal

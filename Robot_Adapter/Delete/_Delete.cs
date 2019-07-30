@@ -159,8 +159,8 @@ namespace BH.Adapter.Robot
                 caseSel = m_RobotApplication.Project.Structure.Selections.CreatePredefined(IRobotPredefinedSelection.I_PS_CASE_SIMPLE_CASES);               
             }            
             m_RobotApplication.Project.Structure.Cases.DeleteMany(caseSel);
-            m_tags[typeof(Bar)] = caseTags;
-            BH.Engine.Reflection.Compute.RecordWarning("Note that when all cases are deleted in Robot, combinations are deleted also");
+            m_tags[typeof(BH.oM.Structure.Loads.Loadcase)] = caseTags;
+            if(ids == null || ids.Count() != 0) BH.Engine.Reflection.Compute.RecordWarning("Note that when all cases are deleted in Robot, combinations are deleted also");
             return sucess;
         }
 
@@ -171,7 +171,7 @@ namespace BH.Adapter.Robot
             int sucess = 1;
             string caseIds = "";
             RobotSelection caseSel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
-            Dictionary<int, HashSet<string>> caseTags = GetTypeTags(typeof(BH.oM.Structure.Loads.Loadcase));
+            Dictionary<int, HashSet<string>> caseTags = GetTypeTags(typeof(BH.oM.Structure.Loads.LoadCombination));
             if (ids != null)
             {
                 List<int> indicies = ids.Cast<int>().ToList();
@@ -188,7 +188,7 @@ namespace BH.Adapter.Robot
                 caseSel = m_RobotApplication.Project.Structure.Selections.CreatePredefined(IRobotPredefinedSelection.I_PS_CASE_COMBINATIONS);
             }
             m_RobotApplication.Project.Structure.Cases.DeleteMany(caseSel);
-            m_tags[typeof(Bar)] = caseTags;
+            m_tags[typeof(BH.oM.Structure.Loads.LoadCombination)] = caseTags;
             return sucess;
         }
 

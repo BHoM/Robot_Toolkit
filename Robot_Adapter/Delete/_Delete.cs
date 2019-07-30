@@ -47,10 +47,7 @@ namespace BH.Adapter.Robot
             if (type == typeof(Bar))
                 success = DeleteBars(ids);
             if (type == typeof(BH.oM.Structure.Loads.Loadcase))
-            {
-                BH.Engine.Reflection.Compute.RecordWarning("Note that when all cases are deleted in Robot, combinations are deleted also");
                 success = DeleteLoadcases(ids);
-            }
             if (type == typeof(BH.oM.Structure.Loads.LoadCombination))
                 success = DeleteLoadCombinations(ids);
             if (type == null)
@@ -163,6 +160,7 @@ namespace BH.Adapter.Robot
             }            
             m_RobotApplication.Project.Structure.Cases.DeleteMany(caseSel);
             m_tags[typeof(Bar)] = caseTags;
+            BH.Engine.Reflection.Compute.RecordWarning("Note that when all cases are deleted in Robot, combinations are deleted also");
             return sucess;
         }
 

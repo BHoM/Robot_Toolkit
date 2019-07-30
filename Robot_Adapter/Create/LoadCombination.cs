@@ -34,17 +34,18 @@ namespace BH.Adapter.Robot
 
         private bool CreateCollection(IEnumerable<LoadCombination> lComabinations)
         {
-
             foreach (LoadCombination lComb in lComabinations)
             {
-                RobotCaseCombination rCaseCombination = m_RobotApplication.Project.Structure.Cases.CreateCombination(lComb.Number, lComb.Name, IRobotCombinationType.I_CBT_ULS, IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_COMB);
-                for (int i = 0; i < lComb.LoadCases.Count; i++)
+                if (m_RobotApplication.Project.Structure.Cases.Exist(lComb.Number)!=-1)
                 {
-                    rCaseCombination.CaseFactors.New(lComb.LoadCases[i].Item2.Number, lComb.LoadCases[i].Item1);
+                    RobotCaseCombination rCaseCombination = m_RobotApplication.Project.Structure.Cases.CreateCombination(lComb.Number, lComb.Name, IRobotCombinationType.I_CBT_ULS, IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_COMB);
+                    for (int i = 0; i < lComb.LoadCases.Count; i++)
+                    {
+                        rCaseCombination.CaseFactors.New(lComb.LoadCases[i].Item2.Number, lComb.LoadCases[i].Item1);
+                    }
+                    updateview();
                 }
-                updateview();
             }
-        
             return true;
         }
 

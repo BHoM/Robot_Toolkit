@@ -29,6 +29,7 @@ using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Structure.Loads;
 using BH.oM.Structure.MaterialFragments;
 using BH.oM.Adapters.Robot;
+using BH.oM.Reflection.Attributes;
 
 namespace BH.Adapter.Robot
 {
@@ -111,6 +112,8 @@ namespace BH.Adapter.Robot
 
                 if (objects.First() is LoadCombination)
                 {
+                    BH.Engine.Reflection.Compute.RecordWarning("Note if a combination in the model with the same number exists, combination will not be pushed. Use 'delete'" +
+                        "to clear combinations before re-pushing");
                     success = CreateCollection(objects as IEnumerable<LoadCombination>);
                 }
 

@@ -47,6 +47,8 @@ namespace BH.Adapter.Robot
                 success = DeleteBars(ids);
             if (type == typeof(BH.oM.Structure.Loads.Loadcase)) 
                 success = DeleteLoadcases(ids);
+            if (type == typeof(BH.oM.Structure.Loads.LoadCombination))
+                success = DeleteLoadCombinations(ids);
             if (type == null)
                 success = DeleteAll();
             updateview();
@@ -153,14 +155,35 @@ namespace BH.Adapter.Robot
             }
             else
             {
-                int maxNodeIndex = m_RobotApplication.Project.Structure.Cases.FreeNumber;
-                for (int i = 1; i < maxNodeIndex; i++)
+                caseSel = m_RobotApplication.Project.Structure.Selections.CreatePredefined(IRobotPredefinedSelection.I_PS_CASE_SIMPLE_CASES);                
+            }            
+            m_RobotApplication.Project.Structure.Cases.DeleteMany(caseSel);
+            m_tags[typeof(Bar)] = caseTags;
+            return sucess;
+        }
+
+        /***************************************************/
+
+        public int DeleteLoadCombinations(IEnumerable<object> ids)
+        {
+            int sucess = 1;
+            string caseIds = "";
+            RobotSelection caseSel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
+            Dictionary<int, HashSet<string>> caseTags = GetTypeTags(typeof(BH.oM.Structure.Loads.Loadcase));
+            if (ids != null)
+            {
+                List<int> indicies = ids.Cast<int>().ToList();
+                foreach (int ind in indicies)
                 {
-                    caseIds += i.ToString() + ",";
-                    caseTags.Remove(i);
+                    caseIds += ind.ToString() + ",";
+                    caseTags.Remove(ind);
                 }
                 caseIds.TrimEnd(',');
                 caseSel.FromText(caseIds);
+            }
+            else
+            {
+                caseSel = m_RobotApplication.Project.Structure.Selections.CreatePredefined(IRobotPredefinedSelection.I_PS_CASE_COMBINATIONS);
             }
             m_RobotApplication.Project.Structure.Cases.DeleteMany(caseSel);
             m_tags[typeof(Bar)] = caseTags;

@@ -33,12 +33,12 @@ namespace BH.Engine.Robot
 
         public static void RobotConstraint(IRobotNodeSupportData suppData, Constraint6DOF constraint)
         {
-            suppData.UX = (int)(constraint.TranslationX);
-            suppData.UY = (int)(constraint.TranslationY);
-            suppData.UZ = (int)(constraint.TranslationZ);
-            suppData.RX = (int)(constraint.RotationX);
-            suppData.RY = (int)(constraint.RotationY);
-            suppData.RZ = (int)(constraint.RotationZ);
+            suppData.UX = constraint.TranslationX == DOFType.Fixed ? 1 : 0;
+            suppData.UY = constraint.TranslationY == DOFType.Fixed ? 1 : 0;
+            suppData.UZ = constraint.TranslationZ == DOFType.Fixed ? 1 : 0;
+            suppData.RX = constraint.RotationX == DOFType.Fixed ? 1 : 0;
+            suppData.RY = constraint.RotationY == DOFType.Fixed ? 1 : 0;
+            suppData.RZ = constraint.RotationZ == DOFType.Fixed ? 1 : 0;
             suppData.KX = constraint.TranslationalStiffnessX;
             suppData.KY = constraint.TranslationalStiffnessY;
             suppData.KZ = constraint.TranslationalStiffnessZ;

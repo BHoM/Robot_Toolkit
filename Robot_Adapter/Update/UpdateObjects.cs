@@ -161,7 +161,26 @@ namespace BH.Adapter.Robot
         protected bool Update(IEnumerable<Constraint6DOF> nodeConst)
         {
             bool success = true;
-            success = Create(nodeConst);
+
+            m_RobotApplication.Interactive = 0;
+
+            try
+            {
+                foreach (Constraint6DOF constraint in nodeConst)
+                {
+                    RobotNodeSupport robotSupport = m_RobotApplication.Project.Structure.Labels.Get(IRobotLabelType.I_LT_SUPPORT, constraint.Name) as RobotNodeSupport;
+                    IRobotNodeSupportData suppData = robotSupport.Data;
+
+                    Engine.Robot.Convert.RobotConstraint(suppData, constraint);
+
+                    m_RobotApplication.Project.Structure.Labels.Store(robotSupport);
+                }
+            }
+            finally
+            {
+                m_RobotApplication.Interactive = 1;
+            }
+
             return success;
         }
 

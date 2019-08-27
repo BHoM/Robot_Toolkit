@@ -126,6 +126,7 @@
     <Compile Include="Execute\_Execute.cs" />
     <Compile Include="Adapter\NextId.cs" />
     <Compile Include="Read\Elements\Bar.cs" />
+    <Compile Include="Read\Elements\Groups.cs" />
     <Compile Include="Read\Elements\Mesh.cs" />
     <Compile Include="Read\Elements\RigidLink.cs" />
     <Compile Include="Read\Loads\Load.cs" />

@@ -93,7 +93,7 @@ namespace BH.Adapter.Robot
                 return ReadLoads(); //TODO: Implement load extraction
 
             if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
-                return new List<BHoMGroup<IBHoMObject>>();
+                return ReadGroups();
 
             if (type == typeof(FramingElementDesignProperties))
                 return ReadFramingElementDesignProperties();

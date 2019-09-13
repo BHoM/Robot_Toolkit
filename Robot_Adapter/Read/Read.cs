@@ -90,7 +90,7 @@ namespace BH.Adapter.Robot
                 return ReadSectionProperties();
 
             if (typeof(ILoad).IsAssignableFrom(type))
-                return ReadLoads(); //TODO: Implement load extraction
+                return ReadLoads(type); //TODO: Implement load extraction
 
             if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
                 return ReadGroups();

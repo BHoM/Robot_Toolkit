@@ -74,6 +74,9 @@ namespace BH.Adapter.Robot
 
             queryParams.Selection.Set(IRobotObjectType.I_OT_CASE, caseSelection);
             queryParams.Selection.Set(IRobotObjectType.I_OT_NODE, nodeSelection);
+            queryParams.SetParam(IRobotResultParamType.I_RPT_MODE, 0);
+            queryParams.SetParam(IRobotResultParamType.I_RPT_MODE_CMB, IRobotModeCombinationType.I_MCT_CQC);
+
             RobotResultRowSet rowSet = new RobotResultRowSet();
 
             IRobotResultQueryReturnType ret = IRobotResultQueryReturnType.I_RQRT_MORE_AVAILABLE;

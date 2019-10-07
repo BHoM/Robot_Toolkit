@@ -126,6 +126,9 @@ namespace BH.Adapter.Robot
             if (type == typeof(BarForce))
                 return ReadBarForce(ids, cases, divisions);
 
+            if (type == typeof(BarDeformation))
+                return ReadBarDeformation(ids, cases, divisions);
+
             if (type == typeof(NodeDisplacement))
                 return ReadNodeDisplacement(ids, cases, divisions);
 

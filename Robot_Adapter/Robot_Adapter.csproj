@@ -142,6 +142,7 @@
     <Compile Include="Read\Loads\Loadcase.cs" />
     <Compile Include="Read\Elements\DesignGroups.cs" />
     <Compile Include="Read\Properties\FramingElementDesignProperties.cs" />
+    <Compile Include="Read\Results\BarDeformation.cs" />
     <Compile Include="Read\Results\BarForce.cs" />
     <Compile Include="Read\Results\MeshResults.cs" />
     <Compile Include="Read\Results\NodeDisplacement.cs" />

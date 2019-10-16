@@ -43,9 +43,9 @@ namespace BH.Adapter.Robot
         {
             if (type == typeof(PointLoad))
                 return ReadNodeLoads(ids);
-            else if (type == typeof(ContourLoad))
+            else if (type == typeof(oM.Structure.Loads.ContourLoad) || type == typeof(oM.Adapters.Robot.ContourLoad))
                 return ReadContourLoads(ids);
-            else if (type == typeof(GeometricalLineLoad))
+            else if (type == typeof(oM.Structure.Loads.GeometricalLineLoad) || type == typeof(oM.Adapters.Robot.GeometricalLineLoad))
                 return ReadGeometricalLineLoads(ids);
 
             return new List<ILoad>();
@@ -165,7 +165,7 @@ namespace BH.Adapter.Robot
 
                                     contourPoints.Add(contourPoints.First());
 
-                                    ContourLoad contourLoad = new ContourLoad
+                                    oM.Structure.Loads.ContourLoad contourLoad = new oM.Structure.Loads.ContourLoad
                                     {
                                         Force = new Vector { X = fx, Y = fy, Z = fz },
                                         Contour = new Polyline { ControlPoints = contourPoints },
@@ -237,7 +237,7 @@ namespace BH.Adapter.Robot
                                     linRecord.GetPoint(1, out xa, out ya, out za);
                                     linRecord.GetPoint(2, out xb, out yb, out zb);
 
-                                    GeometricalLineLoad contourLoad = new GeometricalLineLoad
+                                    oM.Structure.Loads.GeometricalLineLoad contourLoad = new oM.Structure.Loads.GeometricalLineLoad
                                     {
                                         ForceA = new Vector { X = fxa, Y = fya, Z = fza },
                                         ForceB = new Vector { X = fxb, Y = fyb, Z = fzb },

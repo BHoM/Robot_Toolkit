@@ -292,7 +292,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        public static void RobotLoad(this ContourLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
+        public static void RobotLoad(this oM.Structure.Loads.ContourLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
             if (load.Force.Length() == 0)
             {
@@ -329,7 +329,7 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        public static void RobotLoad(this GeometricalLineLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
+        public static void RobotLoad(this oM.Structure.Loads.GeometricalLineLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
             if (load.ForceA.Length() == 0 && load.ForceB.Length() == 0 && load.MomentA.Length() == 0 && load.MomentB.Length() == 0)
             {

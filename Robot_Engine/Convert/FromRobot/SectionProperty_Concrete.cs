@@ -159,7 +159,6 @@ namespace BH.Engine.Robot
             double HF2 = 0;
             double b1 = 0;
             double b2 = 0;
-            double b3 = 0;
             double h1 = 0;
             double h2 = 0;
             double l1 = 0;

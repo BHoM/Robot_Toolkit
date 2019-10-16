@@ -35,9 +35,9 @@ namespace BH.Engine.Adapters.Robot
         /****           Public Constructors             ****/
         /***************************************************/
 
-        public static GeometricalLineLoad GeometricalLineLoad(Line location, Loadcase loadcase, Vector forceAtStart, Vector forceAtEnd, Vector momentAtStart, Vector momentAtEnd, string name = "")
+        public static oM.Structure.Loads.GeometricalLineLoad GeometricalLineLoad(Line location, Loadcase loadcase, Vector forceAtStart, Vector forceAtEnd, Vector momentAtStart, Vector momentAtEnd, string name = "")
         {
-            return new GeometricalLineLoad
+            return new oM.Structure.Loads.GeometricalLineLoad
             {
                 Location = location,
                 Loadcase = loadcase,
@@ -51,9 +51,9 @@ namespace BH.Engine.Adapters.Robot
 
         /***************************************************/
 
-        public static GeometricalLineLoad GeometricalLineLoad(Line location, Loadcase loadcase, Vector force, string name = "")
+        public static oM.Structure.Loads.GeometricalLineLoad GeometricalLineLoad(Line location, Loadcase loadcase, Vector force, string name = "")
         {
-            return new GeometricalLineLoad
+            return new oM.Structure.Loads.GeometricalLineLoad
             {
                 Location = location,
                 Loadcase = loadcase,

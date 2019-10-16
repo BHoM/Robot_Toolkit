@@ -35,9 +35,9 @@ namespace BH.Engine.Adapters.Robot
         /****           Public Constructors             ****/
         /***************************************************/
 
-        public static ContourLoad ContourLoad(Polyline contour, Vector loadVector, Loadcase loadcase, LoadAxis axis = LoadAxis.Global, bool projected = false, string name = "")
+        public static oM.Structure.Loads.ContourLoad ContourLoad(Polyline contour, Vector loadVector, Loadcase loadcase, LoadAxis axis = LoadAxis.Global, bool projected = false, string name = "")
         {
-            return new ContourLoad
+            return new oM.Structure.Loads.ContourLoad
             {
                 Contour = contour,
                 Force = loadVector,

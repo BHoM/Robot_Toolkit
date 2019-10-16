@@ -36,12 +36,13 @@ namespace BH.Adapter.Robot
         {
             IRobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotCollection rMaterials = labelServer.GetMany(IRobotLabelType.I_LT_MATERIAL);
-            IRobotMaterialData mData;
             IMaterialFragment bhomMat = null;
             List<IMaterialFragment> bhomMaterials = new List<IMaterialFragment>();
-            int counter = 0;
-            bool refresh = false;
 
+            //IRobotMaterialData mData;
+            //int counter = 0;
+            //bool refresh = false;
+            //
             //foreach (string matName in m_dbMaterialNames)
             //{
             //    IRobotLabel label = labelServer.Create(IRobotLabelType.I_LT_MATERIAL, "");
@@ -111,7 +112,6 @@ namespace BH.Adapter.Robot
                 default:
                     Engine.Reflection.Compute.RecordWarning("Material of Robot type " + mData.Type + " not yet suported. Empty material will be provided");
                     return null;
-                    break;
             }
            
             bhomMat.CustomData.Add(AdapterId, NextId(bhomMat.GetType(), false));

@@ -103,7 +103,7 @@ namespace BH.Adapter.Robot
                         List<oM.Structure.Loads.ContourLoad> contourLoads = objects.Select(x => (x as oM.Adapters.Robot.ContourLoad).UpgradeVersion()).ToList();
                         success = CreateCollection(contourLoads as IEnumerable<oM.Structure.Loads.ContourLoad>);
                     }
-                    else if (objects.First() is oM.Adapters.Robot.ContourLoad)
+                    else if (objects.First() is oM.Adapters.Robot.GeometricalLineLoad)
                     {
                         List<oM.Structure.Loads.GeometricalLineLoad> geoLineLoads = objects.Select(x => (x as oM.Adapters.Robot.GeometricalLineLoad).UpgradeVersion()).ToList();
                         success = CreateCollection(geoLineLoads as IEnumerable<oM.Structure.Loads.GeometricalLineLoad>);

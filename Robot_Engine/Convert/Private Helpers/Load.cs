@@ -146,6 +146,12 @@ namespace BH.Engine.Robot
                 loadRecordForce.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PX, load.Force.X);
                 loadRecordForce.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PY, load.Force.Y);
                 loadRecordForce.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PZ, load.Force.Z);
+
+                if (load.Axis == LoadAxis.Local)
+                    loadRecordForce.SetValue((short)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM, 1);
+
+                if (load.Projected)
+                    loadRecordForce.SetValue((short)IRobotUniformRecordValues.I_URV_PROJECTED, 1);
             }
 
             if (load.Moment.Length() != 0)
@@ -155,7 +161,13 @@ namespace BH.Engine.Robot
                 loadRecordMoment.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MX, load.Moment.X);
                 loadRecordMoment.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MY, load.Moment.Y);
                 loadRecordMoment.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MZ, load.Moment.Z);
-            }
+
+                if (load.Axis == LoadAxis.Local)
+                    loadRecordMoment.SetValue((short)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM, 1);
+
+                if (load.Projected)
+                    loadRecordMoment.SetValue((short)IRobotUniformRecordValues.I_URV_PROJECTED, 1);
+            }                      
 
         }
 

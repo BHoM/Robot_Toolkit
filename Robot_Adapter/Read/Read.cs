@@ -136,13 +136,6 @@ namespace BH.Adapter.Robot
 
         }
 
-        protected override IEnumerable<IResultCollection> ReadResults(FilterRequest query)
-        {
-            if (query.Type == typeof(MeshResults))
-                return ReadMeshResults(query);
-
-            return null;
-        }
 
         /***************************************************/
 

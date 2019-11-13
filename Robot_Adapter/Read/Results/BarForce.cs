@@ -37,6 +37,7 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
 
+
         private List<BarForce> ReadBarForce(IList ids = null, IList cases = null, int divisions = 5)
         {
             List<BarForce> barforces = new List<BarForce>();

@@ -39,7 +39,7 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
 
-        private List<MeshResults> ReadMeshResults(FilterRequest query = null)
+        private List<MeshResult> ReadMeshResults(FilterRequest query = null)
         {
             IList ids = (IList)query.Equalities["ObjectIds"];
             IList cases = (IList)query.Equalities["Cases"];
@@ -105,12 +105,12 @@ namespace BH.Adapter.Robot
                 queryParams.ResultIds.Set(j + 1, id);
             }
 
-            List<MeshResults> meshResultsCollection = new List<MeshResults>();
+            List<MeshResult> meshResultsCollection = new List<MeshResult>();
             foreach (BH.oM.Structure.Elements.Panel panel in panels)
             {
 
                 oM.Geometry.Basis orientation = (oM.Geometry.Basis)((userCoordinateSystem != null) ? userCoordinateSystem : panel.CustomData["CoordinateSystem"] as dynamic);
-                List<MeshResult> meshResults = new List<MeshResult>();
+                List<MeshElementResult> meshResults = new List<MeshElementResult>();
 
                 RobotSelection caseSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_CASE);
                 caseSelection.FromText((cases == null || cases.Count == 0) ? "all" : Convert.ToRobotSelectionString(GetCaseNumbers(cases)));
@@ -267,9 +267,15 @@ namespace BH.Adapter.Robot
                         isOk = rowSet.MoveNext();
                     }
                 }
-                ReadOnlyCollection<MeshResult> meshResultReadOnlyCollection = new ReadOnlyCollection<MeshResult>(meshResults);
-                meshResultsCollection.Add(new MeshResults(System.Convert.ToString(panel.CustomData[AdapterId]), layer, smoothing, meshResultReadOnlyCollection));
+
+                foreach (var resultByCase in meshResults.GroupBy(x => x.ResultCase))
+                {
+                    string loadCase = resultByCase.Key.ToString();
+                    MeshResult meshResult = new MeshResult(panel.CustomData[AdapterId].ToString(), loadCase, 0, layer, layerPosition, smoothing, new ReadOnlyCollection<MeshElementResult>(resultByCase.ToList()));
+                    meshResultsCollection.Add(meshResult);
+                }
             }
+
             return meshResultsCollection;
         }
 

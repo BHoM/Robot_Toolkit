@@ -29,7 +29,6 @@ using System;
 using System.Collections.Generic;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure;
-using BH.Engine.Reflection;
 using BH.oM.Reflection.Debugging;
 using BH.oM.Adapters.Robot;
 

@@ -30,6 +30,7 @@ using BH.oM.Structure.Loads;
 using BH.oM.Structure.MaterialFragments;
 using BH.oM.Adapters.Robot;
 using BH.oM.Reflection.Attributes;
+using BH.Engine.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {
@@ -39,7 +40,7 @@ namespace BH.Adapter.Robot
         /****           Adapter Methods                 ****/
         /***************************************************/
 
-        protected override bool Create<T>(IEnumerable<T> objects, bool replaceAll = false)
+        protected override bool Create<T>(IEnumerable<T> objects)
         {
             bool success = true;
             if (objects.Count() > 0)
@@ -97,7 +98,20 @@ namespace BH.Adapter.Robot
 
                 if (typeof(ILoad).IsAssignableFrom(objects.First().GetType()))
                 {
-                    success = CreateCollection(objects as IEnumerable<ILoad>);
+                    if (objects.First() is oM.Adapters.Robot.ContourLoad)
+                    {
+                        List<oM.Structure.Loads.ContourLoad> contourLoads = objects.Select(x => (x as oM.Adapters.Robot.ContourLoad).UpgradeVersion()).ToList();
+                        success = CreateCollection(contourLoads as IEnumerable<oM.Structure.Loads.ContourLoad>);
+                    }
+                    else if (objects.First() is oM.Adapters.Robot.GeometricalLineLoad)
+                    {
+                        List<oM.Structure.Loads.GeometricalLineLoad> geoLineLoads = objects.Select(x => (x as oM.Adapters.Robot.GeometricalLineLoad).UpgradeVersion()).ToList();
+                        success = CreateCollection(geoLineLoads as IEnumerable<oM.Structure.Loads.GeometricalLineLoad>);
+                    }
+                    else
+                    {
+                        success = CreateCollection(objects as IEnumerable<ILoad>);
+                    }
                 }
 
                 if (objects.First() is Panel)

@@ -32,7 +32,7 @@ namespace BH.Adapter.Robot
         /****             Public Methods                ****/
         /***************************************************/
 
-        public override int UpdateProperty(Type type, IEnumerable<object> ids, string property, object newValue)
+        protected override int UpdateProperty(Type type, IEnumerable<object> ids, string property, object newValue)
         {
 
             if (property == "Tags")

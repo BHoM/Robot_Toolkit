@@ -43,8 +43,7 @@ namespace BH.Adapter.Robot
                     for (int i = 0; i < lComb.LoadCases.Count; i++)
                     {
                         System.Tuple<double, ICase> loadcase = lComb.LoadCases[i];
-                        if(loadcase.Item1 != 0)
-                            rCaseCombination.CaseFactors.New(lComb.LoadCases[i].Item2.Number, lComb.LoadCases[i].Item1);
+                        rCaseCombination.CaseFactors.New(lComb.LoadCases[i].Item2.Number, lComb.LoadCases[i].Item1);
                     }
                     updateview();
                 }

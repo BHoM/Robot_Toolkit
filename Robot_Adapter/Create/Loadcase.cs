@@ -45,7 +45,8 @@ namespace BH.Adapter.Robot
                 IRobotCaseNature rNature = BH.Engine.Robot.Convert.RobotLoadNature(caseList[i], out subNature);
                 m_RobotApplication.Project.Structure.Cases.CreateSimple(caseList[i].Number, caseList[i].Name, rNature, IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
                 IRobotSimpleCase sCase = caseServer.Get(caseList[i].Number) as IRobotSimpleCase;
-                sCase.label = (caseList[i].CustomData.ContainsKey("Label"))? caseList[i].CustomData["Label"].ToString() : "";
+                object labelName;
+                sCase.label = (caseList[i].CustomData.TryGetValue("Label", out labelName) && labelName is string)? labelName as string: "";
                 if (subNature >= 0)               
                     sCase.SetNatureExt(subNature);
             }

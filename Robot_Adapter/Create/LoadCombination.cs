@@ -34,6 +34,7 @@ namespace BH.Adapter.Robot
 
         private bool CreateCollection(IEnumerable<LoadCombination> lComabinations)
         {
+            m_RobotApplication.Project.Structure.Cases.BeginMultiOperation();
             foreach (LoadCombination lComb in lComabinations)
             {
                 if (m_RobotApplication.Project.Structure.Cases.Exist(lComb.Number)!=-1)
@@ -41,7 +42,9 @@ namespace BH.Adapter.Robot
                     RobotCaseCombination rCaseCombination = m_RobotApplication.Project.Structure.Cases.CreateCombination(lComb.Number, lComb.Name, IRobotCombinationType.I_CBT_ULS, IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_COMB);
                     for (int i = 0; i < lComb.LoadCases.Count; i++)
                     {
-                        rCaseCombination.CaseFactors.New(lComb.LoadCases[i].Item2.Number, lComb.LoadCases[i].Item1);
+                        System.Tuple<double, ICase> loadcase = lComb.LoadCases[i];
+                        if(loadcase.Item1 != 0)
+                            rCaseCombination.CaseFactors.New(lComb.LoadCases[i].Item2.Number, lComb.LoadCases[i].Item1);
                     }
                     updateview();
                 }
@@ -51,6 +54,7 @@ namespace BH.Adapter.Robot
                         "to clear combinations before re-pushing");
                 }
             }
+            m_RobotApplication.Project.Structure.Cases.EndMultiOperation();
             return true;
         }
 

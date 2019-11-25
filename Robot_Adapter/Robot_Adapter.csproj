@@ -148,6 +148,7 @@
     <Compile Include="Read\Results\NodeDisplacement.cs" />
     <Compile Include="Read\Results\NodeReactions.cs" />
     <Compile Include="Read\Read.cs" />
+    <Compile Include="Read\Results\NodeResults.cs" />
     <Compile Include="Read\Results\ResultUtils.cs" />
     <Compile Include="Update\FramingElementDesignProperties.cs" />
     <Compile Include="Update\Bars.cs" />

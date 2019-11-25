@@ -43,7 +43,7 @@ namespace BH.Adapter.Robot
             List<BarResult> barResults = new List<BarResult>();
             RobotResultQueryParams queryParams = (RobotResultQueryParams)m_RobotApplication.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
 
-            List<int> results = GetBarExtractionParameters(request);
+            List<int> results = BarResultParameters(request);
 
             if (results.Count == 0)
             {
@@ -58,17 +58,12 @@ namespace BH.Adapter.Robot
             }
 
             RobotSelection barSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
-            RobotSelection caseSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
+            RobotSelection caseSelection = GetCaseSelection(request);
 
             if (request.ObjectIds == null || request.ObjectIds.Count == 0)
                 barSelection.FromText("all");
             else
                 barSelection.FromText(BH.Engine.Robot.Convert.ToRobotSelectionString(CheckAndGetIds(request.ObjectIds)));
-
-            if (request.Cases == null || request.Cases.Count == 0)
-                caseSelection.FromText("all");
-            else
-                caseSelection.FromText(BH.Engine.Robot.Convert.ToRobotSelectionString(GetCaseNumbers(request.Cases)));
 
             queryParams.Selection.Set(IRobotObjectType.I_OT_CASE, caseSelection);
             queryParams.Selection.Set(IRobotObjectType.I_OT_BAR, barSelection);
@@ -225,7 +220,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private List<int> GetBarExtractionParameters(BarResultRequest request)
+        private List<int> BarResultParameters(BarResultRequest request)
         {
             List<int> results = new List<int>();
             switch (request.ResultType)

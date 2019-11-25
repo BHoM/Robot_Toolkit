@@ -25,6 +25,7 @@ using System.Linq;
 using BH.oM.Base;
 using BH.oM.Structure.Results;
 using BH.oM.Structure.Requests;
+using BH.oM.Data.Requests;
 using RobotOM;
 using BH.oM.Common;
 using System;
@@ -35,12 +36,26 @@ namespace BH.Adapter.Robot
     public partial class RobotAdapter
     {
         /***************************************************/
-        /**** Public Methods                            ****/
+        /**** Private Methods                            ****/
         /***************************************************/
 
         private double CheckGetValue(RobotResultRow row, int valuePosition)
         {
             return row.IsAvailable(valuePosition) ? row.GetValue(valuePosition) : 0;
+        }
+
+        /***************************************************/
+
+        private RobotSelection GetCaseSelection(IResultRequest request)
+        {
+            RobotSelection caseSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
+
+            if (request.Cases == null || request.Cases.Count == 0)
+                caseSelection.FromText("all");
+            else
+                caseSelection.FromText(BH.Engine.Robot.Convert.ToRobotSelectionString(GetCaseNumbers(request.Cases)));
+
+            return caseSelection;
         }
 
         /***************************************************/

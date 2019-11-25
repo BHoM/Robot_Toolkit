@@ -143,10 +143,12 @@
     <Compile Include="Read\Elements\DesignGroups.cs" />
     <Compile Include="Read\Properties\FramingElementDesignProperties.cs" />
     <Compile Include="Read\Results\BarForce.cs" />
+    <Compile Include="Read\Results\BarResults.cs" />
     <Compile Include="Read\Results\MeshResults.cs" />
     <Compile Include="Read\Results\NodeDisplacement.cs" />
     <Compile Include="Read\Results\NodeReactions.cs" />
     <Compile Include="Read\Read.cs" />
+    <Compile Include="Read\Results\ResultUtils.cs" />
     <Compile Include="Update\FramingElementDesignProperties.cs" />
     <Compile Include="Update\Bars.cs" />
     <Compile Include="Update\UpdateObjects.cs" />

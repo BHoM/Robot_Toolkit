@@ -42,7 +42,7 @@ namespace BH.Adapter.Robot
         {
             if (request.DivisionType == DivisionType.ExtremeValues)
             {
-                Engine.Reflection.Compute.RecordWarning("Robot API extremevalues gives unreliable results and runs very slow. Instead results at even divisions along the bar will be extracted. To get extremevalues out of Robot try increacing the division points and use AbsoluteMaxForce envelopes from the BHoM_Engine");
+                Engine.Reflection.Compute.RecordWarning("Robot API extreme values gives unreliable results and runs very slow. Instead results at even divisions along the bar will be extracted. To get extreme values out of Robot try increasing the division points and use AbsoluteMaxForce envelopes from the BHoM_Engine");
             }
 
             List<BarResult> barResults = new List<BarResult>();

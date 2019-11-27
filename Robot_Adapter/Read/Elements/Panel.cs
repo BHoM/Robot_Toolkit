@@ -161,5 +161,74 @@ namespace BH.Adapter.Robot
 
             return BHoMPanels;
         }
+
+        /***************************************************/
+
+        //Method is stripped dpwn to only return data needed for extracting mesh results
+        private List<Panel> ReadPanelsLight(IList ids = null)
+        {
+            IRobotStructure robotStructureServer = m_RobotApplication.Project.Structure;
+            IRobotObjObjectServer robotPanelServer = m_RobotApplication.Project.Structure.Objects;
+            List<Panel> BHoMPanels = new List<Panel>();
+            Panel BHoMPanel = null;
+
+            List<int> panelIds = CheckAndGetIds(ids);
+            RobotSelection rPanSelect = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_PANEL);
+            if (panelIds == null)
+            {
+                rPanSelect.FromText("all");
+            }
+            else if (panelIds.Count == 0)
+            {
+                rPanSelect.FromText("all");
+            }
+            else
+            {
+                rPanSelect.FromText(BH.Engine.Robot.Convert.ToRobotSelectionString(panelIds));
+            }
+
+            IRobotCollection rPanels = robotPanelServer.GetMany(rPanSelect);
+
+            for (int i = 1; i <= rPanels.Count; i++)
+            {
+                RobotObjObject rpanel = (RobotObjObject)rPanels.Get(i);
+                BHoMPanel = null;
+
+                if (rpanel.Main.Attribs.Meshed == 1)
+                {
+                    ICurve outline = BH.Engine.Robot.Convert.ToBHoMGeometry(rpanel.Main.GetGeometry() as dynamic);
+
+                    BHoMPanel = new Panel();
+                    BHoMPanel.CustomData[AdapterId] = rpanel.Number;
+                    BHoMPanel.CustomData["RobotFiniteElementIds"] = rpanel.FiniteElems;
+                    BHoMPanel.CustomData["RobotNodeIds"] = rpanel.Nodes;
+
+                    //Get the coordinate system for the panel
+                    BH.oM.Geometry.Point coordPoint = BH.Engine.Geometry.Query.StartPoint(outline as dynamic);
+
+                    double x, y, z; rpanel.Main.Attribs.GetDirX(out x, out y, out z);
+                    BH.oM.Geometry.Vector coordXAxis = BH.Engine.Geometry.Create.Vector(x, y, z);
+                    BH.oM.Geometry.Vector coordZAxis = BH.Engine.Geometry.Compute.FitPlane(outline as dynamic).Normal;
+                    if (coordZAxis.Z == 0)
+                    {
+                        if ((coordZAxis.X > coordZAxis.Y && coordZAxis.X < 1) || (coordZAxis.Y > coordZAxis.X && coordZAxis.Y < 1))
+                            coordZAxis = BH.Engine.Geometry.Modify.Reverse(coordZAxis);
+                    }
+                    if (rpanel.Main.Attribs.DirZ == 0)
+                        coordZAxis = BH.Engine.Geometry.Modify.Reverse(coordZAxis);
+
+                    BH.oM.Geometry.CoordinateSystem.Cartesian tempCoordSys = BH.Engine.Geometry.Create.CartesianCoordinateSystem(coordPoint, coordXAxis, coordZAxis);
+                    BH.oM.Geometry.CoordinateSystem.Cartesian coordinateSystem = BH.Engine.Geometry.Create.CartesianCoordinateSystem(coordPoint, coordXAxis, tempCoordSys.Z);
+
+                    BHoMPanel.CustomData["CoordinateSystem"] = coordinateSystem;
+                    
+                }
+                BHoMPanels.Add(BHoMPanel);
+            }
+
+            return BHoMPanels;
+        }
+
+      /***************************************************/
     }
 }

@@ -40,9 +40,10 @@ namespace BH.Adapter.Robot
 
         public IEnumerable<IResult> ReadResults(BarResultRequest request)
         {
-
             if (request.DivisionType == DivisionType.ExtremeValues)
-                return ReadBarExtremeResults(request);
+            {
+                Engine.Reflection.Compute.RecordWarning("Robot API extremevalues gives unreliable results and runs very slow. Instead results at even divisions along the bar will be extracted. To get extremevalues out of Robot try increacing the division points and use AbsoluteMaxForce envelopes from the BHoM_Engine");
+            }
 
             List<BarResult> barResults = new List<BarResult>();
             RobotResultQueryParams queryParams = (RobotResultQueryParams)m_RobotApplication.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
@@ -116,135 +117,7 @@ namespace BH.Adapter.Robot
         /***************************************************/
         /**** Private Methods                           ****/
         /***************************************************/
-
-        public IEnumerable<IResult> ReadBarExtremeResults(BarResultRequest request)
-        {
-            List<BarResult> barResults = new List<BarResult>();
-            RobotExtremeParams extremeParams = (RobotExtremeParams)m_RobotApplication.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_EXTREME_PARAMS);
-            RobotResultQueryParams queryParams = (RobotResultQueryParams)m_RobotApplication.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
-
-            List<int> results = BarResultParameters(request);
-
-            if (results.Count == 0)
-            {
-                Engine.Reflection.Compute.RecordError("Unable to extract results of type " + request.ResultType + " from Robot");
-            }
-
-            queryParams.ResultIds.SetSize(results.Count);
-            for (int i = 0; i < results.Count; i++)
-            {
-                int id = (int)results[i];
-                queryParams.ResultIds.Set(i + 1, id);
-            }
-
-
-            List<int> barIds = new List<int>();
-            if (request.ObjectIds == null || request.ObjectIds.Count == 0)
-            {
-                m_RobotApplication.Project.Structure.Bars.BeginMultiOperation();
-                IRobotCollection robotBars = m_RobotApplication.Project.Structure.Bars.GetAll();
-                for (int i = 1; i <= robotBars.Count; i++)
-                {
-                    RobotBar robotBar = robotBars.Get(i);
-                    barIds.Add(robotBar.Number);
-                }
-                m_RobotApplication.Project.Structure.Bars.EndMultiOperation();
-            }
-            else
-                barIds = CheckAndGetIds(request.ObjectIds);
-
-
-            List<int> casesIds;
-            if (request.Cases == null || request.Cases.Count == 0)
-            {
-                RobotCaseCollection rLoadCases = m_RobotApplication.Project.Structure.Cases.GetAll();
-                casesIds = new List<int>();
-                for (int i = 0; i < rLoadCases.Count; i++)
-                {
-                    IRobotCase rLoadCase = rLoadCases.Get(i) as IRobotCase;
-                    casesIds.Add(rLoadCase.Number);
-                }
-            }
-            else
-            {
-                casesIds = GetCaseNumbers(request.Cases);
-            }
-
-
-            for (int i = 0; i < results.Count; i++)
-            {
-
-                extremeParams.ValueType = (IRobotExtremeValueType)results[i];
-
-
-                foreach (int caseId in casesIds)
-                {
-                    RobotSelection caseSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
-                    caseSelection.AddOne(caseId);
-
-                    foreach (int barId in barIds)
-                    {
-                        RobotSelection barSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
-
-
-                        barSelection.AddOne(barId);
-                        extremeParams.Selection.Set(IRobotObjectType.I_OT_CASE, caseSelection);
-                        extremeParams.Selection.Set(IRobotObjectType.I_OT_BAR, barSelection);
-                        RobotExtremeValue val = m_RobotApplication.Kernel.Structure.Results.Extremes.MaxValue(extremeParams);
-                        double robotPosition = val.Position;
-
-
-                        queryParams.Selection.Set(IRobotObjectType.I_OT_CASE, caseSelection);
-                        queryParams.Selection.Set(IRobotObjectType.I_OT_BAR, barSelection);
-                        queryParams.SetParam(IRobotResultParamType.I_RPT_BAR_RELATIVE_POINT, robotPosition);
-                        RobotResultRowSet rowSet = new RobotResultRowSet();
-
-                        IRobotResultQueryReturnType ret = IRobotResultQueryReturnType.I_RQRT_MORE_AVAILABLE;
-
-                        while (ret != IRobotResultQueryReturnType.I_RQRT_DONE)
-                        {
-                            ret = m_RobotApplication.Kernel.Structure.Results.Query(queryParams, rowSet);
-                            bool isOk = rowSet.MoveFirst();
-                            while (isOk)
-                            {
-                                RobotResultRow row = rowSet.CurrentRow;
-                                int idCase = (int)row.GetParam(IRobotResultParamType.I_RPT_LOAD_CASE);
-                                int idBar = (int)row.GetParam(IRobotResultParamType.I_RPT_BAR);
-                                double position = (int)row.GetParam(IRobotResultParamType.I_RPT_BAR_RELATIVE_POINT);
-                                int division = 1;// (int)row.GetParam(IRobotResultParamType.I_RPT_BAR_DIV_COUNT);
-                                //double position = (1 / (System.Convert.ToDouble(division) - 1)) * (System.Convert.ToDouble(idPoint) - 1);
-
-                                switch (request.ResultType)
-                                {
-                                    case BarResultType.BarForce:
-                                        barResults.Add(GetBarForce(row, idCase, idBar, division, position));
-                                        break;
-                                    case BarResultType.BarDeformation:
-                                        barResults.Add(GetBarDeformation(row, idCase, idBar, division, position));
-                                        break;
-                                    case BarResultType.BarStress:
-                                        barResults.Add(GetBarStress(row, idCase, idBar, division, position));
-                                        break;
-                                    case BarResultType.BarDisplacement:
-                                        barResults.Add(GetBarDisplacement(row, idCase, idBar, division, position));
-                                        break;
-                                }
-
-                                isOk = rowSet.MoveNext();
-
-                            }
-                        }
-
-                    }
-                }
-            }
-
-
-
-            return barResults;
-        }
-
-        /***************************************************/
+        
 
         private BarForce GetBarForce(RobotResultRow row, int idCase, int idBar, int divisions, double position)
         {

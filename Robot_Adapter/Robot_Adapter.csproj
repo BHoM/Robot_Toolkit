@@ -131,6 +131,7 @@
     <Compile Include="Read\Elements\RigidLink.cs" />
     <Compile Include="Read\Loads\Load.cs" />
     <Compile Include="Read\Elements\Node.cs" />
+    <Compile Include="Read\Loads\Loadcombination.cs" />
     <Compile Include="Read\Properties\Constraint.cs" />
     <Compile Include="Read\Elements\Opening.cs" />
     <Compile Include="Read\Elements\Panel.cs" />

@@ -62,7 +62,7 @@ namespace BH.Adapter.Robot
             List<BH.oM.Structure.Elements.Panel> panels = new List<oM.Structure.Elements.Panel>();
             if (request.ObjectIds == null || request.ObjectIds.Count == 0)
             {
-                panels = ReadPanels();
+                panels = ReadPanelsLight();
             }
             else
             {
@@ -80,7 +80,7 @@ namespace BH.Adapter.Robot
                 }
                 if (panelIds.Count > 0)
                 {
-                    panels.AddRange(ReadPanels(panelIds as dynamic));
+                    panels.AddRange(ReadPanelsLight(panelIds as dynamic));
                 }
             }
 

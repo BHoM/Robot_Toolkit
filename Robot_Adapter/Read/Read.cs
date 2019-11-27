@@ -123,21 +123,13 @@ namespace BH.Adapter.Robot
 
         protected override IEnumerable<IResult> ReadResults(Type type, IList ids = null, IList cases = null, int divisions = 5)
         {
-            if (type == typeof(BarForce))
-                return ReadBarForce(ids, cases, divisions);
+            IResultRequest request = Engine.Structure.Create.IResultRequest(type, ids?.Cast<object>(), cases?.Cast<object>(), divisions);
 
-            if (type == typeof(NodeDisplacement))
-                return ReadNodeDisplacement(ids, cases, divisions);
-
-            if (type == typeof(NodeReaction))
-                return ReadNodeReactions(ids, cases, divisions);
-
-            return base.ReadResults(type, ids, cases, divisions);
-
+            if (request != null)
+                return this.ReadResults(request as dynamic);
+            else
+                return base.ReadResults(type, ids, cases, divisions);
         }
-
-
-        /***************************************************/
 
         /***************************************************/
         /****           Private Methods                 ****/

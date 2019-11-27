@@ -105,9 +105,7 @@ namespace BH.Adapter.Robot
             {
                 if (filter.Type == typeof(BH.oM.Structure.Results.MeshResult))
                 {
-                    List<BH.oM.Structure.Results.MeshResult> results = ReadMeshResults(filter);
-                    results.Sort();
-                    return results;
+                    return ReadMeshResults(filter);
                 }
             }
 

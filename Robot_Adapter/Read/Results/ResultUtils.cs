@@ -36,7 +36,13 @@ namespace BH.Adapter.Robot
     public partial class RobotAdapter
     {
         /***************************************************/
-        /**** Private Methods                            ****/
+        /**** Protected Override Methods                ****/
+        /***************************************************/
+
+            
+
+        /***************************************************/
+        /**** Private Methods                           ****/
         /***************************************************/
 
         private double CheckGetValue(RobotResultRow row, int valuePosition)

@@ -166,12 +166,26 @@ namespace BH.Adapter.Robot
                 cas_sel.FromText(m_RobotApplication.Project.Structure.Cases.Get(1).Number.ToString());
             }
 
-            result_params.ResultIds.SetSize(5);
+            if (ids == null || ids.Count == 0)
+                bar_sel.FromText("all");
+            else
+                bar_sel.FromText(BH.Engine.Robot.Convert.ToRobotSelectionString(CheckAndGetIds(ids)));
+
+
+
+            int elemGamma_id = 20;
+            int membGamma_id = 274;
+
+            result_params.ResultIds.SetSize(7);
             result_params.ResultIds.Set(1, nod1_id);
             result_params.ResultIds.Set(2, nod2_id);
-            result_params.ResultIds.Set(3, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FX);
-            result_params.ResultIds.Set(4, 269);
-            result_params.ResultIds.Set(5, 270);
+            result_params.ResultIds.Set(3, 269);
+            result_params.ResultIds.Set(4, 270);
+            result_params.ResultIds.Set(5, elemGamma_id); //Gamma angle
+            result_params.ResultIds.Set(6, membGamma_id); //Gamma angle
+            result_params.ResultIds.Set(7, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FX);
+
+
 
             result_params.SetParam(IRobotResultParamType.I_RPT_BAR_RELATIVE_POINT, 0);
             result_params.Selection.Set(IRobotObjectType.I_OT_BAR, bar_sel);
@@ -196,8 +210,10 @@ namespace BH.Adapter.Robot
                     Node endNode = null; bhomNodes.TryGetValue(nod2.ToString(), out endNode);
                     Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode, Name = bar_num.ToString() };
 
+                    double gamma = CheckGetValue(result_row, elemGamma_id);
+
                     bhomBar.SectionProperty = null;
-                    //bhomBar.OrientationAngle = robotBar.Gamma * 180 / Math.PI;
+                    bhomBar.OrientationAngle = gamma;
                     bhomBar.Name = bar_num.ToString();
 
                     bhomBar.CustomData[AdapterId] = bar_num.ToString();

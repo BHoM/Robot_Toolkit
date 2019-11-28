@@ -105,7 +105,6 @@
     <Compile Include="Convert\Private Helpers\Material.cs" />
     <Compile Include="Convert\Private Helpers\Panel.cs" />
     <Compile Include="Convert\ToRobot\MemberType.cs" />
-    <Compile Include="Convert\ToRobot\MeshResultParameters.cs" />
     <Compile Include="Convert\ToRobot\Release.cs" />
     <Compile Include="Convert\Private Helpers\SectionProperty.cs" />
     <Compile Include="Convert\FromRobot\SectionProperty_Steel.cs" />

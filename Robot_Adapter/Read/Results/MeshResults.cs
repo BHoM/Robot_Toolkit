@@ -31,6 +31,8 @@ using BH.oM.Data.Requests;
 using System.Collections.ObjectModel;
 using BH.oM.Common;
 using BH.oM.Structure.Requests;
+using BH.oM.Geometry;
+using BH.Engine.Geometry;
 using BH.oM.Base;
 
 namespace BH.Adapter.Robot
@@ -46,7 +48,7 @@ namespace BH.Adapter.Robot
             MeshResultLayer layer = request.Layer;
             MeshResultSmoothingType smoothing = request.Smoothing;
             double layerPosition = request.LayerPosition;
-            IRobotFeLayerType robotMeshLayer = Convert.FromBHoMEnum(request.Layer);
+            IRobotFeLayerType robotMeshLayer = Engine.Robot.Convert.FromBHoMEnum(request.Layer);
             if (robotMeshLayer == IRobotFeLayerType.I_FLT_LOWER)
                 layerPosition = 0;
             if (robotMeshLayer == IRobotFeLayerType.I_FLT_MIDDLE)
@@ -54,7 +56,7 @@ namespace BH.Adapter.Robot
             if (robotMeshLayer == IRobotFeLayerType.I_FLT_UPPER)
                 layerPosition = 1;
 
-            IRobotFeResultSmoothing robotFESmoothing = Convert.FromBHoMEnum(request.Smoothing);
+            IRobotFeResultSmoothing robotFESmoothing = Engine.Robot.Convert.FromBHoMEnum(request.Smoothing);
 
             IRobotStructure robotStructureServer = m_RobotApplication.Project.Structure;
 
@@ -105,13 +107,29 @@ namespace BH.Adapter.Robot
 
             RobotSelection caseSelection = GetCaseSelection(request);
 
+            Basis globalXY = Basis.XY;
+
+            if (request.ResultType == MeshResultType.Displacements)
+            {
+                Basis orientation = request.Orientation;
+
+                if (orientation != null)
+                {
+                    bool same = orientation.X.Angle(globalXY.X) < Tolerance.Angle;
+                    same &= orientation.Y.Angle(globalXY.Y) < Tolerance.Angle;
+                    same &= orientation.Z.Angle(globalXY.Z) < Tolerance.Angle;
+
+                    if (!same)
+                        Engine.Reflection.Compute.RecordWarning("Mesh Displacements are always extracted in Global coordinates");
+                }
+            }
+
             List<MeshResult> meshResultsCollection = new List<MeshResult>();
             foreach (BH.oM.Structure.Elements.Panel panel in panels)
             {
 
-                oM.Geometry.Basis orientation = request.Orientation ?? (oM.Geometry.Basis)(panel.CustomData["CoordinateSystem"] as dynamic);
+                Basis orientation = request.Orientation ?? (Basis)(panel.CustomData["CoordinateSystem"] as dynamic);
                 List<MeshElementResult> meshResults = new List<MeshElementResult>();
-
 
                 RobotSelection panelSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_PANEL);
                 panelSelection.FromText(panel.CustomData[BH.Engine.Robot.Convert.AdapterID].ToString());
@@ -192,7 +210,7 @@ namespace BH.Adapter.Robot
                                 meshResults.Add(GetMeshVonMises(row, idPanel, idNode, idFiniteElement, idCase, layer, layerPosition, smoothing, orientation));
                                 break;
                             case MeshResultType.Displacements:
-                                meshResults.Add(GetMeshDisplacement(row, idPanel, idNode, idFiniteElement, idCase, layer, layerPosition, smoothing, orientation));
+                                meshResults.Add(GetMeshDisplacement(row, idPanel, idNode, idFiniteElement, idCase, layer, layerPosition, smoothing, (Basis)globalXY));
                                 break;
 
                         }
@@ -285,6 +303,14 @@ namespace BH.Adapter.Robot
 
         private MeshDisplacement GetMeshDisplacement(RobotResultRow row, int idPanel, int idNode, int idFiniteElement, int idCase, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
         {
+
+            Vector u = new Vector
+            {
+                X = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UX),
+                Y = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UY),
+                Z = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UZ),
+            };
+
             return new MeshDisplacement(idPanel,
                                         idNode,
                                         idFiniteElement,
@@ -294,9 +320,9 @@ namespace BH.Adapter.Robot
                                         layerPosition,
                                         smoothing,
                                         orientation,
-                                        CheckGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_UXX),
-                                        CheckGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_UYY),
-                                        CheckGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_WNORM),
+                                        u.X,
+                                        u.Y,
+                                        u.Z,
                                         0,
                                         0,
                                         0);
@@ -340,12 +366,15 @@ namespace BH.Adapter.Robot
                     break;
 
                 case MeshResultType.Displacements:
-                    results.Add((int)IRobotFeResultType.I_FRT_DETAILED_UXX);
-                    results.Add((int)IRobotFeResultType.I_FRT_DETAILED_UYY);
-                    results.Add((int)IRobotFeResultType.I_FRT_DETAILED_WNORM);
-                    results.Add((int)IRobotFeResultType.I_FRT_DETAILED_RXX);
-                    results.Add((int)IRobotFeResultType.I_FRT_DETAILED_RYY);
-                    results.Add((int)IRobotFeResultType.I_FRT_DETAILED_RNORM);
+                    results.Add((int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UX);
+                    results.Add((int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UY);
+                    results.Add((int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UZ);
+                    //results.Add((int)IRobotFeResultType.I_FRT_DETAILED_UXX);
+                    //results.Add((int)IRobotFeResultType.I_FRT_DETAILED_UYY);
+                    //results.Add((int)IRobotFeResultType.I_FRT_DETAILED_WNORM);
+                    //results.Add((int)IRobotFeResultType.I_FRT_DETAILED_RXX);
+                    //results.Add((int)IRobotFeResultType.I_FRT_DETAILED_RYY);
+                    //results.Add((int)IRobotFeResultType.I_FRT_DETAILED_RNORM);
 
                     break;
             }

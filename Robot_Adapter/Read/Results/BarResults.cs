@@ -25,8 +25,13 @@ using System.Linq;
 using BH.oM.Base;
 using BH.oM.Structure.Results;
 using BH.oM.Structure.Requests;
+using BH.oM.Structure.Elements;
 using RobotOM;
 using BH.oM.Common;
+using BH.oM.Geometry;
+using BH.oM.Geometry.CoordinateSystem;
+using BH.Engine.Geometry;
+using BH.Engine.Structure;
 using System;
 using System.Collections;
 
@@ -63,6 +68,7 @@ namespace BH.Adapter.Robot
                 queryParams.ResultIds.Set(i + 1, id);
             }
 
+
             RobotSelection barSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
             RobotSelection caseSelection = GetCaseSelection(request);
 
@@ -74,9 +80,24 @@ namespace BH.Adapter.Robot
             queryParams.Selection.Set(IRobotObjectType.I_OT_CASE, caseSelection);
             queryParams.Selection.Set(IRobotObjectType.I_OT_BAR, barSelection);
             queryParams.SetParam(IRobotResultParamType.I_RPT_BAR_DIV_COUNT, request.Divisions);
+
             RobotResultRowSet rowSet = new RobotResultRowSet();
 
             IRobotResultQueryReturnType ret = IRobotResultQueryReturnType.I_RQRT_MORE_AVAILABLE;
+
+
+            List<Bar> bars = new List<Bar>();
+
+            Cartesian globalXY = new Cartesian();
+
+            if (request.ResultType == BarResultType.BarDisplacement)
+            {
+                bars = ReadBarsQuery(request.ObjectIds?.Select(x => x.ToString()).ToList());
+                globalXY = new Cartesian(Point.Origin, Vector.XAxis, Vector.YAxis, Vector.ZAxis);
+            }
+
+
+            Dictionary<int, TransformMatrix> transformations = new Dictionary<int, TransformMatrix>();
 
             while (ret != IRobotResultQueryReturnType.I_RQRT_DONE)
             {
@@ -103,7 +124,18 @@ namespace BH.Adapter.Robot
                             barResults.Add(GetBarStress(row, idCase, idBar, division, position));
                             break;
                         case BarResultType.BarDisplacement:
-                            barResults.Add(GetBarDisplacement(row, idCase, idBar, division, position));
+                            TransformMatrix localToGlobal;
+
+                            if (!transformations.TryGetValue(idBar, out localToGlobal))
+                            {
+                                Bar bar = bars.First(x => x.CustomData[AdapterId].ToString() == idBar.ToString());
+                                Cartesian local = bar.CoordinateSystem();
+                                local.Origin = Point.Origin;
+                                localToGlobal = Engine.Geometry.Create.OrientationMatrix(globalXY, local);
+                                transformations[idBar] = localToGlobal;
+                            }
+                             
+                            barResults.Add(GetBarDisplacement(row, idCase, idBar, division, position, localToGlobal));
                             break;
                     }
 
@@ -147,7 +179,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private BarDisplacement GetBarDisplacement(RobotResultRow row, int idCase, int idBar, int divisions, double position)
+        private BarDisplacement GetBarDisplacement(RobotResultRow row, int idCase, int idBar, int divisions, double position, TransformMatrix localToGlobal)
         {
             double ux = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_BAR_UX);
             double uy = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_BAR_UY);
@@ -157,18 +189,24 @@ namespace BH.Adapter.Robot
             double ry = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_BAR_RY);
             double rz = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_BAR_RZ);
 
+            Point u = new Point { X = ux, Y = uy, Z = uz };
+            Point r = new Point { X = rx, Y = ry, Z = rz };
+
+            u = u.Transform(localToGlobal);
+            r = r.Transform(localToGlobal);
+
             return new BarDisplacement
             {
                 ResultCase = idCase,
                 ObjectId = idBar,
                 Divisions = divisions,
                 Position = position,
-                UX = ux,
-                UY = uy,
-                UZ = uz,
-                RX = rx,
-                RY = ry,
-                RZ = rz
+                UX = u.X,
+                UY = u.Y,
+                UZ = u.Z,
+                RX = r.X,
+                RY = r.Y,
+                RZ = r.Z
             };
         }
 

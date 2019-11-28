@@ -194,7 +194,7 @@ namespace BH.Adapter.Robot
                         }
 
                         int idFiniteElement = 0;
-                        if (request.Smoothing == MeshResultSmoothingType.ByFiniteElementCentres)
+                        if (request.Smoothing == MeshResultSmoothingType.ByFiniteElementCentres || request.Smoothing == MeshResultSmoothingType.None)
                             if (queryParams.IsParamSet(IRobotResultParamType.I_RPT_ELEMENT))
                                 idFiniteElement = System.Convert.ToInt32(row.GetParam(IRobotResultParamType.I_RPT_ELEMENT));
 

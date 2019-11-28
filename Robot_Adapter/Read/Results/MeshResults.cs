@@ -202,7 +202,7 @@ namespace BH.Adapter.Robot
 
                 foreach (var resultByCase in meshResults.GroupBy(x => new { x.ResultCase, x.TimeStep }))
                 {
-                    string loadCase = resultByCase.Key.ToString();
+                    System.IComparable loadCase = resultByCase.Key.ResultCase;
                     double timeStep = resultByCase.Key.TimeStep;
                     MeshResult meshResult = new MeshResult(panel.CustomData[AdapterId].ToString(), loadCase, timeStep, layer, layerPosition, smoothing, new ReadOnlyCollection<MeshElementResult>(resultByCase.ToList()));
                     meshResultsCollection.Add(meshResult);

@@ -87,13 +87,11 @@ namespace BH.Adapter.Robot
 
 
             List<Bar> bars = new List<Bar>();
-
-            Cartesian globalXY = new Cartesian();
+            Cartesian globalXY = new Cartesian(Point.Origin, Vector.XAxis, Vector.YAxis, Vector.ZAxis);
 
             if (request.ResultType == BarResultType.BarDisplacement)
             {
                 bars = ReadBarsQuery(request.ObjectIds?.Select(x => x.ToString()).ToList());
-                globalXY = new Cartesian(Point.Origin, Vector.XAxis, Vector.YAxis, Vector.ZAxis);
             }
 
 

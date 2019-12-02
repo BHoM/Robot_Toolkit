@@ -94,6 +94,9 @@ namespace BH.Adapter.Robot
 
                     int[] robotNodeIds = new int[3];
 
+                    int faceId = row.GetParam(IRobotResultParamType.I_RPT_ELEMENT);
+                    meshFace.CustomData[AdapterId] = faceId;
+
                     robotNodeIds[0] = System.Convert.ToInt32(row.GetValue(564));
                     robotNodeIds[1] = System.Convert.ToInt32(row.GetValue(565));
                     robotNodeIds[2] = System.Convert.ToInt32(row.GetValue(566));

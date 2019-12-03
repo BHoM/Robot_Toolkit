@@ -222,7 +222,9 @@ namespace BH.Adapter.Robot
                 {
                     System.IComparable loadCase = resultByCase.Key.ResultCase;
                     double timeStep = resultByCase.Key.TimeStep;
-                    MeshResult meshResult = new MeshResult(panel.CustomData[AdapterId].ToString(), loadCase, timeStep, layer, layerPosition, smoothing, new ReadOnlyCollection<MeshElementResult>(resultByCase.ToList()));
+                    List<MeshElementResult> resultList = resultByCase.ToList();
+                    resultList.Sort();
+                    MeshResult meshResult = new MeshResult(panel.CustomData[AdapterId].ToString(), loadCase, timeStep, layer, layerPosition, smoothing, new ReadOnlyCollection<MeshElementResult>(resultList));
                     meshResultsCollection.Add(meshResult);
                 }
             }

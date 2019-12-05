@@ -47,6 +47,13 @@ namespace BH.Adapter.Robot
         {
             MeshResultLayer layer = request.Layer;
             MeshResultSmoothingType smoothing = request.Smoothing;
+
+            if (smoothing == MeshResultSmoothingType.None)
+            {
+                Engine.Reflection.Compute.RecordWarning("Result extraction with no smoothing is currently possible in the Robot adapter. To extract results please choose another smoothening type");
+                return new List<IResult>();
+            }
+
             double layerPosition = request.LayerPosition;
             IRobotFeLayerType robotMeshLayer = Engine.Robot.Convert.FromBHoMEnum(request.Layer);
             if (robotMeshLayer == IRobotFeLayerType.I_FLT_LOWER)

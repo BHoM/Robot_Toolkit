@@ -75,7 +75,8 @@ namespace BH.Adapter.Robot
                 //return new List<RigidLink>();
 
             if (type == typeof(LoadCombination))
-                return new List<LoadCombination>();
+                return ReadLoadCombinations();
+                //return new List<LoadCombination>();
 
             if (type == typeof(LinkConstraint))
                 return new List<LinkConstraint>();

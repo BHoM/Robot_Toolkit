@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using RobotOM;
 using BH.oM.Structure.Loads;
+using System.Diagnostics;
 
 namespace BH.Adapter.Robot
 {
@@ -32,18 +33,34 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
 
-        private List<LoadCombination> ReadLoadCombination(List<string> ids = null)
+        private List<LoadCombination> ReadLoadCombinations(List<string> ids = null)
         {
-            RobotCaseCollection rLoadCombinations = m_RobotApplication.Project.Structure.Cases.GetAll();
             List<LoadCombination> bhomLoadCombinations = new List<LoadCombination>();
+            IRobotCaseCollection rLoadCollection = m_RobotApplication.Project.Structure.Cases.GetAll();
 
-            for (int i = 1; i <= rLoadCombinations.Count; i++)
+            for (int i = 1; i <= rLoadCollection.Count; i++)
             {
-                IRobotCase rLoadCombination = rLoadCombinations.Get(i) as IRobotCase;
-                LoadCombination lCombination = BH.Engine.Structure.Create.LoadCombination(rLoadCombination.Name, rLoadCombination.Number, BH.Engine.Robot.Convert.BHoMLoadNature(rLoadCombination.Nature));
-                lCombination.CustomData[AdapterId] = rLoadCombination.Number;
-                bhomLoadCombinations.Add(lCombination);
+                IRobotCase rCase = rLoadCollection.Get(i) as IRobotCase;
+                if (rCase.Type == IRobotCaseType.I_CT_COMBINATION) // No support for code combinations for now as it needs building support for components
+                {
+                    IRobotCaseCombination rCaseCombination = rCase as IRobotCaseCombination;
+                    List<System.Tuple<double, ICase>> bCaseFactors = new List<System.Tuple<double, ICase>>();
+
+                    for (int j = 1; j <= rCaseCombination.CaseFactors.Count; j++)
+                    {
+                        IRobotCase rCaseIn = rLoadCollection.Get(j) as IRobotCase;
+                        Loadcase lCase = BH.Engine.Structure.Create.Loadcase(rCaseIn.Name, rCaseIn.Number, BH.Engine.Robot.Convert.BHoMLoadNature(rCaseIn.Nature));
+                        lCase.CustomData[AdapterId] = rCaseCombination.Number;
+                        bCaseFactors.Add(new System.Tuple<double, ICase>(rCaseCombination.CaseFactors.Get(j).Factor, lCase));
+                    }
+                    
+                    LoadCombination lCombination = BH.Engine.Structure.Create.LoadCombination(rCaseCombination.Name, rCaseCombination.Number, bCaseFactors);
+
+                    lCombination.CustomData[AdapterId] = rCaseCombination.Number;
+                    bhomLoadCombinations.Add(lCombination);
+                }
             }
+
             return bhomLoadCombinations;
         }
 

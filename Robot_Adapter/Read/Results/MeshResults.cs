@@ -50,7 +50,7 @@ namespace BH.Adapter.Robot
 
             if (smoothing == MeshResultSmoothingType.None)
             {
-                Engine.Reflection.Compute.RecordWarning("Result extraction with no smoothing is currently possible in the Robot adapter. To extract results please choose another smoothening type");
+                Engine.Reflection.Compute.RecordWarning("Result extraction with no smoothing is currently not possible in the Robot adapter. To extract results please choose another smoothening type");
                 return new List<IResult>();
             }
 

@@ -254,14 +254,14 @@ namespace BH.Adapter.Robot
                                   layerPosition,
                                   smoothing,
                                   orientation,
-                                  CheckGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_SXX),
-                                  CheckGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_SYY),
-                                  CheckGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_SXY),
-                                  CheckGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_TXX),
-                                  CheckGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_TYY),
-                                  CheckGetValue(row, (int)IRobotFeResultType.I_FRT_PRINCIPAL_S1),
-                                  CheckGetValue(row, (int)IRobotFeResultType.I_FRT_PRINCIPAL_S2),
-                                  CheckGetValue(row, (int)IRobotFeResultType.I_FRT_PRINCIPAL_S1_2));
+                                  TryGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_SXX),
+                                  TryGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_SYY),
+                                  TryGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_SXY),
+                                  TryGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_TXX),
+                                  TryGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_TYY),
+                                  TryGetValue(row, (int)IRobotFeResultType.I_FRT_PRINCIPAL_S1),
+                                  TryGetValue(row, (int)IRobotFeResultType.I_FRT_PRINCIPAL_S2),
+                                  TryGetValue(row, (int)IRobotFeResultType.I_FRT_PRINCIPAL_S1_2));
         }
 
 
@@ -278,14 +278,14 @@ namespace BH.Adapter.Robot
                                 layerPosition,
                                 smoothing,
                                 orientation,
-                                CheckGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_NXX),
-                                CheckGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_NYY),
-                                CheckGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_NXY),
-                                CheckGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_MXX),
-                                CheckGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_MYY),
-                                CheckGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_MXY),
-                                CheckGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_QXX),
-                                CheckGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_QYY));
+                                TryGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_NXX),
+                                TryGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_NYY),
+                                TryGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_NXY),
+                                TryGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_MXX),
+                                TryGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_MYY),
+                                TryGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_MXY),
+                                TryGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_QXX),
+                                TryGetValue(row, (int)IRobotFeResultType.I_FRT_DETAILED_QYY));
         }
 
 
@@ -302,9 +302,9 @@ namespace BH.Adapter.Robot
                                     layerPosition,
                                     smoothing,
                                     orientation,
-                                    CheckGetValue(row, (int)IRobotFeResultType.I_FRT_COMPLEX_S_MISES),
-                                    CheckGetValue(row, (int)IRobotFeResultType.I_FRT_COMPLEX_N_MISES),
-                                    CheckGetValue(row, (int)IRobotFeResultType.I_FRT_COMPLEX_M_MISES));
+                                    TryGetValue(row, (int)IRobotFeResultType.I_FRT_COMPLEX_S_MISES),
+                                    TryGetValue(row, (int)IRobotFeResultType.I_FRT_COMPLEX_N_MISES),
+                                    TryGetValue(row, (int)IRobotFeResultType.I_FRT_COMPLEX_M_MISES));
         }
 
 
@@ -315,9 +315,9 @@ namespace BH.Adapter.Robot
 
             Vector u = new Vector
             {
-                X = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UX),
-                Y = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UY),
-                Z = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UZ),
+                X = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UX),
+                Y = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UY),
+                Z = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UZ),
             };
 
             return new MeshDisplacement(idPanel,

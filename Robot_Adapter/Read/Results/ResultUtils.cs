@@ -45,9 +45,9 @@ namespace BH.Adapter.Robot
         /**** Private Methods                           ****/
         /***************************************************/
 
-        private double CheckGetValue(RobotResultRow row, int valuePosition)
+        private double TryGetValue(RobotResultRow row, int valuePosition)
         {
-            return row.IsAvailable(valuePosition) ? row.GetValue(valuePosition) : 0;
+            return row.IsAvailable(valuePosition) ? row.GetValue(valuePosition) : double.NaN;
         }
 
         /***************************************************/

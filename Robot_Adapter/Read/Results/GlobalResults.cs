@@ -106,13 +106,13 @@ namespace BH.Adapter.Robot
 
         private GlobalReactions GetGlobalReaction(RobotResultRow row, int idCase)
         {
-            double fx = CheckGetValue(row, 121);
-            double fy = CheckGetValue(row, 122);
-            double fz = CheckGetValue(row, 123);
+            double fx = TryGetValue(row, 121);
+            double fy = TryGetValue(row, 122);
+            double fz = TryGetValue(row, 123);
 
-            double mx = CheckGetValue(row, 124);
-            double my = CheckGetValue(row, 125);
-            double mz = CheckGetValue(row, 126);
+            double mx = TryGetValue(row, 124);
+            double my = TryGetValue(row, 125);
+            double mz = TryGetValue(row, 126);
 
             return new GlobalReactions
             {

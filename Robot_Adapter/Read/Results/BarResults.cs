@@ -152,13 +152,13 @@ namespace BH.Adapter.Robot
 
         private BarForce GetBarForce(RobotResultRow row, int idCase, int idBar, int divisions, double position)
         {
-            double fx = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FX);
-            double fy = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FY);
-            double fz = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FZ);
+            double fx = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FX);
+            double fy = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FY);
+            double fz = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FZ);
 
-            double mx = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MX);
-            double my = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MY);
-            double mz = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MZ);
+            double mx = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MX);
+            double my = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MY);
+            double mz = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MZ);
 
             return new BarForce
             {
@@ -179,13 +179,13 @@ namespace BH.Adapter.Robot
 
         private BarDisplacement GetBarDisplacement(RobotResultRow row, int idCase, int idBar, int divisions, double position, TransformMatrix localToGlobal)
         {
-            double ux = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_BAR_UX);
-            double uy = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_BAR_UY);
-            double uz = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_BAR_UZ);
+            double ux = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_BAR_UX);
+            double uy = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_BAR_UY);
+            double uz = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_BAR_UZ);
 
-            double rx = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_BAR_RX);
-            double ry = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_BAR_RY);
-            double rz = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_BAR_RZ);
+            double rx = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_BAR_RX);
+            double ry = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_BAR_RY);
+            double rz = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_BAR_RZ);
 
             Point u = new Point { X = ux, Y = uy, Z = uz };
             Point r = new Point { X = rx, Y = ry, Z = rz };
@@ -212,9 +212,9 @@ namespace BH.Adapter.Robot
 
         private BarDeformation GetBarDeformation(RobotResultRow row, int idCase, int idBar, int divisions, double position)
         {
-            double ux = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DEFLECTION_UX);
-            double uy = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DEFLECTION_UY);
-            double uz = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DEFLECTION_UZ);
+            double ux = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DEFLECTION_UX);
+            double uy = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DEFLECTION_UY);
+            double uz = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DEFLECTION_UZ);
 
             return new BarDeformation
             {
@@ -232,16 +232,16 @@ namespace BH.Adapter.Robot
 
         private BarStress GetBarStress(RobotResultRow row, int idCase, int idBar, int divisions, double position)
         {
-            double fxSx = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_FX_SX);
-            double sMax = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_SMAX);
-            double sMaxMy = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_SMAX_MY);
-            double sMaxMz = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_SMAX_MZ);
-            double sMin = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_SMIN);
-            double sMinMy = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_SMIN_MY);
-            double sMinMz = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_SMIN_MZ);
-            double t = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_T);
-            double ty = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_TY);
-            double tz = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_TZ);
+            double fxSx = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_FX_SX);
+            double sMax = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_SMAX);
+            double sMaxMy = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_SMAX_MY);
+            double sMaxMz = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_SMAX_MZ);
+            double sMin = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_SMIN);
+            double sMinMy = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_SMIN_MY);
+            double sMinMz = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_SMIN_MZ);
+            double t = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_T);
+            double ty = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_TY);
+            double tz = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_TZ);
 
             return new BarStress
             {

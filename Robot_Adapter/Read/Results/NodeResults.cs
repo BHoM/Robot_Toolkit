@@ -109,13 +109,13 @@ namespace BH.Adapter.Robot
 
         private NodeDisplacement GetNodeDisplacement(RobotResultRow row, int idCase, int idNode)
         {
-            double ux = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UX);
-            double uy = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UY);
-            double uz = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UZ);
+            double ux = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UX);
+            double uy = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UY);
+            double uz = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UZ);
 
-            double rx = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_RX);
-            double ry = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_RY);
-            double rz = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_RZ);
+            double rx = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_RX);
+            double ry = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_RY);
+            double rz = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_RZ);
 
             return new NodeDisplacement
             {
@@ -134,13 +134,13 @@ namespace BH.Adapter.Robot
 
         private NodeReaction GetNodeReaction(RobotResultRow row, int idCase, int idNode)
         {
-            double fx = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_REACTION_FX);
-            double fy = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_REACTION_FY);
-            double fz = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_REACTION_FZ);
+            double fx = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_REACTION_FX);
+            double fy = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_REACTION_FY);
+            double fz = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_REACTION_FZ);
 
-            double mx = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_REACTION_MX);
-            double my = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_REACTION_MY);
-            double mz = CheckGetValue(row, (int)IRobotExtremeValueType.I_EVT_REACTION_MZ);
+            double mx = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_REACTION_MX);
+            double my = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_REACTION_MY);
+            double mz = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_REACTION_MZ);
 
             return new NodeReaction
             {

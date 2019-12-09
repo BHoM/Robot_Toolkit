@@ -210,7 +210,7 @@ namespace BH.Adapter.Robot
                     Node endNode = null; bhomNodes.TryGetValue(nod2.ToString(), out endNode);
                     Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode, Name = bar_num.ToString() };
 
-                    double gamma = CheckGetValue(result_row, elemGamma_id);
+                    double gamma = TryGetValue(result_row, elemGamma_id);
 
                     bhomBar.SectionProperty = null;
                     bhomBar.OrientationAngle = gamma;

@@ -131,25 +131,6 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static void ConcreteSection(this FreeFormProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
-        {
-            sectionData.MaterialName = material.Name;
-            ConcreteSection steelSection = BH.Engine.Structure.Create.ConcreteSectionFromProfile(section, material as Concrete);
-
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, steelSection.Area);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IX, steelSection.J);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IY, steelSection.Iy);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IZ, steelSection.Iz);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VY, steelSection.Vy);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VZ, steelSection.Vz);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VPY, steelSection.Vpy);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VPZ, steelSection.Vpz);
-
-            sectionData.CalcNonstdGeometry();
-        }
-
-        /***************************************************/
-
         private static void ConcreteSection(this IProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
         {
             Reflection.Compute.RecordWarning("Profile of type " + section.GetType().Name + "is not yet fully supported for Concrete sections. Section with name " + sectionData.Name + " set as explicit section");

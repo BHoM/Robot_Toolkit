@@ -41,24 +41,29 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        public static void SectionProperty(this ExplicitSection section, Material material, IRobotBarSectionData secData)
+        public static void SectionProperty(this ExplicitSection section, IMaterialFragment material, IRobotBarSectionData secData)
         {
-            
+            secData.MaterialName = material.Name;
+
+            secData.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, section.Area);
+            secData.SetValue(IRobotBarSectionDataValue.I_BSDV_IX, section.J);
+            secData.SetValue(IRobotBarSectionDataValue.I_BSDV_IY, section.Iy);
+            secData.SetValue(IRobotBarSectionDataValue.I_BSDV_IZ, section.Iz);
+            secData.SetValue(IRobotBarSectionDataValue.I_BSDV_VY, section.Vy);
+            secData.SetValue(IRobotBarSectionDataValue.I_BSDV_VZ, section.Vz);
+            secData.SetValue(IRobotBarSectionDataValue.I_BSDV_VPY, section.Vpy);
+            secData.SetValue(IRobotBarSectionDataValue.I_BSDV_VPZ, section.Vpz);
+
+            secData.CalcNonstdGeometry();
         }
 
         /***************************************************/
 
-        public static void SectionProperty(this CableSection section, Material material, IRobotBarSectionData secData)
+        public static void SectionProperty(this ISectionProperty section, IMaterialFragment material, IRobotBarSectionData secData)
         {
-            
+            secData.MaterialName = material.Name;
+            Engine.Reflection.Compute.RecordWarning("Section of type " + section.GetType().Name + " is not yet supported in the Robot adapter. Section with name " + secData.Name + " will not have any properties set");
         }
-
-        /***************************************************/
-
-        //private static void SectionShapeType(this IList<ICurve> edges, IRobotBarSectionData secData)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         /***************************************************/
 

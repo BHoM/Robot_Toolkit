@@ -146,7 +146,7 @@ namespace BH.Engine.Robot
                         H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_H);
                         TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_TW);
                         TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_TF);
-                        sectionProfile = BH.Engine.Geometry.Create.GeneralisedFabricatedBoxProfile(H + (2*TF), B1 + (2 * TW), TW, TF, TF, (B - B1 - (2 * TW)) / 2, (B - B1 - (2 * TW)) / 2);
+                        sectionProfile = BH.Engine.Geometry.Create.GeneralisedFabricatedBoxProfile(H + (2 * TF), B1 + (2 * TW), TW, TF, TF, (B - B1 - (2 * TW)) / 2, (B - B1 - (2 * TW)) / 2);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
                     case IRobotBarSectionShapeType.I_BSST_USER_BOX_3:
@@ -157,7 +157,7 @@ namespace BH.Engine.Robot
                         TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TW);
                         TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF);
                         TF2 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF2);
-                        sectionProfile = BH.Engine.Geometry.Create.GeneralisedFabricatedBoxProfile(H + TF + TF2, B1 + (2*TW), TW, TF, TF2, (B2 - B1 - (2*TW))/2, (B - B1 - (2 * TW))/2);
+                        sectionProfile = BH.Engine.Geometry.Create.GeneralisedFabricatedBoxProfile(H + TF + TF2, B1 + (2 * TW), TW, TF, TF2, (B2 - B1 - (2 * TW)) / 2, (B - B1 - (2 * TW)) / 2);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
                     case IRobotBarSectionShapeType.I_BSST_BOX:
@@ -436,6 +436,27 @@ namespace BH.Engine.Robot
 
             sectionData.CalcNonstdGeometry();
 
+        }
+
+        /***************************************************/
+
+        private static void SteelSection(this IProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
+        {
+            Reflection.Compute.RecordWarning("Profile of type " + section.GetType().Name + "is not yet fully supported for Steel sections. Section with name " + sectionData.Name + " set as explicit section");
+
+            sectionData.MaterialName = material.Name;
+            SteelSection steelSection = BH.Engine.Structure.Create.SteelSectionFromProfile(section, material as Steel);
+
+            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, steelSection.Area);
+            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IX, steelSection.J);
+            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IY, steelSection.Iy);
+            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IZ, steelSection.Iz);
+            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VY, steelSection.Vy);
+            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VZ, steelSection.Vz);
+            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VPY, steelSection.Vpy);
+            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VPZ, steelSection.Vpz);
+
+            sectionData.CalcNonstdGeometry();
         }
 
         /***************************************************/

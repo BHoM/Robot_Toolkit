@@ -377,25 +377,6 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
-        private static void SteelSection(this FreeFormProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
-        {
-            sectionData.MaterialName = material.Name;
-            SteelSection steelSection = BH.Engine.Structure.Create.SteelSectionFromProfile(section, material as Steel);
-
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, steelSection.Area);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IX, steelSection.J);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IY, steelSection.Iy);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IZ, steelSection.Iz);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VY, steelSection.Vy);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VZ, steelSection.Vz);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VPY, steelSection.Vpy);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VPZ, steelSection.Vpz);
-
-            sectionData.CalcNonstdGeometry();
-        }
-
-        /***************************************************/
-
         private static void SteelSection(this GeneralisedFabricatedBoxProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_BOX_3;
@@ -413,26 +394,6 @@ namespace BH.Engine.Robot
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TW, section.WebThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF, section.TopFlangeThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF2, section.BotFlangeThickness);
-
-            sectionData.CalcNonstdGeometry();
-
-        }
-
-        /***************************************************/
-
-        private static void SteelSection(this KiteProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
-        {
-            sectionData.MaterialName = material.Name;
-            SteelSection steelSection = BH.Engine.Structure.Create.SteelSectionFromProfile(section, material as Steel);
-
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, steelSection.Area);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IX, steelSection.J);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IY, steelSection.Iy);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IZ, steelSection.Iz);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VY, steelSection.Vy);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VZ, steelSection.Vz);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VPY, steelSection.Vpy);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VPZ, steelSection.Vpz);
 
             sectionData.CalcNonstdGeometry();
 

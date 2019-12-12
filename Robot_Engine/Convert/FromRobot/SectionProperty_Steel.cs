@@ -111,6 +111,11 @@ namespace BH.Engine.Robot
                         return null;
                 }
             }
+            else if (secData.Type == IRobotBarSectionType.I_BST_COMPLEX)
+            {
+                Reflection.Compute.RecordWarning("Compex sections can not currently be read from Robot.");
+                return null;
+            }
             else
             {
                 IRobotBarSectionNonstdData nonStdData = secData.GetNonstd(1);

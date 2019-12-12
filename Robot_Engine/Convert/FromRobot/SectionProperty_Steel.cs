@@ -100,6 +100,9 @@ namespace BH.Engine.Robot
                         sectionProfile = BH.Engine.Geometry.Create.TubeProfile(d, Tf);
                         return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
 
+                    case IRobotBarSectionShapeType.I_BSST_UPN:
+                        sectionProfile = BH.Engine.Geometry.Create.ChannelProfile(d, bf, Tw, Tf, r, ri);
+                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
                     default:
                         return null;
                 }

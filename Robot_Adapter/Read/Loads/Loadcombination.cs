@@ -35,6 +35,7 @@ namespace BH.Adapter.Robot
 
         private List<LoadCombination> ReadLoadCombinations(List<string> ids = null)
         {
+            m_RobotApplication.Project.Structure.Cases.BeginMultiOperation();
             List<LoadCombination> bhomLoadCombinations = new List<LoadCombination>();
             IRobotCaseCollection rLoadCollection = m_RobotApplication.Project.Structure.Cases.GetAll();
 
@@ -60,7 +61,7 @@ namespace BH.Adapter.Robot
                     bhomLoadCombinations.Add(lCombination);
                 }
             }
-
+            m_RobotApplication.Project.Structure.Cases.EndMultiOperation();
             return bhomLoadCombinations;
         }
 

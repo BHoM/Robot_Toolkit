@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using BH.oM.Adapter;
 
 namespace BH.Adapter.Robot
 {
@@ -32,23 +33,14 @@ namespace BH.Adapter.Robot
         /****             Public Methods                ****/
         /***************************************************/
 
-        protected override int UpdateProperty(Type type, IEnumerable<object> ids, string property, object newValue)
+        protected override int IUpdateTags(Type type, IEnumerable<object> ids, IEnumerable<HashSet<string>> newTags, ActionConfig actionConfig = null)
         {
+            List<int> indecies = ids.Select(x => (int)x).ToList();
+            if (indecies.Count < 1)
+                return 0;
 
-            if (property == "Tags")
-            {
-                List<int> indecies = ids.Select(x => (int)x).ToList();
-                if (indecies.Count < 1)
-                    return 0;
-
-                List<HashSet<string>> tags = (newValue as IEnumerable<HashSet<string>>).ToList();
-                return UpdateTags(type, indecies, tags);
-            }
-
-            return 0;
+            return UpdateTags(type, indecies, newTags.ToList());
         }
-
-        /***************************************************/
 
         /***************************************************/
         /****             Private Methods               ****/

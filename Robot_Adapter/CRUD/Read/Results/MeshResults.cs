@@ -139,7 +139,7 @@ namespace BH.Adapter.Robot
                 List<MeshElementResult> meshResults = new List<MeshElementResult>();
 
                 RobotSelection panelSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_PANEL);
-                panelSelection.FromText(panel.CustomData[BH.Engine.Robot.Convert.AdapterIdName].ToString());
+                panelSelection.FromText(panel.CustomData[AdapterIdName].ToString());
 
                 RobotSelection finiteElementSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_FINITE_ELEMENT);
                 finiteElementSelection.FromText(panel.CustomData["RobotFiniteElementIds"].ToString());

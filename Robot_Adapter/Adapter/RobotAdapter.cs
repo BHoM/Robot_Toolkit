@@ -47,7 +47,7 @@ namespace BH.Adapter.Robot
         {
             if (Active)
             {
-                AdapterIdName = Engine.Robot.Convert.AdapterIdName;
+                AdapterIdName = Engine.Robot.Convert.AdapterID;
 
                 RobotConfig = (robotConfig == null) ? new RobotConfig() : robotConfig;
 
@@ -95,22 +95,6 @@ namespace BH.Adapter.Robot
         /**** Public  Methods                           ****/
         /***************************************************/
 
-
-         /* Temporary override of the pull method until updates have been made to the MeshResults and IResultCOllection : IResult
-          */
-        public override IEnumerable<object> Pull(IRequest request, Dictionary<string, object> config = null)
-        {
-            FilterRequest filter = request as FilterRequest;
-            if (filter != null)
-            {
-                if (filter.Type == typeof(BH.oM.Structure.Results.MeshResult))
-                {
-                    return ReadMeshResults(filter);
-                }
-            }
-
-            return base.Pull(request, config);
-        }
 
         public static bool IsApplicationRunning()
         {

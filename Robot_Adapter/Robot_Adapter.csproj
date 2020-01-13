@@ -33,6 +33,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Adapter_Engine">
+      <HintPath>..\..\BHoM_Adapter\Build\Adapter_Engine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Adapter_oM">
+      <HintPath>..\..\BHoM_Adapter\Build\Adapter_oM.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Analytical_oM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM\Build\Analytical_oM.dll</HintPath>
@@ -87,6 +95,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM_Engine\Build\Serialiser_Engine.dll</HintPath>
     </Reference>
+    <Reference Include="Structure_AdapterModules">
+      <HintPath>..\..\BHoM_Adapter\Build\Structure_AdapterModules.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Structure_Engine">
       <HintPath>..\..\BHoM_Engine\Structure_Engine\obj\Debug\Structure_Engine.dll</HintPath>
     </Reference>
@@ -105,6 +117,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdapterActions\Pull.cs" />
     <Compile Include="CRUD\Create\DesignGroup.cs" />
     <Compile Include="CRUD\Create\FramingElementDesignProperties.cs" />
     <Compile Include="CRUD\Create\Constraints.cs" />
@@ -123,7 +136,7 @@
     <Compile Include="CRUD\Create\RigidLinks.cs" />
     <Compile Include="CRUD\Delete\_Delete.cs" />
     <Compile Include="CRUD\Create\_Create.cs" />
-    <Compile Include="Execute\_Execute.cs" />
+    <Compile Include="AdapterActions\Execute\_Execute.cs" />
     <Compile Include="Adapter\NextId.cs" />
     <Compile Include="CRUD\Read\Elements\Bar.cs" />
     <Compile Include="CRUD\Read\Elements\Groups.cs" />

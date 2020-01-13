@@ -45,9 +45,13 @@ namespace BH.Adapter.Robot
 
         public RobotAdapter(string filePath = "", RobotConfig robotConfig = null, bool Active = false)
         {
+            //Initialise
+            AdapterIdName = Engine.Robot.Convert.AdapterID;
+            SetupComparers();
+            SetupDependencies();
+
             if (Active)
             {
-                AdapterIdName = Engine.Robot.Convert.AdapterID;
 
                 RobotConfig = (robotConfig == null) ? new RobotConfig() : robotConfig;
 

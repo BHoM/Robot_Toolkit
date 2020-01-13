@@ -36,39 +36,24 @@ namespace BH.Adapter.Robot
     public partial class RobotAdapter
     {
         /***************************************************/
-        /**** BHoM Adapter Interface                    ****/
+        /**** Protected methods                         ****/
         /***************************************************/
 
-        protected override IEqualityComparer<T> Comparer<T>()
+        protected void SetupComparers()
         {
-            Type type = typeof(T);
-
-            if (m_Comparers.ContainsKey(type))
+            AdapterComparers = new Dictionary<Type, object>
             {
-                return m_Comparers[type] as IEqualityComparer<T>;
-            }
-            else
-            {
-                return EqualityComparer<T>.Default;
-            }
+                {typeof(Node), new NodeDistanceComparer(3) },
+                {typeof(ISectionProperty), new BHoMObjectNameOrToStringComparer() },
+                {typeof(Material), new BHoMObjectNameComparer() },
+                {typeof(Constraint4DOF), new BHoMObjectNameComparer() },
+                {typeof(Constraint6DOF), new BHoMObjectNameComparer() },
+                {typeof(Loadcase), new BHoMObjectNameComparer() },
+                {typeof(LinkConstraint), new BHoMObjectNameComparer() },
+                {typeof(ISurfaceProperty), new BHoMObjectNameComparer() },
+                {typeof(BarRelease), new BHoMObjectNameComparer() }
+            };
         }
-
-        /***************************************************/
-        /**** Private Fields                            ****/
-        /***************************************************/
-
-        private static Dictionary<Type, object> m_Comparers = new Dictionary<Type, object>
-        {
-            {typeof(Node), new NodeDistanceComparer(3) },
-            {typeof(ISectionProperty), new BHoMObjectNameOrToStringComparer() },
-            {typeof(Material), new BHoMObjectNameComparer() },
-            {typeof(Constraint4DOF), new BHoMObjectNameComparer() },
-            {typeof(Constraint6DOF), new BHoMObjectNameComparer() },
-            {typeof(Loadcase), new BHoMObjectNameComparer() },
-            {typeof(LinkConstraint), new BHoMObjectNameComparer() },
-            {typeof(ISurfaceProperty), new BHoMObjectNameComparer() },
-            {typeof(BarRelease), new BHoMObjectNameComparer() }
-        };
 
         /***************************************************/
     }

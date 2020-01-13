@@ -27,6 +27,7 @@ using BH.oM.Structure.Elements;
 using RobotOM;
 using BH.oM.Structure.Design;
 using BH.Engine.Reflection;
+using BH.oM.Adapter;
 
 namespace BH.Adapter.Robot
 {
@@ -37,7 +38,7 @@ namespace BH.Adapter.Robot
         /****           Adapter Methods                 ****/
         /***************************************************/
 
-        protected override int Delete(Type type, IEnumerable<object> ids)
+        protected override int IDelete(Type type, IEnumerable<object> ids, ActionConfig actionConfig = null)
         {
             int success = 0;
             if (type == typeof(DesignGroup))

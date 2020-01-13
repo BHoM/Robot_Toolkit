@@ -28,6 +28,7 @@ using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Structure.Constraints;
 using BH.oM.Structure.Loads;
 using BH.oM.Physical.Materials;
+using BH.oM.Adapter;
 using RobotOM;
 
 namespace BH.Adapter.Robot
@@ -38,7 +39,7 @@ namespace BH.Adapter.Robot
         /****           Protected Methods               ****/
         /***************************************************/
 
-        protected override bool UpdateObjects<T>(IEnumerable<T> objects)
+        protected override bool IUpdate<T>(IEnumerable<T> objects, ActionConfig actionConfig = null)
         {
             bool success = true;
             success = Update(objects as dynamic);
@@ -90,7 +91,7 @@ namespace BH.Adapter.Robot
             }
 
             bool success = true;
-            success = Create(matToCreate);
+            success = ICreate(matToCreate);
             return success;
         }
 
@@ -108,7 +109,7 @@ namespace BH.Adapter.Robot
             }
 
             bool success = true;
-            success = Create(secPropToCreate);
+            success = ICreate(secPropToCreate);
             return success;
         }
 
@@ -117,7 +118,7 @@ namespace BH.Adapter.Robot
         protected bool Update(IEnumerable<ISurfaceProperty> property2Ds)
         {
             bool success = true;
-            success = Create(property2Ds);
+            success = ICreate(property2Ds);
             return success;
         }
 
@@ -126,7 +127,7 @@ namespace BH.Adapter.Robot
         protected bool Update(IEnumerable<LinkConstraint> linkConstraints)
         {
             bool success = true;
-            success = Create(linkConstraints);
+            success = ICreate(linkConstraints);
             return success;
         }
 
@@ -152,7 +153,7 @@ namespace BH.Adapter.Robot
         protected bool Update(IEnumerable<LoadCombination> loadCombinations)
         {
             bool success = true;
-            success = Create(loadCombinations);
+            success = ICreate(loadCombinations);
             return success;
         }
 

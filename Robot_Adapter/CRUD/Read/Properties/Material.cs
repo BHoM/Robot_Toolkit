@@ -114,7 +114,7 @@ namespace BH.Adapter.Robot
                     return null;
             }
            
-            bhomMat.CustomData.Add(AdapterIdName, NextId(bhomMat.GetType(), false));
+            bhomMat.CustomData.Add(AdapterIdName, NextFreeId(bhomMat.GetType(), false));
             return bhomMat;
         }
 

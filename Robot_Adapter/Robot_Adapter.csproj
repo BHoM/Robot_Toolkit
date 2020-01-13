@@ -164,7 +164,7 @@
     <Compile Include="CRUD\Update\FramingElementDesignProperties.cs" />
     <Compile Include="CRUD\Update\Bars.cs" />
     <Compile Include="CRUD\Update\UpdateObjects.cs" />
-    <Compile Include="CRUD\Update\UpdateProperty.cs" />
+    <Compile Include="CRUD\Update\UpdateTags.cs" />
     <Compile Include="Types\Comparer.cs" />
     <Compile Include="Types\DependencyTypes.cs" />
     <Compile Include="Adapter\RobotAdapter.cs" />

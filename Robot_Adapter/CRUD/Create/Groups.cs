@@ -41,7 +41,7 @@ namespace BH.Adapter.Robot
             foreach (BHoMGroup<T> group in groups)
             {
                 IRobotObjectType rType = BH.Engine.Robot.Convert.RobotObjectType(typeof(T));
-                string members = group.Elements.Select(x => int.Parse(x.CustomData[BH.Engine.Robot.Convert.AdapterID].ToString())).ToRobotSelectionString();
+                string members = group.Elements.Select(x => int.Parse(x.CustomData[BH.Engine.Robot.Convert.AdapterIdName].ToString())).ToRobotSelectionString();
                 rGroupServer.Create(rType, group.Name, members);
             }
             return true;

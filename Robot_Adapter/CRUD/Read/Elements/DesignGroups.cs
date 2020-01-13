@@ -48,7 +48,7 @@ namespace BH.Adapter.Robot
                 BH.oM.Adapters.Robot.DesignGroup bhomDesignGroup = new BH.oM.Adapters.Robot.DesignGroup();
                 bhomDesignGroup.Name = designGroup.Name;
                 bhomDesignGroup.Number = designGroup.UsrNo;
-                bhomDesignGroup.CustomData[AdapterId] = designGroup.UsrNo;
+                bhomDesignGroup.CustomData[AdapterIdName] = designGroup.UsrNo;
                 bhomDesignGroup.CustomData[Engine.Robot.Convert.AdapterName] = designGroup.Name;
                 bhomDesignGroup.MaterialName = designGroup.Material;
                 designGroup.GetMembList(RDStream);

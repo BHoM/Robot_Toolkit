@@ -41,7 +41,7 @@ namespace BH.Adapter.Robot
             {
                 RobotNodeSupport rNodeSupp = robSupport.Get(i);
                 Constraint6DOF bhomSupp = BH.Engine.Robot.Convert.ToBHoMObject(rNodeSupp);
-                bhomSupp.CustomData.Add(AdapterId, rNodeSupp.Name);
+                bhomSupp.CustomData.Add(AdapterIdName, rNodeSupp.Name);
                 //if (m_SupportTaggs != null)
                 //    bhomSupp.ApplyTaggedName(m_SupportTaggs[rNodeSupp.Name]);
                 constList.Add(bhomSupp);

@@ -65,7 +65,7 @@ namespace BH.Adapter.Robot
                 }
                 if (tempOpening != null)
                 {
-                    tempOpening.CustomData[AdapterId] = rOpening.Number;
+                    tempOpening.CustomData[AdapterIdName] = rOpening.Number;
                     openings.Add(tempOpening);
                 }
             }

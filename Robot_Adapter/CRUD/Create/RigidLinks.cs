@@ -36,9 +36,9 @@ namespace BH.Adapter.Robot
         {
             foreach (RigidLink rLink in rigidLinks)
             {
-                string[] str = rLink.SlaveNodes.Select(x => x.CustomData[AdapterId].ToString() + ",").ToList().ToArray();
+                string[] str = rLink.SlaveNodes.Select(x => x.CustomData[AdapterIdName].ToString() + ",").ToList().ToArray();
                 string slaves = string.Join("", str).TrimEnd(',');
-                m_RobotApplication.Project.Structure.Nodes.RigidLinks.Set(System.Convert.ToInt32(rLink.MasterNode.CustomData[AdapterId]), slaves, rLink.Constraint.Name);
+                m_RobotApplication.Project.Structure.Nodes.RigidLinks.Set(System.Convert.ToInt32(rLink.MasterNode.CustomData[AdapterIdName]), slaves, rLink.Constraint.Name);
             }
             return true;
         }

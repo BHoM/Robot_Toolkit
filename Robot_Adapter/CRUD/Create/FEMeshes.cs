@@ -55,21 +55,21 @@ namespace BH.Adapter.Robot
                     if (fMeshFace.NodeListIndices.Count == 3)
                     {
                         ptarray.SetSize(3);
-                        ptarray.Set(1, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[0]].CustomData[AdapterId]));
-                        ptarray.Set(2, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[1]].CustomData[AdapterId]));
-                        ptarray.Set(3, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[2]].CustomData[AdapterId]));
+                        ptarray.Set(1, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[0]].CustomData[AdapterIdName]));
+                        ptarray.Set(2, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[1]].CustomData[AdapterIdName]));
+                        ptarray.Set(3, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[2]].CustomData[AdapterIdName]));
                     }
                     else if (fMeshFace.NodeListIndices.Count == 4)
                     {
                         ptarray.SetSize(4);
-                        ptarray.Set(1, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[0]].CustomData[AdapterId]));
-                        ptarray.Set(2, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[1]].CustomData[AdapterId]));
-                        ptarray.Set(3, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[2]].CustomData[AdapterId]));
-                        ptarray.Set(4, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[3]].CustomData[AdapterId]));
+                        ptarray.Set(1, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[0]].CustomData[AdapterIdName]));
+                        ptarray.Set(2, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[1]].CustomData[AdapterIdName]));
+                        ptarray.Set(3, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[2]].CustomData[AdapterIdName]));
+                        ptarray.Set(4, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[3]].CustomData[AdapterIdName]));
                     }
 
                     FEMeshFace clone = fMeshFace.GetShallowClone() as FEMeshFace;
-                    clone.CustomData[AdapterId] = fMeshFaceIdx;
+                    clone.CustomData[AdapterIdName] = fMeshFaceIdx;
                     fEMesh.Faces[i] = clone;
 
                     faceList = faceList + fMeshFaceIdx.ToString() + ",";
@@ -82,7 +82,7 @@ namespace BH.Adapter.Robot
                 faceList.TrimEnd(',');
 
                 int elemNumber = objServer.Objects.FreeNumber;
-                fEMesh.CustomData[AdapterId] = elemNumber;
+                fEMesh.CustomData[AdapterIdName] = elemNumber;
                 objServer.Objects.CreateOnFiniteElems(faceList, elemNumber);
                 mesh = objServer.Objects.Get(elemNumber) as RobotObjObject;
                 if (fEMesh.Property is LoadingPanelProperty)

@@ -80,7 +80,7 @@ namespace BH.Adapter.Robot
                 {
                     bhomSec.Material = bhomMat;
                     bhomSec.Name = rSection.Name;
-                    bhomSec.CustomData[AdapterId] = rSection.Name;
+                    bhomSec.CustomData[AdapterIdName] = rSection.Name;
                     bhomSectionProps.Add(bhomSec);
                 }
             }

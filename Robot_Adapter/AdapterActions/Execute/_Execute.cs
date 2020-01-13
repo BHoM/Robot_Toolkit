@@ -26,6 +26,7 @@ using System.Linq;
 using System;
 using BH.oM.Structure.Loads;
 using RobotOM;
+using BH.oM.Adapter;
 
 namespace BH.Adapter.Robot
 {
@@ -35,7 +36,7 @@ namespace BH.Adapter.Robot
         /****           Adapter Methods                 ****/
         /***************************************************/
 
-        public override bool Execute(string command, Dictionary<string, object> parameters = null, Dictionary<string, object> config = null)
+        public override bool Execute(string command, Dictionary<string, object> parameters = null, ActionConfig actionConfig = null)
         {
             string commandUpper = command.ToUpper();
 

@@ -31,6 +31,7 @@ using BH.oM.Structure.MaterialFragments;
 using BH.oM.Adapters.Robot;
 using BH.oM.Reflection.Attributes;
 using BH.Engine.Adapters.Robot;
+using BH.oM.Adapter;
 
 namespace BH.Adapter.Robot
 {
@@ -40,7 +41,7 @@ namespace BH.Adapter.Robot
         /****           Adapter Methods                 ****/
         /***************************************************/
 
-        protected override bool Create<T>(IEnumerable<T> objects)
+        protected override bool ICreate<T>(IEnumerable<T> objects, ActionConfig actionConfig = null)
         {
             bool success = true;
             if (objects.Count() > 0)

@@ -35,6 +35,7 @@ using BH.oM.Structure.Results;
 using BH.oM.Common;
 using BH.oM.Data.Requests;
 using System.Linq;
+using BH.oM.Adapter;
 
 namespace BH.Adapter.Robot
 {
@@ -44,7 +45,7 @@ namespace BH.Adapter.Robot
         /**** Adapter Methods                           ****/
         /***************************************************/
         
-        protected override IEnumerable<IBHoMObject> Read(Type type, IList indices = null)
+        protected override IEnumerable<IBHoMObject> IRead(Type type, IList indices, ActionConfig actionConfig = null)
         {
             if (type == typeof(Node))
                 return ReadNodes(indices);

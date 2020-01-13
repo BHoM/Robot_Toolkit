@@ -49,6 +49,7 @@ namespace BH.Adapter.Robot
             AdapterIdName = Engine.Robot.Convert.AdapterID;
             SetupComparers();
             SetupDependencies();
+            BH.Adapter.Modules.Structure.ModuleLoader.LoadModules(this);
 
             if (Active)
             {

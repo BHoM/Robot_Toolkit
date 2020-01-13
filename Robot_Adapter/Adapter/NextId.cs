@@ -36,7 +36,7 @@ namespace BH.Adapter.Robot
         /**** Public Fields                             ****/
         /***************************************************/
 
-        protected override object NextId(Type type, bool refresh)
+        protected override object NextFreeId(Type type, bool refresh)
         {
             int index = 1;
 

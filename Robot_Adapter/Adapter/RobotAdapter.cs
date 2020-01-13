@@ -47,7 +47,7 @@ namespace BH.Adapter.Robot
         {
             if (Active)
             {
-                AdapterId = Engine.Robot.Convert.AdapterID;
+                AdapterIdName = Engine.Robot.Convert.AdapterIdName;
 
                 RobotConfig = (robotConfig == null) ? new RobotConfig() : robotConfig;
 

@@ -39,13 +39,13 @@ namespace BH.Adapter.Robot
             Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
             foreach (Bar bar in bars)
             {
-                RobotBar robotBar = m_RobotApplication.Project.Structure.Bars.Get((int)bar.CustomData[AdapterId]) as RobotBar;
+                RobotBar robotBar = m_RobotApplication.Project.Structure.Bars.Get((int)bar.CustomData[AdapterIdName]) as RobotBar;
                 if (robotBar == null)
                     return false;
 
-                robotBar.StartNode = System.Convert.ToInt32(bar.StartNode.CustomData[AdapterId]);
-                robotBar.EndNode = System.Convert.ToInt32(bar.EndNode.CustomData[AdapterId]);
-                barTags[System.Convert.ToInt32(bar.CustomData[AdapterId])] = bar.Tags;
+                robotBar.StartNode = System.Convert.ToInt32(bar.StartNode.CustomData[AdapterIdName]);
+                robotBar.EndNode = System.Convert.ToInt32(bar.EndNode.CustomData[AdapterIdName]);
+                barTags[System.Convert.ToInt32(bar.CustomData[AdapterIdName])] = bar.Tags;
 
 
                 if (bar.SectionProperty != null && !string.IsNullOrWhiteSpace(bar.SectionProperty.Name))

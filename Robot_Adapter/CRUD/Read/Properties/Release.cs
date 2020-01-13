@@ -47,7 +47,7 @@ namespace BH.Adapter.Robot
                     StartRelease = BH.Engine.Robot.Convert.BHoMRelease(rReleaseData.StartNode),
                     EndRelease = BH.Engine.Robot.Convert.BHoMRelease(rReleaseData.EndNode)
                 };
-                bhomMBarRelease.CustomData.Add(AdapterId, rReleaseLabel.Name);
+                bhomMBarRelease.CustomData.Add(AdapterIdName, rReleaseLabel.Name);
                 bhomReleases.Add(bhomMBarRelease);
             }
             return bhomReleases;

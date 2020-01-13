@@ -46,7 +46,7 @@ namespace BH.Adapter.Robot
            
             foreach (Panel panel in panels)
             {
-                panel.CustomData[AdapterId] = freeObjectNumber.ToString();
+                panel.CustomData[AdapterIdName] = freeObjectNumber.ToString();
                 RobotObjObject rPanel = objServer.Create(freeObjectNumber);
                 freeObjectNumber++;
                 List<Edge> subEdges = new List<Edge>();
@@ -67,7 +67,7 @@ namespace BH.Adapter.Robot
                 {
                     RobotObjObject rPanelOpening = objServer.Create(freeObjectNumber);
                     freeObjectNumber++;
-                    opening.CustomData[AdapterId] = rPanelOpening.Number.ToString();
+                    opening.CustomData[AdapterIdName] = rPanelOpening.Number.ToString();
                     rPanelOpening.Main.Geometry = CreateRobotContour(opening.Edges, out subEdges);
                     rPanelOpening.Initialize();
                     rPanelOpening.Update();

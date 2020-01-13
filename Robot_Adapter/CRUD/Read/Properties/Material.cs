@@ -52,7 +52,7 @@ namespace BH.Adapter.Robot
             //    bhomMat = BH.Engine.Common.Create.Material(matName, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO / Engine.Robot.Query.RobotGravityConstant);
             //    if (m_indexDict.ContainsKey(bhomMat.GetType()) && counter == 0)
             //        m_indexDict[bhomMat.GetType()] = 0;
-            //    bhomMat.CustomData.Add(AdapterId, NextId(bhomMat.GetType(), refresh));
+            //    bhomMat.CustomData.Add(AdapterIdName, NextId(bhomMat.GetType(), refresh));
 
             //    //if (refresh)
             //    //    refresh = false;
@@ -114,7 +114,7 @@ namespace BH.Adapter.Robot
                     return null;
             }
            
-            bhomMat.CustomData.Add(AdapterId, NextId(bhomMat.GetType(), false));
+            bhomMat.CustomData.Add(AdapterIdName, NextId(bhomMat.GetType(), false));
             return bhomMat;
         }
 

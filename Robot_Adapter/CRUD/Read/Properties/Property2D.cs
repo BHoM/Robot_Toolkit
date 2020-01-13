@@ -48,7 +48,7 @@ namespace BH.Adapter.Robot
             {
                 IRobotLabel rThicknessProp = rThicknessProps.Get(i);
                 ISurfaceProperty tempProp = BH.Engine.Robot.Convert.ToBHoMObject(rThicknessProp, BHoMMat);
-                tempProp.CustomData.Add(AdapterId, tempProp.Name);
+                tempProp.CustomData.Add(AdapterIdName, tempProp.Name);
                 BHoMProps.Add(tempProp);
             }
 
@@ -56,7 +56,7 @@ namespace BH.Adapter.Robot
             {
                 IRobotLabel rCladdingProp = rCladdingProps.Get(i);
                 ISurfaceProperty tempProp = BH.Engine.Robot.Convert.ToBHoMObject(rCladdingProp, BHoMMat);
-                tempProp.CustomData.Add(AdapterId, tempProp.Name);
+                tempProp.CustomData.Add(AdapterIdName, tempProp.Name);
                 BHoMProps.Add(tempProp);
             }
             return BHoMProps;

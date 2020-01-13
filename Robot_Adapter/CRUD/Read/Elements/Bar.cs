@@ -52,7 +52,7 @@ namespace BH.Adapter.Robot
 
             List<Bar> bhomBars = new List<Bar>();
             IEnumerable<Node> bhomNodesList = ReadNodes();
-            Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionaryDistinctCheck(x => x.CustomData[AdapterId].ToString());
+            Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionaryDistinctCheck(x => x.CustomData[AdapterIdName].ToString());
             Dictionary<string, BarRelease> bhombarReleases = ReadBarRelease().ToDictionaryDistinctCheck(x => x.Name.ToString());
             Dictionary<string, ISectionProperty> bhomSections = ReadSectionProperties().ToDictionaryDistinctCheck(x => x.Name.ToString());
             Dictionary<string, IMaterialFragment> bhomMaterial = ReadMaterial().ToDictionaryDistinctCheck(x => x.Name.ToString());
@@ -75,7 +75,7 @@ namespace BH.Adapter.Robot
                                                                         bhombarReleases,
                                                                         bhomFramEleDesProps,
                                                                         ref sectionWithMaterial);
-                    bhomBar.CustomData[AdapterId] = robotBar.Number;
+                    bhomBar.CustomData[AdapterIdName] = robotBar.Number;
                     if (barTags != null && barTags.TryGetValue(robotBar.Number, out tags))
                         bhomBar.Tags = tags;
                     bhomBars.Add(bhomBar);
@@ -93,7 +93,7 @@ namespace BH.Adapter.Robot
                                                                         bhombarReleases,
                                                                         bhomFramEleDesProps,
                                                                         ref sectionWithMaterial);
-                    bhomBar.CustomData[AdapterId] = robotBar.Number;
+                    bhomBar.CustomData[AdapterIdName] = robotBar.Number;
                     if (barTags != null && barTags.TryGetValue(robotBar.Number, out tags))
                         bhomBar.Tags = tags;
                     bhomBars.Add(bhomBar);
@@ -216,7 +216,7 @@ namespace BH.Adapter.Robot
                     bhomBar.OrientationAngle = gamma;
                     bhomBar.Name = bar_num.ToString();
 
-                    bhomBar.CustomData[AdapterId] = bar_num.ToString();
+                    bhomBar.CustomData[AdapterIdName] = bar_num.ToString();
                     bhomBars.Add(bhomBar);
 
                     ok = row_set.MoveNext();

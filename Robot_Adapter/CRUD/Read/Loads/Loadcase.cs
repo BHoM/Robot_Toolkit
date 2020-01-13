@@ -41,7 +41,7 @@ namespace BH.Adapter.Robot
             {
                 IRobotCase rLoadCase = rLoadCases.Get(i) as IRobotCase;
                 Loadcase lCase = BH.Engine.Structure.Create.Loadcase(rLoadCase.Name, rLoadCase.Number, BH.Engine.Robot.Convert.BHoMLoadNature(rLoadCase.Nature));
-                lCase.CustomData[AdapterId] = rLoadCase.Number;
+                lCase.CustomData[AdapterIdName] = rLoadCase.Number;
                 bhomLoadCases.Add(lCase);
             }
             return bhomLoadCases;

@@ -87,7 +87,7 @@ namespace BH.Adapter.Robot
                     {
                         BH.Engine.Reflection.Compute.RecordWarning("Geometry for panel " + rpanel.Number.ToString() + " not supported.");
                     }
-                    BHoMPanel.CustomData[AdapterId] = rpanel.Number;
+                    BHoMPanel.CustomData[AdapterIdName] = rpanel.Number;
                     BHoMPanel.CustomData["RobotFiniteElementIds"] = rpanel.FiniteElems;
                     BHoMPanel.CustomData["RobotNodeIds"] = rpanel.Nodes;
 
@@ -139,7 +139,7 @@ namespace BH.Adapter.Robot
                 }
                 if (BHoMPanel != null)
                 {
-                    BHoMPanel.CustomData[AdapterId] = rCladding.Number;
+                    BHoMPanel.CustomData[AdapterIdName] = rCladding.Number;
 
                     if (rCladding.HasLabel(IRobotLabelType.I_LT_CLADDING) != 0)
                     {
@@ -199,7 +199,7 @@ namespace BH.Adapter.Robot
                     ICurve outline = BH.Engine.Robot.Convert.ToBHoMGeometry(rpanel.Main.GetGeometry() as dynamic);
 
                     BHoMPanel = new Panel();
-                    BHoMPanel.CustomData[AdapterId] = rpanel.Number;
+                    BHoMPanel.CustomData[AdapterIdName] = rpanel.Number;
                     BHoMPanel.CustomData["RobotFiniteElementIds"] = rpanel.FiniteElems;
                     BHoMPanel.CustomData["RobotNodeIds"] = rpanel.Nodes;
 

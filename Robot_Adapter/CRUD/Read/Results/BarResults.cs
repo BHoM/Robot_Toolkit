@@ -126,7 +126,7 @@ namespace BH.Adapter.Robot
 
                             if (!transformations.TryGetValue(idBar, out localToGlobal))
                             {
-                                Bar bar = bars.First(x => x.CustomData[AdapterId].ToString() == idBar.ToString());
+                                Bar bar = bars.First(x => x.CustomData[AdapterIdName].ToString() == idBar.ToString());
                                 Cartesian local = bar.CoordinateSystem();
                                 local.Origin = Point.Origin;
                                 localToGlobal = Engine.Geometry.Create.OrientationMatrix(globalXY, local);

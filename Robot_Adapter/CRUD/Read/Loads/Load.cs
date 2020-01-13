@@ -56,7 +56,7 @@ namespace BH.Adapter.Robot
         private List<ILoad> ReadNodeLoads(List<string> ids = null)
         {
             List<ILoad> bhomLoads = new List<ILoad>();
-            Dictionary<int, Node> bhomNodes = ReadNodes().ToDictionary(x => System.Convert.ToInt32(x.CustomData[AdapterId]));
+            Dictionary<int, Node> bhomNodes = ReadNodes().ToDictionary(x => System.Convert.ToInt32(x.CustomData[AdapterIdName]));
             Dictionary<string, Loadcase> bhomLoadCases = new Dictionary<string, Loadcase>();
             List<Loadcase> lCases = ReadLoadCase();
             for (int i = 0; i < lCases.Count; i++)

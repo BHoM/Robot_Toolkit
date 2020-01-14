@@ -27,6 +27,7 @@ using System;
 using BH.oM.Structure.Loads;
 using RobotOM;
 using BH.oM.Adapter;
+using BH.oM.Reflection;
 
 namespace BH.Adapter.Robot
 {
@@ -36,12 +37,14 @@ namespace BH.Adapter.Robot
         /****           Adapter Methods                 ****/
         /***************************************************/
 
-        public override bool Execute(string command, Dictionary<string, object> parameters = null, ActionConfig actionConfig = null)
+        public override Output<object, bool> Execute(string command, Dictionary<string, object> parameters = null, ActionConfig actionConfig = null)
         {
+            var output = new Output<object, bool>() { Item1 = null };
+
             string commandUpper = command.ToUpper();
 
             if (commandUpper == "CLOSE")
-                return Close();
+                output.Item2 = Close();
 
             else if (commandUpper == "SAVE")
             {
@@ -68,7 +71,7 @@ namespace BH.Adapter.Robot
                         break;
                     }
                 }
-                return Save(fileName);
+                output.Item2 = Save(fileName);
             }
 
             //else if (commandUpper == "CLEARRESULTS" || commandUpper == "DELETERESULTS")
@@ -106,11 +109,13 @@ namespace BH.Adapter.Robot
                         break;
                     }
                 }
-                return Analyse(cases);
+                output.Item2 = Analyse(cases);
             }
 
             else
-                return false;
+                output.Item2 = false;
+
+            return output;
         }
 
         /***************************************************/

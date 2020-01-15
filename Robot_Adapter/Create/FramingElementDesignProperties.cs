@@ -41,6 +41,17 @@ namespace BH.Adapter.Robot
 
             IRDimMembDef memberDef = label.Data;
 
+            if (framEleDesProps.MemberLengthYIsRelative)
+                memberDef.SetLengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Y, -framEleDesProps.MemberLengthY);
+            else
+                memberDef.SetLengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Y, framEleDesProps.MemberLengthY);
+
+            if (framEleDesProps.MemberLengthZIsRelative)
+                memberDef.SetLengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Z, -framEleDesProps.MemberLengthZ);
+            else
+                memberDef.SetLengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Z, framEleDesProps.MemberLengthZ);
+
+
             string steelMembersCodeType = m_RobotApplication.Project.Preferences.GetActiveCode(IRobotCodeType.I_CT_STEEL_STRUCTURES);
 
             if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.BS_EN_1993_1_2005_NA_2008_A1_2014))

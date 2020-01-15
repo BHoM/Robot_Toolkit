@@ -32,6 +32,10 @@ namespace BH.oM.Adapters.Robot
 
         public double EulerBucklingLengthCoefficientY { get; set; } = 1;
         public double EulerBucklingLengthCoefficientZ { get; set; } = 1;
+        public double MemberLengthY { get; set; } = 1;
+        public double MemberLengthZ { get; set; } = 1;
+        public bool MemberLengthYIsRelative { get; set; } = true;
+        public bool MemberLengthZIsRelative { get; set; } = true;
 
         /***************************************************/
 

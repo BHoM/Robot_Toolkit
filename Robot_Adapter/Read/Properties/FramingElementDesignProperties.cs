@@ -121,6 +121,29 @@ namespace BH.Adapter.Robot
                     bhomDesignProps.EulerBucklingLengthCoefficientY = memberDesignParams_BS5950_2000.BuckLengthCoeffY;
                     bhomDesignProps.EulerBucklingLengthCoefficientZ = memberDesignParams_BS5950_2000.BuckLengthCoeffZ;
                 }
+
+                if (memberDef.LengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Y) < 0)
+                {
+                    bhomDesignProps.MemberLengthY = -memberDef.LengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Y);
+                    bhomDesignProps.MemberLengthYIsRelative = true;
+                }
+                else
+                {
+                    bhomDesignProps.MemberLengthY = memberDef.LengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Y);
+                    bhomDesignProps.MemberLengthYIsRelative = false;
+                }
+
+                if (memberDef.LengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Z) < 0)
+                {
+                    bhomDesignProps.MemberLengthZ = -memberDef.LengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Z);
+                    bhomDesignProps.MemberLengthZIsRelative = true;
+                }
+                else
+                {
+                    bhomDesignProps.MemberLengthZ = memberDef.LengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Z);
+                    bhomDesignProps.MemberLengthZIsRelative = false;
+                }
+
                 bhomDesignPropsList.Add(bhomDesignProps);
             }
             return bhomDesignPropsList;

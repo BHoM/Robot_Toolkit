@@ -28,6 +28,7 @@ using BH.oM.Structure.Loads;
 using RobotOM;
 using BH.oM.Adapter;
 using BH.oM.Reflection;
+using BH.oM.Adapter.Commands;
 
 namespace BH.Adapter.Robot
 {
@@ -37,90 +38,18 @@ namespace BH.Adapter.Robot
         /****           Adapter Methods                 ****/
         /***************************************************/
 
-        public override Output<object, bool> Execute(string command, Dictionary<string, object> parameters = null, ActionConfig actionConfig = null)
+        public override Output<List<object>, bool> Execute(IExecuteCommand command, ActionConfig actionConfig = null)
         {
-            var output = new Output<object, bool>() { Item1 = null };
+            var output = new Output<List<object>, bool>() { Item1 = null, Item2 = false };
 
-            string commandUpper = command.ToUpper();
-
-            if (commandUpper == "CLOSE")
-                output.Item2 = Close();
-
-            else if (commandUpper == "SAVE")
-            {
-                string fileName = default(string);
-                string[] fileNameStringAlt = {
-                    "Filename",
-                    "File name",
-                    "File_name",
-                    "filename",
-                    "file name",
-                    "file_name",
-                    "FileName",
-                    "File Name",
-                    "File_Name",
-                    "FILENAME",
-                    "FILE NAME",
-                    "FILE_NAME"
-                };
-                foreach (string str in fileNameStringAlt)
-                {
-                    if (parameters.ContainsKey(str))
-                    {
-                        fileName = (string)parameters[str];
-                        break;
-                    }
-                }
-                output.Item2 = Save(fileName);
-            }
-
-            //else if (commandUpper == "CLEARRESULTS" || commandUpper == "DELETERESULTS")
-            //{
-            //    return ClearResults();
-            //}
-
-            else if (commandUpper == "ANALYSE" || commandUpper == "RUN")
-            {
-                IList cases = null;
-                string[] caseStringAlt =
-                {
-                    "Cases",
-                    "CASES",
-                    "cases",
-                    "LoadCases",
-                    "LOADCASES",
-                    "loadcases",
-                    "Loadcases",
-                    "Load Cases",
-                    "LOAD CASES",
-                    "load cases",
-                    "Load cases",
-                    "Load_Cases",
-                    "LOAD_CASES",
-                    "load_cases",
-                    "Load_cases"
-                };
-                foreach (string str in caseStringAlt)
-                {
-                    object obj;
-                    if (parameters.TryGetValue(str, out obj))
-                    {
-                        cases = obj as IList;
-                        break;
-                    }
-                }
-                output.Item2 = Analyse(cases);
-            }
-
-            else
-                output.Item2 = false;
+            output.Item2 = RunCommand(command as dynamic);
 
             return output;
         }
 
         /***************************************************/
 
-        public bool Close()
+        public bool RunCommand(Close command)
         {
             m_RobotApplication.Quit(IRobotQuitOption.I_QO_PROMPT_TO_SAVE_CHANGES);
             return true;
@@ -128,34 +57,36 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        public bool Save(string fileName = null)
+        public bool RunCommand(Save command)
         {
-            if (fileName == null)
-            {
-                m_RobotApplication.Project.Save();
-                return true;
-            }
-            else
-            {
-                m_RobotApplication.Project.SaveAs(fileName);
-                return true;
-            }
+            m_RobotApplication.Project.Save();
+            return true;
         }
 
         /***************************************************/
 
-        public bool Analyse(IList cases = null)
+        public bool RunCommand(SaveAs command)
         {
+            m_RobotApplication.Project.SaveAs(command.FileName);
+            return true;
+        }
+
+        /***************************************************/
+
+        public bool RunCommand(AnalyseLoadCases command)
+        {
+            var cases = command.LoadCases;
+
             RobotSelection rSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
             int index = m_RobotApplication.Project.Structure.Cases.FreeNumber;
-            if(index > 2)
+            if (index > 2)
                 rSelection.FromText("1to" + (index - 1).ToString());
             else
                 rSelection.FromText("1");
             SetAux(rSelection, false);
 
             rSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
-            
+
             if (cases != null && cases.Count > 0)
             {
                 List<int> caseNums = GetCaseNumbers(cases);

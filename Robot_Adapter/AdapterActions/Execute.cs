@@ -35,7 +35,7 @@ namespace BH.Adapter.Robot
     public partial class RobotAdapter
     {
         /***************************************************/
-        /****           Adapter Methods                 ****/
+        /**** IAdapter Interface                        ****/
         /***************************************************/
 
         public override Output<List<object>, bool> Execute(IExecuteCommand command, ActionConfig actionConfig = null)
@@ -47,6 +47,8 @@ namespace BH.Adapter.Robot
             return output;
         }
 
+        /***************************************************/
+        /**** Commands                                  ****/
         /***************************************************/
 
         public bool RunCommand(NewModel command)

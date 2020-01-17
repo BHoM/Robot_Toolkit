@@ -62,7 +62,8 @@ namespace BH.Adapter.Robot
 
         public bool RunCommand(Close command)
         {
-            m_RobotApplication.Quit(IRobotQuitOption.I_QO_PROMPT_TO_SAVE_CHANGES);
+            IRobotQuitOption option = command.SaveBeforeClose ? IRobotQuitOption.I_QO_SAVE_CHANGES : IRobotQuitOption.I_QO_DISCARD_CHANGES;
+            m_RobotApplication.Quit(option);
             return true;
         }
 

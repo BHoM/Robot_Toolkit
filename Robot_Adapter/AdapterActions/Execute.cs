@@ -103,6 +103,8 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
+        /****   Private Support Methods                 ****/
+        /***************************************************/
 
         private bool Analyse(IList cases = null)
         {
@@ -196,7 +198,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        public void SetAux(RobotSelection CSelection, bool yn)
+        private void SetAux(RobotSelection CSelection, bool yn)
         {
             RobotCaseCollection Caux = m_RobotApplication.Project.Structure.Cases.GetMany(CSelection);
             RobotCaseServer CServer = m_RobotApplication.Project.Structure.Cases;

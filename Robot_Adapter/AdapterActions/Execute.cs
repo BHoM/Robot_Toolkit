@@ -49,6 +49,15 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
+        public bool RunCommand(NewModel command)
+        {
+            m_RobotApplication.Interactive = 1;
+            m_RobotApplication.Project.New(IRobotProjectType.I_PT_SHELL);
+            return true;
+        }
+
+        /***************************************************/
+
         public bool RunCommand(Close command)
         {
             m_RobotApplication.Quit(IRobotQuitOption.I_QO_PROMPT_TO_SAVE_CHANGES);
@@ -75,19 +84,43 @@ namespace BH.Adapter.Robot
 
         public bool RunCommand(AnalyseLoadCases command)
         {
-            var cases = command.LoadCases;
+            return Analyse(command.LoadCases);
+        }
 
+        /***************************************************/
+
+        public bool RunCommand(Analyse command)
+        {
+            return Analyse();
+        }
+
+        /***************************************************/
+
+        public bool RunCommand(IExecuteCommand command)
+        {
+            Engine.Reflection.Compute.RecordWarning($"The command {command.GetType().Name} is not supported by this Adapter.");
+            return false;
+        }
+
+        /***************************************************/
+
+        private bool Analyse(IList cases = null)
+        {
             RobotSelection rSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
             int index = m_RobotApplication.Project.Structure.Cases.FreeNumber;
-            if (index > 2)
-                rSelection.FromText("1to" + (index - 1).ToString());
+
+            if (cases == null || cases.Count < 1)
+            {
+
+                if (index > 2)
+                    rSelection.FromText("1to" + (index - 1).ToString());
+                else
+                    rSelection.FromText("1");
+                SetAux(rSelection, false);
+
+                rSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
+            }
             else
-                rSelection.FromText("1");
-            SetAux(rSelection, false);
-
-            rSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
-
-            if (cases != null && cases.Count > 0)
             {
                 List<int> caseNums = GetCaseNumbers(cases);
                 string str = "";

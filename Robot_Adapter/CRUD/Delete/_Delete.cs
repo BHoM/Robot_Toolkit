@@ -55,6 +55,7 @@ namespace BH.Adapter.Robot
                 success = DeleteAll();
             else
                 return base.IDelete(type, ids, actionConfig);
+
             updateview();
             return success;
         }

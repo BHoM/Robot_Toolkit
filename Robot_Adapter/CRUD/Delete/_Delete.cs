@@ -43,16 +43,18 @@ namespace BH.Adapter.Robot
             int success = 0;
             if (type == typeof(DesignGroup))
                 success = DeleteSteelDesignGroups(ids as List<int>);
-            if (type == typeof(Node))
+            else if (type == typeof(Node))
                 success = DeleteNodes(ids);
-            if (type == typeof(Bar))
+            else if (type == typeof(Bar))
                 success = DeleteBars(ids);
-            if (type == typeof(BH.oM.Structure.Loads.Loadcase))
+            else if (type == typeof(BH.oM.Structure.Loads.Loadcase))
                 success = DeleteLoadcases(ids);
-            if (type == typeof(BH.oM.Structure.Loads.LoadCombination))
+            else if (type == typeof(BH.oM.Structure.Loads.LoadCombination))
                 success = DeleteLoadCombinations(ids);
-            if (type == null)
+            else if (type == null)
                 success = DeleteAll();
+            else
+                return base.IDelete(type, ids, actionConfig);
             updateview();
             return success;
         }

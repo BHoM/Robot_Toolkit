@@ -153,7 +153,6 @@ namespace BH.Adapter.Robot
         {
             List<int> caseNums = new List<int>();
 
-
             foreach (object o in cases)
             {
                 int id;

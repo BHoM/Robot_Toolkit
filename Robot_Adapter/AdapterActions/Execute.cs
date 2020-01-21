@@ -111,7 +111,7 @@ namespace BH.Adapter.Robot
         /****   Private Support Methods                 ****/
         /***************************************************/
 
-        private bool Analyse(IList cases = null)
+        private bool Analyse(IEnumerable<object> cases = null)
         {
             RobotSelection rSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
             int index = m_RobotApplication.Project.Structure.Cases.FreeNumber;
@@ -123,7 +123,7 @@ namespace BH.Adapter.Robot
 
             rSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
 
-            if (cases != null && cases.Count > 0)
+            if (cases != null && cases.Count() > 0)
             {
                 List<int> caseNums = GetCaseNumbers(cases);
                 string str = "";
@@ -149,52 +149,42 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private List<int> GetCaseNumbers(IList cases)
+        private List<int> GetCaseNumbers(IEnumerable<object> cases)
         {
             List<int> caseNums = new List<int>();
 
-            if (cases is List<string>)
-                return (cases as List<string>).Select(x => int.Parse(x)).ToList();
-            else if (cases is List<int>)
-                return cases as List<int>;
-            else if (cases is List<double>)
-                return (cases as List<double>).Select(x => (int)Math.Round(x)).ToList();
 
-            else if (cases is List<Loadcase>)
+            foreach (object o in cases)
             {
-                for (int i = 0; i < cases.Count; i++)
+                int id;
+                if (o is Loadcase)
                 {
-                    caseNums.Add(System.Convert.ToInt32((cases[i] as Loadcase).Number));
+                    caseNums.Add((o as Loadcase).Number);
                 }
-            }
-            else if (cases is List<LoadCombination>)
-            {
-                foreach (object lComb in cases)
+                else if (o is LoadCombination)
                 {
+                    LoadCombination lComb = (o as LoadCombination);
                     foreach (Tuple<double, ICase> lCase in (lComb as LoadCombination).LoadCases)
                     {
                         caseNums.Add(System.Convert.ToInt32(lCase.Item2.Number));
                     }
                     caseNums.Add(System.Convert.ToInt32((lComb as LoadCombination).CustomData[AdapterIdName]));
                 }
-            }          
-
-            else
-            {
-                List<int> idsOut = new List<int>();
-                foreach (object o in cases)
+                else if (o is int)
                 {
-                    int id;
-                    if (int.TryParse(o.ToString(), out id))
-                    {
-                        idsOut.Add(id);
-                    }
+                    caseNums.Add((int)o);
                 }
-                return idsOut;
+                else if (int.TryParse(o.ToString(), out id))
+                {
+                    caseNums.Add(id);
+                }
+                else
+                {
+                    Engine.Reflection.Compute.RecordWarning("Could not extract case information from object " + o.ToString() + ". Case information need to be provided as Loadcases, Loadcombinations or as case numbers (string or int)");
+                }
             }
-
-
             return caseNums;
+            
         }
 
         /***************************************************/

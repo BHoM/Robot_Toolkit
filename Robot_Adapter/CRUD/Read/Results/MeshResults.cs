@@ -33,6 +33,7 @@ using BH.oM.Common;
 using BH.oM.Structure.Requests;
 using BH.oM.Geometry;
 using BH.Engine.Geometry;
+using BH.oM.Adapter;
 using BH.oM.Base;
 
 namespace BH.Adapter.Robot
@@ -43,7 +44,7 @@ namespace BH.Adapter.Robot
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public IEnumerable<IResult> ReadResults(MeshResultRequest request)
+        public IEnumerable<IResult> ReadResults(MeshResultRequest request, ActionConfig actionConfig = null)
         {
             MeshResultLayer layer = request.Layer;
             MeshResultSmoothingType smoothing = request.Smoothing;

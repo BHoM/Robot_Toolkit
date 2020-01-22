@@ -32,6 +32,7 @@ using BH.oM.Geometry;
 using BH.oM.Geometry.CoordinateSystem;
 using BH.Engine.Geometry;
 using BH.Engine.Structure;
+using BH.oM.Adapter;
 using System;
 using System.Collections;
 
@@ -43,7 +44,7 @@ namespace BH.Adapter.Robot
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public IEnumerable<IResult> ReadResults(BarResultRequest request)
+        public IEnumerable<IResult> ReadResults(BarResultRequest request, ActionConfig actionConfig = null)
         {
             if (request.DivisionType == DivisionType.ExtremeValues)
             {

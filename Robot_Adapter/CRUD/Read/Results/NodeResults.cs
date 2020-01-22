@@ -27,6 +27,7 @@ using BH.oM.Structure.Results;
 using BH.oM.Structure.Requests;
 using RobotOM;
 using BH.oM.Common;
+using BH.oM.Adapter;
 using System;
 using System.Collections;
 
@@ -38,7 +39,7 @@ namespace BH.Adapter.Robot
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public IEnumerable<IResult> ReadResults(NodeResultRequest request)
+        public IEnumerable<IResult> ReadResults(NodeResultRequest request, ActionConfig actionConfig = null)
         {
             List<NodeResult> nodeResults = new List<NodeResult>();
 

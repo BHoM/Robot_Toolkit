@@ -94,7 +94,6 @@ namespace BH.Adapter.Robot
         /**** Public  Methods                           ****/
         /***************************************************/
 
-
         public static bool IsApplicationRunning()
         {
             return (Process.GetProcessesByName("robot").Length > 0) ? true : false;
@@ -114,7 +113,6 @@ namespace BH.Adapter.Robot
         //private Dictionary<string, string> m_MaterialTaggs = new Dictionary<string, string>();
         //private Dictionary<string, string> m_SectionPropertyTaggs = new Dictionary<string, string>();
         //private Dictionary<string, string> m_SupportTaggs = new Dictionary<string, string>();
-
 
         /***************************************************/
         /**** Private Helper Methods                    ****/
@@ -151,6 +149,5 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
-
     }
 }

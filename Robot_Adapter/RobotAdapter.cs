@@ -91,12 +91,6 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
-
-        /***************************************************/
-        /**** Public  Fields                           ****/
-        /***************************************************/
-
-        /***************************************************/
         /**** Public  Methods                           ****/
         /***************************************************/
 
@@ -106,31 +100,6 @@ namespace BH.Adapter.Robot
             return (Process.GetProcessesByName("robot").Length > 0) ? true : false;
         }
 
-        private void updateview()
-        {
-            m_RobotApplication.Project.ViewMngr.Refresh();
-        }
-
-        private Dictionary<int, HashSet<string>> GetTypeTags(Type t)
-        {
-            Dictionary<int, HashSet<string>> typeTags;
-
-            if (!m_tags.TryGetValue(t, out typeTags))
-                typeTags = new Dictionary<int, HashSet<string>>();
-
-            m_tags[t] = typeTags;
-
-            return typeTags;
-        }
-
-        private void SetProjectPreferences(RobotConfig robotConfig)
-        {
-            if (robotConfig.DatabaseSettings.SteelDesignCode != DesignCode_Steel.Default)
-                m_RobotApplication.Project.Preferences.SetActiveCode(IRobotCodeType.I_CT_STEEL_STRUCTURES, Query.GetStringFromEnum(robotConfig.DatabaseSettings.SteelDesignCode));
-            
-            m_RobotApplication.Project.Preferences.SetCurrentDatabase(IRobotDatabaseType.I_DT_SECTIONS, Query.GetStringFromEnum(robotConfig.DatabaseSettings.SectionDatabase));
-            m_RobotApplication.Project.Preferences.Materials.Load(Query.GetStringFromEnum(robotConfig.DatabaseSettings.MaterialDatabase));
-        }
         /***************************************************/
         /**** Private Fields                            ****/
         /***************************************************/
@@ -151,6 +120,37 @@ namespace BH.Adapter.Robot
         /**** Private Helper Methods                    ****/
         /***************************************************/
 
-        
+        private void updateview()
+        {
+            m_RobotApplication.Project.ViewMngr.Refresh();
+        }
+
+        /***************************************************/
+
+        private Dictionary<int, HashSet<string>> GetTypeTags(Type t)
+        {
+            Dictionary<int, HashSet<string>> typeTags;
+
+            if (!m_tags.TryGetValue(t, out typeTags))
+                typeTags = new Dictionary<int, HashSet<string>>();
+
+            m_tags[t] = typeTags;
+
+            return typeTags;
+        }
+
+        /***************************************************/
+
+        private void SetProjectPreferences(RobotConfig robotConfig)
+        {
+            if (robotConfig.DatabaseSettings.SteelDesignCode != DesignCode_Steel.Default)
+                m_RobotApplication.Project.Preferences.SetActiveCode(IRobotCodeType.I_CT_STEEL_STRUCTURES, Query.GetStringFromEnum(robotConfig.DatabaseSettings.SteelDesignCode));
+
+            m_RobotApplication.Project.Preferences.SetCurrentDatabase(IRobotDatabaseType.I_DT_SECTIONS, Query.GetStringFromEnum(robotConfig.DatabaseSettings.SectionDatabase));
+            m_RobotApplication.Project.Preferences.Materials.Load(Query.GetStringFromEnum(robotConfig.DatabaseSettings.MaterialDatabase));
+        }
+
+        /***************************************************/
+
     }
 }

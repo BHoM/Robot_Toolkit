@@ -115,8 +115,16 @@ namespace BH.Adapter.Robot
         {
             RobotSelection rSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
             int index = m_RobotApplication.Project.Structure.Cases.FreeNumber;
+
+
+            RobotCaseCollection rCases = m_RobotApplication.Project.Structure.Cases.GetAll();
+            if (rCases.Count != 0)
+                index = (rCases.Get(rCases.Count) as IRobotCase).Number;
+            else
+                index = 1;
+
             if (index > 2)
-                rSelection.FromText("1to" + (index - 1).ToString());
+                rSelection.FromText("1to" + (index).ToString());
             else
                 rSelection.FromText("1");
             SetAux(rSelection, false);
@@ -127,7 +135,7 @@ namespace BH.Adapter.Robot
             {
                 List<int> caseNums = GetCaseNumbers(cases);
                 string str = "";
-                for (int i = 1; i < index; i++)
+                for (int i = 1; i <= index; i++)
                 {
                     if (!caseNums.Contains(i))
                         str = str + i.ToString() + ",";

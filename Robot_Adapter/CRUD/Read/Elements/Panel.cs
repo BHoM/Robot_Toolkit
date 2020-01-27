@@ -43,6 +43,7 @@ namespace BH.Adapter.Robot
             List<Panel> BHoMPanels = new List<Panel>();
             IRobotStructure robotStructureServer = m_RobotApplication.Project.Structure;
             IRobotObjObjectServer robotPanelServer = m_RobotApplication.Project.Structure.Objects;
+            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
             List<Material> bhomMaterials = new List<Material>();
             List<Opening> allOpenings = ReadOpenings();
             Panel BHoMPanel = null;
@@ -108,13 +109,20 @@ namespace BH.Adapter.Robot
                     BH.oM.Geometry.CoordinateSystem.Cartesian tempCoordSys = BH.Engine.Geometry.Create.CartesianCoordinateSystem(coordPoint, coordXAxis, coordZAxis);
                     BH.oM.Geometry.CoordinateSystem.Cartesian coordinateSystem = BH.Engine.Geometry.Create.CartesianCoordinateSystem(coordPoint, coordXAxis, tempCoordSys.Z);                    
 
-                    BHoMPanel.CustomData["CoordinateSystem"] = coordinateSystem;
-
+                    BHoMPanel.CustomData["CoordinateSystem"] = coordinateSystem;                
                     if (rpanel.HasLabel(IRobotLabelType.I_LT_PANEL_THICKNESS) != 0)
                     {
                         string propName = rpanel.GetLabelName(IRobotLabelType.I_LT_PANEL_THICKNESS);
                         if (BHoMProperties.ContainsKey(propName))
+                        {
+                            if(BHoMProperties[propName].Material == null)
+                            {
+                                IRobotLabel thicknessLabel = rpanel.GetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS);
+                                IRobotThicknessData thicknessData = thicknessLabel.Data;
+                                BHoMProperties[propName].Material = MaterialFromLabel(robotLabelServer.Get(IRobotLabelType.I_LT_MATERIAL, thicknessData.MaterialName));
+                            }
                             BHoMPanel.Property = BHoMProperties[propName];
+                        }
                         else
                             BH.Engine.Reflection.Compute.RecordEvent("Failed to convert/create ConstantThickness property for panel " + rpanel.Number.ToString(), oM.Reflection.Debugging.EventType.Warning);
                     }

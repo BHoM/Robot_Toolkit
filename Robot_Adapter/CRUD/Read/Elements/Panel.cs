@@ -28,6 +28,7 @@ using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Physical.Materials;
 using BH.oM.Geometry;
 using System.Collections;
+using BH.oM.Structure.MaterialFragments;
 
 namespace BH.Adapter.Robot
 {
@@ -44,7 +45,7 @@ namespace BH.Adapter.Robot
             IRobotStructure robotStructureServer = m_RobotApplication.Project.Structure;
             IRobotObjObjectServer robotPanelServer = m_RobotApplication.Project.Structure.Objects;
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            List<Material> bhomMaterials = new List<Material>();
+            Dictionary<string, IMaterialFragment> bhomMaterials = BHoMProperties.Where(x => x.Value.Material != null).Select(x => x.Value.Material as IMaterialFragment).ToDictionary(x => x.Name);
             List<Opening> allOpenings = ReadOpenings();
             Panel BHoMPanel = null;
 
@@ -113,18 +114,35 @@ namespace BH.Adapter.Robot
                     if (rpanel.HasLabel(IRobotLabelType.I_LT_PANEL_THICKNESS) != 0)
                     {
                         string propName = rpanel.GetLabelName(IRobotLabelType.I_LT_PANEL_THICKNESS);
-                        if (BHoMProperties.ContainsKey(propName))
+                        if (!BHoMProperties.ContainsKey(propName))
                         {
-                            if(BHoMProperties[propName].Material == null)
+                            try
+                            {
+                                IRobotLabel thicknessLabel = rpanel.GetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS);
+                                IRobotThicknessData thicknessData = thicknessLabel.Data;                                
+                                if(!bhomMaterials.ContainsKey(thicknessData.MaterialName))
+                                    bhomMaterials.Add(thicknessData.MaterialName, MaterialFromLabel(robotLabelServer.Get(IRobotLabelType.I_LT_MATERIAL, thicknessData.MaterialName)));                                
+                                ISurfaceProperty tempProp = BH.Engine.Robot.Convert.ToBHoMObject(thicknessLabel, bhomMaterials);
+                                tempProp.CustomData.Add(AdapterIdName, tempProp.Name);
+                                BHoMProperties.Add(propName, tempProp);
+                                BHoMPanel.Property = BHoMProperties[propName];
+                            }
+                            catch
+                            {
+                                BH.Engine.Reflection.Compute.RecordEvent("Failed to convert/create ConstantThickness property for panel " + rpanel.Number.ToString(), oM.Reflection.Debugging.EventType.Warning);
+                            }
+                        }
+                        else
+                        {
+                            if (BHoMProperties[propName].Material == null)
                             {
                                 IRobotLabel thicknessLabel = rpanel.GetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS);
                                 IRobotThicknessData thicknessData = thicknessLabel.Data;
                                 BHoMProperties[propName].Material = MaterialFromLabel(robotLabelServer.Get(IRobotLabelType.I_LT_MATERIAL, thicknessData.MaterialName));
+                                bhomMaterials.Add(thicknessData.MaterialName, BHoMProperties[propName].Material);
                             }
                             BHoMPanel.Property = BHoMProperties[propName];
-                        }
-                        else
-                            BH.Engine.Reflection.Compute.RecordEvent("Failed to convert/create ConstantThickness property for panel " + rpanel.Number.ToString(), oM.Reflection.Debugging.EventType.Warning);
+                        }                           
                     }
                     else
                     {

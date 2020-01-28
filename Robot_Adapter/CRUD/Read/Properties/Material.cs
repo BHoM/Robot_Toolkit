@@ -39,38 +39,14 @@ namespace BH.Adapter.Robot
             IMaterialFragment bhomMat = null;
             List<IMaterialFragment> bhomMaterials = new List<IMaterialFragment>();
 
-            //IRobotMaterialData mData;
-            //int counter = 0;
-            //bool refresh = false;
-            //
-            //foreach (string matName in m_dbMaterialNames)
-            //{
-            //    IRobotLabel label = labelServer.Create(IRobotLabelType.I_LT_MATERIAL, "");
-            //    mData = label.Data;
-            //    mData.LoadFromDBase(matName);
-            //    MaterialType bhomMatType = BH.Engine.Robot.Convert.GetMaterialType(mData.Type);
-            //    bhomMat = BH.Engine.Common.Create.Material(matName, bhomMatType, mData.E, mData.NU, mData.LX, mData.RO / Engine.Robot.Query.RobotGravityConstant);
-            //    if (m_indexDict.ContainsKey(bhomMat.GetType()) && counter == 0)
-            //        m_indexDict[bhomMat.GetType()] = 0;
-            //    bhomMat.CustomData.Add(AdapterIdName, NextId(bhomMat.GetType(), refresh));
-
-            //    //if (refresh)
-            //    //    refresh = false;
-
-            //    if (bhomMat != null)
-            //        bhomMaterials.Add(bhomMat);
-            //    counter++;
-            //}
-
             for (int i = 1; i <= rMaterials.Count; i++)
             {
-                IRobotLabel rMatLable = rMaterials.Get(i);
+                IRobotLabel robotMaterialLabel = rMaterials.Get(i);
 
-                bhomMat = MaterialFromLabel(rMatLable);
+                bhomMat = MaterialFromLabel(robotMaterialLabel);
 
                 if (bhomMat != null)
                     bhomMaterials.Add(bhomMat);
-                //}
             }
 
             return bhomMaterials;
@@ -83,18 +59,15 @@ namespace BH.Adapter.Robot
             IRobotLabel materialLabel = m_RobotApplication.Project.Structure.Labels.Get(IRobotLabelType.I_LT_MATERIAL, labelName);
             if(materialLabel != null)
                 return MaterialFromLabel(materialLabel);
-
             return null;
         }
 
         /***************************************************/
 
-        private IMaterialFragment MaterialFromLabel(IRobotLabel materialLabel)
+        private IMaterialFragment MaterialFromLabel(IRobotLabel robotMaterialLabel)
         {
-            IRobotMaterialData mData = materialLabel.Data as IRobotMaterialData;
-
+            IRobotMaterialData mData = robotMaterialLabel.Data as IRobotMaterialData;
             IMaterialFragment bhomMat;
-
             switch (mData.Type)
             {
                 case IRobotMaterialType.I_MT_STEEL:
@@ -112,8 +85,7 @@ namespace BH.Adapter.Robot
                 default:
                     Engine.Reflection.Compute.RecordWarning("Material of Robot type " + mData.Type + " not yet suported. Empty material will be provided");
                     return null;
-            }
-           
+            }           
             bhomMat.CustomData.Add(AdapterIdName, NextFreeId(bhomMat.GetType(), false));
             return bhomMat;
         }
@@ -133,6 +105,22 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
+        private IMaterialFragment ReadMaterialFromPanel(IRobotObjObject robotPanel)
+        {
+            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
+            IRobotLabel thicknessLabel = robotPanel.GetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS);
+            IRobotThicknessData thicknessData = thicknessLabel.Data;
+            IMaterialFragment material = null;
+            try
+            {
+                material = MaterialFromLabel(robotLabelServer.Get(IRobotLabelType.I_LT_MATERIAL, thicknessData.MaterialName));
+            }
+            catch
+            {
+                BH.Engine.Reflection.Compute.RecordWarning("No material is assigned for panel " + robotPanel.Number.ToString());
+            }
+            return material;
+        }
     }
 }
 

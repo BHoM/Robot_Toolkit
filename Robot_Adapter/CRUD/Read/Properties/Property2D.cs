@@ -63,6 +63,23 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
-
+        
+        private ISurfaceProperty ReadProperty2DFromPanel(IRobotObjObject robotPanel, Dictionary<string, IMaterialFragment> bHoMMaterials = null)
+        {
+            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
+            if (bHoMMaterials == null) bHoMMaterials = new Dictionary<string, IMaterialFragment>();
+            IRobotLabel thicknessLabel = robotPanel.GetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS);
+            IRobotThicknessData thicknessData = thicknessLabel.Data;
+            if (!bHoMMaterials.ContainsKey(thicknessData.MaterialName))
+                bHoMMaterials.Add(thicknessData.MaterialName, MaterialFromLabel(robotLabelServer.Get(IRobotLabelType.I_LT_MATERIAL, thicknessData.MaterialName)));
+            ISurfaceProperty thicknessProperty = BH.Engine.Robot.Convert.ToBHoMObject(thicknessLabel, bHoMMaterials);
+            if (thicknessProperty == null)
+            {
+                BH.Engine.Reflection.Compute.RecordEvent("Failed to convert/create ConstantThickness property for panel " + robotPanel.Number.ToString(), oM.Reflection.Debugging.EventType.Warning);
+                return null;
+            }
+            else
+                return thicknessProperty;
+        }
     }
 }

@@ -40,12 +40,13 @@ namespace BH.Adapter.Robot
 
         private List<Panel> ReadPanels(IList ids = null)
         {
-            Dictionary<string, ISurfaceProperty> BHoMProperties = ReadProperty2D().ToDictionary(x => x.Name);
+            Dictionary<string, ISurfaceProperty> bhomProperties = new Dictionary<string, ISurfaceProperty>();
+            Dictionary<string, IMaterialFragment> bhomMaterials = new Dictionary<string, IMaterialFragment>();
             List<Panel> BHoMPanels = new List<Panel>();
             IRobotStructure robotStructureServer = m_RobotApplication.Project.Structure;
             IRobotObjObjectServer robotPanelServer = m_RobotApplication.Project.Structure.Objects;
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            Dictionary<string, IMaterialFragment> bhomMaterials = BHoMProperties.Where(x => x.Value.Material != null).Select(x => x.Value.Material as IMaterialFragment).ToDictionary(x => x.Name);
+
             List<Opening> allOpenings = ReadOpenings();
             Panel BHoMPanel = null;
 
@@ -114,14 +115,13 @@ namespace BH.Adapter.Robot
                     if (robotPanel.HasLabel(IRobotLabelType.I_LT_PANEL_THICKNESS) != 0)
                     {
                         string propName = robotPanel.GetLabelName(IRobotLabelType.I_LT_PANEL_THICKNESS);
-                        if (!BHoMProperties.ContainsKey(propName))
-                            BHoMProperties.Add(propName, ReadProperty2DFromPanel(robotPanel, bhomMaterials));
-                        else
+                        if (!bhomProperties.ContainsKey(propName))
                         {
-                            ISurfaceProperty property2D = BHoMProperties[propName];
+                            ISurfaceProperty property2D = ReadProperty2DFromPanel(robotPanel, bhomMaterials);
                             if (property2D.Material == null) property2D.Material = ReadMaterialFromPanel(robotPanel);
-                            BHoMPanel.Property = BHoMProperties[propName];
+                            bhomProperties.Add(propName, property2D);
                         }
+                        BHoMPanel.Property = bhomProperties[propName];
                     }
                     BHoMPanels.Add(BHoMPanel);
                 }
@@ -147,14 +147,13 @@ namespace BH.Adapter.Robot
                         string propName = robotCladdingPanel.GetLabelName(IRobotLabelType.I_LT_CLADDING);
                         if (propName != "")
                         {
-                            if (!BHoMProperties.ContainsKey(propName))
-                                BHoMProperties.Add(propName, ReadProperty2DFromPanel(robotCladdingPanel, bhomMaterials));
-                            else
+                            if (!bhomProperties.ContainsKey(propName))
                             {
-                                ISurfaceProperty property2D = BHoMProperties[propName];
+                                ISurfaceProperty property2D = ReadProperty2DFromPanel(robotCladdingPanel, bhomMaterials);
                                 if (property2D.Material == null) property2D.Material = ReadMaterialFromPanel(robotCladdingPanel);
-                                BHoMPanel.Property = BHoMProperties[propName];
+                                bhomProperties.Add(propName, property2D);
                             }
+                            BHoMPanel.Property = bhomProperties[propName];
                         }
                     }
                     BHoMPanels.Add(BHoMPanel);

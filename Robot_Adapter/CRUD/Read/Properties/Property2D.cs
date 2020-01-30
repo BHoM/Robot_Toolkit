@@ -70,7 +70,7 @@ namespace BH.Adapter.Robot
             if (bHoMMaterials == null) bHoMMaterials = new Dictionary<string, IMaterialFragment>();
             IRobotLabel thicknessLabel = robotPanel.GetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS);
             IRobotThicknessData thicknessData = thicknessLabel.Data;
-            if (!bHoMMaterials.ContainsKey(thicknessData.MaterialName))
+            if (thicknessData.MaterialName != "" && !bHoMMaterials.ContainsKey(thicknessData.MaterialName))
                 bHoMMaterials.Add(thicknessData.MaterialName, MaterialFromLabel(robotLabelServer.Get(IRobotLabelType.I_LT_MATERIAL, thicknessData.MaterialName)));
             ISurfaceProperty thicknessProperty = BH.Engine.Robot.Convert.ToBHoMObject(thicknessLabel, bHoMMaterials);
             if (thicknessProperty == null)

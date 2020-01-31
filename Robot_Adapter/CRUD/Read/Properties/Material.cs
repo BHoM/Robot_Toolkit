@@ -110,16 +110,7 @@ namespace BH.Adapter.Robot
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotLabel thicknessLabel = robotPanel.GetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS);
             IRobotThicknessData thicknessData = thicknessLabel.Data;
-            IMaterialFragment material = null;
-            try
-            {
-                material = MaterialFromLabel(robotLabelServer.Get(IRobotLabelType.I_LT_MATERIAL, thicknessData.MaterialName));
-            }
-            catch
-            {
-                BH.Engine.Reflection.Compute.RecordWarning("No material is assigned for panel " + robotPanel.Number.ToString());
-            }
-            return material;
+            return MaterialFromLabel(robotLabelServer.Get(IRobotLabelType.I_LT_MATERIAL, thicknessData.MaterialName));
         }
     }
 }

@@ -150,7 +150,6 @@ namespace BH.Adapter.Robot
                             if (!bhomProperties.ContainsKey(propName))
                             {
                                 ISurfaceProperty property2D = ReadProperty2DFromPanel(robotCladdingPanel, bhomMaterials, true);
-                                if (property2D.Material == null) property2D.Material = ReadMaterialFromPanel(robotCladdingPanel);
                                 bhomProperties.Add(propName, property2D);
                             }
                             BHoMPanel.Property = bhomProperties[propName];

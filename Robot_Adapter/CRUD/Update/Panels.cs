@@ -38,9 +38,10 @@ namespace BH.Adapter.Robot
         protected override bool UpdateOnly<T>(IEnumerable<T> panels, string tag = "", ActionConfig actionConfig = null)
         {
             Dictionary<int, HashSet<string>> panelTags = GetTypeTags(typeof(Panel));
+            RobotObjObjectServer robotObjectServer = m_RobotApplication.Project.Structure.Objects;
             foreach (Panel panel in panels.Select(x => x as Panel))
             {
-                RobotObjObject robotPanel = m_RobotApplication.Project.Structure.Objects.Get((int)panel.CustomData[AdapterIdName]) as RobotObjObject;
+                RobotObjObject robotPanel = robotObjectServer.Get((int)panel.CustomData[AdapterIdName]) as RobotObjObject;
                 if (robotPanel == null)
                     return false;
                 
@@ -57,20 +58,22 @@ namespace BH.Adapter.Robot
                 else
                     robotPanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, panel.Property.Name);
 
-                //RobotSelection rPanelOpenings = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_OBJECT);
-                //foreach (Opening opening in panel.Openings)
-                //{
-                //    RobotObjObject rPanelOpening = objServer.Create(freeObjectNumber);
-                //    freeObjectNumber++;
-                //    opening.CustomData[AdapterIdName] = rPanelOpening.Number.ToString();
-                //    rPanelOpening.Main.Geometry = CreateRobotContour(opening.Edges, out subEdges);
-                //    rPanelOpening.Initialize();
-                //    rPanelOpening.Update();
-                //    if (HasEdgeSupports(subEdges)) SetRobotPanelEdgeSupports(rPanel, subEdges);
-                //    rPanelOpenings.AddOne(rPanelOpening.Number);
-                //}
-                //robotPanel.SetHostedObjects(rPanelOpenings);
+                robotObjectServer.DeleteMany(robotPanel.GetHostedObjects());
 
+                RobotSelection rPanelOpenings = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_OBJECT);
+                int freeObjectNumber = robotObjectServer.FreeNumber;
+                foreach (Opening opening in panel.Openings)
+                {
+                    RobotObjObject rPanelOpening = robotObjectServer.Create(freeObjectNumber);
+                    freeObjectNumber++;
+                    opening.CustomData[AdapterIdName] = rPanelOpening.Number.ToString();
+                    rPanelOpening.Main.Geometry = CreateRobotContour(opening.Edges, out subEdges);
+                    rPanelOpening.Initialize();
+                    rPanelOpening.Update();
+                    if (HasEdgeSupports(subEdges)) SetRobotPanelEdgeSupports(robotPanel, subEdges);
+                    rPanelOpenings.AddOne(rPanelOpening.Number);
+                }
+                robotPanel.SetHostedObjects(rPanelOpenings);
             }
             m_tags[typeof(Panel)] = panelTags;
             return true;

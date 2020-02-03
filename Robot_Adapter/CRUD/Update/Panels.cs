@@ -52,6 +52,7 @@ namespace BH.Adapter.Robot
                 robotPanel.Initialize();
                 robotPanel.Update();
                 if (HasEdgeSupports(subEdges)) SetRobotPanelEdgeSupports(robotPanel, subEdges);
+                if (HasEdgeSupports(subEdges)) SetRobotPanelEdgeReleases(robotPanel, subEdges);
 
                 if (panel.Property is LoadingPanelProperty)
                     robotPanel.SetLabel(IRobotLabelType.I_LT_CLADDING, panel.Property.Name);
@@ -62,17 +63,20 @@ namespace BH.Adapter.Robot
 
                 RobotSelection rPanelOpenings = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_OBJECT);
                 int freeObjectNumber = robotObjectServer.FreeNumber;
+                robotObjectServer.BeginMultiOperation();
                 foreach (Opening opening in panel.Openings)
                 {
-                    RobotObjObject rPanelOpening = robotObjectServer.Create(freeObjectNumber);
+                    RobotObjObject robotPanelOpening = robotObjectServer.Create(freeObjectNumber);
                     freeObjectNumber++;
-                    opening.CustomData[AdapterIdName] = rPanelOpening.Number.ToString();
-                    rPanelOpening.Main.Geometry = CreateRobotContour(opening.Edges, out subEdges);
-                    rPanelOpening.Initialize();
-                    rPanelOpening.Update();
-                    if (HasEdgeSupports(subEdges)) SetRobotPanelEdgeSupports(robotPanel, subEdges);
-                    rPanelOpenings.AddOne(rPanelOpening.Number);
+                    opening.CustomData[AdapterIdName] = robotPanelOpening.Number.ToString();
+                    robotPanelOpening.Main.Geometry = CreateRobotContour(opening.Edges, out subEdges);
+                    robotPanelOpening.Initialize();
+                    robotPanelOpening.Update();
+                    if (HasEdgeSupports(subEdges)) SetRobotPanelEdgeSupports(robotPanelOpening, subEdges);
+                    if (HasEdgeReleases(subEdges)) SetRobotPanelEdgeReleases(robotPanelOpening, subEdges);
+                    rPanelOpenings.AddOne(robotPanelOpening.Number);
                 }
+                robotObjectServer.EndMultiOperation();
                 robotPanel.SetHostedObjects(rPanelOpenings);
             }
             m_tags[typeof(Panel)] = panelTags;

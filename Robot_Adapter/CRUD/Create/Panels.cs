@@ -27,6 +27,7 @@ using BH.oM.Geometry;
 using BH.oM.Structure.SurfaceProperties;
 using RobotOM;
 using BHEG = BH.Engine.Geometry;
+using BH.oM.Structure.Constraints;
 
 namespace BH.Adapter.Robot
 {
@@ -56,6 +57,7 @@ namespace BH.Adapter.Robot
                 rPanel.Initialize();
                 rPanel.Update();
                 if (HasEdgeSupports(subEdges)) SetRobotPanelEdgeSupports(rPanel, subEdges);
+                if (HasEdgeReleases(subEdges)) SetRobotPanelEdgeReleases(rPanel, subEdges);
 
                 if (panel.Property is LoadingPanelProperty)
                     rPanel.SetLabel(IRobotLabelType.I_LT_CLADDING, panel.Property.Name);
@@ -71,7 +73,8 @@ namespace BH.Adapter.Robot
                     rPanelOpening.Main.Geometry = CreateRobotContour(opening.Edges, out subEdges);
                     rPanelOpening.Initialize();
                     rPanelOpening.Update();
-                    if (HasEdgeSupports(subEdges)) SetRobotPanelEdgeSupports(rPanel, subEdges);
+                    if (HasEdgeSupports(subEdges)) SetRobotPanelEdgeSupports(rPanelOpening, subEdges);
+                    if (HasEdgeReleases(subEdges)) SetRobotPanelEdgeReleases(rPanelOpening, subEdges);
                     rPanelOpenings.AddOne(rPanelOpening.Number);
                 }
                 rPanel.SetHostedObjects(rPanelOpenings);
@@ -128,16 +131,60 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
+        private bool HasEdgeReleases(List<Edge> edges)
+        {
+            foreach (Edge edge in edges)
+            {
+                if (edge.Release!= null)
+                {
+                    if (!string.IsNullOrWhiteSpace(edge.Release.Name)) return true;
+                }
+            }
+            return false;
+        }
+
+        /***************************************************/
+
         private void SetRobotPanelEdgeSupports(RobotObjObject panel, List<Edge> edges)
         {
             IRobotCollection panelEdges = panel.Main.Edges;
             for (int i = 1; i <= panelEdges.Count; i++)
             {
                 IRobotObjEdge panelEdge = panelEdges.Get(i);
-                BH.oM.Structure.Constraints.Constraint6DOF support = edges[i - 1].Support;
+                Constraint6DOF support = edges[i - 1].Support;
                 if (support != null)
                 {
-                    if (!string.IsNullOrWhiteSpace(support.Name)) panelEdge.SetLabel(IRobotLabelType.I_LT_SUPPORT, support.Name);
+                    if (!string.IsNullOrWhiteSpace(support.Name))
+                    {
+                        if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_SUPPORT, support.Name) == 0)
+                        {
+                            ICreate(new List<Constraint6DOF>() { support });
+                        }
+                        panelEdge.SetLabel(IRobotLabelType.I_LT_SUPPORT, support.Name);             
+                    }
+                }
+            }
+        }
+
+        /***************************************************/
+
+        private void SetRobotPanelEdgeReleases(RobotObjObject panel, List<Edge> edges)
+        {
+            IRobotCollection panelEdges = panel.Main.Edges;
+            for (int i = 1; i <= panelEdges.Count; i++)
+            {
+                IRobotObjEdge panelEdge = panelEdges.Get(i);
+                Constraint4DOF release = edges[i - 1].Release;
+                if (release != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(release.Name))
+                    {
+                        if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_LINEAR_RELEASE, release.Name) == 0)
+                        {
+                            ICreate(new List<Constraint4DOF>() { release });
+                        }
+                        panelEdge.SetLabel(IRobotLabelType.I_LT_SUPPORT, release.Name);
+                    }
                 }
             }
         }

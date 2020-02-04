@@ -183,7 +183,7 @@ namespace BH.Adapter.Robot
                         {
                             ICreate(new List<Constraint4DOF>() { release });
                         }
-                        panelEdge.SetLabel(IRobotLabelType.I_LT_SUPPORT, release.Name);
+                        panelEdge.SetLabel(IRobotLabelType.I_LT_LINEAR_RELEASE, release.Name);
                     }
                 }
             }

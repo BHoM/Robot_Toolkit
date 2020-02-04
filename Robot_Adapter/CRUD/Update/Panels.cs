@@ -52,7 +52,7 @@ namespace BH.Adapter.Robot
                 robotPanel.Initialize();
                 robotPanel.Update();
                 if (HasEdgeSupports(subEdges)) SetRobotPanelEdgeSupports(robotPanel, subEdges);
-                if (HasEdgeSupports(subEdges)) SetRobotPanelEdgeReleases(robotPanel, subEdges);
+                if (HasEdgeReleases(subEdges)) SetRobotPanelEdgeReleases(robotPanel, subEdges);
 
                 if (panel.Property is LoadingPanelProperty)
                     robotPanel.SetLabel(IRobotLabelType.I_LT_CLADDING, panel.Property.Name);

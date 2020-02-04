@@ -98,7 +98,8 @@
     <Compile Include="Convert\FromRobot\Property2D.cs" />
     <Compile Include="Convert\Private Helpers\Bar.cs" />
     <Compile Include="Convert\FromRobot\SectionProperty_Concrete.cs" />
-    <Compile Include="Convert\Private Helpers\Constraint.cs" />
+    <Compile Include="Convert\Private Helpers\Constraint4DOF.cs" />
+    <Compile Include="Convert\Private Helpers\Constraint6DOF.cs" />
     <Compile Include="Convert\Private Helpers\DataBase.cs" />
     <Compile Include="Convert\Private Helpers\Group.cs" />
     <Compile Include="Convert\Private Helpers\Load.cs" />

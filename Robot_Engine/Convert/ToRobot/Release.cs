@@ -50,6 +50,21 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
+        public static void RobotLinearRelease(IRobotLinearReleaseData rData, Constraint4DOF bhomRelease)
+        {
+            rData.UX = GetLinearReleaseType(bhomRelease.TranslationX);
+            rData.UY = GetLinearReleaseType(bhomRelease.TranslationY);
+            rData.UZ = GetLinearReleaseType(bhomRelease.TranslationZ);
+            rData.RX = GetLinearReleaseType(bhomRelease.RotationX);
+
+            rData.KX = bhomRelease.TranslationalStiffnessX;
+            rData.KY = bhomRelease.TranslationalStiffnessY;
+            rData.KZ = bhomRelease.TranslationalStiffnessZ;
+            rData.HX = bhomRelease.RotationalStiffnessX;            
+        }
+
+        /***************************************************/
+
         public static Constraint6DOF BHoMRelease(IRobotBarEndReleaseData rData)
         {
             Constraint6DOF bhomEndRelease = new Constraint6DOF();
@@ -151,6 +166,25 @@ namespace BH.Engine.Robot
                     return IRobotBarEndReleaseValue.I_BERV_ELASTIC_REDUCED_PLUS;
                 default:
                     return IRobotBarEndReleaseValue.I_BERV_STD;
+            }
+        }
+
+        /***************************************************/
+
+        public static IRobotLinearReleaseDefinitionType GetLinearReleaseType(DOFType linearReleases)
+        {
+            switch (linearReleases)
+            {
+                case DOFType.FixedNegative:
+                    return IRobotLinearReleaseDefinitionType.I_LRDT_MINUS;
+                case DOFType.FixedPositive:
+                    return IRobotLinearReleaseDefinitionType.I_LRDT_PLUS;
+                case DOFType.Free:
+                    return IRobotLinearReleaseDefinitionType.I_LRDT_RELEASED;
+                case DOFType.Fixed:
+                    return IRobotLinearReleaseDefinitionType.I_LRDT_NONE;
+                default:
+                    return IRobotLinearReleaseDefinitionType.I_LRDT_NONE;
             }
         }
 

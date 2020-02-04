@@ -153,6 +153,8 @@
     <Compile Include="CRUD\Create\_Create.cs" />
     <Compile Include="AdapterActions\Execute.cs" />
     <Compile Include="CRUD\Read\Loads\LoadCombination.cs" />
+    <Compile Include="CRUD\Update\Constraint6DOF.cs" />
+    <Compile Include="CRUD\Update\Constraint4DOF.cs" />
     <Compile Include="CRUD\Update\Panels.cs" />
     <Compile Include="Types\NextId.cs" />
     <Compile Include="CRUD\Read\Elements\Bar.cs" />

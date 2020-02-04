@@ -160,6 +160,10 @@ namespace BH.Adapter.Robot
                         {
                             ICreate(new List<Constraint6DOF>() { support });
                         }
+                        else
+                        {
+                            Update(new List<Constraint6DOF>() { support });
+                        }
                         panelEdge.SetLabel(IRobotLabelType.I_LT_SUPPORT, support.Name);             
                     }
                 }
@@ -171,6 +175,7 @@ namespace BH.Adapter.Robot
         private void SetRobotPanelEdgeReleases(RobotObjObject panel, List<Edge> edges)
         {
             IRobotCollection panelEdges = panel.Main.Edges;
+            RobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
             for (int i = 1; i <= panelEdges.Count; i++)
             {
                 IRobotObjEdge panelEdge = panelEdges.Get(i);
@@ -179,11 +184,15 @@ namespace BH.Adapter.Robot
                 {
                     if (!string.IsNullOrWhiteSpace(release.Name))
                     {
-                        if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_LINEAR_RELEASE, release.Name) == 0)
+                        if (robotLabelServer.Exist(IRobotLabelType.I_LT_LINEAR_RELEASE, release.Name) == 0)
                         {
                             ICreate(new List<Constraint4DOF>() { release });
                         }
-                        panelEdge.SetLabel(IRobotLabelType.I_LT_LINEAR_RELEASE, release.Name);
+                        else
+                        {
+                            Update(new List<Constraint4DOF>() { release });
+                        }
+                        m_RobotApplication.Project.Structure.Objects.LinearReleases.Set(panel.Number, i, panel.Number, 1, release.Name);
                     }
                 }
             }

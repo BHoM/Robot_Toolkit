@@ -131,9 +131,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdapterActions\Pull.cs" />
+    <Compile Include="CRUD\Create\Constraint4DOF.cs" />
+    <Compile Include="CRUD\Create\Constraint6DOF.cs" />
     <Compile Include="CRUD\Create\DesignGroup.cs" />
     <Compile Include="CRUD\Create\FramingElementDesignProperties.cs" />
-    <Compile Include="CRUD\Create\Constraints.cs" />
+    <Compile Include="CRUD\Create\LinkConstraint.cs" />
     <Compile Include="CRUD\Create\Bars.cs" />
     <Compile Include="CRUD\Create\FEMeshes.cs" />
     <Compile Include="CRUD\Create\Release.cs" />

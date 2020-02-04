@@ -52,6 +52,11 @@ namespace BH.Adapter.Robot
                     success = CreateCollection(objects as IEnumerable<Constraint6DOF>);
                 }
 
+                if (objects.First() is Constraint4DOF)
+                {
+                    success = CreateCollection(objects as IEnumerable<Constraint4DOF>);
+                }
+
                 if (objects.First() is RigidLink)
                 {
                     success = CreateCollection(objects as IEnumerable<RigidLink>);

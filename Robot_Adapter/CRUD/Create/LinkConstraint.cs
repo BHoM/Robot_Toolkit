@@ -36,22 +36,6 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private bool CreateCollection(IEnumerable<Constraint6DOF> constraints)
-        {
-            List<Constraint6DOF> constList = constraints.ToList();
-            IRobotLabel label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_SUPPORT, "");
-            IRobotNodeSupportData suppData = label.Data;
-
-            for (int i = 0; i < constList.Count; i++)
-            {
-                BH.Engine.Robot.Convert.RobotConstraint(suppData, constList[i]);
-                m_RobotApplication.Project.Structure.Labels.StoreWithName(label, constList[i].Name);
-            }
-            return true;
-        }
-
-        /***************************************************/
-
         private bool CreateCollection(IEnumerable<LinkConstraint> linkConstraints)
         {
             IRobotLabel rigidLink = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_NODE_RIGID_LINK, "");

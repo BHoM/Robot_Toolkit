@@ -72,6 +72,24 @@ namespace BH.Engine.Robot
 
         /***************************************************/
 
+        public static Constraint4DOF BHoMRelease(IRobotLinearReleaseData rData)
+        {
+            Constraint4DOF bhomEndRelease = new Constraint4DOF();
+            bhomEndRelease.TranslationX = GetLinearReleaseType(rData.UX);
+            bhomEndRelease.TranslationY = GetLinearReleaseType(rData.UY);
+            bhomEndRelease.TranslationZ = GetLinearReleaseType(rData.UZ);
+            bhomEndRelease.RotationX = GetLinearReleaseType(rData.RX);
+
+            bhomEndRelease.TranslationalStiffnessX = rData.KX;
+            bhomEndRelease.TranslationalStiffnessY = rData.KY;
+            bhomEndRelease.TranslationalStiffnessZ = rData.KZ;
+            bhomEndRelease.RotationalStiffnessX = rData.HX;
+
+            return bhomEndRelease;
+        }
+
+        /***************************************************/
+
         public static DOFType GetReleaseType(IRobotBarEndReleaseValue endRelease)
         {
             switch (endRelease)
@@ -137,6 +155,27 @@ namespace BH.Engine.Robot
         }
 
         /***************************************************/
+
+        public static DOFType GetLinearReleaseType(IRobotLinearReleaseDefinitionType linearReleases)
+        {
+            switch (linearReleases)
+            {
+                case IRobotLinearReleaseDefinitionType.I_LRDT_MINUS:
+                    return DOFType.FixedNegative;
+                case IRobotLinearReleaseDefinitionType.I_LRDT_PLUS:
+                    return DOFType.FixedPositive;
+                case IRobotLinearReleaseDefinitionType.I_LRDT_RELEASED:
+                    return DOFType.Free;
+                case IRobotLinearReleaseDefinitionType.I_LRDT_NONE:
+                    return DOFType.Fixed;
+                default:
+                    return DOFType.Fixed;
+            }
+        }
+
+        /***************************************************/
+
+
 
     }
 }

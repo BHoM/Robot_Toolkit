@@ -35,11 +35,11 @@ namespace BH.Adapter.Robot
         /****           Protected Methods               ****/
         /***************************************************/
 
-        protected override bool UpdateOnly<T>(IEnumerable<T> panels, string tag = "", ActionConfig actionConfig = null)
+        protected bool Update(IEnumerable<Panel> panels)
         {
             Dictionary<int, HashSet<string>> panelTags = GetTypeTags(typeof(Panel));
             RobotObjObjectServer robotObjectServer = m_RobotApplication.Project.Structure.Objects;
-            foreach (Panel panel in panels.Select(x => x as Panel))
+            foreach (Panel panel in panels)
             {
                 RobotObjObject robotPanel = robotObjectServer.Get((int)panel.CustomData[AdapterIdName]) as RobotObjObject;
                 if (robotPanel == null)

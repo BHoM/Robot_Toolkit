@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Structure.Constraints;
 using RobotOM;
+using BH.Engine.Robot;
 
 namespace BH.Adapter.Robot
 {
@@ -38,14 +39,25 @@ namespace BH.Adapter.Robot
 
         private bool CreateCollection(IEnumerable<Constraint4DOF> constraints)
         {
-            List<Constraint4DOF> constList = constraints.ToList();
-            IRobotLabel label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_LINEAR_RELEASE, "");
-            IRobotLinearReleaseData data = label.Data;
-
-            for (int i = 0; i < constList.Count; i++)
+            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
+            IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_LINEAR_RELEASE, "");
+            int kounta = 1;
+            foreach(Constraint4DOF constraint in constraints) 
             {
-                BH.Engine.Robot.Convert.RobotConstraint(data, constList[i]);
-                m_RobotApplication.Project.Structure.Labels.StoreWithName(label, constList[i].Name);
+                string name = constraint.Name;
+                if (robotLabelServer.Exist(IRobotLabelType.I_LT_LINEAR_RELEASE, constraint.Name) == -1)
+                {
+                    robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_LINEAR_RELEASE, constraint.Name);
+                    Constraint4DOF robotConstraint = Convert.ToBHoMObject(robotLabel.Data);
+                    robotConstraint.Name = robotLabel.Name;
+                    if (!new Constraint4DOFComparer().Equals(constraint, robotConstraint))
+                    {
+                        name = name + "_" + kounta.ToString();
+                        kounta++;
+                    }
+                }
+                Convert.RobotConstraint(robotLabel.Data, constraint);
+                robotLabelServer.StoreWithName(robotLabel, name);
             }
             return true;
         }

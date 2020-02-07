@@ -20,41 +20,46 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Structure.MaterialFragments;
-using BH.oM.Structure.Elements;
-using BH.oM.Structure.SectionProperties;
-using BH.oM.Structure.SurfaceProperties;
+using RobotOM;
 using BH.oM.Structure.Constraints;
-using BH.oM.Structure.Loads;
-using BH.oM.Base;
-using System;
 using System.Collections.Generic;
-using BH.oM.Adapters.Robot;
+using System;
 
-namespace BH.Adapter.Robot
+namespace BH.Engine.Robot
 {
-    public partial class RobotAdapter
+    public class Constraint4DOFComparer : IEqualityComparer<Constraint4DOF>
     {
         /***************************************************/
-        /**** Protected methods                         ****/
+        /****           Public Methods                  ****/
         /***************************************************/
 
-        protected void SetupDependencies()
+        public bool Equals(Constraint4DOF linearRelease1, Constraint4DOF linearRelease2)
         {
-            DependencyTypes = new Dictionary<Type, List<Type>>
+            if (
+                linearRelease1.Name == linearRelease2.Name &&
+                linearRelease1.TranslationX == linearRelease2.TranslationX &&
+                linearRelease1.TranslationY == linearRelease2.TranslationY &&
+                linearRelease1.TranslationZ == linearRelease2.TranslationZ &&
+                linearRelease1.RotationX == linearRelease2.RotationX &&
+                linearRelease1.TranslationalStiffnessX == linearRelease2.TranslationalStiffnessX &&
+                linearRelease1.TranslationalStiffnessY == linearRelease2.TranslationalStiffnessY &&
+                linearRelease1.TranslationalStiffnessZ == linearRelease2.TranslationalStiffnessZ &&
+                linearRelease1.RotationalStiffnessX == linearRelease2.RotationalStiffnessX)
             {
-                {typeof(Bar), new List<Type> { typeof(ISectionProperty), typeof(Node), typeof(BarRelease), typeof(FramingElementDesignProperties)}},
-                {typeof(ISectionProperty), new List<Type> { typeof(IMaterialFragment) } },
-                {typeof(Node), new List<Type> { typeof(Constraint6DOF) } },
-                {typeof(ILoad), new List<Type> { typeof(Loadcase) } },
-                {typeof(LoadCombination), new List<Type> { typeof(Loadcase) } },
-                {typeof(Panel), new List<Type> { typeof(ISurfaceProperty) , typeof(Opening), typeof(Edge)} },
-                {typeof(Opening), new List<Type> {typeof(Edge) } },
-                {typeof(Edge), new List<Type> { typeof(Constraint6DOF), typeof(Constraint4DOF) } },
-                {typeof(ISurfaceProperty), new List<Type> { typeof(IMaterialFragment) } },
-                {typeof(RigidLink), new List<Type> { typeof(LinkConstraint), typeof(Node) } },
-                {typeof(FEMesh), new List<Type> { typeof(Node), typeof(ISurfaceProperty)} }
-            };
+                return true;
+            }
+            else
+                return false;
+        }
+
+        /***************************************************/
+
+        public int GetHashCode(Constraint4DOF obj)
+        {
+            //Check whether the object is null
+            if (Object.ReferenceEquals(obj, null)) return 0;
+
+            return obj.Name == null ? 0 : obj.Name.GetHashCode();
         }
 
         /***************************************************/

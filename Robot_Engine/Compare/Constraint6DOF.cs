@@ -20,41 +20,50 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Structure.MaterialFragments;
-using BH.oM.Structure.Elements;
-using BH.oM.Structure.SectionProperties;
-using BH.oM.Structure.SurfaceProperties;
+using RobotOM;
 using BH.oM.Structure.Constraints;
-using BH.oM.Structure.Loads;
-using BH.oM.Base;
-using System;
 using System.Collections.Generic;
-using BH.oM.Adapters.Robot;
+using System;
 
-namespace BH.Adapter.Robot
+namespace BH.Engine.Robot
 {
-    public partial class RobotAdapter
+    public class Constraint6DOFComparer : IEqualityComparer<Constraint6DOF>
     {
         /***************************************************/
-        /**** Protected methods                         ****/
+        /****           Public Methods                  ****/
         /***************************************************/
 
-        protected void SetupDependencies()
+        public bool Equals(Constraint6DOF support_1, Constraint6DOF support_2)
         {
-            DependencyTypes = new Dictionary<Type, List<Type>>
+            if (
+                support_1.Name == support_2.Name &&
+                support_1.TranslationX == support_2.TranslationX &&
+                support_1.TranslationY == support_2.TranslationY &&
+                support_1.TranslationZ == support_2.TranslationZ &&
+                support_1.RotationX == support_2.RotationX &&
+                support_1.RotationY == support_2.RotationY &&
+                support_1.RotationZ == support_2.RotationZ &&
+                support_1.TranslationalStiffnessX == support_2.TranslationalStiffnessX &&
+                support_1.TranslationalStiffnessY == support_2.TranslationalStiffnessY &&
+                support_1.TranslationalStiffnessZ == support_2.TranslationalStiffnessZ &&
+                support_1.RotationalStiffnessX == support_2.RotationalStiffnessX &&
+                support_1.RotationalStiffnessY == support_2.RotationalStiffnessY &&
+                support_1.RotationalStiffnessZ == support_2.RotationalStiffnessZ)
+
             {
-                {typeof(Bar), new List<Type> { typeof(ISectionProperty), typeof(Node), typeof(BarRelease), typeof(FramingElementDesignProperties)}},
-                {typeof(ISectionProperty), new List<Type> { typeof(IMaterialFragment) } },
-                {typeof(Node), new List<Type> { typeof(Constraint6DOF) } },
-                {typeof(ILoad), new List<Type> { typeof(Loadcase) } },
-                {typeof(LoadCombination), new List<Type> { typeof(Loadcase) } },
-                {typeof(Panel), new List<Type> { typeof(ISurfaceProperty) , typeof(Opening), typeof(Edge)} },
-                {typeof(Opening), new List<Type> {typeof(Edge) } },
-                {typeof(Edge), new List<Type> { typeof(Constraint6DOF), typeof(Constraint4DOF) } },
-                {typeof(ISurfaceProperty), new List<Type> { typeof(IMaterialFragment) } },
-                {typeof(RigidLink), new List<Type> { typeof(LinkConstraint), typeof(Node) } },
-                {typeof(FEMesh), new List<Type> { typeof(Node), typeof(ISurfaceProperty)} }
-            };
+                return true;
+            }
+            else
+                return false;
+        }
+        /***************************************************/
+
+        public int GetHashCode(Constraint6DOF obj)
+        {
+            //Check whether the object is null
+            if (Object.ReferenceEquals(obj, null)) return 0;
+
+            return obj.Name == null ? 0 : obj.Name.GetHashCode();
         }
 
         /***************************************************/

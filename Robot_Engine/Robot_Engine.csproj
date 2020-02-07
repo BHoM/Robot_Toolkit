@@ -94,20 +94,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compare\Constraint4DOF.cs" />
+    <Compile Include="Compare\Constraint6DOF.cs" />
     <Compile Include="Convert\AdapterID.cs" />
     <Compile Include="Convert\FromRobot\Property2D.cs" />
-    <Compile Include="Convert\Private Helpers\Bar.cs" />
+    <Compile Include="Convert\FromRobot\LinearRelease.cs" />
+    <Compile Include="Convert\ToRobot\Bar.cs" />
     <Compile Include="Convert\FromRobot\SectionProperty_Concrete.cs" />
-    <Compile Include="Convert\Private Helpers\Constraint4DOF.cs" />
-    <Compile Include="Convert\Private Helpers\Constraint6DOF.cs" />
-    <Compile Include="Convert\Private Helpers\DataBase.cs" />
-    <Compile Include="Convert\Private Helpers\Group.cs" />
-    <Compile Include="Convert\Private Helpers\Load.cs" />
-    <Compile Include="Convert\Private Helpers\Material.cs" />
-    <Compile Include="Convert\Private Helpers\Panel.cs" />
+    <Compile Include="Convert\ToRobot\Constraint4DOF.cs" />
+    <Compile Include="Convert\ToRobot\Constraint6DOF.cs" />
+    <Compile Include="Convert\ToRobot\DataBase.cs" />
+    <Compile Include="Convert\ToRobot\Group.cs" />
+    <Compile Include="Convert\ToRobot\Load.cs" />
+    <Compile Include="Convert\ToRobot\Material.cs" />
+    <Compile Include="Convert\ToRobot\Panel.cs" />
     <Compile Include="Convert\ToRobot\MemberType.cs" />
     <Compile Include="Convert\ToRobot\Release.cs" />
-    <Compile Include="Convert\Private Helpers\SectionProperty.cs" />
+    <Compile Include="Convert\ToRobot\SectionProperty.cs" />
     <Compile Include="Convert\FromRobot\SectionProperty_Steel.cs" />
     <Compile Include="Convert\FromRobot\Bar.cs" />
     <Compile Include="Convert\FromRobot\Geometry.cs" />

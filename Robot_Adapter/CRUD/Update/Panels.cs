@@ -51,8 +51,7 @@ namespace BH.Adapter.Robot
                 robotPanel.Main.Attribs.Meshed = 1;
                 robotPanel.Initialize();
                 robotPanel.Update();
-                if (HasEdgeSupports(subEdges)) SetRobotPanelEdgeSupports(robotPanel, subEdges);
-                if (HasEdgeReleases(subEdges)) SetRobotPanelEdgeReleases(robotPanel, subEdges);
+                SetRobotPanelEdgeConstraints(robotPanel, subEdges);
 
                 if (panel.Property is LoadingPanelProperty)
                     robotPanel.SetLabel(IRobotLabelType.I_LT_CLADDING, panel.Property.Name);
@@ -72,8 +71,7 @@ namespace BH.Adapter.Robot
                     robotPanelOpening.Main.Geometry = CreateRobotContour(opening.Edges, out subEdges);
                     robotPanelOpening.Initialize();
                     robotPanelOpening.Update();
-                    if (HasEdgeSupports(subEdges)) SetRobotPanelEdgeSupports(robotPanelOpening, subEdges);
-                    if (HasEdgeReleases(subEdges)) SetRobotPanelEdgeReleases(robotPanelOpening, subEdges);
+                    SetRobotPanelEdgeConstraints(robotPanelOpening, subEdges);
                     rPanelOpenings.AddOne(robotPanelOpening.Number);
                 }
                 robotObjectServer.EndMultiOperation();

@@ -20,41 +20,50 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Structure.MaterialFragments;
-using BH.oM.Structure.Elements;
-using BH.oM.Structure.SectionProperties;
-using BH.oM.Structure.SurfaceProperties;
+using RobotOM;
 using BH.oM.Structure.Constraints;
-using BH.oM.Structure.Loads;
-using BH.oM.Base;
-using System;
-using System.Collections.Generic;
-using BH.oM.Adapters.Robot;
 
-namespace BH.Adapter.Robot
+namespace BH.Engine.Robot
 {
-    public partial class RobotAdapter
+    public static partial class Convert
     {
         /***************************************************/
-        /**** Protected methods                         ****/
+        /****           Public Methods                  ****/
         /***************************************************/
-
-        protected void SetupDependencies()
+       
+        public static Constraint4DOF ToBHoMObject(IRobotLinearReleaseData rData)
         {
-            DependencyTypes = new Dictionary<Type, List<Type>>
+            Constraint4DOF linearRelease = new Constraint4DOF();
+            linearRelease.TranslationX = GetLinearReleaseType(rData.UX);
+            linearRelease.TranslationY = GetLinearReleaseType(rData.UY);
+            linearRelease.TranslationZ = GetLinearReleaseType(rData.UZ);
+            linearRelease.RotationX = GetLinearReleaseType(rData.RX);
+
+            linearRelease.TranslationalStiffnessX = rData.KX;
+            linearRelease.TranslationalStiffnessY = rData.KY;
+            linearRelease.TranslationalStiffnessZ = rData.KZ;
+            linearRelease.RotationalStiffnessX = rData.HX;
+
+            return linearRelease;
+        }
+
+        /***************************************************/                    
+
+        public static DOFType GetLinearReleaseType(IRobotLinearReleaseDefinitionType linearReleases)
+        {
+            switch (linearReleases)
             {
-                {typeof(Bar), new List<Type> { typeof(ISectionProperty), typeof(Node), typeof(BarRelease), typeof(FramingElementDesignProperties)}},
-                {typeof(ISectionProperty), new List<Type> { typeof(IMaterialFragment) } },
-                {typeof(Node), new List<Type> { typeof(Constraint6DOF) } },
-                {typeof(ILoad), new List<Type> { typeof(Loadcase) } },
-                {typeof(LoadCombination), new List<Type> { typeof(Loadcase) } },
-                {typeof(Panel), new List<Type> { typeof(ISurfaceProperty) , typeof(Opening), typeof(Edge)} },
-                {typeof(Opening), new List<Type> {typeof(Edge) } },
-                {typeof(Edge), new List<Type> { typeof(Constraint6DOF), typeof(Constraint4DOF) } },
-                {typeof(ISurfaceProperty), new List<Type> { typeof(IMaterialFragment) } },
-                {typeof(RigidLink), new List<Type> { typeof(LinkConstraint), typeof(Node) } },
-                {typeof(FEMesh), new List<Type> { typeof(Node), typeof(ISurfaceProperty)} }
-            };
+                case IRobotLinearReleaseDefinitionType.I_LRDT_MINUS:
+                    return DOFType.FixedNegative;
+                case IRobotLinearReleaseDefinitionType.I_LRDT_PLUS:
+                    return DOFType.FixedPositive;
+                case IRobotLinearReleaseDefinitionType.I_LRDT_RELEASED:
+                    return DOFType.Free;
+                case IRobotLinearReleaseDefinitionType.I_LRDT_NONE:
+                    return DOFType.Fixed;
+                default:
+                    return DOFType.Fixed;
+            }
         }
 
         /***************************************************/

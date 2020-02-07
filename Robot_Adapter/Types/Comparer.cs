@@ -30,6 +30,7 @@ using BH.Engine.Structure;
 using System;
 using System.Collections.Generic;
 using BH.Engine.Base.Objects;
+using BH.Engine.Robot;
 
 namespace BH.Adapter.Robot
 {
@@ -47,8 +48,8 @@ namespace BH.Adapter.Robot
                 {typeof(Bar), new BarEndNodesDistanceComparer(3) },
                 {typeof(ISectionProperty), new BHoMObjectNameOrToStringComparer() },
                 {typeof(Material), new BHoMObjectNameComparer() },
-                {typeof(Constraint4DOF), new BHoMObjectNameComparer() },
-                {typeof(Constraint6DOF), new BHoMObjectNameComparer() },
+                {typeof(Constraint4DOF), new Constraint4DOFComparer() },
+                {typeof(Constraint6DOF), new Constraint6DOFComparer() },
                 {typeof(Loadcase), new BHoMObjectNameComparer() },
                 {typeof(LinkConstraint), new BHoMObjectNameComparer() },
                 {typeof(ISurfaceProperty), new BHoMObjectNameComparer() },

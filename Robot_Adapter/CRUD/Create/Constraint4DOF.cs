@@ -41,7 +41,7 @@ namespace BH.Adapter.Robot
         {
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_LINEAR_RELEASE, "");
-            int kounta = 1;
+            int kounta = 1;            
             foreach(Constraint4DOF constraint in constraints) 
             {
                 string name = constraint.Name;
@@ -50,14 +50,14 @@ namespace BH.Adapter.Robot
                     robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_LINEAR_RELEASE, constraint.Name);
                     Constraint4DOF robotConstraint = Convert.ToBHoMObject(robotLabel.Data);
                     robotConstraint.Name = robotLabel.Name;
-                    if (!new Constraint4DOFComparer().Equals(constraint, robotConstraint))
-                    {
-                        name = name + "_" + kounta.ToString();
-                        kounta++;
-                    }
+
+                    name = name + "_" + kounta.ToString();
+                    kounta++;
+
                 }
                 Convert.RobotConstraint(robotLabel.Data, constraint);
                 robotLabelServer.StoreWithName(robotLabel, name);
+
             }
             return true;
         }

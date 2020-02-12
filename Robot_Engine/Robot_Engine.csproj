@@ -115,7 +115,6 @@
     <Compile Include="Convert\FromRobot\Bar.cs" />
     <Compile Include="Convert\FromRobot\Geometry.cs" />
     <Compile Include="Convert\FromRobot\Selections.cs" />
-    <Compile Include="Convert\FromRobot\SectionProperty.cs" />
     <Compile Include="Convert\FromRobot\Support.cs" />
     <Compile Include="Convert\FromRobot\Node.cs" />
     <Compile Include="Convert\ToRobot\Geometry.cs" />

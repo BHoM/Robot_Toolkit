@@ -150,7 +150,7 @@
     <Compile Include="CRUD\Delete\_Delete.cs" />
     <Compile Include="CRUD\Create\_Create.cs" />
     <Compile Include="AdapterActions\Execute.cs" />
-    <Compile Include="CRUD\Read\Loads\Loadcombination.cs" />
+    <Compile Include="CRUD\Read\Loads\LoadCombination.cs" />
     <Compile Include="Types\NextId.cs" />
     <Compile Include="CRUD\Read\Elements\Bar.cs" />
     <Compile Include="CRUD\Read\Elements\Groups.cs" />

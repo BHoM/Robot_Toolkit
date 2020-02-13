@@ -49,7 +49,7 @@ namespace BH.Adapter.Robot
 
                     for (int j = 1; j <= rCaseCombination.CaseFactors.Count; j++)
                     {
-                        IRobotCase rCaseIn = rLoadCollection.Get(j) as IRobotCase;
+                        IRobotCase rCaseIn = rLoadCollection.Get(rCaseCombination.CaseFactors.Get(j).CaseNumber) as IRobotCase;
                         Loadcase lCase = BH.Engine.Structure.Create.Loadcase(rCaseIn.Name, rCaseIn.Number, BH.Engine.Robot.Convert.BHoMLoadNature(rCaseIn.Nature));
                         lCase.CustomData[AdapterIdName] = rCaseCombination.Number;
                         bCaseFactors.Add(new System.Tuple<double, ICase>(rCaseCombination.CaseFactors.Get(j).Factor, lCase));

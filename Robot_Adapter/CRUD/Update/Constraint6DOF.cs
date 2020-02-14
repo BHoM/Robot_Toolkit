@@ -35,30 +35,28 @@ namespace BH.Adapter.Robot
 
         protected bool Update(IEnumerable<Constraint6DOF> supports)
         {
-            bool success = true;
-            m_RobotApplication.Interactive = 0;
-            RobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            try
+            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
+            IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_LINEAR_RELEASE, "");
+            foreach (Constraint6DOF support in supports)
             {
-                foreach (Constraint6DOF support in supports)
+                string name = support.Name;
+                robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_SUPPORT, support.Name);
+                Constraint6DOF robotConstraint = Convert.ToBHoMObject(robotLabel.Data, robotLabel.Name);
+                Constraint6DOFComparer constraint6DOFComparer = new Constraint6DOFComparer();
+                if (constraint6DOFComparer.Equals(support, robotConstraint))
+                    return true;
+                else
                 {
-                    RobotNodeSupport robotLabel = m_RobotApplication.Project.Structure.Labels.Get(IRobotLabelType.I_LT_SUPPORT, support.Name) as RobotNodeSupport;
-                    Engine.Robot.Convert.RobotConstraint(robotLabel.Data, support);
-                    robotLabelServer.Store(robotLabel);
-                    Constraint6DOFComparer constraint6DOFComparer = new Constraint6DOFComparer();
-                    if (constraint6DOFComparer.Equals(support, Convert.ToBHoMObject(robotLabel.Data)))
-                        BH.Engine.Reflection.Compute.RecordWarning("Support " + support.Name + " already exists in the model, the properties will be overwritten");
+                    Convert.RobotConstraint(robotLabel.Data, support);
+                    robotLabelServer.StoreWithName(robotLabel, name);
+                    BH.Engine.Reflection.Compute.RecordWarning("Support " + name + " already exists in the model, the properties will be overwritten");
                 }
-            }
-            finally
-            {
-                m_RobotApplication.Interactive = 1;
-            }
 
-            return success;
+            }
+            return true;
+
+            /***************************************************/
         }
-
-        /***************************************************/
     }
 }
 

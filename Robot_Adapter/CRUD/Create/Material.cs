@@ -37,7 +37,8 @@ namespace BH.Adapter.Robot
 
         private bool CreateCollection(IEnumerable<IMaterialFragment> mat)
         {
-            IRobotLabel label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_MATERIAL, "");
+            RobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
+            IRobotLabel label = robotLabelServer.Create(IRobotLabelType.I_LT_MATERIAL, "");
             IRobotMaterialData matData = label.Data;
 
             foreach (IMaterialFragment m in mat)
@@ -47,11 +48,15 @@ namespace BH.Adapter.Robot
                 {
                     matData.LoadFromDBase(match);
                     m_RobotApplication.Project.Structure.Labels.StoreWithName(label, match);
+                    if (robotLabelServer.Exist(IRobotLabelType.I_LT_MATERIAL, match) == -1)
+                        MaterialExistsWarning(match);
                 }
                 else
                 {
                     BH.Engine.Robot.Convert.RobotMaterial(matData, m);
                     m_RobotApplication.Project.Structure.Labels.StoreWithName(label, m.Name);
+                    if (robotLabelServer.Exist(IRobotLabelType.I_LT_MATERIAL, m.Name) == -1)
+                        MaterialExistsWarning(m.Name);
                 }
             }
             return true;
@@ -59,8 +64,13 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-    }
+        private void MaterialExistsWarning(string materialName)
+        {
+            BH.Engine.Reflection.Compute.RecordWarning("Material " + materialName + " already exists in the model, the properties will be overwritten");
+        }
 
+        /***************************************************/
+    }
 }
 
 

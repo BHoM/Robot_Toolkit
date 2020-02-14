@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Structure.Constraints;
 using RobotOM;
+using BH.Engine.Robot;
 
 namespace BH.Adapter.Robot
 {
@@ -38,16 +39,24 @@ namespace BH.Adapter.Robot
 
         private bool CreateCollection(IEnumerable<Constraint6DOF> constraints)
         {
-            List<Constraint6DOF> constList = constraints.ToList();
-            IRobotLabel label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_SUPPORT, "");
-            IRobotNodeSupportData suppData = label.Data;
+            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
+            IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_SUPPORT, "");
+            RobotNodeSupportData supportData = robotLabel.Data;
 
-            for (int i = 0; i < constList.Count; i++)
+            foreach(Constraint6DOF constraint in constraints)
             {
-                BH.Engine.Robot.Convert.RobotConstraint(suppData, constList[i]);
-                m_RobotApplication.Project.Structure.Labels.StoreWithName(label, constList[i].Name);
+                string name = constraint.Name;
+                Convert.RobotConstraint(robotLabel.Data, constraint);
+                if (robotLabelServer.Exist(IRobotLabelType.I_LT_SUPPORT, constraint.Name) == -1)
+                {
+                    robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_SUPPORT, constraint.Name);
+                    Constraint6DOF robotConstraint = Convert.ToBHoMObject(supportData, robotLabel.Name);
+                    BH.Engine.Reflection.Compute.RecordWarning("Support " + name + " already exists in the model, the properties will be overwritten");
+                }
+                robotLabelServer.StoreWithName(robotLabel, name);
             }
-            return true;
+            return true;            
+
         }
 
         /***************************************************/

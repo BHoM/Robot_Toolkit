@@ -31,9 +31,10 @@ namespace BH.Engine.Robot
         /****           Public Methods                  ****/
         /***************************************************/
        
-        public static Constraint4DOF ToBHoMObject(IRobotLinearReleaseData rData)
+        public static Constraint4DOF ToBHoMObject(IRobotLinearReleaseData rData, string name = "")
         {
             Constraint4DOF linearRelease = new Constraint4DOF();
+            linearRelease.Name = name;
             linearRelease.TranslationX = GetLinearReleaseType(rData.UX);
             linearRelease.TranslationY = GetLinearReleaseType(rData.UY);
             linearRelease.TranslationZ = GetLinearReleaseType(rData.UZ);

@@ -20,13 +20,10 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Structure.Elements;
-using BH.oM.Structure.SurfaceProperties;
+using BH.Engine.Robot;
+using BH.oM.Structure.Constraints;
 using RobotOM;
 using System.Collections.Generic;
-using BH.oM.Adapter;
-using System.Linq;
-using BH.oM.Structure.Constraints;
 
 namespace BH.Adapter.Robot
 {
@@ -45,9 +42,12 @@ namespace BH.Adapter.Robot
             {
                 foreach (Constraint6DOF support in supports)
                 {
-                    RobotNodeSupport robotSupport = m_RobotApplication.Project.Structure.Labels.Get(IRobotLabelType.I_LT_SUPPORT, support.Name) as RobotNodeSupport;
-                    Engine.Robot.Convert.RobotConstraint(robotSupport.Data, support);
-                    robotLabelServer.Store(robotSupport);
+                    RobotNodeSupport robotLabel = m_RobotApplication.Project.Structure.Labels.Get(IRobotLabelType.I_LT_SUPPORT, support.Name) as RobotNodeSupport;
+                    Engine.Robot.Convert.RobotConstraint(robotLabel.Data, support);
+                    robotLabelServer.Store(robotLabel);
+                    Constraint6DOFComparer constraint6DOFComparer = new Constraint6DOFComparer();
+                    if (constraint6DOFComparer.Equals(support, Convert.ToBHoMObject(robotLabel.Data)))
+                        BH.Engine.Reflection.Compute.RecordWarning("Support " + support.Name + " already exists in the model, the properties will be overwritten");
                 }
             }
             finally

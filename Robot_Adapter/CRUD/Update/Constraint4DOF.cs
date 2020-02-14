@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using BH.oM.Adapter;
 using System.Linq;
 using BH.oM.Structure.Constraints;
+using BH.Engine.Robot;
 
 namespace BH.Adapter.Robot
 {
@@ -46,15 +47,17 @@ namespace BH.Adapter.Robot
                 foreach (Constraint4DOF linearRelease in linearReleases.Select(x => x as Constraint4DOF))
                 {
                     IRobotLabel robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_LINEAR_RELEASE, linearRelease.Name);
-                    BH.Engine.Robot.Convert.RobotConstraint(robotLabel.Data, linearRelease);
+                    Convert.RobotConstraint(robotLabel.Data, linearRelease);
                     robotLabelServer.Store(robotLabel);
+                    Constraint4DOFComparer constraint4DOFComparer = new Constraint4DOFComparer();
+                    if(constraint4DOFComparer.Equals(linearRelease, Convert.ToBHoMObject(robotLabel.Data)))
+                        BH.Engine.Reflection.Compute.RecordWarning("Linear Release " + linearRelease.Name + " already exists in the model, the properties will be overwritten");
                 }
             }
             finally
             {
                 m_RobotApplication.Interactive = 1;
             }
-
             return success;
         }
 

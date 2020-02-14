@@ -34,24 +34,26 @@ namespace BH.Adapter.Robot
 
         private bool CreateCollection(IEnumerable<ISurfaceProperty> properties)
         {
-            RobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
-            IRobotLabel lable = null;
+            RobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
+            IRobotLabel robotLabel = null;
             string name = "";
             foreach (ISurfaceProperty property in properties)
             {
                 if (property is LoadingPanelProperty)
                 {
-                    name = BH.Engine.Robot.Convert.ThicknessProperty(lable, property);
-                    lable = labelServer.CreateLike(IRobotLabelType.I_LT_CLADDING, property.Name, name);
+                    name = BH.Engine.Robot.Convert.ThicknessProperty(robotLabel, property);
+                    robotLabel = robotLabelServer.CreateLike(IRobotLabelType.I_LT_CLADDING, property.Name, name);
+                    if (robotLabelServer.Exist(IRobotLabelType.I_LT_CLADDING, name) == -1)
+                        Property2DExistsWarning(name);
                 }
-
                 else
                 {
-                    lable = labelServer.Create(IRobotLabelType.I_LT_PANEL_THICKNESS, name);
-                    name = BH.Engine.Robot.Convert.ThicknessProperty(lable, property);
+                    robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_PANEL_THICKNESS, name);
+                    name = BH.Engine.Robot.Convert.ThicknessProperty(robotLabel, property);
+                    if (robotLabelServer.Exist(IRobotLabelType.I_LT_PANEL_THICKNESS, name) == -1)
+                        Property2DExistsWarning(name);
                 }
-
-                labelServer.StoreWithName(lable, name);
+                robotLabelServer.StoreWithName(robotLabel, name);
             }
 
             return true;
@@ -59,8 +61,13 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-    }
+        private void Property2DExistsWarning(string propertyName)
+        {
+            BH.Engine.Reflection.Compute.RecordWarning("Property2D " + propertyName + " already exists in the model, the properties will be overwritten");
+        }
 
+        /***************************************************/
+    }
 }
 
 

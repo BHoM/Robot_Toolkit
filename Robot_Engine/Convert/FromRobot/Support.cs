@@ -33,27 +33,33 @@ namespace BH.Engine.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static Constraint6DOF ToBHoMObject(this RobotNodeSupport robSupport)
+        public static Constraint6DOF ToBHoMObject(this RobotNodeSupport robotSupport)
+        {            
+            return Convert.ToBHoMObject(robotSupport.Data, robotSupport.Name);
+        }
+
+        /***************************************************/
+
+        public static Constraint6DOF ToBHoMObject(this RobotNodeSupportData robotSupportData, string name = "")
         {
             List<bool> fixity = new List<bool>();
-            RobotNodeSupportData suppData = robSupport.Data;
-            fixity.Add(suppData.UX != 0);
-            fixity.Add(suppData.UY != 0);
-            fixity.Add(suppData.UZ != 0);
-            fixity.Add(suppData.RX != 0);
-            fixity.Add(suppData.RY != 0);
-            fixity.Add(suppData.RZ != 0);
+            fixity.Add(robotSupportData.UX != 0);
+            fixity.Add(robotSupportData.UY != 0);
+            fixity.Add(robotSupportData.UZ != 0);
+            fixity.Add(robotSupportData.RX != 0);
+            fixity.Add(robotSupportData.RY != 0);
+            fixity.Add(robotSupportData.RZ != 0);
 
             List<double> stiffness = new List<double>();
-            stiffness.Add(suppData.KX);
-            stiffness.Add(suppData.KY);
-            stiffness.Add(suppData.KZ);
-            stiffness.Add(suppData.HX);
-            stiffness.Add(suppData.HY);
-            stiffness.Add(suppData.HZ);
-
-            Constraint6DOF const6DOF = BH.Engine.Structure.Create.Constraint6DOF(robSupport.Name, fixity, stiffness);
-            return const6DOF;
+            stiffness.Add(robotSupportData.KX);
+            stiffness.Add(robotSupportData.KY);
+            stiffness.Add(robotSupportData.KZ);
+            stiffness.Add(robotSupportData.HX);
+            stiffness.Add(robotSupportData.HY);
+            stiffness.Add(robotSupportData.HZ);
+            
+            Constraint6DOF constraint6DOF = BH.Engine.Structure.Create.Constraint6DOF(name, fixity, stiffness);
+            return constraint6DOF;
         }
 
         /***************************************************/

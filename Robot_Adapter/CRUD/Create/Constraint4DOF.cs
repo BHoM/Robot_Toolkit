@@ -20,11 +20,10 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using System.Collections.Generic;
-using System.Linq;
+using BH.Engine.Robot;
 using BH.oM.Structure.Constraints;
 using RobotOM;
-using BH.Engine.Robot;
+using System.Collections.Generic;
 
 namespace BH.Adapter.Robot
 {
@@ -40,24 +39,19 @@ namespace BH.Adapter.Robot
         private bool CreateCollection(IEnumerable<Constraint4DOF> constraints)
         {
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_LINEAR_RELEASE, "");
-            int kounta = 1;            
+            IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_LINEAR_RELEASE, "");        
             foreach(Constraint4DOF constraint in constraints) 
             {
-                string name = constraint.Name;
+                string name = constraint.Name; 
                 if (robotLabelServer.Exist(IRobotLabelType.I_LT_LINEAR_RELEASE, constraint.Name) == -1)
                 {
                     robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_LINEAR_RELEASE, constraint.Name);
                     Constraint4DOF robotConstraint = Convert.ToBHoMObject(robotLabel.Data);
                     robotConstraint.Name = robotLabel.Name;
-
-                    name = name + "_" + kounta.ToString();
-                    kounta++;
-
+                    BH.Engine.Reflection.Compute.RecordWarning("Linear Release " + name + " already exists in the model, the properties will be overwritten");
                 }
                 Convert.RobotConstraint(robotLabel.Data, constraint);
                 robotLabelServer.StoreWithName(robotLabel, name);
-
             }
             return true;
         }

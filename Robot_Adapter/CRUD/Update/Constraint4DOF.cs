@@ -39,26 +39,25 @@ namespace BH.Adapter.Robot
 
         protected bool Update(IEnumerable<Constraint4DOF> linearReleases)
         {
-            bool success = true;
-            m_RobotApplication.Interactive = 0;
-            RobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            try
+            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
+            IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_LINEAR_RELEASE, "");
+            foreach (Constraint4DOF constraint in linearReleases)
             {
-                foreach (Constraint4DOF linearRelease in linearReleases.Select(x => x as Constraint4DOF))
+                string name = constraint.Name;
+                robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_LINEAR_RELEASE, constraint.Name);
+                Constraint4DOF robotConstraint = Convert.ToBHoMObject(robotLabel.Data, robotLabel.Name);
+                Constraint4DOFComparer constraint4DOFComparer = new Constraint4DOFComparer();
+                if (constraint4DOFComparer.Equals(constraint, robotConstraint))
+                    return true;
+                else
                 {
-                    IRobotLabel robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_LINEAR_RELEASE, linearRelease.Name);
-                    Convert.RobotConstraint(robotLabel.Data, linearRelease);
-                    robotLabelServer.Store(robotLabel);
-                    Constraint4DOFComparer constraint4DOFComparer = new Constraint4DOFComparer();
-                    if(constraint4DOFComparer.Equals(linearRelease, Convert.ToBHoMObject(robotLabel.Data)))
-                        BH.Engine.Reflection.Compute.RecordWarning("Linear Release " + linearRelease.Name + " already exists in the model, the properties will be overwritten");
+                    Convert.RobotConstraint(robotLabel.Data, constraint);
+                    robotLabelServer.StoreWithName(robotLabel, name);
+                    BH.Engine.Reflection.Compute.RecordWarning("Linear Release " + name + " already exists in the model, the properties will be overwritten");
                 }
+
             }
-            finally
-            {
-                m_RobotApplication.Interactive = 1;
-            }
-            return success;
+            return true;
         }
 
         /***************************************************/

@@ -94,6 +94,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compare\ConstantThickness.cs" />
+    <Compile Include="Compare\ISurfaceProperty.cs" />
     <Compile Include="Compare\Constraint4DOF.cs" />
     <Compile Include="Compare\Constraint6DOF.cs" />
     <Compile Include="Convert\AdapterID.cs" />

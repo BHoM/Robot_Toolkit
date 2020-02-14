@@ -36,22 +36,20 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private bool CreateCollection(IEnumerable<Constraint4DOF> constraints)
+        private bool CreateCollection(IEnumerable<Constraint4DOF> linearReleases)
         {
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_LINEAR_RELEASE, "");        
-            foreach(Constraint4DOF constraint in constraints) 
+            IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_LINEAR_RELEASE, "");
+            foreach (Constraint4DOF linearRelease in linearReleases)
             {
-                string name = constraint.Name; 
-                if (robotLabelServer.Exist(IRobotLabelType.I_LT_LINEAR_RELEASE, constraint.Name) == -1)
+                int test = robotLabelServer.Exist(IRobotLabelType.I_LT_LINEAR_RELEASE, linearRelease.Name);
+                if (robotLabelServer.Exist(IRobotLabelType.I_LT_LINEAR_RELEASE, linearRelease.Name) == -1)
+                    Update(linearReleases);
+                else
                 {
-                    robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_LINEAR_RELEASE, constraint.Name);
-                    Constraint4DOF robotConstraint = Convert.ToBHoMObject(robotLabel.Data);
-                    robotConstraint.Name = robotLabel.Name;
-                    BH.Engine.Reflection.Compute.RecordWarning("Linear Release " + name + " already exists in the model, the properties will be overwritten");
+                    Convert.RobotConstraint(robotLabel.Data, linearRelease);
+                    robotLabelServer.StoreWithName(robotLabel, linearRelease.Name);
                 }
-                Convert.RobotConstraint(robotLabel.Data, constraint);
-                robotLabelServer.StoreWithName(robotLabel, name);
             }
             return true;
         }

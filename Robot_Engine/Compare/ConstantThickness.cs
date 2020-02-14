@@ -20,45 +20,38 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using System.Collections.Generic;
-using System.Linq;
-using BH.oM.Structure.Constraints;
 using RobotOM;
-using BH.Engine.Robot;
+using BH.oM.Structure.Constraints;
+using System.Collections.Generic;
+using System;
+using BH.oM.Structure.SurfaceProperties;
 
-namespace BH.Adapter.Robot
+namespace BH.Engine.Robot
 {
-    public partial class RobotAdapter
+    public class ConstantThicknessComparer : IEqualityComparer<ConstantThickness>
     {
-
         /***************************************************/
-        /****           Private Methods                 ****/
-        /***************************************************/
-
+        /****           Public Methods                  ****/
         /***************************************************/
 
-        private bool CreateCollection(IEnumerable<Constraint6DOF> constraints)
+        public bool Equals(ConstantThickness constantThickness1, ConstantThickness constrantThickness2)
         {
-            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_SUPPORT, "");
-            foreach (Constraint6DOF constraint in constraints)
-            {
-                int test = robotLabelServer.Exist(IRobotLabelType.I_LT_SUPPORT, constraint.Name);
-                if (robotLabelServer.Exist(IRobotLabelType.I_LT_SUPPORT, constraint.Name) == -1)
-                    Update(constraints);
-                else
-                {
-                    Convert.RobotConstraint(robotLabel.Data, constraint);
-                    robotLabelServer.StoreWithName(robotLabel, constraint.Name);
-                }
-            }
-            return true;
+           
+                return false;
         }
 
         /***************************************************/
 
+        public int GetHashCode(ConstantThickness obj)
+        {
+            //Check whether the object is null
+            if (Object.ReferenceEquals(obj, null)) return 0;
+
+            return obj.Name == null ? 0 : obj.Name.GetHashCode();
+        }
+
+        /***************************************************/
+       
     }
-
 }
-
 

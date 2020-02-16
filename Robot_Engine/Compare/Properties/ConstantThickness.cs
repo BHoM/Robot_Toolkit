@@ -28,25 +28,26 @@ using BH.oM.Structure.SurfaceProperties;
 
 namespace BH.Engine.Robot
 {
-    public class ISurfacePropertyComparer : IEqualityComparer<ISurfaceProperty>
+    public class ConstantThicknessComparer : IEqualityComparer<ConstantThickness>
     {
         /***************************************************/
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public bool Equals(ISurfaceProperty surfaceProperty1, ISurfaceProperty surfaceProperty2)
+        public bool Equals(ConstantThickness constantThickness1, ConstantThickness constantThickness2)
         {
-            if (surfaceProperty1.GetType() == typeof(ConstantThickness) && surfaceProperty2.GetType() == typeof(ConstantThickness))
-            {
+            if( constantThickness1.Name == constantThickness2.Name &&
+                constantThickness1.Material.Name == constantThickness2.Material.Name &&
+                constantThickness1.Thickness == constantThickness2.Thickness &&
+                constantThickness1.PanelType == constantThickness2.PanelType)
                 return true;
-            }
             else
                 return false;
         }
 
         /***************************************************/
 
-        public int GetHashCode(ISurfaceProperty obj)
+        public int GetHashCode(ConstantThickness obj)
         {
             //Check whether the object is null
             if (Object.ReferenceEquals(obj, null)) return 0;
@@ -55,7 +56,7 @@ namespace BH.Engine.Robot
         }
 
         /***************************************************/
-      
+       
     }
 }
 

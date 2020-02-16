@@ -20,48 +20,49 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Structure.Elements;
-using BH.oM.Structure.SurfaceProperties;
 using RobotOM;
-using System.Collections.Generic;
-using BH.oM.Adapter;
-using System.Linq;
 using BH.oM.Structure.Constraints;
-using BH.Engine.Robot;
+using System.Collections.Generic;
+using System;
+using BH.oM.Structure.SurfaceProperties;
+using BH.oM.Structure.MaterialFragments;
 
-namespace BH.Adapter.Robot
+namespace BH.Engine.Robot
 {
-    public partial class RobotAdapter
+    public class MaterialComparer : IEqualityComparer<IMaterialFragment>
     {
         /***************************************************/
-        /****           Protected Methods               ****/
+        /****           Public Methods                  ****/
         /***************************************************/
 
-        protected bool Update(IEnumerable<Constraint4DOF> linearReleases)
+        public bool Equals(IMaterialFragment material1, IMaterialFragment material2)
         {
-            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_LINEAR_RELEASE, "");
-            foreach (Constraint4DOF constraint in linearReleases)
+            if (material1.GetType() == typeof(Steel) && material2.GetType() == typeof(Steel))
             {
-                string name = constraint.Name;
-                robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_LINEAR_RELEASE, constraint.Name);
-                Constraint4DOF robotConstraint = Convert.ToBHoMObject(robotLabel.Data, robotLabel.Name);
-                Constraint4DOFComparer constraint4DOFComparer = new Constraint4DOFComparer();
-                if (constraint4DOFComparer.Equals(constraint, robotConstraint))
-                    return true;
-                else
-                {
-                    Convert.RobotConstraint(robotLabel.Data, constraint);
-                    robotLabelServer.StoreWithName(robotLabel, name);
-                    BH.Engine.Reflection.Compute.RecordWarning("Linear Release " + name + " already exists in the model, the properties will be overwritten");
-                }
-
+                SteelMaterialComparer steelMaterialComparer = new SteelMaterialComparer();
+                return steelMaterialComparer.Equals(material1 as Steel, material2 as Steel);
             }
-            return true;
+            else if (material1.GetType() == typeof(Concrete) && material2.GetType() == typeof(Concrete))
+            {
+                ConcreteMaterialComparer concreteMaterialComparer = new ConcreteMaterialComparer();
+                return concreteMaterialComparer.Equals(material1 as Concrete, material2 as Concrete);
+            }
+            else
+                return false;
         }
 
         /***************************************************/
 
+        public int GetHashCode(IMaterialFragment obj)
+        {
+            //Check whether the object is null
+            if (Object.ReferenceEquals(obj, null)) return 0;
+
+            return obj.Name == null ? 0 : obj.Name.GetHashCode();
+        }
+
+        /***************************************************/
+       
     }
 }
 

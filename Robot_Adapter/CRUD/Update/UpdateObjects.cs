@@ -78,25 +78,7 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
-
-        protected bool Update(IEnumerable<Material> materials)
-        {
-            List<Material> matToCreate = new List<Material>();
-
-            foreach (Material m in materials)
-            {
-                string match = BH.Engine.Robot.Convert.Match(m_dbMaterialNames, m);
-                if (match == null)
-                    matToCreate.Add(m);
-            }
-
-            bool success = true;
-            success = ICreate(matToCreate);
-            return success;
-        }
-
-        /***************************************************/
-
+        
         protected bool Update(IEnumerable<ISectionProperty> sectionProperties)
         {
             List<ISectionProperty> secPropToCreate = new List<ISectionProperty>();
@@ -110,15 +92,6 @@ namespace BH.Adapter.Robot
 
             bool success = true;
             success = ICreate(secPropToCreate);
-            return success;
-        }
-
-        /***************************************************/
-
-        protected bool Update(IEnumerable<ISurfaceProperty> property2Ds)
-        {
-            bool success = true;
-            success = ICreate(property2Ds);
             return success;
         }
 

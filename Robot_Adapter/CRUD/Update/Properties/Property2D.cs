@@ -21,9 +21,11 @@
  */
 
 using BH.Engine.Robot;
-using BH.oM.Structure.Constraints;
+using BH.oM.Structure.MaterialFragments;
+using BH.oM.Structure.SurfaceProperties;
 using RobotOM;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BH.Adapter.Robot
 {
@@ -33,30 +35,12 @@ namespace BH.Adapter.Robot
         /****           Protected Methods               ****/
         /***************************************************/
 
-        protected bool Update(IEnumerable<Constraint6DOF> supports)
+        protected bool Update(IEnumerable<ISurfaceProperty> properties)
         {
-            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_LINEAR_RELEASE, "");
-            foreach (Constraint6DOF support in supports)
-            {
-                string name = support.Name;
-                robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_SUPPORT, support.Name);
-                Constraint6DOF robotConstraint = Convert.ToBHoMObject(robotLabel.Data, robotLabel.Name);
-                Constraint6DOFComparer constraint6DOFComparer = new Constraint6DOFComparer();
-                if (constraint6DOFComparer.Equals(support, robotConstraint))
-                    return true;
-                else
-                {
-                    Convert.RobotConstraint(robotLabel.Data, support);
-                    robotLabelServer.StoreWithName(robotLabel, name);
-                    BH.Engine.Reflection.Compute.RecordWarning("Support " + name + " already exists in the model, the properties will be overwritten");
-                }
-
-            }
-            return true;
-
-            /***************************************************/
+            return CreateCollection(properties, true);
         }
+
+        /***************************************************/
     }
 }
 

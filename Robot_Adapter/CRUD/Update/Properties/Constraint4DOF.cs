@@ -20,44 +20,47 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Engine.Robot;
-using BH.oM.Structure.Constraints;
+using BH.oM.Structure.Elements;
+using BH.oM.Structure.SurfaceProperties;
 using RobotOM;
 using System.Collections.Generic;
+using BH.oM.Adapter;
+using System.Linq;
+using BH.oM.Structure.Constraints;
+using BH.Engine.Robot;
 
 namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
     {
-
         /***************************************************/
-        /****           Private Methods                 ****/
-        /***************************************************/
-
+        /****           Protected Methods               ****/
         /***************************************************/
 
-        private bool CreateCollection(IEnumerable<Constraint4DOF> linearReleases)
+        protected bool Update(IEnumerable<Constraint4DOF> linearReleases)
         {
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_LINEAR_RELEASE, "");
-            List<Constraint4DOF> linearReleasesToUpdate = new List<Constraint4DOF>();
-            foreach (Constraint4DOF linearRelease in linearReleases)
+            foreach (Constraint4DOF constraint in linearReleases)
             {
-                if (robotLabelServer.Exist(IRobotLabelType.I_LT_LINEAR_RELEASE, linearRelease.Name) == -1)
-                    linearReleasesToUpdate.Add(linearRelease);
+                robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_LINEAR_RELEASE, constraint.Name);
+                Constraint4DOF robotConstraint = Convert.ToBHoMObject(robotLabel.Data, robotLabel.Name);
+                Constraint4DOFComparer constraint4DOFComparer = new Constraint4DOFComparer();
+                if (constraint4DOFComparer.Equals(constraint, robotConstraint))
+                    return true;
                 else
                 {
-                    Convert.RobotConstraint(robotLabel.Data, linearRelease);
-                    robotLabelServer.StoreWithName(robotLabel, linearRelease.Name);
+                    Convert.RobotConstraint(robotLabel.Data, constraint);
+                    robotLabelServer.StoreWithName(robotLabel, constraint.Name);
+                    BH.Engine.Reflection.Compute.RecordWarning("Linear Release " + constraint.Name + " already exists in the model, the properties have beene overwritten");
                 }
-                Update(linearReleasesToUpdate);
+
             }
             return true;
         }
 
         /***************************************************/
+
     }
-
 }
-
 

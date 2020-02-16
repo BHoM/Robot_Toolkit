@@ -20,44 +20,42 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Engine.Robot;
-using BH.oM.Structure.Constraints;
 using RobotOM;
+using BH.oM.Structure.Constraints;
 using System.Collections.Generic;
+using System;
+using BH.oM.Structure.SurfaceProperties;
 
-namespace BH.Adapter.Robot
+namespace BH.Engine.Robot
 {
-    public partial class RobotAdapter
+    public class LoadingPanelPropertyComparer : IEqualityComparer<LoadingPanelProperty>
     {
-
         /***************************************************/
-        /****           Private Methods                 ****/
-        /***************************************************/
-
+        /****           Public Methods                  ****/
         /***************************************************/
 
-        private bool CreateCollection(IEnumerable<Constraint4DOF> linearReleases)
+        public bool Equals(LoadingPanelProperty property1, LoadingPanelProperty property2)
         {
-            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_LINEAR_RELEASE, "");
-            List<Constraint4DOF> linearReleasesToUpdate = new List<Constraint4DOF>();
-            foreach (Constraint4DOF linearRelease in linearReleases)
-            {
-                if (robotLabelServer.Exist(IRobotLabelType.I_LT_LINEAR_RELEASE, linearRelease.Name) == -1)
-                    linearReleasesToUpdate.Add(linearRelease);
-                else
-                {
-                    Convert.RobotConstraint(robotLabel.Data, linearRelease);
-                    robotLabelServer.StoreWithName(robotLabel, linearRelease.Name);
-                }
-                Update(linearReleasesToUpdate);
-            }
-            return true;
+            if (property1.Name == property2.Name &&
+                 property1.Material.Name == property2.Material.Name &&
+                 property1.LoadApplication == property2.LoadApplication)
+                return true;
+            else
+                return false;
         }
 
         /***************************************************/
+
+        public int GetHashCode(LoadingPanelProperty obj)
+        {
+            //Check whether the object is null
+            if (Object.ReferenceEquals(obj, null)) return 0;
+
+            return obj.Name == null ? 0 : obj.Name.GetHashCode();
+        }
+
+        /***************************************************/
+       
     }
-
 }
-
 

@@ -153,9 +153,11 @@
     <Compile Include="CRUD\Create\_Create.cs" />
     <Compile Include="AdapterActions\Execute.cs" />
     <Compile Include="CRUD\Read\Loads\LoadCombination.cs" />
-    <Compile Include="CRUD\Update\Constraint6DOF.cs" />
-    <Compile Include="CRUD\Update\Constraint4DOF.cs" />
-    <Compile Include="CRUD\Update\Panels.cs" />
+    <Compile Include="CRUD\Update\Properties\Constraint6DOF.cs" />
+    <Compile Include="CRUD\Update\Properties\Constraint4DOF.cs" />
+    <Compile Include="CRUD\Update\Elements\Panels.cs" />
+    <Compile Include="CRUD\Update\Properties\Material.cs" />
+    <Compile Include="CRUD\Update\Properties\Property2D.cs" />
     <Compile Include="Types\NextId.cs" />
     <Compile Include="CRUD\Read\Elements\Bar.cs" />
     <Compile Include="CRUD\Read\Elements\Groups.cs" />
@@ -180,8 +182,8 @@
     <Compile Include="CRUD\Read\Read.cs" />
     <Compile Include="CRUD\Read\Results\NodeResults.cs" />
     <Compile Include="CRUD\Read\Results\ResultUtils.cs" />
-    <Compile Include="CRUD\Update\FramingElementDesignProperties.cs" />
-    <Compile Include="CRUD\Update\Bars.cs" />
+    <Compile Include="CRUD\Update\Properties\FramingElementDesignProperties.cs" />
+    <Compile Include="CRUD\Update\Elements\Bars.cs" />
     <Compile Include="CRUD\Update\UpdateObjects.cs" />
     <Compile Include="CRUD\Update\UpdateTags.cs" />
     <Compile Include="Types\Comparer.cs" />

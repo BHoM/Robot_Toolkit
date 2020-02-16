@@ -35,28 +35,32 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private bool CreateCollection(IEnumerable<IMaterialFragment> mat)
+        private bool CreateCollection(IEnumerable<IMaterialFragment> materials, bool overwrite = true)
         {
             RobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotLabel label = robotLabelServer.Create(IRobotLabelType.I_LT_MATERIAL, "");
             IRobotMaterialData matData = label.Data;
-
-            foreach (IMaterialFragment m in mat)
+            List<IMaterialFragment> materialsToUpdate = new List<IMaterialFragment>();
+            foreach (IMaterialFragment material in materials)
             {
-                string match = BH.Engine.Robot.Convert.Match(m_dbMaterialNames, m);
+                string match = BH.Engine.Robot.Convert.Match(m_dbMaterialNames, material);
                 if (match != null)
                 {
                     matData.LoadFromDBase(match);
-                    m_RobotApplication.Project.Structure.Labels.StoreWithName(label, match);
-                    if (robotLabelServer.Exist(IRobotLabelType.I_LT_MATERIAL, match) == -1)
-                        MaterialExistsWarning(match);
+                    if (overwrite || robotLabelServer.Exist(IRobotLabelType.I_LT_MATERIAL, match) != -1)
+                    {
+                        m_RobotApplication.Project.Structure.Labels.StoreWithName(label, match);
+                        if (overwrite) MaterialExistsWarning(match);
+                    }
                 }
                 else
                 {
-                    BH.Engine.Robot.Convert.RobotMaterial(matData, m);
-                    m_RobotApplication.Project.Structure.Labels.StoreWithName(label, m.Name);
-                    if (robotLabelServer.Exist(IRobotLabelType.I_LT_MATERIAL, m.Name) == -1)
-                        MaterialExistsWarning(m.Name);
+                    if (overwrite || robotLabelServer.Exist(IRobotLabelType.I_LT_MATERIAL, match) != -1)          
+                    {
+                        BH.Engine.Robot.Convert.RobotMaterial(matData, material);
+                        m_RobotApplication.Project.Structure.Labels.StoreWithName(label, material.Name);
+                        if (overwrite) MaterialExistsWarning(material.Name);
+                    }
                 }
             }
             return true;
@@ -66,7 +70,7 @@ namespace BH.Adapter.Robot
 
         private void MaterialExistsWarning(string materialName)
         {
-            BH.Engine.Reflection.Compute.RecordWarning("Material " + materialName + " already exists in the model, the properties will be overwritten");
+            BH.Engine.Reflection.Compute.RecordWarning("Material '" + materialName + "' already exists in the model, the properties have been overwritten");
         }
 
         /***************************************************/

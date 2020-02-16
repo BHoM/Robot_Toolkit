@@ -20,17 +20,17 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using BH.Engine.Base.Objects;
+using BH.Engine.Structure;
 using BH.oM.Physical.Materials;
+using BH.oM.Structure.Constraints;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.Loads;
+using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.SurfaceProperties;
-using BH.oM.Structure.Constraints;
-using BH.Engine.Structure;
 using System;
 using System.Collections.Generic;
-using BH.Engine.Base.Objects;
-using BH.Engine.Robot;
 
 namespace BH.Adapter.Robot
 {
@@ -48,6 +48,7 @@ namespace BH.Adapter.Robot
                 {typeof(Bar), new BarEndNodesDistanceComparer(3) },
                 {typeof(ISectionProperty), new BHoMObjectNameOrToStringComparer() },
                 {typeof(Material), new BHoMObjectNameComparer() },
+                {typeof(IMaterialFragment), new BHoMObjectNameComparer() },
                 {typeof(Constraint4DOF), new BHoMObjectNameComparer() },
                 {typeof(Constraint6DOF), new BHoMObjectNameComparer() },
                 {typeof(Loadcase), new BHoMObjectNameComparer() },

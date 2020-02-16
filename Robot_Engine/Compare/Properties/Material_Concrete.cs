@@ -20,44 +20,48 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Engine.Robot;
-using BH.oM.Structure.Constraints;
 using RobotOM;
+using BH.oM.Structure.Constraints;
 using System.Collections.Generic;
+using System;
+using BH.oM.Structure.SurfaceProperties;
+using BH.oM.Structure.MaterialFragments;
 
-namespace BH.Adapter.Robot
+namespace BH.Engine.Robot
 {
-    public partial class RobotAdapter
+    public class ConcreteMaterialComparer : IEqualityComparer<Concrete>
     {
-
         /***************************************************/
-        /****           Private Methods                 ****/
-        /***************************************************/
-
+        /****           Public Methods                  ****/
         /***************************************************/
 
-        private bool CreateCollection(IEnumerable<Constraint4DOF> linearReleases)
+        public bool Equals(Concrete material1, Concrete material2)
         {
-            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_LINEAR_RELEASE, "");
-            List<Constraint4DOF> linearReleasesToUpdate = new List<Constraint4DOF>();
-            foreach (Constraint4DOF linearRelease in linearReleases)
-            {
-                if (robotLabelServer.Exist(IRobotLabelType.I_LT_LINEAR_RELEASE, linearRelease.Name) == -1)
-                    linearReleasesToUpdate.Add(linearRelease);
-                else
-                {
-                    Convert.RobotConstraint(robotLabel.Data, linearRelease);
-                    robotLabelServer.StoreWithName(robotLabel, linearRelease.Name);
-                }
-                Update(linearReleasesToUpdate);
-            }
-            return true;
+            if(material1.Name == material2.Name &&
+               material1.Density == material2.Density &&
+               material1.YoungsModulus == material2.YoungsModulus &&
+               material1.PoissonsRatio == material2.PoissonsRatio &&
+               material1.ThermalExpansionCoeff == material2.ThermalExpansionCoeff &&
+               material1.DampingRatio == material2.DampingRatio &&
+               material1.CubeStrength == material2.CubeStrength &&
+               material1.CylinderStrength == material2.CylinderStrength)           
+               return true;
+            else
+                return false;
         }
 
         /***************************************************/
+
+        public int GetHashCode(Concrete obj)
+        {
+            //Check whether the object is null
+            if (Object.ReferenceEquals(obj, null)) return 0;
+
+            return obj.Name == null ? 0 : obj.Name.GetHashCode();
+        }
+
+        /***************************************************/
+       
     }
-
 }
-
 

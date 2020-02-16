@@ -28,21 +28,31 @@ using BH.oM.Structure.SurfaceProperties;
 
 namespace BH.Engine.Robot
 {
-    public class ConstantThicknessComparer : IEqualityComparer<ConstantThickness>
+    public class ISurfacePropertyComparer : IEqualityComparer<ISurfaceProperty>
     {
         /***************************************************/
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public bool Equals(ConstantThickness constantThickness1, ConstantThickness constrantThickness2)
+        public bool Equals(ISurfaceProperty surfaceProperty1, ISurfaceProperty surfaceProperty2)
         {
-           
+            if (surfaceProperty1.GetType() == typeof(ConstantThickness) && surfaceProperty2.GetType() == typeof(ConstantThickness))
+            {
+                ConstantThicknessComparer constantThicknessComparer = new ConstantThicknessComparer();
+                return constantThicknessComparer.Equals(surfaceProperty1 as ConstantThickness, surfaceProperty2 as ConstantThickness);
+            }
+            else if ((surfaceProperty1.GetType() == typeof(LoadingPanelProperty) && surfaceProperty2.GetType() == typeof(LoadingPanelProperty)))
+            {
+                LoadingPanelPropertyComparer loadingPanelPropertyComparer = new LoadingPanelPropertyComparer();
+                return loadingPanelPropertyComparer.Equals(surfaceProperty1 as LoadingPanelProperty, surfaceProperty2 as LoadingPanelProperty);
+            }
+            else
                 return false;
         }
 
         /***************************************************/
 
-        public int GetHashCode(ConstantThickness obj)
+        public int GetHashCode(ISurfaceProperty obj)
         {
             //Check whether the object is null
             if (Object.ReferenceEquals(obj, null)) return 0;
@@ -51,7 +61,7 @@ namespace BH.Engine.Robot
         }
 
         /***************************************************/
-       
+      
     }
 }
 

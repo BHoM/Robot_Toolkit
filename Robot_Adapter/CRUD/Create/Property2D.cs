@@ -35,31 +35,25 @@ namespace BH.Adapter.Robot
         private bool CreateCollection(IEnumerable<ISurfaceProperty> properties, bool overwrite = true)
         {
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            List<ISurfaceProperty> propertiesToUpdate = new List<ISurfaceProperty>();            
+            List<ISurfaceProperty> propertiesToUpdate = new List<ISurfaceProperty>();
             foreach (ISurfaceProperty property in properties)
             {
                 if (property is LoadingPanelProperty)
                 {
-                    if (overwrite || robotLabelServer.Exist(IRobotLabelType.I_LT_CLADDING, property.Name) != -1)
-                    {
-                        IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_CLADDING, "");
-                        BH.Engine.Robot.Convert.ThicknessProperty(robotLabel, property);
-                        robotLabelServer.StoreWithName(robotLabel, property.Name);
-                        if(overwrite)
-                            BH.Engine.Reflection.Compute.RecordWarning("Cladding panel property2D '" + property.Name + "' already exists in the model, the properties have been overwritten");
-                    }
+                    if (robotLabelServer.Exist(IRobotLabelType.I_LT_CLADDING, property.Name) == -1)
+                        BH.Engine.Reflection.Compute.RecordWarning("Cladding panel property2D '" + property.Name + "' already exists in the model, the properties have been overwritten");
+                    IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_CLADDING, "");
+                    BH.Engine.Robot.Convert.ThicknessProperty(robotLabel, property);
+                    robotLabelServer.StoreWithName(robotLabel, property.Name);
                 }
                 else
                 {
-                    if (overwrite || robotLabelServer.Exist(IRobotLabelType.I_LT_PANEL_THICKNESS, property.Name) != -1)
-                    {
-                        IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_PANEL_THICKNESS, "");
-                        BH.Engine.Robot.Convert.ThicknessProperty(robotLabel, property);
-                        robotLabelServer.StoreWithName(robotLabel, property.Name);
-                        if(overwrite)
-                            BH.Engine.Reflection.Compute.RecordWarning("Panel property2D '" + property.Name + "' already exists in the model, the properties have been overwritten");
-                    }
-                }                              
+                    if (robotLabelServer.Exist(IRobotLabelType.I_LT_PANEL_THICKNESS, property.Name) == -1)
+                        BH.Engine.Reflection.Compute.RecordWarning("Panel property2D '" + property.Name + "' already exists in the model, the properties have been overwritten");
+                    IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_PANEL_THICKNESS, "");
+                    BH.Engine.Robot.Convert.ThicknessProperty(robotLabel, property);
+                    robotLabelServer.StoreWithName(robotLabel, property.Name);
+                }
             }
             return true;
         }

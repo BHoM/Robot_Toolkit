@@ -48,7 +48,7 @@ namespace BH.Adapter.Robot
                 {
                     Convert.RobotConstraint(robotLabel.Data, support);
                     robotLabelServer.StoreWithName(robotLabel, support.Name);
-                    BH.Engine.Reflection.Compute.RecordWarning("Support " + support.Name + " already exists in the model, the properties have been overwritten");
+                    BH.Engine.Reflection.Compute.RecordWarning("Support '" + support.Name + "' already exists in the model, the properties have been overwritten");
                 }
 
             }

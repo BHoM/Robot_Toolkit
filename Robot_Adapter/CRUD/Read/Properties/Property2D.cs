@@ -47,7 +47,7 @@ namespace BH.Adapter.Robot
             for (int i = 1; i <= rThicknessProps.Count; i++)
             {
                 IRobotLabel rThicknessProp = rThicknessProps.Get(i);
-                ISurfaceProperty tempProp = BH.Engine.Robot.Convert.ToBHoMObject(rThicknessProp, BHoMMat);
+                ISurfaceProperty tempProp = BH.Engine.Robot.Convert.FromRobot(rThicknessProp, BHoMMat);
                 tempProp.CustomData.Add(AdapterIdName, tempProp.Name);
                 BHoMProps.Add(tempProp);
             }
@@ -55,7 +55,7 @@ namespace BH.Adapter.Robot
             for (int i = 1; i <= rCladdingProps.Count; i++)
             {
                 IRobotLabel rCladdingProp = rCladdingProps.Get(i);
-                ISurfaceProperty tempProp = BH.Engine.Robot.Convert.ToBHoMObject(rCladdingProp, BHoMMat);
+                ISurfaceProperty tempProp = BH.Engine.Robot.Convert.FromRobot(rCladdingProp, BHoMMat);
                 tempProp.CustomData.Add(AdapterIdName, tempProp.Name);
                 BHoMProps.Add(tempProp);
             }
@@ -76,12 +76,12 @@ namespace BH.Adapter.Robot
                 IRobotThicknessData thicknessData = thicknessLabel.Data;
                 if (thicknessData.MaterialName != "" && !bHoMMaterials.ContainsKey(thicknessData.MaterialName))
                     bHoMMaterials.Add(thicknessData.MaterialName, MaterialFromLabel(robotLabelServer.Get(IRobotLabelType.I_LT_MATERIAL, thicknessData.MaterialName)));
-                thicknessProperty = BH.Engine.Robot.Convert.ToBHoMObject(thicknessLabel, bHoMMaterials);
+                thicknessProperty = BH.Engine.Robot.Convert.FromRobot(thicknessLabel, bHoMMaterials);
             }
             else
             {
                 thicknessLabel = robotPanel.GetLabel(IRobotLabelType.I_LT_CLADDING);
-                thicknessProperty = BH.Engine.Robot.Convert.ToBHoMObject(thicknessLabel, bHoMMaterials);
+                thicknessProperty = BH.Engine.Robot.Convert.FromRobot(thicknessLabel, bHoMMaterials);
             }
             if (thicknessProperty == null)
             {

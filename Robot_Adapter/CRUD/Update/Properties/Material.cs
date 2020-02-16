@@ -21,7 +21,7 @@
  */
 
 using BH.Engine.Robot;
-using BH.oM.Structure.Constraints;
+using BH.oM.Structure.MaterialFragments;
 using RobotOM;
 using System.Collections.Generic;
 
@@ -29,35 +29,16 @@ namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
     {
-
         /***************************************************/
-        /****           Private Methods                 ****/
-        /***************************************************/
-
+        /****           Protected Methods               ****/
         /***************************************************/
 
-        private bool CreateCollection(IEnumerable<Constraint4DOF> linearReleases)
+        protected bool Update(IEnumerable<IMaterialFragment> materials)
         {
-            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_LINEAR_RELEASE, "");
-            List<Constraint4DOF> linearReleasesToUpdate = new List<Constraint4DOF>();
-            foreach (Constraint4DOF linearRelease in linearReleases)
-            {
-                if (robotLabelServer.Exist(IRobotLabelType.I_LT_LINEAR_RELEASE, linearRelease.Name) == -1)
-                    linearReleasesToUpdate.Add(linearRelease);
-                else
-                {
-                    Convert.RobotConstraint(robotLabel.Data, linearRelease);
-                    robotLabelServer.StoreWithName(robotLabel, linearRelease.Name);
-                }
-                Update(linearReleasesToUpdate);
-            }
-            return true;
+            return CreateCollection(materials, true);
         }
 
         /***************************************************/
     }
-
 }
-
 

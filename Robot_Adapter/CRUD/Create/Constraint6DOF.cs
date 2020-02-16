@@ -41,16 +41,17 @@ namespace BH.Adapter.Robot
         {
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_SUPPORT, "");
+            List<Constraint6DOF> constraintsToUpdate = new List<Constraint6DOF>();
             foreach (Constraint6DOF constraint in constraints)
             {
-                int test = robotLabelServer.Exist(IRobotLabelType.I_LT_SUPPORT, constraint.Name);
                 if (robotLabelServer.Exist(IRobotLabelType.I_LT_SUPPORT, constraint.Name) == -1)
-                    Update(constraints);
+                    constraintsToUpdate.Add(constraint);
                 else
                 {
                     Convert.RobotConstraint(robotLabel.Data, constraint);
                     robotLabelServer.StoreWithName(robotLabel, constraint.Name);
                 }
+                Update(constraintsToUpdate);
             }
             return true;
         }

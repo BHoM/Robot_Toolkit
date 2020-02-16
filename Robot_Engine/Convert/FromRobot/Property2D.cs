@@ -35,7 +35,7 @@ namespace BH.Engine.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static ISurfaceProperty ToBHoMObject(this IRobotLabel rLabel, Dictionary<string, IMaterialFragment> Material)
+        public static ISurfaceProperty FromRobot(this IRobotLabel rLabel, Dictionary<string, IMaterialFragment> Material)
         {
             ISurfaceProperty BHoMProperty = null;
             IMaterialFragment mat = null;

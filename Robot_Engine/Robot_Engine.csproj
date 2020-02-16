@@ -94,10 +94,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Compare\ConstantThickness.cs" />
-    <Compile Include="Compare\ISurfaceProperty.cs" />
-    <Compile Include="Compare\Constraint4DOF.cs" />
-    <Compile Include="Compare\Constraint6DOF.cs" />
+    <Compile Include="Compare\Properties\Material_Concrete.cs" />
+    <Compile Include="Compare\Properties\Material_Steel.cs" />
+    <Compile Include="Compare\Properties\Material.cs" />
+    <Compile Include="Compare\Properties\LoadingPanelProperty.cs" />
+    <Compile Include="Compare\Properties\ConstantThickness.cs" />
+    <Compile Include="Compare\Properties\ISurfaceProperty.cs" />
+    <Compile Include="Compare\Properties\Constraint4DOF.cs" />
+    <Compile Include="Compare\Properties\Constraint6DOF.cs" />
     <Compile Include="Convert\AdapterID.cs" />
     <Compile Include="Convert\FromRobot\Property2D.cs" />
     <Compile Include="Convert\FromRobot\LinearRelease.cs" />

@@ -47,20 +47,16 @@ namespace BH.Adapter.Robot
                 if (match != null)
                 {
                     matData.LoadFromDBase(match);
-                    if (overwrite || robotLabelServer.Exist(IRobotLabelType.I_LT_MATERIAL, match) != -1)
-                    {
-                        m_RobotApplication.Project.Structure.Labels.StoreWithName(label, match);
-                        if (overwrite) MaterialExistsWarning(match);
-                    }
+                    if (robotLabelServer.Exist(IRobotLabelType.I_LT_MATERIAL, match) == -1)
+                        MaterialExistsWarning(match);
+                    m_RobotApplication.Project.Structure.Labels.StoreWithName(label, match);
                 }
                 else
                 {
-                    if (overwrite || robotLabelServer.Exist(IRobotLabelType.I_LT_MATERIAL, match) != -1)          
-                    {
-                        BH.Engine.Robot.Convert.RobotMaterial(matData, material);
-                        m_RobotApplication.Project.Structure.Labels.StoreWithName(label, material.Name);
-                        if (overwrite) MaterialExistsWarning(material.Name);
-                    }
+                    if (robotLabelServer.Exist(IRobotLabelType.I_LT_MATERIAL, material.Name) == -1)
+                        MaterialExistsWarning(material.Name);
+                    BH.Engine.Robot.Convert.RobotMaterial(matData, material);
+                    m_RobotApplication.Project.Structure.Labels.StoreWithName(label, material.Name);
                 }
             }
             return true;

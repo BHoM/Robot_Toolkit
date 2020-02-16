@@ -50,8 +50,8 @@ namespace BH.Adapter.Robot
                     Convert.RobotConstraint(robotLabel.Data, linearRelease);
                     robotLabelServer.StoreWithName(robotLabel, linearRelease.Name);
                 }
-                Update(linearReleasesToUpdate);
             }
+            Update(linearReleasesToUpdate);
             return true;
         }
 

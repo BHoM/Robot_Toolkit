@@ -51,8 +51,8 @@ namespace BH.Adapter.Robot
                     Convert.RobotConstraint(robotLabel.Data, constraint);
                     robotLabelServer.StoreWithName(robotLabel, constraint.Name);
                 }
-                Update(constraintsToUpdate);
             }
+            Update(constraintsToUpdate);
             return true;
         }
 

@@ -44,13 +44,13 @@ namespace BH.Adapter.Robot
             foreach (Constraint4DOF constraint in linearReleases)
             {
                 robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_LINEAR_RELEASE, constraint.Name);
-                Constraint4DOF robotConstraint = Convert.ToBHoMObject(robotLabel.Data, robotLabel.Name);
+                Constraint4DOF robotConstraint = Convert.FromRobot(robotLabel.Data, robotLabel.Name);
                 Constraint4DOFComparer constraint4DOFComparer = new Constraint4DOFComparer();
                 if (constraint4DOFComparer.Equals(constraint, robotConstraint))
                     return true;
                 else
                 {
-                    Convert.RobotConstraint(robotLabel.Data, constraint);
+                    Convert.ToRobot(robotLabel.Data, constraint);
                     robotLabelServer.StoreWithName(robotLabel, constraint.Name);
                     BH.Engine.Reflection.Compute.RecordWarning("Linear Release '" + constraint.Name + "' already exists in the model, the properties have been overwritten");
                 }

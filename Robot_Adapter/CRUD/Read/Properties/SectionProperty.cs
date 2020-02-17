@@ -74,7 +74,7 @@ namespace BH.Adapter.Robot
                     materials[bhomMat.Name] = bhomMat;
                 }
 
-                bhomSec = BH.Engine.Robot.Convert.IBHoMSection(secData, materials[secData.MaterialName]);
+                bhomSec = Convert.FromRobot(secData, materials[secData.MaterialName]);
 
                 if (bhomSec != null)
                 {

@@ -76,7 +76,7 @@ namespace BH.Adapter.Robot
             if (request.ObjectIds == null || request.ObjectIds.Count == 0)
                 barSelection.FromText("all");
             else
-                barSelection.FromText(BH.Engine.Robot.Convert.ToRobotSelectionString(CheckAndGetIds(request.ObjectIds)));
+                barSelection.FromText(Convert.ToRobotSelectionString(CheckAndGetIds(request.ObjectIds)));
 
             queryParams.Selection.Set(IRobotObjectType.I_OT_CASE, caseSelection);
             queryParams.Selection.Set(IRobotObjectType.I_OT_BAR, barSelection);

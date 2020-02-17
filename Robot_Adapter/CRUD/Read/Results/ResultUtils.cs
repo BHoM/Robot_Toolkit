@@ -59,7 +59,7 @@ namespace BH.Adapter.Robot
             if (request.Cases == null || request.Cases.Count == 0)
                 caseSelection.FromText("all");
             else
-                caseSelection.FromText(BH.Engine.Robot.Convert.ToRobotSelectionString(GetCaseNumbers(request.Cases)));
+                caseSelection.FromText(Convert.ToRobotSelectionString(GetCaseNumbers(request.Cases)));
 
             return caseSelection;
         }

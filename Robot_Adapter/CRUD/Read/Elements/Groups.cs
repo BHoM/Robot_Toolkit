@@ -42,7 +42,7 @@ namespace BH.Adapter.Robot
                 RobotGroup rgroup = m_RobotApplication.Project.Structure.Groups.Get(IRobotObjectType.I_OT_BAR, i);
                 if (rgroup != null)
                 {
-                    List<Bar> obj = ReadBars(BH.Engine.Robot.Convert.FromRobotSelectionString(rgroup.SelList));
+                    List<Bar> obj = ReadBars(Convert.FromRobotSelectionString(rgroup.SelList));
                     groups.Add(BH.Engine.Base.Create.BHoMGroup(obj, false, rgroup.Name));
                 }
             }
@@ -51,7 +51,7 @@ namespace BH.Adapter.Robot
                 RobotGroup rgroup = m_RobotApplication.Project.Structure.Groups.Get(IRobotObjectType.I_OT_NODE, i);
                 if (rgroup != null)
                 {
-                    List<Node> obj = ReadNodes(BH.Engine.Robot.Convert.FromRobotSelectionString(rgroup.SelList));
+                    List<Node> obj = ReadNodes(Convert.FromRobotSelectionString(rgroup.SelList));
                     groups.Add(BH.Engine.Base.Create.BHoMGroup(obj, false, rgroup.Name));
                 }
             }
@@ -60,7 +60,7 @@ namespace BH.Adapter.Robot
                 RobotGroup rgroup = m_RobotApplication.Project.Structure.Groups.Get(IRobotObjectType.I_OT_PANEL, i);
                 if (rgroup != null)
                 {
-                    List<Panel> obj = ReadPanels(BH.Engine.Robot.Convert.FromRobotSelectionString(rgroup.SelList));
+                    List<Panel> obj = ReadPanels(Convert.FromRobotSelectionString(rgroup.SelList));
                     groups.Add(BH.Engine.Base.Create.BHoMGroup(obj, false, rgroup.Name));
                 }
             }

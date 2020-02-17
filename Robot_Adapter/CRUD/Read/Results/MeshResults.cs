@@ -56,7 +56,7 @@ namespace BH.Adapter.Robot
             }
 
             double layerPosition = request.LayerPosition;
-            IRobotFeLayerType robotMeshLayer = Engine.Robot.Convert.FromBHoMEnum(request.Layer);
+            IRobotFeLayerType robotMeshLayer = Convert.ToRobot(request.Layer);
             if (robotMeshLayer == IRobotFeLayerType.I_FLT_LOWER)
                 layerPosition = 0;
             if (robotMeshLayer == IRobotFeLayerType.I_FLT_MIDDLE)
@@ -64,7 +64,7 @@ namespace BH.Adapter.Robot
             if (robotMeshLayer == IRobotFeLayerType.I_FLT_UPPER)
                 layerPosition = 1;
 
-            IRobotFeResultSmoothing robotFESmoothing = Engine.Robot.Convert.FromBHoMEnum(request.Smoothing);
+            IRobotFeResultSmoothing robotFESmoothing = Convert.ToRobot(request.Smoothing);
 
             IRobotStructure robotStructureServer = m_RobotApplication.Project.Structure;
 

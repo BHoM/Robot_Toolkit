@@ -52,7 +52,7 @@ namespace BH.Adapter.Robot
                     robotBar.SetSection(bar.SectionProperty.Name, false);
 
                 robotBar.Gamma = bar.OrientationAngle * Math.PI / 180;
-                BH.Engine.Robot.Convert.SetFEAType(robotBar, bar);
+                Convert.ToRobot(robotBar, bar);
 
                 if (bar.CustomData.ContainsKey("FramingElementDesignProperties"))
                 {

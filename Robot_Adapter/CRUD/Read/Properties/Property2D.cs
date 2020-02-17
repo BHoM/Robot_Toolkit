@@ -37,51 +37,70 @@ namespace BH.Adapter.Robot
 
         private List<ISurfaceProperty> ReadProperty2D(List<string> ids = null)
         {
-            List<ISurfaceProperty> BHoMProps = new List<ISurfaceProperty>();
-            IRobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
-            IRobotCollection rThicknessProps = labelServer.GetMany(IRobotLabelType.I_LT_PANEL_THICKNESS);
-            IRobotCollection rCladdingProps = labelServer.GetMany(IRobotLabelType.I_LT_CLADDING);
-            Dictionary<string, IMaterialFragment> BHoMMat = new Dictionary<string, IMaterialFragment>();
-            BHoMMat = (ReadMaterial().ToDictionary(x => x.Name));
+            List<ISurfaceProperty> properties2D = new List<ISurfaceProperty>();
+            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
+            IRobotNamesArray robotCladdingLabelNames = robotLabelServer.GetAvailableNames(IRobotLabelType.I_LT_CLADDING);
+            IRobotNamesArray robotThicknessLabelNames = robotLabelServer.GetAvailableNames(IRobotLabelType.I_LT_PANEL_THICKNESS);
+            Dictionary<string, IMaterialFragment> materials = new Dictionary<string, IMaterialFragment>();
+            IRobotLabel robotLabel = null;
+            materials = (ReadMaterial().ToDictionary(x => x.Name));
 
-            for (int i = 1; i <= rThicknessProps.Count; i++)
+            for (int i = 1; i <= robotThicknessLabelNames.Count; i++)
             {
-                IRobotLabel rThicknessProp = rThicknessProps.Get(i);
-                ISurfaceProperty tempProp = BH.Engine.Robot.Convert.FromRobot(rThicknessProp, BHoMMat);
-                tempProp.CustomData.Add(AdapterIdName, tempProp.Name);
-                BHoMProps.Add(tempProp);
+                string robotLabelName = robotThicknessLabelNames.Get(i);
+                if (robotLabelServer.IsUsed(IRobotLabelType.I_LT_PANEL_THICKNESS, robotLabelName))
+                    robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_PANEL_THICKNESS, robotLabelName);
+                else
+                    robotLabel = robotLabelServer.CreateLike(IRobotLabelType.I_LT_PANEL_THICKNESS, "", robotLabelName);
+                if (robotLabel == null)
+                    BH.Engine.Reflection.Compute.RecordWarning("Failed to read label '" + robotLabelName);
+                else
+                {
+                    ISurfaceProperty property2D = Convert.FromRobot(robotLabel, materials, robotLabelName);
+                    property2D.CustomData.Add(AdapterIdName, property2D.Name);
+                    properties2D.Add(property2D);
+                }
             }
 
-            for (int i = 1; i <= rCladdingProps.Count; i++)
+            for (int i = 1; i <= robotCladdingLabelNames.Count; i++)
             {
-                IRobotLabel rCladdingProp = rCladdingProps.Get(i);
-                ISurfaceProperty tempProp = BH.Engine.Robot.Convert.FromRobot(rCladdingProp, BHoMMat);
-                tempProp.CustomData.Add(AdapterIdName, tempProp.Name);
-                BHoMProps.Add(tempProp);
+                string robotLabelName = robotCladdingLabelNames.Get(i);
+                if (robotLabelServer.IsUsed(IRobotLabelType.I_LT_CLADDING, robotLabelName))
+                    robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_CLADDING, robotLabelName);
+                else
+                    robotLabel = robotLabelServer.CreateLike(IRobotLabelType.I_LT_CLADDING, "", robotLabelName);
+                if (robotLabel == null)
+                    BH.Engine.Reflection.Compute.RecordWarning("Failed to read label '" + robotLabelName);
+                else
+                {
+                    ISurfaceProperty property2D = Convert.FromRobot(robotLabel, materials, robotLabelName);
+                    property2D.CustomData.Add(AdapterIdName, property2D.Name);
+                    properties2D.Add(property2D);
+                }
             }
-            return BHoMProps;
+            return properties2D;
         }
 
         /***************************************************/
         
-        private ISurfaceProperty ReadProperty2DFromPanel(IRobotObjObject robotPanel, Dictionary<string, IMaterialFragment> bHoMMaterials = null, bool isCladding = false)
+        private ISurfaceProperty ReadProperty2DFromPanel(IRobotObjObject robotPanel, Dictionary<string, IMaterialFragment> materials = null, bool isCladding = false)
         {
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            if (bHoMMaterials == null) bHoMMaterials = new Dictionary<string, IMaterialFragment>();
-            IRobotLabel thicknessLabel = null;
+            if (materials == null) materials = new Dictionary<string, IMaterialFragment>();
+            IRobotLabel robotLabel = null;
             ISurfaceProperty thicknessProperty = null;
             if (!isCladding)
             {
-                thicknessLabel = robotPanel.GetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS);
-                IRobotThicknessData thicknessData = thicknessLabel.Data;
-                if (thicknessData.MaterialName != "" && !bHoMMaterials.ContainsKey(thicknessData.MaterialName))
-                    bHoMMaterials.Add(thicknessData.MaterialName, MaterialFromLabel(robotLabelServer.Get(IRobotLabelType.I_LT_MATERIAL, thicknessData.MaterialName)));
-                thicknessProperty = BH.Engine.Robot.Convert.FromRobot(thicknessLabel, bHoMMaterials);
+                robotLabel = robotPanel.GetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS);
+                IRobotThicknessData thicknessData = robotLabel.Data;
+                if (thicknessData.MaterialName != "" && !materials.ContainsKey(thicknessData.MaterialName))
+                    materials.Add(thicknessData.MaterialName, MaterialFromLabel(robotLabelServer.Get(IRobotLabelType.I_LT_MATERIAL, thicknessData.MaterialName)));
+                thicknessProperty = Convert.FromRobot(robotLabel, materials);
             }
             else
             {
-                thicknessLabel = robotPanel.GetLabel(IRobotLabelType.I_LT_CLADDING);
-                thicknessProperty = BH.Engine.Robot.Convert.FromRobot(thicknessLabel, bHoMMaterials);
+                robotLabel = robotPanel.GetLabel(IRobotLabelType.I_LT_CLADDING);
+                thicknessProperty = Convert.FromRobot(robotLabel, materials);
             }
             if (thicknessProperty == null)
             {

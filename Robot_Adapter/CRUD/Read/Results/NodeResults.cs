@@ -66,7 +66,7 @@ namespace BH.Adapter.Robot
             if (request.ObjectIds == null || request.ObjectIds.Count == 0)
                 nodeSelection.FromText("all");
             else
-                nodeSelection.FromText(BH.Engine.Robot.Convert.ToRobotSelectionString(CheckAndGetIds(request.ObjectIds)));
+                nodeSelection.FromText(Convert.ToRobotSelectionString(CheckAndGetIds(request.ObjectIds)));
 
             queryParams.Selection.Set(IRobotObjectType.I_OT_CASE, caseSelection);
             queryParams.Selection.Set(IRobotObjectType.I_OT_NODE, nodeSelection);

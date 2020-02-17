@@ -56,9 +56,12 @@ namespace BH.Adapter.Robot
             if (type == typeof(Opening))
                 return ReadOpenings();
 
+            if (type == typeof(Constraint4DOF))
+                return ReadConstraints4DOF();
+
             if (type == typeof(Constraint6DOF))
                 return ReadConstraints6DOF();
-
+        
             if (type == typeof(Material))
                 return ReadMaterial();
 

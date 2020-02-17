@@ -66,8 +66,8 @@ namespace BH.Adapter.Robot
             }
             else
             {
-                robotPanelSelection.FromText(BH.Engine.Robot.Convert.ToRobotSelectionString(panelIds));
-                robotCladdingPanelSelection.FromText(BH.Engine.Robot.Convert.ToRobotSelectionString(panelIds));
+                robotPanelSelection.FromText(Convert.ToRobotSelectionString(panelIds));
+                robotCladdingPanelSelection.FromText(Convert.ToRobotSelectionString(panelIds));
             }
 
             IRobotCollection rPanels = robotPanelServer.GetMany(robotPanelSelection);
@@ -80,8 +80,8 @@ namespace BH.Adapter.Robot
 
                 if (robotPanel.Main.Attribs.Meshed == 1)
                 {
-                    ICurve outline = BH.Engine.Robot.Convert.ToBHoMGeometry(robotPanel.Main.GetGeometry() as dynamic);
-                    List<Opening> openings = BH.Engine.Robot.Convert.FindOpening(outline, allOpenings);
+                    ICurve outline = Convert.FromRobot(robotPanel.Main.GetGeometry() as dynamic);
+                    List<Opening> openings = Convert.FindOpening(outline, allOpenings);
                     try
                     {
                         BHoMPanel = BH.Engine.Structure.Create.Panel(outline, openings);
@@ -135,7 +135,7 @@ namespace BH.Adapter.Robot
 
                 if (robotCladdingPanel.Main.Attribs.Meshed == 1)
                 {
-                    ICurve outline = BH.Engine.Robot.Convert.ToBHoMGeometry(robotCladdingPanel.Main.GetGeometry() as dynamic);
+                    ICurve outline = Convert.FromRobot(robotCladdingPanel.Main.GetGeometry() as dynamic);
                     BHoMPanel = BH.Engine.Structure.Create.Panel(outline, emptyOpenings);
                 }
                 if (BHoMPanel != null)
@@ -183,7 +183,7 @@ namespace BH.Adapter.Robot
             }
             else
             {
-                rPanSelect.FromText(BH.Engine.Robot.Convert.ToRobotSelectionString(panelIds));
+                rPanSelect.FromText(Convert.ToRobotSelectionString(panelIds));
             }
 
             IRobotCollection rPanels = robotPanelServer.GetMany(rPanSelect);
@@ -195,7 +195,7 @@ namespace BH.Adapter.Robot
 
                 if (rpanel.Main.Attribs.Meshed == 1)
                 {
-                    ICurve outline = BH.Engine.Robot.Convert.ToBHoMGeometry(rpanel.Main.GetGeometry() as dynamic);
+                    ICurve outline = Convert.FromRobot(rpanel.Main.GetGeometry() as dynamic);
 
                     BHoMPanel = new Panel();
                     BHoMPanel.CustomData[AdapterIdName] = rpanel.Number;

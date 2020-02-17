@@ -68,13 +68,13 @@ namespace BH.Adapter.Robot
                 for (int i = 1; i <= robotBars.Count; i++)
                 {
                     RobotBar robotBar = robotBars.Get(i);
-                    Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject( robotBar, 
-                                                                        bhomNodes, 
-                                                                        bhomSections, 
-                                                                        bhomMaterial, 
-                                                                        bhombarReleases,
-                                                                        bhomFramEleDesProps,
-                                                                        ref sectionWithMaterial);
+                    Bar bhomBar = Convert.FromRobot( robotBar, 
+                                                     bhomNodes, 
+                                                     bhomSections, 
+                                                     bhomMaterial, 
+                                                     bhombarReleases,
+                                                     bhomFramEleDesProps,
+                                                     ref sectionWithMaterial);
                     bhomBar.CustomData[AdapterIdName] = robotBar.Number;
                     if (barTags != null && barTags.TryGetValue(robotBar.Number, out tags))
                         bhomBar.Tags = tags;
@@ -86,13 +86,13 @@ namespace BH.Adapter.Robot
                 for (int i = 0; i < barIds.Count; i++)
                 {
                     RobotBar robotBar = m_RobotApplication.Project.Structure.Bars.Get(barIds[i]) as RobotBar;
-                    Bar bhomBar = BH.Engine.Robot.Convert.ToBHoMObject( robotBar, 
-                                                                        bhomNodes, 
-                                                                        bhomSections, 
-                                                                        bhomMaterial,
-                                                                        bhombarReleases,
-                                                                        bhomFramEleDesProps,
-                                                                        ref sectionWithMaterial);
+                    Bar bhomBar = Convert.FromRobot( robotBar, 
+                                                     bhomNodes, 
+                                                     bhomSections, 
+                                                     bhomMaterial,
+                                                     bhombarReleases,
+                                                     bhomFramEleDesProps,
+                                                     ref sectionWithMaterial);
                     bhomBar.CustomData[AdapterIdName] = robotBar.Number;
                     if (barTags != null && barTags.TryGetValue(robotBar.Number, out tags))
                         bhomBar.Tags = tags;
@@ -169,7 +169,7 @@ namespace BH.Adapter.Robot
             if (ids == null || ids.Count == 0)
                 bar_sel.FromText("all");
             else
-                bar_sel.FromText(BH.Engine.Robot.Convert.ToRobotSelectionString(CheckAndGetIds(ids)));
+                bar_sel.FromText(Convert.ToRobotSelectionString(CheckAndGetIds(ids)));
 
 
 

@@ -48,7 +48,7 @@ namespace BH.Adapter.Robot
             }
             else
             {
-                rSelect.FromText(BH.Engine.Robot.Convert.ToRobotSelectionString(openingIds));
+                rSelect.FromText(Convert.ToRobotSelectionString(openingIds));
             }
             IRobotCollection rOpenings = rStructure.Objects.GetMany(rSelect);
             Opening tempOpening = null;
@@ -60,7 +60,7 @@ namespace BH.Adapter.Robot
                
                 if (rOpening.Main.Attribs.Meshed != 1)
                 {
-                    ICurve outline = BH.Engine.Robot.Convert.ToBHoMGeometry(rOpening.Main.GetGeometry() as dynamic);
+                    ICurve outline = Convert.FromRobot(rOpening.Main.GetGeometry() as dynamic);
                     tempOpening = BH.Engine.Structure.Create.Opening(outline);
                 }
                 if (tempOpening != null)

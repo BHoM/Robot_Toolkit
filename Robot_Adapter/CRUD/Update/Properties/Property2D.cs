@@ -37,7 +37,7 @@ namespace BH.Adapter.Robot
 
         protected bool Update(IEnumerable<ISurfaceProperty> properties)
         {
-            return CreateCollection(properties, true);
+            return CreateCollection(properties);
         }
 
         /***************************************************/

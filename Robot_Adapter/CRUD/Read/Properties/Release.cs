@@ -34,23 +34,22 @@ namespace BH.Adapter.Robot
 
         private List<BarRelease> ReadBarRelease(List<string> ids = null)
         {
-            IRobotCollection releaseCollection = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_BAR_RELEASE);
-            List<BarRelease> bhomReleases = new List<BarRelease>();
-
-            for (int i = 1; i <= releaseCollection.Count; i++)
+            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
+            IRobotNamesArray robotLabelNames = robotLabelServer.GetAvailableNames(IRobotLabelType.I_LT_BAR_RELEASE);
+            List<BarRelease> releases = new List<BarRelease>();
+            for (int i = 1; i <= robotLabelNames.Count; i++)
             {
-                IRobotLabel rReleaseLabel = releaseCollection.Get(i);
-                IRobotBarReleaseData rReleaseData = rReleaseLabel.Data as IRobotBarReleaseData;
-                BarRelease bhomMBarRelease = new BarRelease
+                IRobotLabel robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_BAR_RELEASE, robotLabelNames.Get(i));
+                IRobotBarReleaseData robotLabelData = robotLabel.Data as IRobotBarReleaseData;
+                BarRelease release = new BarRelease
                 {
-                    Name = rReleaseLabel.Name,
-                    StartRelease = BH.Engine.Robot.Convert.BHoMRelease(rReleaseData.StartNode),
-                    EndRelease = BH.Engine.Robot.Convert.BHoMRelease(rReleaseData.EndNode)
+                    StartRelease = Convert.FromRobot(robotLabelData.StartNode),
+                    EndRelease = Convert.FromRobot(robotLabelData.EndNode)
                 };
-                bhomMBarRelease.CustomData.Add(AdapterIdName, rReleaseLabel.Name);
-                bhomReleases.Add(bhomMBarRelease);
+                release.CustomData.Add(AdapterIdName, robotLabel.Name);
+                releases.Add(release);
             }
-            return bhomReleases;
+            return releases;
         }
 
         /***************************************************/        

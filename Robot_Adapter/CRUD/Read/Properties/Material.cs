@@ -34,14 +34,15 @@ namespace BH.Adapter.Robot
 
         private List<IMaterialFragment> ReadMaterial(List<string> ids = null)
         {
-            IRobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
-            IRobotCollection rMaterials = labelServer.GetMany(IRobotLabelType.I_LT_MATERIAL);
+            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
+            IRobotNamesArray robotLabelNames = robotLabelServer.GetAvailableNames(IRobotLabelType.I_LT_MATERIAL);
             IMaterialFragment bhomMat = null;
             List<IMaterialFragment> bhomMaterials = new List<IMaterialFragment>();
 
-            for (int i = 1; i <= rMaterials.Count; i++)
+            for (int i = 1; i <= robotLabelNames.Count; i++)
             {
-                IRobotLabel robotMaterialLabel = rMaterials.Get(i);
+                string robotLabelName = robotLabelNames.Get(i);
+                IRobotLabel robotMaterialLabel = robotLabelServer.Get(IRobotLabelType.I_LT_MATERIAL, robotLabelName);
 
                 bhomMat = MaterialFromLabel(robotMaterialLabel);
 

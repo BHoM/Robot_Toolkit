@@ -49,11 +49,11 @@ namespace BH.Adapter.Robot
                 bhomDesignGroup.Name = designGroup.Name;
                 bhomDesignGroup.Number = designGroup.UsrNo;
                 bhomDesignGroup.CustomData[AdapterIdName] = designGroup.UsrNo;
-                bhomDesignGroup.CustomData[Engine.Robot.Convert.AdapterName] = designGroup.Name;
+                bhomDesignGroup.CustomData[Convert.AdapterName] = designGroup.Name;
                 bhomDesignGroup.MaterialName = designGroup.Material;
                 designGroup.GetMembList(RDStream);
                 if (RDStream.Size(IRDimStreamType.I_DST_TEXT) > 0)
-                    bhomDesignGroup.MemberIds = Engine.Robot.Convert.ToSelectionList(RDStream.ReadText());
+                    bhomDesignGroup.MemberIds = Convert.ToSelectionList(RDStream.ReadText());
                 designGroupList.Add(bhomDesignGroup);
             }
             return designGroupList;

@@ -40,13 +40,13 @@ namespace BH.Adapter.Robot
             foreach (Constraint6DOF support in supports)
             {
                 robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_SUPPORT, support.Name);
-                Constraint6DOF robotConstraint = Convert.ToBHoMObject(robotLabel.Data, robotLabel.Name);
+                Constraint6DOF robotConstraint = Convert.FromRobot(robotLabel.Data, robotLabel.Name);
                 Constraint6DOFComparer constraint6DOFComparer = new Constraint6DOFComparer();
                 if (constraint6DOFComparer.Equals(support, robotConstraint))
                     return true;
                 else
                 {
-                    Convert.RobotConstraint(robotLabel.Data, support);
+                    Convert.ToRobot(robotLabel.Data, support);
                     robotLabelServer.StoreWithName(robotLabel, support.Name);
                     BH.Engine.Reflection.Compute.RecordWarning("Support '" + support.Name + "' already exists in the model, the properties have been overwritten");
                 }

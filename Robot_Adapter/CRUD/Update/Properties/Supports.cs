@@ -20,48 +20,41 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using RobotOM;
+using BH.Engine.Robot;
 using BH.oM.Structure.Constraints;
+using RobotOM;
 using System.Collections.Generic;
-using System;
-using BH.oM.Structure.SurfaceProperties;
 
-namespace BH.Engine.Robot
+namespace BH.Adapter.Robot
 {
-    public class ISurfacePropertyComparer : IEqualityComparer<ISurfaceProperty>
+    public partial class RobotAdapter
     {
         /***************************************************/
-        /****           Public Methods                  ****/
+        /****           Protected Methods               ****/
         /***************************************************/
 
-        public bool Equals(ISurfaceProperty surfaceProperty1, ISurfaceProperty surfaceProperty2)
+        protected bool Update(IEnumerable<Constraint6DOF> supports)
         {
-            if (surfaceProperty1.GetType() == typeof(ConstantThickness) && surfaceProperty2.GetType() == typeof(ConstantThickness))
+            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
+            foreach (Constraint6DOF support in supports)
             {
-                ConstantThicknessComparer constantThicknessComparer = new ConstantThicknessComparer();
-                return constantThicknessComparer.Equals(surfaceProperty1 as ConstantThickness, surfaceProperty2 as ConstantThickness);
+                IRobotLabel robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_SUPPORT, support.Name);
+                Constraint6DOF robotConstraint = Convert.FromRobot(robotLabel as RobotNodeSupport);
+                Constraint6DOFComparer constraint6DOFComparer = new Constraint6DOFComparer();
+                if (constraint6DOFComparer.Equals(support, robotConstraint))
+                    return true;
+                else
+                {
+                    Convert.ToRobot(robotLabel.Data, support);
+                    robotLabelServer.StoreWithName(robotLabel, support.Name);
+                    BH.Engine.Reflection.Compute.RecordWarning("Support '" + support.Name + "' already exists in the model, the properties have been overwritten");
+                }
+
             }
-            else if ((surfaceProperty1.GetType() == typeof(LoadingPanelProperty) && surfaceProperty2.GetType() == typeof(LoadingPanelProperty)))
-            {
-                LoadingPanelPropertyComparer loadingPanelPropertyComparer = new LoadingPanelPropertyComparer();
-                return loadingPanelPropertyComparer.Equals(surfaceProperty1 as LoadingPanelProperty, surfaceProperty2 as LoadingPanelProperty);
-            }
-            else
-                return false;
+            return true;
+
+            /***************************************************/
         }
-
-        /***************************************************/
-
-        public int GetHashCode(ISurfaceProperty obj)
-        {
-            //Check whether the object is null
-            if (Object.ReferenceEquals(obj, null)) return 0;
-
-            return obj.Name == null ? 0 : obj.Name.GetHashCode();
-        }
-
-        /***************************************************/
-      
     }
 }
 

@@ -30,44 +30,40 @@ namespace BH.Adapter.Robot
         /***************************************************/
         /****           Public Methods                  ****/
         /***************************************************/
-
-        public static void ToRobot(IRobotBarEndReleaseData rData, Constraint6DOF bhomRelease)
+        
+        public static BarRelease FromRobot(this IRobotLabel robotLabel, IRobotBarReleaseData robotBarReleaseData, string name = "")
         {
-            rData.UX = ToRobot(bhomRelease.TranslationX);
-            rData.UY = ToRobot(bhomRelease.TranslationY);
-            rData.UZ = ToRobot(bhomRelease.TranslationZ);
-            rData.RX = ToRobot(bhomRelease.RotationX);
-            rData.RY = ToRobot(bhomRelease.RotationY);
-            rData.RZ = ToRobot(bhomRelease.RotationZ);
+            if (robotLabel.Name != "") name = robotLabel.Name;    
+            BarRelease release = new BarRelease
+            {
+                Name = name,
+                StartRelease = FromRobot(robotBarReleaseData.StartNode),
+                EndRelease = FromRobot(robotBarReleaseData.EndNode)
+            };
 
-            rData.KX = bhomRelease.TranslationalStiffnessX;
-            rData.KY = bhomRelease.TranslationalStiffnessY;
-            rData.KZ = bhomRelease.TranslationalStiffnessZ;
-            rData.HX = bhomRelease.RotationalStiffnessX;
-            rData.HY = bhomRelease.RotationalStiffnessY;
-            rData.HZ = bhomRelease.RotationalStiffnessZ;
+            return release;
         }
 
         /***************************************************/
 
-        public static Constraint6DOF FromRobot(IRobotBarEndReleaseData rData)
+        public static Constraint6DOF FromRobot(this IRobotBarEndReleaseData barEndReleaseData)
         {
-            Constraint6DOF bhomEndRelease = new Constraint6DOF();
-            bhomEndRelease.TranslationX = FromRobot(rData.UX);
-            bhomEndRelease.TranslationY = FromRobot(rData.UY);
-            bhomEndRelease.TranslationZ = FromRobot(rData.UZ);
-            bhomEndRelease.RotationX = FromRobot(rData.RX);
-            bhomEndRelease.RotationY = FromRobot(rData.RY);
-            bhomEndRelease.RotationZ = FromRobot(rData.RZ);
+            Constraint6DOF endRelease = new Constraint6DOF();
+            endRelease.TranslationX = FromRobot(barEndReleaseData.UX);
+            endRelease.TranslationY = FromRobot(barEndReleaseData.UY);
+            endRelease.TranslationZ = FromRobot(barEndReleaseData.UZ);
+            endRelease.RotationX = FromRobot(barEndReleaseData.RX);
+            endRelease.RotationY = FromRobot(barEndReleaseData.RY);
+            endRelease.RotationZ = FromRobot(barEndReleaseData.RZ);
 
-            bhomEndRelease.TranslationalStiffnessX = rData.KX;
-            bhomEndRelease.TranslationalStiffnessY = rData.KY;
-            bhomEndRelease.TranslationalStiffnessZ = rData.KZ;
-            bhomEndRelease.RotationalStiffnessX = rData.HX;
-            bhomEndRelease.RotationalStiffnessY = rData.HY;
-            bhomEndRelease.RotationalStiffnessZ = rData.HZ;
+            endRelease.TranslationalStiffnessX = barEndReleaseData.KX;
+            endRelease.TranslationalStiffnessY = barEndReleaseData.KY;
+            endRelease.TranslationalStiffnessZ = barEndReleaseData.KZ;
+            endRelease.RotationalStiffnessX = barEndReleaseData.HX;
+            endRelease.RotationalStiffnessY = barEndReleaseData.HY;
+            endRelease.RotationalStiffnessZ = barEndReleaseData.HZ;
 
-            return bhomEndRelease;
+            return endRelease;
         }
 
         /***************************************************/
@@ -104,39 +100,7 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
-
-        public static IRobotBarEndReleaseValue ToRobot(DOFType endRelease)
-        {
-            switch (endRelease)
-            {
-                case DOFType.Spring:
-                    return IRobotBarEndReleaseValue.I_BERV_ELASTIC;
-                case DOFType.SpringNegative:
-                    return IRobotBarEndReleaseValue.I_BERV_ELASTIC_MINUS;
-                case DOFType.SpringPositive:
-                    return IRobotBarEndReleaseValue.I_BERV_ELASTIC_PLUS;
-                case DOFType.Free:
-                    return IRobotBarEndReleaseValue.I_BERV_STD;
-                case DOFType.FixedNegative:
-                    return IRobotBarEndReleaseValue.I_BERV_MINUS;
-                case DOFType.FixedPositive:
-                    return IRobotBarEndReleaseValue.I_BERV_PLUS;
-                case DOFType.Fixed:
-                    return IRobotBarEndReleaseValue.I_BERV_NONE;
-                case DOFType.NonLinear:
-                    return IRobotBarEndReleaseValue.I_BERV_NONLINEAR;
-                case DOFType.SpringRelative:
-                    return IRobotBarEndReleaseValue.I_BERV_ELASTIC_REDUCED;
-                case DOFType.SpringRelativeNegative:
-                    return IRobotBarEndReleaseValue.I_BERV_ELASTIC_REDUCED_MINUS;
-                case DOFType.SpringRelativePositive:
-                    return IRobotBarEndReleaseValue.I_BERV_ELASTIC_REDUCED_PLUS;
-                default:
-                    return IRobotBarEndReleaseValue.I_BERV_STD;
-            }
-        }
-     
-        /***************************************************/
+      
     }
 }
 

@@ -20,26 +20,43 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using RobotOM;
-using BH.oM.Structure.Constraints;
 using System.Collections.Generic;
 using BH.oM.Base;
+using BH.oM.Structure.Elements;
+using BH.oM.Structure.SectionProperties;
+using BH.oM.Structure.SurfaceProperties;
+using BH.oM.Structure.Constraints;
+using BH.oM.Structure.Loads;
+using BH.oM.Physical.Materials;
+using BH.oM.Adapter;
+using RobotOM;
 
 namespace BH.Adapter.Robot
 {
-    public static partial class Convert
+    public partial class RobotAdapter
     {
         /***************************************************/
-        /****           Public Methods                  ****/
+        /****           Protected Methods               ****/
         /***************************************************/
-
-        public static dynamic FromRobot(IRobotLabel robotLabel, string robotLabelName = "")
+                          
+        protected bool Update(IEnumerable<ISectionProperty> sectionProperties)
         {
-            if (robotLabelName == "") robotLabelName = robotLabel.Name;
-            return FromRobot(robotLabel.Data as dynamic, robotLabelName);
+            List<ISectionProperty> secPropToCreate = new List<ISectionProperty>();
+
+            foreach (ISectionProperty p in sectionProperties)
+            {
+                string match = Convert.Match(m_dbSecPropNames, p);
+                if (match == null)
+                    secPropToCreate.Add(p);
+            }
+
+            bool success = true;
+            success = ICreate(secPropToCreate);
+            return success;
         }
 
         /***************************************************/
-    }
+
+     }
 }
 

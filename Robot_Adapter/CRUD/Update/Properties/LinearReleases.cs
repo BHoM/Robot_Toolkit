@@ -20,43 +20,46 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using RobotOM;
-using BH.oM.Structure.Constraints;
-using System.Collections.Generic;
-using System;
+using BH.oM.Structure.Elements;
 using BH.oM.Structure.SurfaceProperties;
+using RobotOM;
+using System.Collections.Generic;
+using BH.oM.Adapter;
+using System.Linq;
+using BH.oM.Structure.Constraints;
+using BH.Engine.Robot;
 
-namespace BH.Engine.Robot
+namespace BH.Adapter.Robot
 {
-    public class ConstantThicknessComparer : IEqualityComparer<ConstantThickness>
+    public partial class RobotAdapter
     {
         /***************************************************/
-        /****           Public Methods                  ****/
+        /****           Protected Methods               ****/
         /***************************************************/
 
-        public bool Equals(ConstantThickness constantThickness1, ConstantThickness constantThickness2)
+        protected bool Update(IEnumerable<Constraint4DOF> linearReleases)
         {
-            if( constantThickness1.Name == constantThickness2.Name &&
-                constantThickness1.Material.Name == constantThickness2.Material.Name &&
-                constantThickness1.Thickness == constantThickness2.Thickness &&
-                constantThickness1.PanelType == constantThickness2.PanelType)
-                return true;
-            else
-                return false;
+            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
+            foreach (Constraint4DOF constraint in linearReleases)
+            {
+                IRobotLabel robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_LINEAR_RELEASE, constraint.Name);
+                Constraint4DOF robotConstraint = Convert.FromRobot(robotLabel, robotLabel.Data as IRobotLinearReleaseData);
+                Constraint4DOFComparer constraint4DOFComparer = new Constraint4DOFComparer();
+                if (constraint4DOFComparer.Equals(constraint, robotConstraint))
+                    return true;
+                else
+                {
+                    Convert.ToRobot(robotLabel.Data, constraint);
+                    robotLabelServer.StoreWithName(robotLabel, constraint.Name);
+                    BH.Engine.Reflection.Compute.RecordWarning("Linear Release '" + constraint.Name + "' already exists in the model, the properties have been overwritten");
+                }
+
+            }
+            return true;
         }
 
         /***************************************************/
 
-        public int GetHashCode(ConstantThickness obj)
-        {
-            //Check whether the object is null
-            if (Object.ReferenceEquals(obj, null)) return 0;
-
-            return obj.Name == null ? 0 : obj.Name.GetHashCode();
-        }
-
-        /***************************************************/
-       
     }
 }
 

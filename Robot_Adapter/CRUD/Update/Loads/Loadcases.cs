@@ -20,10 +20,16 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Engine.Robot;
-using BH.oM.Structure.Constraints;
-using RobotOM;
 using System.Collections.Generic;
+using BH.oM.Base;
+using BH.oM.Structure.Elements;
+using BH.oM.Structure.SectionProperties;
+using BH.oM.Structure.SurfaceProperties;
+using BH.oM.Structure.Constraints;
+using BH.oM.Structure.Loads;
+using BH.oM.Physical.Materials;
+using BH.oM.Adapter;
+using RobotOM;
 
 namespace BH.Adapter.Robot
 {
@@ -33,29 +39,23 @@ namespace BH.Adapter.Robot
         /****           Protected Methods               ****/
         /***************************************************/
 
-        protected bool Update(IEnumerable<Constraint6DOF> supports)
+        protected bool Update(IEnumerable<Loadcase> loadcases)
         {
-            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_LINEAR_RELEASE, "");
-            foreach (Constraint6DOF support in supports)
+            bool success = true;
+            foreach (Loadcase lCase in loadcases)
             {
-                robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_SUPPORT, support.Name);
-                Constraint6DOF robotConstraint = Convert.FromRobot(robotLabel.Data, robotLabel.Name);
-                Constraint6DOFComparer constraint6DOFComparer = new Constraint6DOFComparer();
-                if (constraint6DOFComparer.Equals(support, robotConstraint))
-                    return true;
-                else
-                {
-                    Convert.ToRobot(robotLabel.Data, support);
-                    robotLabelServer.StoreWithName(robotLabel, support.Name);
-                    BH.Engine.Reflection.Compute.RecordWarning("Support '" + support.Name + "' already exists in the model, the properties have been overwritten");
-                }
-
+                RobotSimpleCase robotSimpCase = m_RobotApplication.Project.Structure.Cases.Get(System.Convert.ToInt32(lCase.CustomData[AdapterIdName])) as RobotSimpleCase;
+                int subNature;
+                IRobotCaseNature rNature = Convert.ToRobot(lCase, out subNature);
+                robotSimpCase.AnalizeType = IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR;
+                robotSimpCase.Nature = rNature;
+                robotSimpCase.Number = System.Convert.ToInt32(lCase.CustomData[AdapterIdName]);
             }
-            return true;
-
-            /***************************************************/
+            return success;
         }
-    }
+
+        /***************************************************/
+
+     }
 }
 

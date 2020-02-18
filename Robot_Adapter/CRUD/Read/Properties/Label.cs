@@ -24,6 +24,9 @@ using RobotOM;
 using BH.oM.Structure.Constraints;
 using System.Collections.Generic;
 using BH.oM.Base;
+using BH.oM.Structure.MaterialFragments;
+using BH.oM.Structure.SurfaceProperties;
+using BH.oM.Structure.SectionProperties;
 
 namespace BH.Adapter.Robot
 {
@@ -33,12 +36,12 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        private List<BHoMObject> ReadLabels(IRobotLabelType robotLabelType)
+        public List<IBHoMObject> ReadLabels(IRobotLabelType robotLabelType)
         {
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            IRobotNamesArray robotLabelNames = robotLabelServer.GetAvailableNames(robotLabelType);
-            List<BHoMObject> objects = new List<BHoMObject>();
-            RobotNodeSupport robotLabel = null;
+            IRobotNamesArray robotLabelNames = robotLabelServer.GetAvailableNames(robotLabelType);            
+            List<IBHoMObject> objects = new List<IBHoMObject>();
+            IRobotLabel robotLabel = null;
             for (int i = 1; i <= robotLabelNames.Count; i++)
             {
                 string robotLabelName = robotLabelNames.Get(i);
@@ -50,10 +53,76 @@ namespace BH.Adapter.Robot
                     BH.Engine.Reflection.Compute.RecordWarning("Failed to read label '" + robotLabelName);
                 else
                 {
-                    BHoMObject obj = Convert.FromRobot(robotLabel, robotLabelName);
-                    obj.CustomData.Add(AdapterIdName, robotLabel.Name);
-                    obj.Name = robotLabel.Name;
-                    objects.Add(obj);
+                    IBHoMObject obj = null;
+                    switch (robotLabelType)
+                    {
+                        case IRobotLabelType.I_LT_NODE_COMPATIBILITY:
+                            break;
+                        case IRobotLabelType.I_LT_BAR_SECTION:
+                            break;
+                        case IRobotLabelType.I_LT_BAR_RELEASE:
+                            BarRelease barRelease = robotLabel.FromRobot(robotLabel.Data as IRobotBarReleaseData, robotLabelName);  
+                            obj = barRelease;
+                            break;
+                        case IRobotLabelType.I_LT_BAR_OFFSET:
+                            break;
+                        case IRobotLabelType.I_LT_BAR_CABLE:
+                            break;
+                        case IRobotLabelType.I_LT_BAREND_BRACKET:
+                            break;
+                        case IRobotLabelType.I_LT_EDGE_SUPPORT:
+                            break;
+                        case IRobotLabelType.I_LT_PANEL_THICKNESS:
+                            break;
+                        case IRobotLabelType.I_LT_PANEL_REINFORCEMENT:
+                            break;
+                        case IRobotLabelType.I_LT_UNKNOWN:
+                            break;
+                        case IRobotLabelType.I_LT_SUPPORT:
+                            Constraint6DOF support = Convert.FromRobot(robotLabel as RobotNodeSupport);
+                            obj = support;
+                            break;
+                        case IRobotLabelType.I_LT_MATERIAL:
+                            IMaterialFragment material = Convert.FromRobot(robotLabel, robotLabel.Data as RobotMaterialData, robotLabelName);
+                            obj = material;
+                            break;
+                        case IRobotLabelType.I_LT_LINEAR_RELEASE:
+                            Constraint4DOF linearRelease = Convert.FromRobot(robotLabel, robotLabel.Data as IRobotLinearReleaseData);
+                            obj = linearRelease;
+                            break;
+                        case IRobotLabelType.I_LT_BAR_ELASTIC_GROUND:
+                            break;
+                        case IRobotLabelType.I_LT_NODE_RIGID_LINK:
+                            break;
+                        case IRobotLabelType.I_LT_MEMBER_TYPE:
+                            break;
+                        case IRobotLabelType.I_LT_VEHICLE:
+                            break;
+                        case IRobotLabelType.I_LT_SOLID_PROPERTIES:
+                            break;
+                        case IRobotLabelType.I_LT_BAR_GEO_IMPERFECTIONS:
+                            break;
+                        case IRobotLabelType.I_LT_BAR_NONLINEAR_HINGE:
+                            break;
+                        case IRobotLabelType.I_LT_CLADDING:
+                            //ISurfaceProperty cladding = Convert.FromRobot(robotLabel, robotLabelName);
+                            //obj = cladding;
+                            break;
+                        case IRobotLabelType.I_LT_PANEL_CALC_MODEL:
+                            break;
+                        case IRobotLabelType.I_LT_MEMBER_REINFORCEMENT_PARAMS:
+                            break;
+                        case IRobotLabelType.I_LT_COUNT:
+                            break;
+                        default:
+                            break;
+                    }
+                    if (obj != null)
+                    {
+                        obj.CustomData.Add(AdapterIdName, robotLabelName);
+                        obj.Name = robotLabelName;
+                        objects.Add(obj);
+                    }
                 }
             }
             return objects;

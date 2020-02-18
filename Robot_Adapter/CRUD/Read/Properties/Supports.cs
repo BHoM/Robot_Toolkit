@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using RobotOM;
 using BH.oM.Structure.Constraints;
+using System.Linq;
 
 namespace BH.Adapter.Robot
 {
@@ -34,28 +35,7 @@ namespace BH.Adapter.Robot
 
         private List<Constraint6DOF> ReadConstraints6DOF(List<string> ids = null)
         {
-            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            IRobotNamesArray robotLabelNames = robotLabelServer.GetAvailableNames(IRobotLabelType.I_LT_SUPPORT);     
-            List<Constraint6DOF> constraints = new List<Constraint6DOF>();
-            RobotNodeSupport robotLabel = null;
-            for (int i = 1; i <= robotLabelNames.Count; i++)
-            {
-                string robotLabelName = robotLabelNames.Get(i);
-                if (robotLabelServer.IsUsed(IRobotLabelType.I_LT_SUPPORT, robotLabelName))
-                    robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_SUPPORT, robotLabelNames.Get(i)) as RobotNodeSupport;
-                else
-                    robotLabel = robotLabelServer.CreateLike(IRobotLabelType.I_LT_SUPPORT, "", robotLabelName) as RobotNodeSupport;
-                if (robotLabel == null)
-                    BH.Engine.Reflection.Compute.RecordWarning("Failed to read label '" + robotLabelName);
-                else
-                { 
-                    Constraint6DOF support = Convert.FromRobot(robotLabel, robotLabelName);
-                    support.CustomData.Add(AdapterIdName, robotLabel.Name);
-                    support.Name = robotLabel.Name;
-                    constraints.Add(support);
-                }
-            }
-            return constraints;
+            return ReadLabels(IRobotLabelType.I_LT_SUPPORT).Select(x => x as Constraint6DOF).ToList() ;
         }
 
         /***************************************************/

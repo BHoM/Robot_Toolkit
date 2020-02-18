@@ -33,10 +33,10 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static Constraint6DOF FromRobot(this RobotNodeSupport robotSupport, string name)
+        public static Constraint6DOF FromRobot(this RobotNodeSupport robotSupport)
         {
             RobotNodeSupportData robotSupportData = robotSupport.Data;
-     
+            string name = robotSupport.Name;
             List<bool> fixity = new List<bool>();
             fixity.Add(robotSupportData.UX != 0);
             fixity.Add(robotSupportData.UY != 0);

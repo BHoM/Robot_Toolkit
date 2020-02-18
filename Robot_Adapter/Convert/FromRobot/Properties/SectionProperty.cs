@@ -44,7 +44,7 @@ namespace BH.Adapter.Robot
             {
                 Engine.Reflection.Compute.RecordWarning("Section proeprty of material type " + material.GetType().Name + " currently not supported. Section with label " + secData.Name + " was not extracted from the model");
                 return null;
-            }
+            }            
         }
 
         /***************************************************/

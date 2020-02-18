@@ -35,7 +35,6 @@ namespace BH.Adapter.Robot
         private bool CreateCollection(IEnumerable<ISurfaceProperty> properties)
         {
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            List<ISurfaceProperty> propertiesToUpdate = new List<ISurfaceProperty>();
             foreach (ISurfaceProperty property in properties)
             {
                 if (property is LoadingPanelProperty)

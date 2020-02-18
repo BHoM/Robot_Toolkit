@@ -134,7 +134,11 @@
     <Compile Include="Convert\AdapterID.cs" />
     <Compile Include="Convert\FromRobot\Elements\Bar.cs" />
     <Compile Include="Convert\FromRobot\Elements\Node.cs" />
-    <Compile Include="Convert\FromRobot\Elements\Geometry.cs" />
+    <Compile Include="Convert\FromRobot\Geometry\Circle.cs" />
+    <Compile Include="Convert\FromRobot\Geometry\Arc.cs" />
+    <Compile Include="Convert\FromRobot\Geometry\Polyline.cs" />
+    <Compile Include="Convert\FromRobot\Geometry\Point.cs" />
+    <Compile Include="Convert\FromRobot\Geometry\Polycurve.cs" />
     <Compile Include="Convert\FromRobot\Properties\LinearRelease.cs" />
     <Compile Include="Convert\FromRobot\Properties\BarRelease.cs" />
     <Compile Include="Convert\FromRobot\Properties\Material.cs" />
@@ -145,10 +149,11 @@
     <Compile Include="Convert\FromRobot\Properties\SectionProperty_Steel.cs" />
     <Compile Include="Convert\FromRobot\Groups and Lists\Selections.cs" />
     <Compile Include="Convert\ToRobot\Elements\Bar.cs" />
+    <Compile Include="Convert\ToRobot\Geometry\Point.cs" />
     <Compile Include="Convert\ToRobot\Groups and Lists\DataBase.cs" />
     <Compile Include="Convert\ToRobot\Groups and Lists\DesignGroup.cs" />
     <Compile Include="Convert\ToRobot\Enums\Enums.cs" />
-    <Compile Include="Convert\ToRobot\Geometry\Geometry.cs" />
+    <Compile Include="Convert\ToRobot\Geometry\Curve.cs" />
     <Compile Include="Convert\ToRobot\Groups and Lists\Group.cs" />
     <Compile Include="Convert\ToRobot\Groups and Lists\Lists.cs" />
     <Compile Include="Convert\ToRobot\Loads\Load.cs" />
@@ -156,6 +161,7 @@
     <Compile Include="Convert\ToRobot\Properties\MemberType.cs" />
     <Compile Include="Convert\ToRobot\Elements\Panel.cs" />
     <Compile Include="Convert\ToRobot\Properties\LinearRelease.cs" />
+    <Compile Include="Convert\ToRobot\Properties\Property2D.cs" />
     <Compile Include="Convert\ToRobot\Properties\SectionProperty_Concrete.cs" />
     <Compile Include="Convert\ToRobot\Properties\SectionProperty_Steel.cs" />
     <Compile Include="Convert\ToRobot\Properties\Support.cs" />

@@ -21,12 +21,9 @@
  */
 
 using BH.oM.Geometry;
-using BH.Engine.Geometry;
+using GeometryEngine = BH.Engine.Geometry;
 using RobotOM;
-using System;
-using System.Collections.Generic;
-using BH.oM.Structure.Elements;
-using BH.oM.Structure.SurfaceProperties;
+
 
 namespace BH.Adapter.Robot
 {
@@ -36,28 +33,20 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static List<Opening> FindOpening(ICurve panelOutline, List<Opening> openings)
+        public static Polyline FromRobot(this RobotGeoPolyline polyline)
         {
-            List<Opening> openingsInPanel = new List<Opening>();
+            Polyline bhomPolyline = new Polyline();
 
-            foreach (Opening o in openings)
+            for (int j = 1; j <= polyline.Segments.Count; j++)
             {
-                List<ICurve> crvsOpening = new List<ICurve>();
-                foreach (Edge e in o.Edges)
-                {
-                    crvsOpening.Add(e.Curve);
-                }
-                PolyCurve crv = BH.Engine.Geometry.Modify.IJoin(crvsOpening)[0];
-                List<Point> pts = new List<Point>();
-                pts.Add(crv.Bounds().Centre());
-                if (panelOutline.IIsContaining(pts))
-                    openingsInPanel.Add(o);
+                bhomPolyline.ControlPoints.Add(FromRobot(polyline.Segments.Get(j).P1 as dynamic));
             }
-            return openingsInPanel;
+            bhomPolyline.ControlPoints.Add(FromRobot(polyline.Segments.Get(1).P1));
+
+            return bhomPolyline;
         }
 
         /***************************************************/
-
     }
 }
 

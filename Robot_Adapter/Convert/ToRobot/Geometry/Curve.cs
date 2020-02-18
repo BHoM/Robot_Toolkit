@@ -20,9 +20,10 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Geometry;
 using BH.Engine.Geometry;
+using BH.oM.Geometry;
 using RobotOM;
+using System;
 using System.Collections.Generic;
 
 namespace BH.Adapter.Robot
@@ -33,11 +34,16 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static RobotGeoPoint3D ToRobot(RobotApplication robotapp, Point point)
+        public static IRobotComponentType ToRobot(ICurve curve)
         {
-            RobotGeoPoint3D robotPoint = robotapp.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_POINT_3D);
-            robotPoint.Set(point.X, point.Y, point.Z);
-            return robotPoint;                        
+            if (curve is Arc)
+                return IRobotComponentType.I_CT_GEO_SEGMENT_ARC;
+
+            if (curve is Line)
+                return IRobotComponentType.I_CT_GEO_SEGMENT_LINE;
+
+            else
+                throw new Exception("Geometry is only valid for Line, Arc and Circle");
         }
 
         /***************************************************/
@@ -52,6 +58,47 @@ namespace BH.Adapter.Robot
                 contour.Set(i, pts[i - 1].X, pts[i - 1].Y, pts[i - 1].Z);
             }    
             return contour;
+        }
+
+        /***************************************************/
+
+        public static void ToRobot(ICurve curve, RobotGeoObject contourGeo)
+        {
+            Circle bhomCircle = curve as Circle;
+            RobotGeoCircle circle = contourGeo as RobotGeoCircle;
+            Point bhomPoint1 = bhomCircle.IPointAtParameter(0);
+            Point bhomPoint2 = bhomCircle.IPointAtParameter(0.33);
+            Point bhomPoint3 = bhomCircle.IPointAtParameter(0.66);
+            circle.P1.Set(bhomPoint1.X, bhomPoint1.Y, bhomPoint1.Z);
+            circle.P2.Set(bhomPoint2.X, bhomPoint2.Y, bhomPoint2.Z);
+            circle.P3.Set(bhomPoint3.X, bhomPoint3.Y, bhomPoint3.Z);
+        }
+
+        /***************************************************/
+
+        public static RobotGeoSegment ToRobot(ICurve curve, RobotGeoSegment segment)
+        {
+            if (curve is Arc)
+            {
+                Arc bhomArc = curve as Arc;
+                RobotGeoSegmentArc arc = segment as RobotGeoSegmentArc;
+                Point start = bhomArc.StartPoint();
+                Point middle = bhomArc.PointAtParameter(0.5);
+
+                arc.P1.Set(start.X, start.Y, start.Z);
+                arc.P2.Set(middle.X, middle.Y, middle.Z);
+                return segment;
+            }
+
+            if (curve is Line)
+            {
+                Line bhomLine = curve as Line;
+                segment.P1.Set(bhomLine.Start.X, bhomLine.Start.Y, bhomLine.Start.Z);
+                return segment;
+            }
+
+            else
+                return null;
         }
 
         /***************************************************/

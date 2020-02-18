@@ -33,42 +33,6 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static Point FromRobot(this RobotGeoPoint3D point)
-        {
-            return new Point { X = point.X, Y = point.Y, Z = point.Z };
-        }
-
-        /***************************************************/
-
-        public static Circle FromRobot(RobotGeoCircle circle)
-        {
-            return (GeometryEngine.Create.Circle(FromRobot(circle.P1 as dynamic), FromRobot(circle.P2 as dynamic), FromRobot(circle.P3 as dynamic)));
-        }
-
-        /***************************************************/
-
-        public static Arc FromRobot(this IRobotGeoArc arc)
-        {
-            return GeometryEngine.Create.Arc(FromRobot(arc.P1 as dynamic), FromRobot(arc.P2 as dynamic), FromRobot(arc.P3 as dynamic));
-        }
-
-        /***************************************************/
-
-        public static Polyline FromRobot(this RobotGeoPolyline polyline)
-        {
-            Polyline bhomPolyline = new Polyline();
-
-            for (int j = 1; j <= polyline.Segments.Count; j++)
-            {
-                bhomPolyline.ControlPoints.Add(FromRobot(polyline.Segments.Get(j).P1 as dynamic));
-            }
-            bhomPolyline.ControlPoints.Add(FromRobot(polyline.Segments.Get(1).P1));
-
-            return bhomPolyline;
-        }
-
-        /***************************************************/
-
         public static PolyCurve FromRobot(this RobotGeoContour contour)
         {            
             PolyCurve polycurve = new PolyCurve();

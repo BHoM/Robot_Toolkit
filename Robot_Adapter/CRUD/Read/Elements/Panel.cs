@@ -118,7 +118,11 @@ namespace BH.Adapter.Robot
                         if (!bhomProperties.ContainsKey(propName))
                         {
                             ISurfaceProperty property2D = ReadProperty2DFromPanel(robotPanel, bhomMaterials);
-                            if (property2D.Material == null) property2D.Material = ReadMaterialFromPanel(robotPanel);
+                            if (property2D.Material == null)
+                            {
+                                property2D.Material = ReadMaterialFromPanel(robotPanel);
+                                if(!bhomMaterials.ContainsKey(property2D.Name)) bhomMaterials.Add(property2D.Material.Name, property2D.Material);
+                            }
                             bhomProperties.Add(propName, property2D);
                         }
                         BHoMPanel.Property = bhomProperties[propName];

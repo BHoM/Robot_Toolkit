@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using RobotOM;
 using BH.oM.Structure.MaterialFragments;
+using System.Linq;
 
 namespace BH.Adapter.Robot
 {
@@ -32,25 +33,9 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
 
-        private List<IMaterialFragment> ReadMaterial(List<string> ids = null)
+        private List<IMaterialFragment> ReadMaterials(List<string> ids = null)
         {
-            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            IRobotNamesArray robotLabelNames = robotLabelServer.GetAvailableNames(IRobotLabelType.I_LT_MATERIAL);
-            IMaterialFragment bhomMat = null;
-            List<IMaterialFragment> bhomMaterials = new List<IMaterialFragment>();
-
-            for (int i = 1; i <= robotLabelNames.Count; i++)
-            {
-                string robotLabelName = robotLabelNames.Get(i);
-                IRobotLabel robotMaterialLabel = robotLabelServer.Get(IRobotLabelType.I_LT_MATERIAL, robotLabelName);
-
-                bhomMat = MaterialFromLabel(robotMaterialLabel);
-
-                if (bhomMat != null)
-                    bhomMaterials.Add(bhomMat);
-            }
-
-            return bhomMaterials;
+            return ReadLabels(IRobotLabelType.I_LT_MATERIAL).Select(x => x as IMaterialFragment).ToList(); ;
         }
 
         /***************************************************/
@@ -59,36 +44,8 @@ namespace BH.Adapter.Robot
         {
             IRobotLabel materialLabel = m_RobotApplication.Project.Structure.Labels.Get(IRobotLabelType.I_LT_MATERIAL, labelName);
             if(materialLabel != null)
-                return MaterialFromLabel(materialLabel);
+                return Convert.FromRobot(materialLabel, materialLabel.Data as RobotMaterialData);
             return null;
-        }
-
-        /***************************************************/
-
-        private IMaterialFragment MaterialFromLabel(IRobotLabel robotMaterialLabel)
-        {
-            IRobotMaterialData mData = robotMaterialLabel.Data as IRobotMaterialData;
-            IMaterialFragment bhomMat;
-            switch (mData.Type)
-            {
-                case IRobotMaterialType.I_MT_STEEL:
-                    bhomMat = Engine.Structure.Create.Steel(mData.Name, mData.E, mData.NU, mData.LX, mData.RO / Engine.Robot.Query.RobotGravityConstant, mData.DumpCoef, mData.RE, mData.RT);
-                    break;
-                case IRobotMaterialType.I_MT_CONCRETE:
-                    bhomMat = Engine.Structure.Create.Concrete(mData.Name, mData.E, mData.NU, mData.LX, mData.RO / Engine.Robot.Query.RobotGravityConstant, mData.DumpCoef, 0, 0);
-                    break;
-                case IRobotMaterialType.I_MT_ALUMINIUM:
-                    bhomMat = Engine.Structure.Create.Aluminium(mData.Name, mData.E, mData.NU, mData.LX, mData.RO / Engine.Robot.Query.RobotGravityConstant, mData.DumpCoef);
-                    break;
-                case IRobotMaterialType.I_MT_OTHER:
-                case IRobotMaterialType.I_MT_TIMBER:
-                case IRobotMaterialType.I_MT_ALL:
-                default:
-                    Engine.Reflection.Compute.RecordWarning("Material of Robot type " + mData.Type + " not yet suported. Empty material will be provided");
-                    return null;
-            }           
-            bhomMat.CustomData.Add(AdapterIdName, NextFreeId(bhomMat.GetType(), false));
-            return bhomMat;
         }
 
         /***************************************************/
@@ -111,7 +68,8 @@ namespace BH.Adapter.Robot
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotLabel thicknessLabel = robotPanel.GetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS);
             IRobotThicknessData thicknessData = thicknessLabel.Data;
-            return MaterialFromLabel(robotLabelServer.Get(IRobotLabelType.I_LT_MATERIAL, thicknessData.MaterialName));
+            IRobotLabel robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_MATERIAL, thicknessData.MaterialName);
+            return Convert.FromRobot(robotLabel, robotLabel.Data as RobotMaterialData);
         }
     }
 }

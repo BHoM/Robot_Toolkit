@@ -31,10 +31,10 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
        
-        public static Constraint4DOF FromRobot(IRobotLinearReleaseData robotLinearReleaseData, string name)
+        public static Constraint4DOF FromRobot(this IRobotLabel robotLabel, IRobotLinearReleaseData robotLinearReleaseData)
         {
             Constraint4DOF linearRelease = new Constraint4DOF();
-            linearRelease.Name = name;
+            linearRelease.Name = robotLabel.Name;
             linearRelease.TranslationX = GetLinearReleaseType(robotLinearReleaseData.UX);
             linearRelease.TranslationY = GetLinearReleaseType(robotLinearReleaseData.UY);
             linearRelease.TranslationZ = GetLinearReleaseType(robotLinearReleaseData.UZ);
@@ -50,7 +50,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/                    
 
-        public static DOFType GetLinearReleaseType(IRobotLinearReleaseDefinitionType linearReleases)
+        public static DOFType GetLinearReleaseType(this IRobotLinearReleaseDefinitionType linearReleases)
         {
             switch (linearReleases)
             {

@@ -39,23 +39,6 @@ namespace BH.Adapter.Robot
         /****           Protected Methods               ****/
         /***************************************************/
 
-        protected override bool IUpdate<T>(IEnumerable<T> objects, ActionConfig actionConfig = null)
-        {
-            bool success = true;
-            success = Update(objects as dynamic);
-            updateview();
-            return success;
-        }
-
-        /***************************************************/
-
-        protected bool Update(IEnumerable<IBHoMObject> bhomObjects)
-        {
-            return true;
-        }
-
-        /***************************************************/
-
         protected bool Update(IEnumerable<Node> nodes)
         {
             Dictionary<int, HashSet<string>> nodeTags = GetTypeTags(typeof(Node));
@@ -79,59 +62,6 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
         
-        protected bool Update(IEnumerable<ISectionProperty> sectionProperties)
-        {
-            List<ISectionProperty> secPropToCreate = new List<ISectionProperty>();
-
-            foreach (ISectionProperty p in sectionProperties)
-            {
-                string match = Convert.Match(m_dbSecPropNames, p);
-                if (match == null)
-                    secPropToCreate.Add(p);
-            }
-
-            bool success = true;
-            success = ICreate(secPropToCreate);
-            return success;
-        }
-
-        /***************************************************/
-
-        protected bool Update(IEnumerable<LinkConstraint> linkConstraints)
-        {
-            bool success = true;
-            success = ICreate(linkConstraints);
-            return success;
-        }
-
-        /***************************************************/
-
-        protected bool Update(IEnumerable<Loadcase> loadCases)
-        {
-            bool success = true;
-            foreach (Loadcase lCase in loadCases)
-            {
-                RobotSimpleCase robotSimpCase = m_RobotApplication.Project.Structure.Cases.Get(System.Convert.ToInt32(lCase.CustomData[AdapterIdName])) as RobotSimpleCase;
-                int subNature;
-                IRobotCaseNature rNature = Convert.ToRobot(lCase, out subNature);
-                robotSimpCase.AnalizeType = IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR;
-                robotSimpCase.Nature = rNature;
-                robotSimpCase.Number = System.Convert.ToInt32(lCase.CustomData[AdapterIdName]);
-            }
-            return success;
-        }
-
-        /***************************************************/
-
-        protected bool Update(IEnumerable<LoadCombination> loadCombinations)
-        {
-            bool success = true;
-            success = ICreate(loadCombinations);
-            return success;
-        }
-
-        /***************************************************/
-
      }
 }
 

@@ -20,48 +20,42 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using RobotOM;
-using BH.oM.Structure.Constraints;
 using System.Collections.Generic;
-using System;
+using BH.oM.Base;
+using BH.oM.Structure.Elements;
+using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.SurfaceProperties;
-using BH.oM.Structure.MaterialFragments;
+using BH.oM.Structure.Constraints;
+using BH.oM.Structure.Loads;
+using BH.oM.Physical.Materials;
+using BH.oM.Adapter;
+using RobotOM;
 
-namespace BH.Engine.Robot
+namespace BH.Adapter.Robot
 {
-    public class ConcreteMaterialComparer : IEqualityComparer<Concrete>
+    public partial class RobotAdapter
     {
         /***************************************************/
-        /****           Public Methods                  ****/
+        /****           Protected Methods               ****/
         /***************************************************/
 
-        public bool Equals(Concrete material1, Concrete material2)
+        protected override bool IUpdate<T>(IEnumerable<T> objects, ActionConfig actionConfig = null)
         {
-            if(material1.Name == material2.Name &&
-               material1.Density == material2.Density &&
-               material1.YoungsModulus == material2.YoungsModulus &&
-               material1.PoissonsRatio == material2.PoissonsRatio &&
-               material1.ThermalExpansionCoeff == material2.ThermalExpansionCoeff &&
-               material1.DampingRatio == material2.DampingRatio &&
-               material1.CubeStrength == material2.CubeStrength &&
-               material1.CylinderStrength == material2.CylinderStrength)           
-               return true;
-            else
-                return false;
+            bool success = true;
+            success = Update(objects as dynamic);
+            updateview();
+            return success;
         }
 
         /***************************************************/
 
-        public int GetHashCode(Concrete obj)
+        protected bool Update(IEnumerable<IBHoMObject> bhomObjects)
         {
-            //Check whether the object is null
-            if (Object.ReferenceEquals(obj, null)) return 0;
-
-            return obj.Name == null ? 0 : obj.Name.GetHashCode();
+            return true;
         }
-
-        /***************************************************/
        
-    }
+        /***************************************************/
+
+     }
 }
 

@@ -38,7 +38,7 @@ namespace BH.Adapter.Robot
         {
             IRobotCollection secProps = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_BAR_SECTION);
             List<ISectionProperty> bhomSectionProps = new List<ISectionProperty>();
-            Dictionary<string, IMaterialFragment> materials = ReadMaterial().ToDictionary(x => x.Name);
+            Dictionary<string, IMaterialFragment> materials = ReadMaterials().ToDictionary(x => x.Name);
 
             for (int i = 1; i <= secProps.Count; i++)
             {

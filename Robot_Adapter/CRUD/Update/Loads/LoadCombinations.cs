@@ -20,49 +20,34 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using RobotOM;
-using BH.oM.Structure.Constraints;
 using System.Collections.Generic;
-using System;
+using BH.oM.Base;
+using BH.oM.Structure.Elements;
+using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.SurfaceProperties;
-using BH.oM.Structure.MaterialFragments;
+using BH.oM.Structure.Constraints;
+using BH.oM.Structure.Loads;
+using BH.oM.Physical.Materials;
+using BH.oM.Adapter;
+using RobotOM;
 
-namespace BH.Engine.Robot
+namespace BH.Adapter.Robot
 {
-    public class MaterialComparer : IEqualityComparer<IMaterialFragment>
+    public partial class RobotAdapter
     {
         /***************************************************/
-        /****           Public Methods                  ****/
+        /****           Protected Methods               ****/
         /***************************************************/
 
-        public bool Equals(IMaterialFragment material1, IMaterialFragment material2)
+        protected bool Update(IEnumerable<LoadCombination> loadCombinations)
         {
-            if (material1.GetType() == typeof(Steel) && material2.GetType() == typeof(Steel))
-            {
-                SteelMaterialComparer steelMaterialComparer = new SteelMaterialComparer();
-                return steelMaterialComparer.Equals(material1 as Steel, material2 as Steel);
-            }
-            else if (material1.GetType() == typeof(Concrete) && material2.GetType() == typeof(Concrete))
-            {
-                ConcreteMaterialComparer concreteMaterialComparer = new ConcreteMaterialComparer();
-                return concreteMaterialComparer.Equals(material1 as Concrete, material2 as Concrete);
-            }
-            else
-                return false;
+            bool success = true;
+            success = ICreate(loadCombinations);
+            return success;
         }
 
         /***************************************************/
 
-        public int GetHashCode(IMaterialFragment obj)
-        {
-            //Check whether the object is null
-            if (Object.ReferenceEquals(obj, null)) return 0;
-
-            return obj.Name == null ? 0 : obj.Name.GetHashCode();
-        }
-
-        /***************************************************/
-       
-    }
+     }
 }
 

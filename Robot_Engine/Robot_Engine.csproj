@@ -94,12 +94,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Compare\Properties\Material_Concrete.cs" />
-    <Compile Include="Compare\Properties\Material_Steel.cs" />
-    <Compile Include="Compare\Properties\Material.cs" />
     <Compile Include="Compare\Properties\LoadingPanelProperty.cs" />
-    <Compile Include="Compare\Properties\ConstantThickness.cs" />
-    <Compile Include="Compare\Properties\ISurfaceProperty.cs" />
     <Compile Include="Compare\Properties\Constraint4DOF.cs" />
     <Compile Include="Compare\Properties\Constraint6DOF.cs" />
     <Compile Include="Create\ContourLoad.cs" />

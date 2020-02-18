@@ -63,7 +63,7 @@ namespace BH.Adapter.Robot
                 return ReadConstraints6DOF();
         
             if (type == typeof(Material))
-                return ReadMaterial();
+                return ReadMaterials();
 
             if (type == typeof(Panel))
                 return ReadPanels(indices);
@@ -109,7 +109,7 @@ namespace BH.Adapter.Robot
             {
                 List<IBHoMObject> objects = new List<IBHoMObject>();
                 objects.AddRange(ReadConstraints6DOF());
-                objects.AddRange(ReadMaterial());
+                objects.AddRange(ReadMaterials());
                 objects.AddRange(ReadBarRelease());
                 objects.AddRange(ReadLoadCase());
                 objects.AddRange(ReadSectionProperties());

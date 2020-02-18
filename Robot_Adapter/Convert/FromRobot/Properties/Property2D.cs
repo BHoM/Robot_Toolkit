@@ -90,7 +90,7 @@ namespace BH.Adapter.Robot
                             case IRobotThicknessOrthoType.I_TOT_HOLLOW_CORE_SLAB:
                             case IRobotThicknessOrthoType.I_TOT_USER:
                                 BHoMProperty = new ConstantThickness { Name = robotLabelName, Thickness = double.NaN, Material = mat };
-                                BH.Engine.Reflection.Compute.RecordWarning("Could not pull property of type " + orthoData.Type + " with name " + robotLabelName + ". A constant thickness property with NaN thickness as been created in its place");
+                                BH.Engine.Reflection.Compute.RecordWarning("Thickness property '" + robotLabelName + "' of type " + orthoData.Type + " Not yet supported. A constant thickness property with NaN thickness has been created in its place");
                                 break;
                             default:
                                 BHoMProperty = new ConstantThickness { Name = robotLabelName, Thickness = orthoData.H, Material = mat };

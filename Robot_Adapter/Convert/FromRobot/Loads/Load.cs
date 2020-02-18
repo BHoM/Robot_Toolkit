@@ -20,8 +20,13 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using System.Collections.Generic;
+using System.Linq;
 using RobotOM;
-using BH.oM.Structure.Elements;
+using BH.oM.Structure.Loads;
+using BH.oM.Adapters.Robot;
+using BH.oM.Geometry;
+using BH.Engine.Geometry;
 
 namespace BH.Adapter.Robot
 {
@@ -31,23 +36,27 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static void SetFEAType(IRobotBar rBar, Bar bhomBar)
+        public static LoadNature FromRobot(IRobotCaseNature nature)
         {
-            if (bhomBar.FEAType == BarFEAType.CompressionOnly)
+            switch (nature)
             {
-                rBar.TensionCompression = IRobotBarTensionCompression.I_BTC_COMPRESSION_ONLY;
-            }
-            if (bhomBar.FEAType == BarFEAType.TensionOnly)
-            {
-                rBar.TensionCompression = IRobotBarTensionCompression.I_BTC_TENSION_ONLY;
-            }
-            if (bhomBar.FEAType == BarFEAType.Axial)
-            {
-                rBar.TrussBar = true;
+                case IRobotCaseNature.I_CN_PERMANENT:
+                    return LoadNature.Dead;
+                case IRobotCaseNature.I_CN_EXPLOATATION:
+                    return LoadNature.Live;
+                case IRobotCaseNature.I_CN_SEISMIC:
+                    return LoadNature.Seismic;
+                case IRobotCaseNature.I_CN_SNOW:
+                    return LoadNature.Snow;
+                case IRobotCaseNature.I_CN_TEMPERATURE:
+                    return LoadNature.Temperature;
+                case IRobotCaseNature.I_CN_WIND:
+                    return LoadNature.Wind;
+                default:
+                    return LoadNature.Other;
             }
         }
-
         /***************************************************/
-
     }
 }
+

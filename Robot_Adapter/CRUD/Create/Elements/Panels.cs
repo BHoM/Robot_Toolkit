@@ -100,7 +100,7 @@ namespace BH.Adapter.Robot
                 contourPanel = m_RobotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_CONTOUR);
                 foreach (Edge edge in subEdges)
                 {
-                    RobotGeoSegment segment = m_RobotApplication.CmpntFactory.Create(Convert.ToRobot(edge.Curve));
+                    RobotGeoSegment segment = m_RobotApplication.CmpntFactory.Create(Convert.IsConvertible(edge.Curve));
                     (contourPanel as RobotGeoContour).Add(Convert.ToRobot(edge.Curve, segment));
                 }
             }

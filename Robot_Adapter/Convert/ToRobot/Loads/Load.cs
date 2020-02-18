@@ -68,30 +68,7 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
-
-        public static LoadNature FromRobot(IRobotCaseNature nature)
-        {
-            switch (nature)
-            {
-                case IRobotCaseNature.I_CN_PERMANENT:
-                    return LoadNature.Dead;
-                case IRobotCaseNature.I_CN_EXPLOATATION:
-                    return LoadNature.Live;
-                case IRobotCaseNature.I_CN_SEISMIC:
-                    return LoadNature.Seismic;
-                case IRobotCaseNature.I_CN_SNOW:
-                    return LoadNature.Snow;
-                case IRobotCaseNature.I_CN_TEMPERATURE:
-                    return LoadNature.Temperature;
-                case IRobotCaseNature.I_CN_WIND:
-                    return LoadNature.Wind;
-                default:
-                    return LoadNature.Other;
-            }
-        }
-
-        /***************************************************/
-
+       
         public static void ToRobot(this GravityLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_DEAD);

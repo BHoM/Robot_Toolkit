@@ -131,7 +131,7 @@ namespace BH.Adapter.Robot
                         barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterIdName]);
                         RobotBar rBar = barServer.Get(barNum) as RobotBar;
                         barTags[barNum] = bhomBar.Tags;
-                        Convert.ToRobot(rBar, bhomBar);
+                        Convert.SetFEAType(rBar, bhomBar);
                     }
                     catch
                     {

@@ -36,9 +36,9 @@ namespace BH.Adapter.Robot
 
         private List<ISurfaceProperty> ReadProperty2D(List<string> names = null)
         {
-            List<ISurfaceProperty> properties2D = ReadLabels(IRobotLabelType.I_LT_CLADDING).Select(x => x as ISurfaceProperty).ToList();
-            properties2D.AddRange(ReadLabels(IRobotLabelType.I_LT_PANEL_THICKNESS).Select(x => x as ISurfaceProperty).ToList());
-            return properties2D;
+            List<ISurfaceProperty> surfaceProperties = ReadLabels(IRobotLabelType.I_LT_CLADDING).Select(x => x as ISurfaceProperty).ToList();
+            surfaceProperties.AddRange(ReadLabels(IRobotLabelType.I_LT_PANEL_THICKNESS).Select(x => x as ISurfaceProperty).ToList());
+            return surfaceProperties;
         }
 
         /***************************************************/

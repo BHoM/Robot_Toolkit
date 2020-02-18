@@ -40,7 +40,6 @@ namespace BH.Adapter.Robot
             RobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotLabel label = robotLabelServer.Create(IRobotLabelType.I_LT_MATERIAL, "");
             IRobotMaterialData matData = label.Data;
-            List<IMaterialFragment> materialsToUpdate = new List<IMaterialFragment>();
             foreach (IMaterialFragment material in materials)
             {
                 string match = Convert.Match(m_dbMaterialNames, material);

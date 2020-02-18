@@ -47,7 +47,6 @@ namespace BH.Adapter.Robot
                 {typeof(Node), new NodeDistanceComparer(3) },
                 {typeof(Bar), new BarEndNodesDistanceComparer(3) },
                 {typeof(ISectionProperty), new BHoMObjectNameOrToStringComparer() },
-                {typeof(Material), new BHoMObjectNameComparer() },
                 {typeof(IMaterialFragment), new BHoMObjectNameComparer() },
                 {typeof(Constraint4DOF), new BHoMObjectNameComparer() },
                 {typeof(Constraint6DOF), new BHoMObjectNameComparer() },

@@ -35,7 +35,7 @@ namespace BH.Adapter.Robot
 
         public static void ToRobot(IRobotMaterialData materialData, IMaterialFragment material)
         {
-            materialData.Type = ToRobot(material);
+            materialData.Type = GetMaterialType(material);
             materialData.Name = material.Name;
 
             if (material is IIsotropic)
@@ -57,7 +57,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        public static IRobotMaterialType ToRobot(IMaterialFragment mat)
+        public static IRobotMaterialType GetMaterialType(IMaterialFragment mat)
         {
             if (mat is Steel)
                 return IRobotMaterialType.I_MT_STEEL;

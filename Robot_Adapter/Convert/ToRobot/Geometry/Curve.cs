@@ -34,7 +34,7 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static IRobotComponentType ToRobot(ICurve curve)
+        public static IRobotComponentType IsConvertible(ICurve curve)
         {
             if (curve is Arc)
                 return IRobotComponentType.I_CT_GEO_SEGMENT_ARC;

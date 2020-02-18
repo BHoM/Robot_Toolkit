@@ -21,12 +21,9 @@
  */
 
 using BH.oM.Geometry;
-using BH.Engine.Geometry;
+using GeometryEngine = BH.Engine.Geometry;
 using RobotOM;
-using System;
-using System.Collections.Generic;
-using BH.oM.Structure.Elements;
-using BH.oM.Structure.SurfaceProperties;
+
 
 namespace BH.Adapter.Robot
 {
@@ -36,28 +33,13 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static List<Opening> FindOpening(ICurve panelOutline, List<Opening> openings)
+        public static Point FromRobot(this RobotGeoPoint3D point)
         {
-            List<Opening> openingsInPanel = new List<Opening>();
-
-            foreach (Opening o in openings)
-            {
-                List<ICurve> crvsOpening = new List<ICurve>();
-                foreach (Edge e in o.Edges)
-                {
-                    crvsOpening.Add(e.Curve);
-                }
-                PolyCurve crv = BH.Engine.Geometry.Modify.IJoin(crvsOpening)[0];
-                List<Point> pts = new List<Point>();
-                pts.Add(crv.Bounds().Centre());
-                if (panelOutline.IIsContaining(pts))
-                    openingsInPanel.Add(o);
-            }
-            return openingsInPanel;
+            return new Point { X = point.X, Y = point.Y, Z = point.Z };
         }
 
         /***************************************************/
-
+       
     }
 }
 

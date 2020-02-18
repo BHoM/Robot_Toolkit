@@ -39,16 +39,12 @@ namespace BH.Adapter.Robot
             {
                 if (property is LoadingPanelProperty)
                 {
-                    //if (robotLabelServer.Exist(IRobotLabelType.I_LT_CLADDING, property.Name) == -1)
-                    //    BH.Engine.Reflection.Compute.RecordWarning("Cladding panel property2D '" + property.Name + "' already exists in the model, the properties have been overwritten");
                     IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_CLADDING, "");
                     Convert.ToRobot(robotLabel, property);
                     robotLabelServer.StoreWithName(robotLabel, property.Name);
                 }
                 else
                 {
-                    //if (robotLabelServer.Exist(IRobotLabelType.I_LT_PANEL_THICKNESS, property.Name) == -1)
-                    //    BH.Engine.Reflection.Compute.RecordWarning("Panel property2D '" + property.Name + "' already exists in the model, the properties have been overwritten");
                     IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_PANEL_THICKNESS, "");
                     Convert.ToRobot(robotLabel, property);
                     robotLabelServer.StoreWithName(robotLabel, property.Name);

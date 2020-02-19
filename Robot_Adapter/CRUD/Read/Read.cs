@@ -72,7 +72,7 @@ namespace BH.Adapter.Robot
                 return ReadMeshes();
 
             if (typeof(ISurfaceProperty).IsAssignableFrom(type))
-                return ReadProperty2D();
+                return ReadSurfaceProperties();
 
             if (type == typeof(RigidLink))
                 return ReadRigidLinks();

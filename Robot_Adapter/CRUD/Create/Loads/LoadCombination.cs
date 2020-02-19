@@ -45,7 +45,7 @@ namespace BH.Adapter.Robot
                         System.Tuple<double, ICase> loadcase = lComb.LoadCases[i];
                         rCaseCombination.CaseFactors.New(lComb.LoadCases[i].Item2.Number, lComb.LoadCases[i].Item1);
                     }
-                    updateview();
+                    UpdateView();
                 }
                 else
                 {

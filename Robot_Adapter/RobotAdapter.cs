@@ -118,7 +118,7 @@ namespace BH.Adapter.Robot
         /**** Private Helper Methods                    ****/
         /***************************************************/
 
-        private void updateview()
+        private void UpdateView()
         {
             m_RobotApplication.Project.ViewMngr.Refresh();
         }

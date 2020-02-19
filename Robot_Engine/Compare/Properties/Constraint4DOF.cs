@@ -35,8 +35,19 @@ namespace BH.Engine.Robot
 
         public bool Equals(Constraint4DOF linearRelease1, Constraint4DOF linearRelease2)
         {
-            if (
-                linearRelease1.Name == linearRelease2.Name &&
+            //Check whether the compared objects reference the same data.
+            if (Object.ReferenceEquals(linearRelease1, linearRelease2))
+                return true;
+
+            //Check whether any of the compared objects is null.
+            if (Object.ReferenceEquals(linearRelease1, null) || Object.ReferenceEquals(linearRelease2, null))
+                return false;
+
+            //Check if the GUIDs are the same
+            if (linearRelease1.BHoM_Guid == linearRelease2.BHoM_Guid)
+                return true;
+
+            if (linearRelease1.Name == linearRelease2.Name &&
                 linearRelease1.TranslationX == linearRelease2.TranslationX &&
                 linearRelease1.TranslationY == linearRelease2.TranslationY &&
                 linearRelease1.TranslationZ == linearRelease2.TranslationZ &&
@@ -44,12 +55,10 @@ namespace BH.Engine.Robot
                 linearRelease1.TranslationalStiffnessX == linearRelease2.TranslationalStiffnessX &&
                 linearRelease1.TranslationalStiffnessY == linearRelease2.TranslationalStiffnessY &&
                 linearRelease1.TranslationalStiffnessZ == linearRelease2.TranslationalStiffnessZ &&
-                linearRelease1.RotationalStiffnessX == linearRelease2.RotationalStiffnessX)
-            {
+                linearRelease1.RotationalStiffnessX == linearRelease2.RotationalStiffnessX)            
                 return true;
-            }
-            else
-                return false;
+
+            return false;
         }
 
         /***************************************************/

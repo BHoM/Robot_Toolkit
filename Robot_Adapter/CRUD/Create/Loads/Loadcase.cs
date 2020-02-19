@@ -42,7 +42,7 @@ namespace BH.Adapter.Robot
             for (int i = 0; i < caseList.Count; i++)
             {                
                 int subNature;
-                IRobotCaseNature rNature = Convert.ToRobot(caseList[i], out subNature);
+                IRobotCaseNature rNature = Convert.ToRobotLoadcaseNature(caseList[i], out subNature);
                 m_RobotApplication.Project.Structure.Cases.CreateSimple(caseList[i].Number, caseList[i].Name, rNature, IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
                 IRobotSimpleCase sCase = caseServer.Get(caseList[i].Number) as IRobotSimpleCase;
                 object labelName;

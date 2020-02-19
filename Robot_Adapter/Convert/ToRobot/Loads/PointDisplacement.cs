@@ -20,53 +20,36 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using BH.Engine.Geometry;
+using BH.oM.Structure.Loads;
 using RobotOM;
-using BH.oM.Structure.Constraints;
-using System.Collections.Generic;
-using System;
-using BH.oM.Structure.SurfaceProperties;
 
-namespace BH.Engine.Robot
+namespace BH.Adapter.Robot
 {
-    public class LoadingPanelPropertyComparer : IEqualityComparer<LoadingPanelProperty>
+    public static partial class Convert
     {
         /***************************************************/
         /****           Public Methods                  ****/
         /***************************************************/
-
-        public bool Equals(LoadingPanelProperty property1, LoadingPanelProperty property2)
+             
+        public static void ToRobot(this PointDisplacement load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
-            //Check whether the compared objects reference the same data.
-            if (Object.ReferenceEquals(property1, property2))
-                return true;
-
-            //Check whether any of the compared objects is null.
-            if (Object.ReferenceEquals(property1, null) || Object.ReferenceEquals(property2, null))
-                return false;
-
-            //Check if the GUIDs are the same
-            if (property1.BHoM_Guid == property2.BHoM_Guid)
-                return true;
-
-            if (property1.Name == property2.Name &&
-                 property1.Material.Name == property2.Material.Name &&
-                 property1.LoadApplication == property2.LoadApplication)
-                return true;
-            return false;
+            if (load.Translation.Length() == 0 && load.Rotation.Length() == 0)
+            {
+                Engine.Reflection.Compute.RecordError("Zero point displacements are not pushed to Robot");
+                return;
+            }
+            IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_DISPLACEMENT);
+            loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
+            loadRecord.SetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_UX, load.Translation.X);
+            loadRecord.SetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_UY, load.Translation.Y);
+            loadRecord.SetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_UZ, load.Translation.Z);
+            loadRecord.SetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_RX, load.Rotation.X);
+            loadRecord.SetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_RY, load.Rotation.Y);
+            loadRecord.SetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_RZ, load.Rotation.Z);
         }
 
         /***************************************************/
-
-        public int GetHashCode(LoadingPanelProperty obj)
-        {
-            //Check whether the object is null
-            if (Object.ReferenceEquals(obj, null)) return 0;
-
-            return obj.Name == null ? 0 : obj.Name.GetHashCode();
-        }
-
-        /***************************************************/
-       
     }
 }
 

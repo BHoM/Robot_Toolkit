@@ -33,28 +33,35 @@ namespace BH.Engine.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public bool Equals(Constraint6DOF support_1, Constraint6DOF support_2)
+        public bool Equals(Constraint6DOF support1, Constraint6DOF support2)
         {
-            if (
-                support_1.Name == support_2.Name &&
-                support_1.TranslationX == support_2.TranslationX &&
-                support_1.TranslationY == support_2.TranslationY &&
-                support_1.TranslationZ == support_2.TranslationZ &&
-                support_1.RotationX == support_2.RotationX &&
-                support_1.RotationY == support_2.RotationY &&
-                support_1.RotationZ == support_2.RotationZ &&
-                support_1.TranslationalStiffnessX == support_2.TranslationalStiffnessX &&
-                support_1.TranslationalStiffnessY == support_2.TranslationalStiffnessY &&
-                support_1.TranslationalStiffnessZ == support_2.TranslationalStiffnessZ &&
-                support_1.RotationalStiffnessX == support_2.RotationalStiffnessX &&
-                support_1.RotationalStiffnessY == support_2.RotationalStiffnessY &&
-                support_1.RotationalStiffnessZ == support_2.RotationalStiffnessZ)
-
-            {
+            //Check whether the compared objects reference the same data.
+            if (Object.ReferenceEquals(support1, support2))
                 return true;
-            }
-            else
+
+            //Check whether any of the compared objects is null.
+            if (Object.ReferenceEquals(support1, null) || Object.ReferenceEquals(support2, null))
                 return false;
+
+            //Check if the GUIDs are the same
+            if (support1.BHoM_Guid == support2.BHoM_Guid)
+                return true;
+
+            if (support1.Name == support2.Name &&
+                support1.TranslationX == support2.TranslationX &&
+                support1.TranslationY == support2.TranslationY &&
+                support1.TranslationZ == support2.TranslationZ &&
+                support1.RotationX == support2.RotationX &&
+                support1.RotationY == support2.RotationY &&
+                support1.RotationZ == support2.RotationZ &&
+                support1.TranslationalStiffnessX == support2.TranslationalStiffnessX &&
+                support1.TranslationalStiffnessY == support2.TranslationalStiffnessY &&
+                support1.TranslationalStiffnessZ == support2.TranslationalStiffnessZ &&
+                support1.RotationalStiffnessX == support2.RotationalStiffnessX &&
+                support1.RotationalStiffnessY == support2.RotationalStiffnessY &&
+                support1.RotationalStiffnessZ == support2.RotationalStiffnessZ)
+                return true;
+            return false;
         }
         /***************************************************/
 

@@ -46,7 +46,7 @@ namespace BH.Adapter.Robot
             {
                 RobotSimpleCase robotSimpCase = m_RobotApplication.Project.Structure.Cases.Get(System.Convert.ToInt32(lCase.CustomData[AdapterIdName])) as RobotSimpleCase;
                 int subNature;
-                IRobotCaseNature rNature = Convert.ToRobot(lCase, out subNature);
+                IRobotCaseNature rNature = Convert.ToRobotLoadcaseNature(lCase, out subNature);
                 robotSimpCase.AnalizeType = IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR;
                 robotSimpCase.Nature = rNature;
                 robotSimpCase.Number = System.Convert.ToInt32(lCase.CustomData[AdapterIdName]);

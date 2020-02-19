@@ -158,7 +158,7 @@
     <Compile Include="Convert\FromRobot\Properties\Material.cs" />
     <Compile Include="Convert\FromRobot\Properties\SectionProperty.cs" />
     <Compile Include="Convert\FromRobot\Properties\Support.cs" />
-    <Compile Include="Convert\FromRobot\Properties\Property2D.cs" />
+    <Compile Include="Convert\FromRobot\Properties\SurfaceProperty.cs" />
     <Compile Include="Convert\FromRobot\Properties\SectionProperty_Concrete.cs" />
     <Compile Include="Convert\FromRobot\Properties\SectionProperty_Steel.cs" />
     <Compile Include="Convert\FromRobot\Groups and Lists\Selections.cs" />

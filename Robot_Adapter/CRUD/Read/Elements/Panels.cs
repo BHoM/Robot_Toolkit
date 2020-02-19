@@ -117,13 +117,16 @@ namespace BH.Adapter.Robot
                         string propName = robotPanel.GetLabelName(IRobotLabelType.I_LT_PANEL_THICKNESS);
                         if (!bhomProperties.ContainsKey(propName))
                         {
-                            ISurfaceProperty property2D = ReadProperty2DFromPanel(robotPanel, bhomMaterials);
-                            if (property2D.Material == null)
+                            ISurfaceProperty SurfaceProperty = ReadSurfacePropertyFromPanel(robotPanel, bhomMaterials);
+                            if (SurfaceProperty.Material == null)
                             {
-                                property2D.Material = ReadMaterialFromPanel(robotPanel);
-                                if(!bhomMaterials.ContainsKey(property2D.Name)) bhomMaterials.Add(property2D.Material.Name, property2D.Material);
+                                SurfaceProperty.Material = ReadMaterialFromPanel(robotPanel);
+                                if (SurfaceProperty.Material != null && SurfaceProperty.Material.Name != "" && !bhomMaterials.ContainsKey(SurfaceProperty.Name))
+                                {
+                                    bhomMaterials.Add(SurfaceProperty.Material.Name, SurfaceProperty.Material);
+                                }
                             }
-                            bhomProperties.Add(propName, property2D);
+                            bhomProperties.Add(propName, SurfaceProperty);
                         }
                         BHoMPanel.Property = bhomProperties[propName];
                     }
@@ -153,8 +156,8 @@ namespace BH.Adapter.Robot
                         {
                             if (!bhomProperties.ContainsKey(propName))
                             {
-                                ISurfaceProperty property2D = ReadProperty2DFromPanel(robotCladdingPanel, bhomMaterials, true);
-                                bhomProperties.Add(propName, property2D);
+                                ISurfaceProperty SurfaceProperty = ReadSurfacePropertyFromPanel(robotCladdingPanel, bhomMaterials, true);
+                                bhomProperties.Add(propName, SurfaceProperty);
                             }
                             BHoMPanel.Property = bhomProperties[propName];
                         }

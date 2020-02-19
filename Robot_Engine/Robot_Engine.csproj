@@ -94,9 +94,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Compare\Properties\LoadingPanelProperty.cs" />
-    <Compile Include="Compare\Properties\Constraint4DOF.cs" />
-    <Compile Include="Compare\Properties\Constraint6DOF.cs" />
+    <Compile Include="Objects\Comparers\LoadingPanelProperty.cs" />
+    <Compile Include="Objects\Comparers\Constraint4DOF.cs" />
+    <Compile Include="Objects\Comparers\Constraint6DOF.cs" />
     <Compile Include="Create\ContourLoad.cs" />
     <Compile Include="Create\DesignGroup.cs" />
     <Compile Include="Create\AdvancedSettings.cs" />

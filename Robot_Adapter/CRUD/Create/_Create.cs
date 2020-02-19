@@ -146,7 +146,7 @@ namespace BH.Adapter.Robot
                 }
             }
             
-            updateview();
+            UpdateView();
             return success;
         }          
       

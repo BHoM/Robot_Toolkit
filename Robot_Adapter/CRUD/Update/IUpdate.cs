@@ -37,7 +37,7 @@ namespace BH.Adapter.Robot
         {
             bool success = true;
             success = Update(objects as dynamic);
-            updateview();
+            UpdateView();
             return success;
         }
 

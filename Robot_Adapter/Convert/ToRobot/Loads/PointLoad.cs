@@ -20,53 +20,39 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using BH.Engine.Geometry;
+using BH.oM.Structure.Loads;
 using RobotOM;
-using BH.oM.Structure.Constraints;
-using System.Collections.Generic;
-using System;
-using BH.oM.Structure.SurfaceProperties;
 
-namespace BH.Engine.Robot
+namespace BH.Adapter.Robot
 {
-    public class LoadingPanelPropertyComparer : IEqualityComparer<LoadingPanelProperty>
+    public static partial class Convert
     {
         /***************************************************/
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public bool Equals(LoadingPanelProperty property1, LoadingPanelProperty property2)
+        public static void ToRobot(this PointLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
-            //Check whether the compared objects reference the same data.
-            if (Object.ReferenceEquals(property1, property2))
-                return true;
-
-            //Check whether any of the compared objects is null.
-            if (Object.ReferenceEquals(property1, null) || Object.ReferenceEquals(property2, null))
-                return false;
-
-            //Check if the GUIDs are the same
-            if (property1.BHoM_Guid == property2.BHoM_Guid)
-                return true;
-
-            if (property1.Name == property2.Name &&
-                 property1.Material.Name == property2.Material.Name &&
-                 property1.LoadApplication == property2.LoadApplication)
-                return true;
-            return false;
+            if (load.Force.Length() == 0 && load.Moment.Length() == 0)
+            {
+                Engine.Reflection.Compute.RecordError("Zero forces and moments are not pushed to Robot");
+                return;
+            }
+            IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_FORCE);
+            loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
+            loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_FX, load.Force.X);
+            loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_FY, load.Force.Y);
+            loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_FZ, load.Force.Z);
+            if (load.Moment != null)
+            {
+                loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_CX, load.Moment.X);
+                loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_CY, load.Moment.Y);
+                loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_CZ, load.Moment.Z);
+            }
         }
 
         /***************************************************/
-
-        public int GetHashCode(LoadingPanelProperty obj)
-        {
-            //Check whether the object is null
-            if (Object.ReferenceEquals(obj, null)) return 0;
-
-            return obj.Name == null ? 0 : obj.Name.GetHashCode();
-        }
-
-        /***************************************************/
-       
     }
 }
 

@@ -20,16 +20,10 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using System.Collections.Generic;
-using BH.oM.Base;
-using BH.oM.Structure.Elements;
-using BH.oM.Structure.SectionProperties;
-using BH.oM.Structure.SurfaceProperties;
-using BH.oM.Structure.Constraints;
-using BH.oM.Structure.Loads;
-using BH.oM.Physical.Materials;
 using BH.oM.Adapter;
-using RobotOM;
+using BH.oM.Base;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BH.Adapter.Robot
 {
@@ -51,6 +45,9 @@ namespace BH.Adapter.Robot
 
         protected bool Update(IEnumerable<IBHoMObject> bhomObjects)
         {
+            IBHoMObject first = bhomObjects.FirstOrDefault();
+            if(first != null)
+                BH.Engine.Reflection.Compute.RecordWarning("Objects of type '" + first.GetType().Name + "' can currently not be updated");
             return true;
         }
        

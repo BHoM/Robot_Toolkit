@@ -74,9 +74,7 @@ namespace BH.Adapter.Robot
                 if (robotPanel.HasLabel(IRobotLabelType.I_LT_PANEL_THICKNESS) == -1)
                 { 
                     robotThicknessLabel = robotPanel.GetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS);                  
-                    IMaterialFragment material = ReadMaterialFromPanel(robotPanel);
-                    if (material != null && material.Name != "")
-                        materials.Add(material.Name, material);
+                    IMaterialFragment material = ReadMaterialFromPanel(robotPanel, materials);
                 }
                 thicknessProperty = (robotThicknessLabel == null)? null : Convert.FromRobot(robotThicknessLabel, materials);
             }

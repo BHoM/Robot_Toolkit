@@ -63,13 +63,18 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private IMaterialFragment ReadMaterialFromPanel(IRobotObjObject robotPanel)
+        private IMaterialFragment ReadMaterialFromPanel(IRobotObjObject robotPanel, Dictionary<string, IMaterialFragment> materials = null)
         {
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;            
             IRobotLabel thicknessLabel = robotPanel.GetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS);
             IRobotThicknessData thicknessData = (thicknessLabel == null)? null : thicknessLabel.Data;
+            if (thicknessData != null && materials != null && materials.ContainsKey(thicknessData.MaterialName))
+                return materials[thicknessData.MaterialName];
             IRobotLabel robotLabel = (thicknessData == null) ? null : robotLabelServer.Get(IRobotLabelType.I_LT_MATERIAL, thicknessData.MaterialName);
-            return (robotLabel == null)? null : Convert.FromRobot(robotLabel, robotLabel.Data as RobotMaterialData);
+            IMaterialFragment material = (robotLabel == null)? null : Convert.FromRobot(robotLabel, robotLabel.Data as RobotMaterialData);
+            if (material != null && materials != null)
+                materials.Add(material.Name, material);
+            return material;
         }
     }
 }

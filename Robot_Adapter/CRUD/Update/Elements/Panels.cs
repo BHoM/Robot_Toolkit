@@ -41,24 +41,36 @@ namespace BH.Adapter.Robot
             RobotObjObjectServer robotObjectServer = m_RobotApplication.Project.Structure.Objects;
             foreach (Panel panel in panels)
             {
+                if (panel == null)
+                {
+                    Engine.Reflection.Compute.RecordWarning("At least one provided panel is null and is not updated!");
+                    continue;
+                }
+
+                if (!panel.CustomData.ContainsKey(AdapterIdName))
+                {
+                    string panelName = string.IsNullOrWhiteSpace(panel.Name) ? "no name" : "name " + panel.Name;
+                    Engine.Reflection.Compute.RecordWarning("Panel with " + panelName + " did not contain any Robot id. To update panels they need this information. For this operation to work, try using a Panel that has first been pulled from Robot");
+                    continue;
+                }
+
                 RobotObjObject robotPanel = robotObjectServer.Get((int)panel.CustomData[AdapterIdName]) as RobotObjObject;
                 if (robotPanel == null)
-                    return false;
-                
+                {
+                    Engine.Reflection.Compute.RecordWarning("Could not find a panel with the Id " + panel.CustomData[AdapterIdName].ToString() + " in Robot. Panel could not be updated!");
+                    continue;
+                }
+                robotObjectServer.DeleteMany(robotPanel.GetHostedObjects());
                 List<Edge> subEdges = new List<Edge>();
 
                 robotPanel.Main.Geometry = CreateRobotContour(panel.ExternalEdges, out subEdges);
                 robotPanel.Main.Attribs.Meshed = 1;
-                robotPanel.Initialize();
-                robotPanel.Update();
                 SetRobotPanelEdgeConstraints(robotPanel, subEdges);
 
                 if (panel.Property is LoadingPanelProperty)
                     robotPanel.SetLabel(IRobotLabelType.I_LT_CLADDING, panel.Property.Name);
                 else
-                    robotPanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, panel.Property.Name);
-
-                robotObjectServer.DeleteMany(robotPanel.GetHostedObjects());
+                    robotPanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, panel.Property.Name);                
 
                 RobotSelection rPanelOpenings = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_OBJECT);
                 int freeObjectNumber = robotObjectServer.FreeNumber;
@@ -76,6 +88,8 @@ namespace BH.Adapter.Robot
                 }
                 robotObjectServer.EndMultiOperation();
                 robotPanel.SetHostedObjects(rPanelOpenings);
+                robotPanel.Initialize();
+                robotPanel.Update();
             }
             m_tags[typeof(Panel)] = panelTags;
             return true;

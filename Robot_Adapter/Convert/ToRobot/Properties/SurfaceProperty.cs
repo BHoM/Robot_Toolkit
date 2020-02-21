@@ -42,19 +42,7 @@ namespace BH.Adapter.Robot
 
             if (property is LoadingPanelProperty)
             {
-                LoadingPanelProperty panalProp = property as LoadingPanelProperty;
-                if (panalProp.LoadApplication == LoadPanelSupportConditions.AllSides)
-                {
-                    name = "Two-way";
-                }
-                if (panalProp.LoadApplication == LoadPanelSupportConditions.TwoSides && panalProp.ReferenceEdge % 2 == 1)
-                {
-                    name = "One-way X";
-                }
-                if (panalProp.LoadApplication == LoadPanelSupportConditions.TwoSides && panalProp.ReferenceEdge % 2 == 0)
-                {
-                    name = "One-way Y";
-                }
+                return (property as LoadingPanelProperty).ToRobot();
             }
             else
             {
@@ -118,6 +106,33 @@ namespace BH.Adapter.Robot
             }
             return name;          
         }
+
+        /***************************************************/
+
+        public static string ToRobot(this LoadingPanelProperty property)
+        {
+            string name = "";
+            LoadingPanelProperty panalProp = property as LoadingPanelProperty;
+            if (panalProp.LoadApplication == LoadPanelSupportConditions.AllSides)
+            {
+                name = "Two-way";
+            }
+            else if (panalProp.LoadApplication == LoadPanelSupportConditions.TwoSides && panalProp.ReferenceEdge % 2 == 1)
+            {
+                name = "One-way X";
+            }
+            else if (panalProp.LoadApplication == LoadPanelSupportConditions.TwoSides && panalProp.ReferenceEdge % 2 == 0)
+            {
+                name = "One-way Y";
+            }
+            else
+            {
+                name = "Two-way";
+                Engine.Reflection.Compute.RecordWarning("Panel support condintion not supported in Robot for property named '" + property.Name + "'. The cladding will be assumed Two-way.");
+            }
+            return name;
+        }
+
         /***************************************************/
     }
 }

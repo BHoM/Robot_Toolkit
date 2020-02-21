@@ -40,15 +40,14 @@ namespace BH.Adapter.Robot
 
         private List<Panel> ReadPanels(IList ids = null)
         {
-            Dictionary<string, ISurfaceProperty> bhomProperties = new Dictionary<string, ISurfaceProperty>();
-            Dictionary<string, IMaterialFragment> bhomMaterials = new Dictionary<string, IMaterialFragment>();
-            List<Panel> BHoMPanels = new List<Panel>();
+            Dictionary<string, ISurfaceProperty> surfaceProperties = new Dictionary<string, ISurfaceProperty>();
+            Dictionary<string, IMaterialFragment> materials = new Dictionary<string, IMaterialFragment>();
+            List<Panel> panels = new List<Panel>();
             IRobotStructure robotStructureServer = m_RobotApplication.Project.Structure;
             IRobotObjObjectServer robotPanelServer = m_RobotApplication.Project.Structure.Objects;
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
 
-            List<Opening> allOpenings = ReadOpenings();
-            Panel BHoMPanel = null;
+            Panel panel = null;
 
             List<int> panelIds = CheckAndGetIds(ids);
 
@@ -70,29 +69,36 @@ namespace BH.Adapter.Robot
                 robotCladdingPanelSelection.FromText(Convert.ToRobotSelectionString(panelIds));
             }
 
-            IRobotCollection rPanels = robotPanelServer.GetMany(robotPanelSelection);
+            IRobotCollection robotPanels = robotPanelServer.GetMany(robotPanelSelection);
             IRobotCollection robotCladdingPanels = robotPanelServer.GetMany(robotCladdingPanelSelection);
 
-            for (int i = 1; i <= rPanels.Count; i++)
+            for (int i = 1; i <= robotPanels.Count; i++)
             {
-                RobotObjObject robotPanel = (RobotObjObject)rPanels.Get(i);
-                BHoMPanel = null;
+                RobotObjObject robotPanel = (RobotObjObject)robotPanels.Get(i);
+                panel = null;
 
                 if (robotPanel.Main.Attribs.Meshed == 1)
                 {
                     ICurve outline = Convert.FromRobot(robotPanel.Main.GetGeometry() as dynamic);
-                    List<Opening> openings = Convert.FindOpening(outline, allOpenings);
+                    List<Opening> openings = new List<Opening>();
+
+                    IRobotCollection robotOpenings = robotPanelServer.GetMany(robotPanel.GetHostedObjects());
+                    for (int j = 1; j <= robotOpenings.Count; j++)
+                    {
+                        RobotObjObject robotOpening = (RobotObjObject)robotOpenings.Get(j);
+                        openings.Add(BH.Engine.Structure.Create.Opening(Convert.FromRobot(robotOpening.Main.GetGeometry() as dynamic)));
+                    }
                     try
                     {
-                        BHoMPanel = BH.Engine.Structure.Create.Panel(outline, openings);
+                        panel = BH.Engine.Structure.Create.Panel(outline, openings);
                     }
                     catch
                     {
                         BH.Engine.Reflection.Compute.RecordWarning("Geometry for panel " + robotPanel.Number.ToString() + " not supported.");
                     }
-                    BHoMPanel.CustomData[AdapterIdName] = robotPanel.Number;
-                    BHoMPanel.CustomData["RobotFiniteElementIds"] = robotPanel.FiniteElems;
-                    BHoMPanel.CustomData["RobotNodeIds"] = robotPanel.Nodes;
+                    panel.CustomData[AdapterIdName] = robotPanel.Number;
+                    panel.CustomData["RobotFiniteElementIds"] = robotPanel.FiniteElems;
+                    panel.CustomData["RobotNodeIds"] = robotPanel.Nodes;
 
                     //Get the coordinate system for the panel
                     BH.oM.Geometry.Point coordPoint = BH.Engine.Geometry.Query.StartPoint(outline as dynamic);
@@ -111,61 +117,65 @@ namespace BH.Adapter.Robot
                     BH.oM.Geometry.CoordinateSystem.Cartesian tempCoordSys = BH.Engine.Geometry.Create.CartesianCoordinateSystem(coordPoint, coordXAxis, coordZAxis);
                     BH.oM.Geometry.CoordinateSystem.Cartesian coordinateSystem = BH.Engine.Geometry.Create.CartesianCoordinateSystem(coordPoint, coordXAxis, tempCoordSys.Z);
 
-                    BHoMPanel.CustomData["CoordinateSystem"] = coordinateSystem;
+                    panel.CustomData["CoordinateSystem"] = coordinateSystem;
                     if (robotPanel.HasLabel(IRobotLabelType.I_LT_PANEL_THICKNESS) != 0)
                     {
                         string propName = robotPanel.GetLabelName(IRobotLabelType.I_LT_PANEL_THICKNESS);
-                        if (!bhomProperties.ContainsKey(propName))
+                        if (!surfaceProperties.ContainsKey(propName))
                         {
-                            ISurfaceProperty SurfaceProperty = ReadSurfacePropertyFromPanel(robotPanel, bhomMaterials);
+                            ISurfaceProperty SurfaceProperty = ReadSurfacePropertyFromPanel(robotPanel, materials);
                             if (SurfaceProperty.Material == null)
                             {
                                 SurfaceProperty.Material = ReadMaterialFromPanel(robotPanel);
-                                if (SurfaceProperty.Material != null && SurfaceProperty.Material.Name != "" && !bhomMaterials.ContainsKey(SurfaceProperty.Name))
+                                if (SurfaceProperty.Material != null && SurfaceProperty.Material.Name != "" && !materials.ContainsKey(SurfaceProperty.Name))
                                 {
-                                    bhomMaterials.Add(SurfaceProperty.Material.Name, SurfaceProperty.Material);
+                                    materials.Add(SurfaceProperty.Material.Name, SurfaceProperty.Material);
                                 }
                             }
-                            bhomProperties.Add(propName, SurfaceProperty);
+                            surfaceProperties.Add(propName, SurfaceProperty);
                         }
-                        BHoMPanel.Property = bhomProperties[propName];
+                        panel.Property = surfaceProperties[propName];
                     }
-                    BHoMPanels.Add(BHoMPanel);
+                    panels.Add(panel);
                 }
             }
 
-            List<Opening> emptyOpenings = new List<Opening>();
-            //robotPanelServer.BeginMultiOperation();
             for (int i = 1; i <= robotCladdingPanels.Count; i++)
             {
+                Panel claddingPanel = null;
                 RobotObjObject robotCladdingPanel = (RobotObjObject)robotCladdingPanels.Get(i);
-
-                if (robotCladdingPanel.Main.Attribs.Meshed == 1)
+                if (robotCladdingPanel.HasLabel(IRobotLabelType.I_LT_CLADDING) != 0)
                 {
-                    ICurve outline = Convert.FromRobot(robotCladdingPanel.Main.GetGeometry() as dynamic);
-                    BHoMPanel = BH.Engine.Structure.Create.Panel(outline, emptyOpenings);
-                }
-                if (BHoMPanel != null)
-                {
-                    BHoMPanel.CustomData[AdapterIdName] = robotCladdingPanel.Number;
-
-                    if (robotCladdingPanel.HasLabel(IRobotLabelType.I_LT_CLADDING) != 0)
+                    List<Opening> claddingOpenings = new List<Opening>();
+                    IRobotCollection robotCladdingOpenings = robotPanelServer.GetMany(robotCladdingPanel.GetHostedObjects());
+                    for (int j = 1; j <= robotCladdingOpenings.Count; j++)
                     {
+                        RobotObjObject robotOpening = (RobotObjObject)robotCladdingOpenings.Get(j);
+                        claddingOpenings.Add(BH.Engine.Structure.Create.Opening(Convert.FromRobot(robotOpening.Main.GetGeometry() as RobotGeoContour)));
+                    }
+                    if (robotCladdingPanel.Main.Attribs.Meshed == 1)
+                    {
+                        ICurve outline = Convert.FromRobot(robotCladdingPanel.Main.GetGeometry() as dynamic);
+                        claddingPanel = BH.Engine.Structure.Create.Panel(outline, claddingOpenings);
+                    }
+                    if (claddingPanel != null)
+                    {
+                        claddingPanel.CustomData[AdapterIdName] = robotCladdingPanel.Number;
                         string propName = robotCladdingPanel.GetLabelName(IRobotLabelType.I_LT_CLADDING);
                         if (propName != "")
                         {
-                            if (!bhomProperties.ContainsKey(propName))
+                            if (!surfaceProperties.ContainsKey(propName))
                             {
-                                ISurfaceProperty SurfaceProperty = ReadSurfacePropertyFromPanel(robotCladdingPanel, bhomMaterials, true);
-                                bhomProperties.Add(propName, SurfaceProperty);
+                                ISurfaceProperty SurfaceProperty = ReadSurfacePropertyFromPanel(robotCladdingPanel, materials, true);
+                                surfaceProperties.Add(propName, SurfaceProperty);
                             }
-                            BHoMPanel.Property = bhomProperties[propName];
+                            claddingPanel.Property = surfaceProperties[propName];
                         }
+                        panels.Add(claddingPanel);
                     }
-                    BHoMPanels.Add(BHoMPanel);
                 }
             }
-            return BHoMPanels;
+            return panels;
         }
 
         /***************************************************/

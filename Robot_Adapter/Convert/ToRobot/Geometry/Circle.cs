@@ -34,32 +34,21 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static RobotGeoObject ToRobot(List<ICurve> curves, RobotApplication robotApplication)
+        public static RobotGeoCircle ToRobot(Circle circle, RobotApplication robotApplication)
         {
-            if (curves.Count == 1 && curves[0] is Circle)
-            {
-                RobotGeoObject circleContour = Convert.ToRobot(curves[0] as Circle, robotApplication) as RobotGeoObject;
-                circleContour.Initialize();
-                return circleContour;
-            }
-            else
-            {
-                RobotGeoContour contour = robotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_CONTOUR);
-                foreach (ICurve curve in curves)
-                {
-                    if (curve is Line)
-                        contour.Add(Convert.ToRobot(curve as Line, robotApplication) as RobotGeoSegment);
-                    else if (curve is Arc)
-                        contour.Add(Convert.ToRobot(curve as Arc, robotApplication) as RobotGeoSegment);
-                    else
-                        BH.Engine.Reflection.Compute.RecordError("Only line, arc and circle curve geometry is supported for contours in Robot");
-                }
-                contour.Initialize();
-                return contour as RobotGeoObject;
-            }
+            RobotGeoCircle robotCircle = robotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_CIRCLE);
+            Point point1 = circle.IPointAtParameter(0);
+            Point point2 = circle.IPointAtParameter(0.33);
+            Point point3 = circle.IPointAtParameter(0.66);
+            robotCircle.P1.Set(point1.X, point1.Y, point1.Z);
+            robotCircle.P2.Set(point2.X, point2.Y, point2.Z);
+            robotCircle.P3.Set(point3.X, point3.Y, point3.Z);
+            return robotCircle;
         }
 
         /***************************************************/
+
     }
+
 }
 

@@ -139,6 +139,10 @@
     <Compile Include="Convert\FromRobot\Geometry\Polyline.cs" />
     <Compile Include="Convert\FromRobot\Geometry\Point.cs" />
     <Compile Include="Convert\FromRobot\Geometry\Polycurve.cs" />
+    <Compile Include="Convert\ToRobot\Geometry\Circle.cs" />
+    <Compile Include="Convert\ToRobot\Geometry\Arc.cs" />
+    <Compile Include="Convert\ToRobot\Geometry\Polyline.cs" />
+    <Compile Include="Convert\ToRobot\Geometry\Line.cs" />
     <Compile Include="Convert\ToRobot\Loads\GeometricalLineLoad.cs" />
     <Compile Include="Convert\ToRobot\Loads\ContourLoad.cs" />
     <Compile Include="Convert\ToRobot\Loads\BarTemperatureLoad.cs" />
@@ -183,7 +187,7 @@
     <Compile Include="Convert\ToRobot\Properties\SectionProperty.cs" />
     <Compile Include="CRUD\Create\Properties\LinearReleases.cs" />
     <Compile Include="CRUD\Create\Properties\Supports.cs" />
-    <Compile Include="CRUD\Groups and Lists\DesignGroups.cs" />
+    <Compile Include="CRUD\Create\Groups and Lists\DesignGroups.cs" />
     <Compile Include="CRUD\Create\Properties\FramingElementDesignProperties.cs" />
     <Compile Include="CRUD\Create\Properties\LinkConstraints.cs" />
     <Compile Include="CRUD\Create\Elements\Bars.cs" />
@@ -191,7 +195,7 @@
     <Compile Include="CRUD\Create\Properties\BarReleases.cs" />
     <Compile Include="CRUD\Create\Loads\LoadCombination.cs" />
     <Compile Include="CRUD\Create\Properties\SurfaceProperties.cs" />
-    <Compile Include="CRUD\Groups and Lists\Groups.cs" />
+    <Compile Include="CRUD\Create\Groups and Lists\Groups.cs" />
     <Compile Include="CRUD\Create\Elements\Panels.cs" />
     <Compile Include="CRUD\Create\Loads\Loads.cs" />
     <Compile Include="CRUD\Create\Elements\Nodes.cs" />
@@ -199,8 +203,8 @@
     <Compile Include="CRUD\Create\Properties\Materials.cs" />
     <Compile Include="CRUD\Create\Properties\SectionProperties.cs" />
     <Compile Include="CRUD\Create\Properties\RigidLinks.cs" />
-    <Compile Include="CRUD\Delete\_Delete.cs" />
-    <Compile Include="CRUD\Create\_Create.cs" />
+    <Compile Include="CRUD\Delete\Delete.cs" />
+    <Compile Include="CRUD\Create\Create.cs" />
     <Compile Include="AdapterActions\Execute.cs" />
     <Compile Include="CRUD\Read\Loads\LoadCombinations.cs" />
     <Compile Include="CRUD\Read\Properties\Labels.cs" />
@@ -245,7 +249,7 @@
     <Compile Include="CRUD\Update\UpdateTags.cs" />
     <Compile Include="Types\Comparer.cs" />
     <Compile Include="Types\DependencyTypes.cs" />
-    <Compile Include="RobotAdapter.cs" />
+    <Compile Include="Adapter\RobotAdapter.cs" />
     <Compile Include="XXLegacy\ResultEnums_for Reference.cs" />
     <Compile Include="XXLegacy\Elements\GridIO.cs" />
     <Compile Include="XXLegacy\Elements\GroupIO.cs" />

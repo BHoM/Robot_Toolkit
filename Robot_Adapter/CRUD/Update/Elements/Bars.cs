@@ -36,18 +36,34 @@ namespace BH.Adapter.Robot
 
         protected bool Update(IEnumerable<Bar> bars)
         {
+            RobotBarServer robotBarServer = m_RobotApplication.Project.Structure.Bars;
             Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
             foreach (Bar bar in bars)
             {
-                RobotBar robotBar = m_RobotApplication.Project.Structure.Bars.Get((int)bar.CustomData[AdapterIdName]) as RobotBar;
+                if (bar == null)
+                {
+                    Engine.Reflection.Compute.RecordWarning("At least one provided panel is null and is not updated!");
+                    continue;
+                }
+
+                if (!bar.CustomData.ContainsKey(AdapterIdName))
+                {
+                    string panelName = string.IsNullOrWhiteSpace(bar.Name) ? "no name" : "name " + bar.Name;
+                    Engine.Reflection.Compute.RecordWarning("Bar with " + panelName + " did not contain any Robot id. To update bars they need this information. For this operation to work, try using a bar that has first been pulled from Robot");
+                    continue;
+                }
+
+                RobotBar robotBar = robotBarServer.Get((int)bar.CustomData[AdapterIdName]) as RobotBar;
                 if (robotBar == null)
-                    return false;
+                {
+                    Engine.Reflection.Compute.RecordWarning("Could not find a bar with the Id " + bar.CustomData[AdapterIdName].ToString() + " in Robot. Bar could not be updated!");
+                    continue;
+                }
 
                 robotBar.StartNode = System.Convert.ToInt32(bar.StartNode.CustomData[AdapterIdName]);
                 robotBar.EndNode = System.Convert.ToInt32(bar.EndNode.CustomData[AdapterIdName]);
                 barTags[System.Convert.ToInt32(bar.CustomData[AdapterIdName])] = bar.Tags;
-
-
+                
                 if (bar.SectionProperty != null && !string.IsNullOrWhiteSpace(bar.SectionProperty.Name))
                     robotBar.SetSection(bar.SectionProperty.Name, false);
 

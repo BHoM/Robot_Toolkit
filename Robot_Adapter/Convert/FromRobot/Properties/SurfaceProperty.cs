@@ -127,7 +127,7 @@ namespace BH.Adapter.Robot
                     case IRobotCladdingType.I_CT_XY:
                         BHoMProperty = new LoadingPanelProperty
                         {
-                            LoadApplication = LoadPanelSupportConditions.TwoSides,
+                            LoadApplication = LoadPanelSupportConditions.AllSides,
                             Name = robotLabelName,
                             ReferenceEdge = 1
                         };

@@ -34,14 +34,14 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static RobotGeoSegmentArc ToRobot(Arc arc, RobotApplication robotApplication)
+        public static RobotGeoSegment ToRobot(Arc arc, RobotApplication robotApplication)
         {
-            RobotGeoSegmentArc robotArc = robotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_ARC);
+            RobotGeoSegmentArc robotArc = robotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_SEGMENT_ARC);
             Point start = arc.StartPoint();
             Point middle = arc.PointAtParameter(0.5);
             robotArc.P1.Set(start.X, start.Y, start.Z);
             robotArc.P2.Set(middle.X, middle.Y, middle.Z);
-            return robotArc;
+            return robotArc as RobotGeoSegment;
         }
 
         /***************************************************/

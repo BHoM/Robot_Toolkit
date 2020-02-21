@@ -34,32 +34,16 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static RobotGeoObject ToRobot(List<ICurve> curves, RobotApplication robotApplication)
+
+        public static RobotGeoSegmentLine ToRobot(Line line, RobotApplication robotApplication)
         {
-            if (curves.Count == 1 && curves[0] is Circle)
-            {
-                RobotGeoObject circleContour = Convert.ToRobot(curves[0] as Circle, robotApplication) as RobotGeoObject;
-                circleContour.Initialize();
-                return circleContour;
-            }
-            else
-            {
-                RobotGeoContour contour = robotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_CONTOUR);
-                foreach (ICurve curve in curves)
-                {
-                    if (curve is Line)
-                        contour.Add(Convert.ToRobot(curve as Line, robotApplication) as RobotGeoSegment);
-                    else if (curve is Arc)
-                        contour.Add(Convert.ToRobot(curve as Arc, robotApplication) as RobotGeoSegment);
-                    else
-                        BH.Engine.Reflection.Compute.RecordError("Only line, arc and circle curve geometry is supported for contours in Robot");
-                }
-                contour.Initialize();
-                return contour as RobotGeoObject;
-            }
+            RobotGeoSegmentLine robotLine = robotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_SEGMENT_LINE);
+            robotLine.P1.Set(line.Start.X, line.Start.Y, line.Start.Z);
+            return robotLine;
         }
 
         /***************************************************/
     }
+
 }
 

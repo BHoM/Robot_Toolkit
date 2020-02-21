@@ -220,7 +220,7 @@ namespace BH.Adapter.Robot
             {
                 foreach (int designGroupNumber in designGroupNumbers)
                 {
-                    _DeleteSteelDesignGroup(designGroupNumber);
+                    DeleteSteelDesignGroup(designGroupNumber);
                 }
             }
             else
@@ -228,7 +228,7 @@ namespace BH.Adapter.Robot
                 for (int i = 0; i <= RDGroups.Count - 1; i++)
                 {
                     int designGroupNumber = RDGroups.GetUserNo(i);
-                    _DeleteSteelDesignGroup(designGroupNumber);
+                    DeleteSteelDesignGroup(designGroupNumber);
 
                 }
             }
@@ -238,7 +238,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private void _DeleteSteelDesignGroup(int designGroupNumber)
+        private void DeleteSteelDesignGroup(int designGroupNumber)
         {
             RobotApplication robot = m_RobotApplication;
             RDimServer RDServer = m_RobotApplication.Kernel.GetExtension("RDimServer");

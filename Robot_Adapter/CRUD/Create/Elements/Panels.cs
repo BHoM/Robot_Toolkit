@@ -58,7 +58,7 @@ namespace BH.Adapter.Robot
                 robotPanel.Update();
                 SetRobotPanelEdgeConstraints(robotPanel, panelSubEdges);
                 if (panel.Property is LoadingPanelProperty)
-                    robotPanel.SetLabel(IRobotLabelType.I_LT_CLADDING, panel.Property.Name);
+                    robotPanel.SetLabel(IRobotLabelType.I_LT_CLADDING, (panel.Property as LoadingPanelProperty).ToRobot());
                 else
                     robotPanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, panel.Property.Name);
 

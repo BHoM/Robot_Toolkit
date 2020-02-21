@@ -177,7 +177,6 @@
     <Compile Include="Convert\FromRobot\Loads\Load.cs" />
     <Compile Include="Convert\ToRobot\Properties\Material.cs" />
     <Compile Include="Convert\ToRobot\Properties\MemberType.cs" />
-    <Compile Include="Convert\FromRobot\Elements\Panel.cs" />
     <Compile Include="Convert\ToRobot\Properties\LinearRelease.cs" />
     <Compile Include="Convert\ToRobot\Properties\SurfaceProperty.cs" />
     <Compile Include="Convert\ToRobot\Properties\SectionProperty_Concrete.cs" />

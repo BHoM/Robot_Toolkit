@@ -35,7 +35,7 @@ namespace BH.Adapter.Robot
 
         public static ISectionProperty FromRobotSteelSection(IRobotBarSectionData secData)
         {
-            IProfile sectionProfile;
+            IProfile sectionProfile = null;
 
             if (secData.Type == IRobotBarSectionType.I_BST_STANDARD)
             {
@@ -57,7 +57,7 @@ namespace BH.Adapter.Robot
                     case IRobotBarSectionShapeType.I_BSST_HEB:
                     case IRobotBarSectionShapeType.I_BSST_HEC:
                         sectionProfile = BH.Engine.Geometry.Create.ISectionProfile(d, bf, Tw, Tf, r, ri);
-                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
+                        break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_RECT:
                     case IRobotBarSectionShapeType.I_BSST_TREC:
@@ -72,27 +72,27 @@ namespace BH.Adapter.Robot
                         {
                             sectionProfile = BH.Engine.Geometry.Create.BoxProfile(d, bf, Tf, 0, 0);
                         }
-                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
+                        break;
 
                     case IRobotBarSectionShapeType.I_BSST_RECT_FILLED:
                         sectionProfile = BH.Engine.Geometry.Create.RectangleProfile(d, bf, 0);
-                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
+                        break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_T_SHAPE:
                         sectionProfile = BH.Engine.Geometry.Create.TSectionProfile(d, bf, Tw, Tf, 0, 0);
-                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
+                        break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_TUBE:
                         sectionProfile = BH.Engine.Geometry.Create.TubeProfile(d, Tf);
-                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
+                        break;
 
                     case IRobotBarSectionShapeType.I_BSST_UPN:
                         sectionProfile = BH.Engine.Geometry.Create.ChannelProfile(d, bf, Tw, Tf, r, ri);
-                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
+                        break;
 
                     case IRobotBarSectionShapeType.I_BSST_CAE:
                         sectionProfile = BH.Engine.Geometry.Create.AngleProfile(d, bf, Tw, Tf, r, ri);
-                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
+                        break;
                     default:
                         return null;
                 }
@@ -122,13 +122,13 @@ namespace BH.Adapter.Robot
                         T = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_T);
                         D = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D);
                         sectionProfile = BH.Engine.Geometry.Create.TubeProfile(D, T);
-                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
+                        break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_RECT:
                         B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B);
                         H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H);
                         sectionProfile = BH.Engine.Geometry.Create.RectangleProfile(H, B, 0);
-                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
+                        break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_I_BISYM:
                         B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B);
@@ -136,7 +136,7 @@ namespace BH.Adapter.Robot
                         TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW);
                         TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF);
                         sectionProfile = BH.Engine.Geometry.Create.ISectionProfile(H + (2 * TF), B, TW, TF, 0, 0);
-                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
+                        break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_BOX_2:
                         B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_B);
@@ -145,7 +145,7 @@ namespace BH.Adapter.Robot
                         TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_TW);
                         TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_TF);
                         sectionProfile = BH.Engine.Geometry.Create.GeneralisedFabricatedBoxProfile(H + (2 * TF), B1 + (2 * TW), TW, TF, TF, (B - B1 - (2 * TW)) / 2, (B - B1 - (2 * TW)) / 2);
-                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
+                        break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_BOX_3:
                         B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B);
@@ -156,7 +156,7 @@ namespace BH.Adapter.Robot
                         TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF);
                         TF2 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF2);
                         sectionProfile = BH.Engine.Geometry.Create.GeneralisedFabricatedBoxProfile(H + TF + TF2, B1 + (2 * TW), TW, TF, TF2, (B2 - B1 - (2 * TW)) / 2, (B - B1 - (2 * TW)) / 2);
-                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
+                        break;
 
                     case IRobotBarSectionShapeType.I_BSST_BOX:
                         B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_B);
@@ -165,24 +165,31 @@ namespace BH.Adapter.Robot
                         TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_TF);
 
                         sectionProfile = BH.Engine.Geometry.Create.FabricatedBoxProfile(H + (2 * TF), B, TW, TF, TF, 0);
-                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
+                        break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_I_MONOSYM:
-                        B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_B1);
+                        B1 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_B1);
+                        B2 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_B2);
                         H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_H);
                         TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TW);
                         TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TF1);
-                        sectionProfile = BH.Engine.Geometry.Create.ISectionProfile(H + (2 * TF), B, TW, TF, 0, 0);
-                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
+                        TF2 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TF2);
+                        sectionProfile = BH.Engine.Geometry.Create.FabricatedISectionProfile(H + TF + TF2, B1, B2, TW, TF, TF2, 0);
+                        break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_CIRC_FILLED:
                         sectionProfile = BH.Engine.Geometry.Create.CircleProfile(D);
-                        return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
+                        break;
 
                     default:
                         return null;
                 }
             }
+
+            if (sectionProfile != null)
+                return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
+            else
+                return null;
         }
 
         /***************************************************/

@@ -83,6 +83,10 @@ namespace BH.Adapter.Robot
                     bhomSec.CustomData[AdapterIdName] = rSection.Name;
                     bhomSectionProps.Add(bhomSec);
                 }
+                else
+                {
+                    Engine.Reflection.Compute.RecordWarning("Unable to convert section named " + rSection.Name);
+                }
             }
             return bhomSectionProps;
         }

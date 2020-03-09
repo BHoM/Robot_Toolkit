@@ -88,17 +88,20 @@ namespace BH.Adapter.Robot
                     if (bhomBar.CustomData.ContainsKey("FramingElementDesignProperties"))
                     {
                         FramingElementDesignProperties framEleDesProps = bhomBar.CustomData["FramingElementDesignProperties"] as FramingElementDesignProperties;
-                        if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name)!=-1)
+                        if (framEleDesProps != null)
                         {
-                            Create(framEleDesProps);
+                            if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name) != -1)
+                            {
+                                Create(framEleDesProps);
+                            }
+                            else
+                            {
+                                List<FramingElementDesignProperties> framEleDesPropsList = new List<FramingElementDesignProperties>();
+                                framEleDesPropsList.Add(framEleDesProps);
+                                Update(framEleDesPropsList);
+                            }
+                            rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name);
                         }
-                        else
-                        {
-                            List<FramingElementDesignProperties> framEleDesPropsList = new List<FramingElementDesignProperties>();
-                            framEleDesPropsList.Add(framEleDesProps);
-                            Update(framEleDesPropsList);
-                        }
-                        rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name);
                     }                  
 
 

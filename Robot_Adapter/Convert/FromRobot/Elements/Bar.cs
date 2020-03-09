@@ -125,7 +125,7 @@ namespace BH.Adapter.Robot
                 string framEleDesPropsName = robotBar.GetLabelName(IRobotLabelType.I_LT_MEMBER_TYPE);
                 if (bhomFramEleDesPropList.TryGetValue(framEleDesPropsName, out bhomFramEleDesignProps) && bhomFramEleDesignProps != null)
                 {
-                    bhomBar.CustomData.Add("FramingElementDesignProperties", bhomFramEleDesignProps);
+                    bhomBar.CustomData["FramingElementDesignProperties"] = bhomFramEleDesignProps;
                 }
                 else
                 { 
@@ -147,7 +147,6 @@ namespace BH.Adapter.Robot
             bhomBar.SectionProperty = secProp;
             bhomBar.OrientationAngle = robotBar.Gamma * Math.PI / 180;
             bhomBar.CustomData[AdapterID] = robotBar.Number;
-            bhomBar.CustomData["FramingElementDesignProperties"] = bhomFramEleDesignProps;
 
             if (robotBar.TensionCompression == IRobotBarTensionCompression.I_BTC_COMPRESSION_ONLY)
             {

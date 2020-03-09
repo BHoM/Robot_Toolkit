@@ -123,7 +123,7 @@ namespace BH.Adapter.Robot
             if (robotBar.HasLabel(IRobotLabelType.I_LT_MEMBER_TYPE) == -1)
             {
                 string framEleDesPropsName = robotBar.GetLabelName(IRobotLabelType.I_LT_MEMBER_TYPE);
-                if (bhomFramEleDesPropList.TryGetValue(framEleDesPropsName, out bhomFramEleDesignProps))
+                if (bhomFramEleDesPropList.TryGetValue(framEleDesPropsName, out bhomFramEleDesignProps) && bhomFramEleDesignProps != null)
                 {
                     bhomBar.CustomData.Add("FramingElementDesignProperties", bhomFramEleDesignProps);
                 }

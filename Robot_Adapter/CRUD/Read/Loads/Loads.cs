@@ -269,7 +269,7 @@ namespace BH.Adapter.Robot
             List<Loadcase> lCases = ReadLoadCase();
             for (int i = 0; i < lCases.Count; i++)
             {
-                if (bhomLoadCases.ContainsKey(lCases[i].Name) == false)
+                if (!bhomLoadCases.ContainsKey(lCases[i].Name))
                     bhomLoadCases.Add(lCases[i].Name, lCases[i]);
             }
 
@@ -309,7 +309,7 @@ namespace BH.Adapter.Robot
                                     {
                                         Pressure = new Vector { X = fx, Y = fy, Z = fz },
                                         Loadcase = bhomLoadCases[sCase.Name],
-                                        Objects = BH.Engine.Base.Create.BHoMGroup(objects) as BHoMGroup<IAreaElement>,
+                                        Objects = new BHoMGroup<IAreaElement>() { Elements = objects.ToList<IAreaElement>() },
                                         Axis = ls == 0 ? LoadAxis.Global : LoadAxis.Local,
                                         Projected = pj == 1
                                     };

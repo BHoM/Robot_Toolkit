@@ -47,6 +47,8 @@ namespace BH.Adapter.Robot
                 return ReadContourLoads(ids);
             else if (type == typeof(oM.Structure.Loads.GeometricalLineLoad) || type == typeof(oM.Adapters.Robot.GeometricalLineLoad))
                 return ReadGeometricalLineLoads(ids);
+            else if (type == typeof(oM.Structure.Loads.AreaUniformlyDistributedLoad))
+                    return ReadAreaUniformlyDistributedLoad(ids);
 
             return new List<ILoad>();
         }
@@ -258,6 +260,69 @@ namespace BH.Adapter.Robot
 
 
         /***************************************************/
+
+
+        private List<ILoad> ReadAreaUniformlyDistributedLoad(List<string> ids = null)
+        {
+            List<ILoad> bhomLoads = new List<ILoad>();
+            Dictionary<int, Panel> bhomPanel = ReadPanels().ToDictionary(x => System.Convert.ToInt32(x.CustomData[AdapterIdName]));
+            Dictionary<string, Loadcase> bhomLoadCases = new Dictionary<string, Loadcase>();
+            List<Loadcase> lCases = ReadLoadCase();
+            for (int i = 0; i < lCases.Count; i++)
+            {
+                if (bhomLoadCases.ContainsKey(lCases[i].Name) == false)
+                    bhomLoadCases.Add(lCases[i].Name, lCases[i]);
+            }
+
+            //Dictionary<string, Loadcase> bhomLoadCases = ReadLoadCase().ToDictionary(x => x.Name);
+            IRobotCaseCollection loadCollection = m_RobotApplication.Project.Structure.Cases.GetAll();
+
+            for (int i = 1; i <= loadCollection.Count; i++)
+            {
+                IRobotCase lCase = loadCollection.Get(i) as IRobotCase;
+                if (lCase.Type == IRobotCaseType.I_CT_SIMPLE)
+                {
+                    IRobotSimpleCase sCase = lCase as IRobotSimpleCase;
+                    if (bhomLoadCases.ContainsKey(sCase.Name))
+                    {
+                        for (int j = 1; j <= sCase.Records.Count; j++)
+                        {
+                            IRobotLoadRecord loadRecord = sCase.Records.Get(j);
+                            List<int> elementIds = Convert.FromRobotSelectionString(loadRecord.Objects.ToText());
+                            List<Panel> objects = new List<Panel>();
+                            for (int k = 0; k < elementIds.Count; k++)
+                            {
+                                if (bhomPanel.ContainsKey(elementIds[k]))
+                                    objects.Add(bhomPanel[elementIds[k]]);
+                            }
+
+                            switch (loadRecord.Type)
+                            {
+                                case IRobotLoadRecordType.I_LRT_UNIFORM:
+                                    double fx = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PX);
+                                    double fy = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PY);
+                                    double fz = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PZ);
+                                    double ls = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM);
+                                    double pj = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PROJECTED);
+
+
+                                    AreaUniformlyDistributedLoad PanelPressure = new AreaUniformlyDistributedLoad
+                                    {
+                                        Pressure = new Vector { X = fx, Y = fy, Z = fz },
+                                        Loadcase = bhomLoadCases[sCase.Name],
+                                        Objects = BH.Engine.Base.Create.BHoMGroup(objects) as BHoMGroup<IAreaElement>,
+                                        Axis = ls == 0 ? LoadAxis.Global : LoadAxis.Local,
+                                        Projected = pj == 1
+                                    };
+                                    bhomLoads.Add(PanelPressure);
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+            return bhomLoads;
+        }
 
     }
 

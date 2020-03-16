@@ -212,6 +212,7 @@
     <Compile Include="CRUD\Create\Create.cs" />
     <Compile Include="AdapterActions\Execute.cs" />
     <Compile Include="CRUD\Read\Loads\LoadCombinations.cs" />
+    <Compile Include="CRUD\Read\Loads\AreaUniformlyDistributedLoad.cs" />
     <Compile Include="CRUD\Read\Properties\Labels.cs" />
     <Compile Include="CRUD\Read\Properties\LinearReleases.cs" />
     <Compile Include="CRUD\Update\Elements\Nodes.cs" />

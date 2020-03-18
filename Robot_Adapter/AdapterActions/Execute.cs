@@ -196,9 +196,9 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private void SetAux(RobotSelection CSelection, bool yn)
+        private void SetAux(RobotSelection cSelection, bool yn)
         {
-            RobotCaseCollection Caux = m_RobotApplication.Project.Structure.Cases.GetMany(CSelection);
+            RobotCaseCollection Caux = m_RobotApplication.Project.Structure.Cases.GetMany(cSelection);
             RobotCaseServer CServer = m_RobotApplication.Project.Structure.Cases;
 
             for (int i = 1; i <= Caux.Count; i++)

@@ -43,7 +43,7 @@ namespace BH.Adapter.Robot
         /**** Constructors                              ****/
         /***************************************************/
 
-        public RobotAdapter(string filePath = "", RobotConfig robotConfig = null, bool Active = false)
+        public RobotAdapter(string filePath = "", RobotConfig robotConfig = null, bool active = false)
         {
             //Initialise
             AdapterIdName = Convert.AdapterID;
@@ -51,7 +51,7 @@ namespace BH.Adapter.Robot
             SetupDependencies();
             BH.Adapter.Modules.Structure.ModuleLoader.LoadModules(this);
 
-            if (Active)
+            if (active)
             {
 
                 RobotConfig = (robotConfig == null) ? new RobotConfig() : robotConfig;

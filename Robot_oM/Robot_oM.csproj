@@ -56,10 +56,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\BarProperties.cs" />
+    <Compile Include="Enums\Commands.cs" />
+    <Compile Include="Enums\DesignCode_Steel.cs" />
+    <Compile Include="Enums\MaterialDB.cs" />
+    <Compile Include="Enums\NodeProperties.cs" />
+    <Compile Include="Enums\ObjectProperties.cs" />
+    <Compile Include="Enums\SectionDB.cs" />
     <Compile Include="Settings\DesignGroup.cs" />
     <Compile Include="Settings\RobotConfig.cs" />
     <Compile Include="Settings\AdvancedSettings.cs" />
-    <Compile Include="Enums.cs" />
     <Compile Include="Settings\DatabaseSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Structural\Loads\ContourLoad.cs" />

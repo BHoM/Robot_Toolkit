@@ -35,7 +35,7 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static ISurfaceProperty FromRobot(this IRobotLabel robotLabel, Dictionary<string, IMaterialFragment> Material, string robotLabelName = "")
+        public static ISurfaceProperty FromRobot(this IRobotLabel robotLabel, Dictionary<string, IMaterialFragment> material, string robotLabelName = "")
         {
             ISurfaceProperty BHoMProperty = null;
             IMaterialFragment mat = null;
@@ -44,8 +44,8 @@ namespace BH.Adapter.Robot
             {
                 IRobotThicknessData data = robotLabel.Data;
                 mat = null;
-                if (Material.ContainsKey(data.MaterialName))
-                    mat = Material[data.MaterialName];                
+                if (material.ContainsKey(data.MaterialName))
+                    mat = material[data.MaterialName];                
                 else
                     BH.Engine.Reflection.Compute.RecordEvent("SurfaceProperty " + robotLabelName + " has no material assigned", oM.Reflection.Debugging.EventType.Warning);
 

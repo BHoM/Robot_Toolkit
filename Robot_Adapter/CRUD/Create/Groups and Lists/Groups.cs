@@ -40,6 +40,11 @@ namespace BH.Adapter.Robot
             RobotGroupServer rGroupServer = m_RobotApplication.Project.Structure.Groups;
             foreach (BHoMGroup<T> group in groups)
             {
+                if (group.Elements.Any(x => !x.CustomData.ContainsKey(AdapterIdName)))
+                {
+                    Engine.Reflection.Compute.RecordError("The Elements of the Group needs to be pre pushed/pulled to assign their Adapter Ids. The Group containing the element(s) with missing Ids have not been created.");
+                }
+
                 IRobotObjectType rType = Convert.RobotObjectType(typeof(T));
                 string members = group.Elements.Select(x => int.Parse(x.CustomData[AdapterIdName].ToString())).ToRobotSelectionString();
 

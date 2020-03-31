@@ -42,6 +42,13 @@ namespace BH.Adapter.Robot
             {
                 IRobotObjectType rType = Convert.RobotObjectType(typeof(T));
                 string members = group.Elements.Select(x => int.Parse(x.CustomData[AdapterIdName].ToString())).ToRobotSelectionString();
+
+                if (string.IsNullOrWhiteSpace(group.Name))
+                {
+                    Engine.Reflection.Compute.RecordError("BHoMGroup must have a name to be pushed to Robot");
+                    continue;
+                }
+
                 rGroupServer.Create(rType, group.Name, members);
             }
             return true;

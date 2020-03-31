@@ -43,6 +43,7 @@ namespace BH.Adapter.Robot
                 if (group.Elements.Any(x => !x.CustomData.ContainsKey(AdapterIdName)))
                 {
                     Engine.Reflection.Compute.RecordError("The Elements of the Group needs to be pre pushed/pulled to assign their Adapter Ids. The Group containing the element(s) with missing Ids have not been created.");
+                    continue;
                 }
 
                 IRobotObjectType rType = Convert.RobotObjectType(typeof(T));

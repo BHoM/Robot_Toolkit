@@ -32,6 +32,7 @@ using BH.oM.Adapters.Robot;
 using BH.oM.Reflection.Attributes;
 using BH.Engine.Adapters.Robot;
 using BH.oM.Adapter;
+using BH.oM.Base;
 
 namespace BH.Adapter.Robot
 {
@@ -143,6 +144,11 @@ namespace BH.Adapter.Robot
                 if (objects.First() is DesignGroup)
                 {
                     success = CreateCollection(objects as IEnumerable<BH.oM.Adapters.Robot.DesignGroup>);
+                }
+
+                if (objects.First() is IBHoMGroup)
+                {
+                    success = CreateCollection(objects as dynamic);
                 }
             }
             

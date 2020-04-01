@@ -50,8 +50,12 @@ namespace BH.Adapter.Robot
             List<ILoad> loads = new List<ILoad>();
 
             //Element loads
+
             if (type.IsAssignableFrom(typeof(AreaUniformlyDistributedLoad)))
                 loads.AddRange(ReadObjectLoads(record => record.FromRobotAreaUDL(), IRobotLoadRecordType.I_LRT_UNIFORM, ids));
+
+            if (type.IsAssignableFrom(typeof(AreaTemperatureLoad)))
+                loads.AddRange(ReadObjectLoads(record => record.FromRobotAreaTempLoad(), IRobotLoadRecordType.I_LRT_THERMAL_IN_3_POINTS, ids));
 
             if (type.IsAssignableFrom(typeof(BarTemperatureLoad)))
                 loads.AddRange(ReadObjectLoads(record => record.FromRobotBarTempLoad(), IRobotLoadRecordType.I_LRT_BAR_THERMAL, ids));

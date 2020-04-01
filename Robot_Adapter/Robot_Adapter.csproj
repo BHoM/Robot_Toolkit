@@ -145,6 +145,7 @@
     <Compile Include="Convert\FromRobot\Geometry\Polyline.cs" />
     <Compile Include="Convert\FromRobot\Geometry\Point.cs" />
     <Compile Include="Convert\FromRobot\Geometry\Polycurve.cs" />
+    <Compile Include="Convert\FromRobot\Loads\AreaTemperatureLoad.cs" />
     <Compile Include="Convert\FromRobot\Loads\AreaUniformlyDistributedLoad.cs" />
     <Compile Include="Convert\FromRobot\Loads\BarPointLoad.cs" />
     <Compile Include="Convert\FromRobot\Loads\BarTemperatureLoad.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="Convert\ToRobot\Geometry\Arc.cs" />
     <Compile Include="Convert\ToRobot\Geometry\Polyline.cs" />
     <Compile Include="Convert\ToRobot\Geometry\Line.cs" />
+    <Compile Include="Convert\ToRobot\Loads\AreaTemperatureLoad.cs" />
     <Compile Include="Convert\ToRobot\Loads\GeometricalLineLoad.cs" />
     <Compile Include="Convert\ToRobot\Loads\ContourLoad.cs" />
     <Compile Include="Convert\ToRobot\Loads\BarTemperatureLoad.cs" />

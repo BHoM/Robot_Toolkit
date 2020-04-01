@@ -29,20 +29,27 @@ namespace BH.Adapter.Robot
     {
         /***************************************************/
         /****           Public Methods                  ****/
-        /***************************************************/      
-       
-        public static void ToRobot(this GravityLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
+        /***************************************************/
+
+        public static BarTemperatureLoad FromRobotBarTempLoad(this IRobotLoadRecord loadRecord)
         {
-            IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_DEAD);
-            loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
-            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_X, load.GravityDirection.X);
-            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Y, load.GravityDirection.Y);
-            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Z, load.GravityDirection.Z);
-            //loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_ENTIRE_STRUCTURE, 1);
+            double t = loadRecord.GetValue((short)IRobotBarThermalRecordValues.I_BTRV_TX);
+            double ty = loadRecord.GetValue((short)IRobotBarThermalRecordValues.I_BTRV_TY);
+            double tz = loadRecord.GetValue((short)IRobotBarThermalRecordValues.I_BTRV_TZ);
+
+            if (ty != 0 || tz != 0)
+            {
+                Engine.Reflection.Compute.RecordWarning("Temparature loads in Robot with non axial components found. BHoM Temprature loads only support uniform temprature change, only this value will be extracted.");
+            }
+
+            return new BarTemperatureLoad
+            {
+                TemperatureChange = t
+            };
+
         }
 
         /***************************************************/
-
     }
 }
 

@@ -20,6 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using BH.oM.Geometry;
 using BH.oM.Structure.Loads;
 using RobotOM;
 
@@ -29,20 +30,22 @@ namespace BH.Adapter.Robot
     {
         /***************************************************/
         /****           Public Methods                  ****/
-        /***************************************************/      
-       
-        public static void ToRobot(this GravityLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
+        /***************************************************/
+
+        public static PointAcceleration FromRobotPtAccel(this IRobotLoadRecord loadRecord)
         {
-            IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_DEAD);
-            loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
-            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_X, load.GravityDirection.X);
-            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Y, load.GravityDirection.Y);
-            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Z, load.GravityDirection.Z);
-            //loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_ENTIRE_STRUCTURE, 1);
+            double ax = loadRecord.GetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UX);
+            double ay = loadRecord.GetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UY);
+            double az = loadRecord.GetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UZ);
+
+            return new PointAcceleration
+            {
+                TranslationalAcceleration = new Vector { X = ax, Y = ay, Z = az }
+            };
+
         }
 
         /***************************************************/
-
     }
 }
 

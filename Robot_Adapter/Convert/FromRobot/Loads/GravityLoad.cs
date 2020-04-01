@@ -20,6 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using BH.oM.Geometry;
 using BH.oM.Structure.Loads;
 using RobotOM;
 
@@ -29,16 +30,19 @@ namespace BH.Adapter.Robot
     {
         /***************************************************/
         /****           Public Methods                  ****/
-        /***************************************************/      
-       
-        public static void ToRobot(this GravityLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
+        /***************************************************/
+
+        public static GravityLoad FromRobotGravityLoad(this IRobotLoadRecord loadRecord)
         {
-            IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_DEAD);
-            loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
-            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_X, load.GravityDirection.X);
-            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Y, load.GravityDirection.Y);
-            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Z, load.GravityDirection.Z);
-            //loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_ENTIRE_STRUCTURE, 1);
+            double dx = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_X);
+            double dy = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_Y);
+            double dz = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_Z);
+            double coef = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_COEFF);
+
+            return new GravityLoad
+            {
+                GravityDirection = new Vector { X = dx * coef, Y = dy * coef, Z = dz * coef }
+            };
         }
 
         /***************************************************/

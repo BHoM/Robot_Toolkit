@@ -20,7 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Engine.Geometry;
+using BH.oM.Geometry;
 using BH.oM.Structure.Loads;
 using RobotOM;
 
@@ -31,30 +31,37 @@ namespace BH.Adapter.Robot
         /***************************************************/
         /****           Public Methods                  ****/
         /***************************************************/
-        
-        public static void ToRobot(this BarVaryingDistributedLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
+
+        public static BarVaryingDistributedLoad FromRobotBarVarDistLoad(this IRobotLoadRecord loadRecord)
         {
-            if (load.ForceA.Length() == 0 && load.ForceB.Length() == 0)
+            double fax = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PX1);
+            double fay = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PY1);
+            double faz = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PZ1);
+            double distA = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_X1);
+            double fbx = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PX2);
+            double fby = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PY2);
+            double fbz = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PZ2);
+            double distB = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_X2);
+
+            double rel = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_RELATIVE);
+            double axis = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_LOCAL);
+            double proj = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PROJECTION);
+
+            if (rel != 0)
             {
-                Engine.Reflection.Compute.RecordError("Zero distributed forces are not pushed to Robot");
-                return;
+                Engine.Reflection.Compute.RecordWarning("Currently no support for BarVaryingDistributedLoad with relative distance from ends");
+                return null;
             }
-            IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_TRAPEZOIDALE);
-            loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
-            loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PX1, load.ForceA.X);
-            loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PY1, load.ForceA.Y);
-            loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PZ1, load.ForceA.Z);
-            loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_X1, load.DistanceFromA);
-            loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PX2, load.ForceB.X);
-            loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PY2, load.ForceB.Y);
-            loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PZ2, load.ForceB.Z);
-            loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_X2, load.DistanceFromB);
 
-            if (load.Axis == LoadAxis.Local)
-                loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_LOCAL, 1);
-
-            if (load.Projected)
-                loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PROJECTION, 1);
+            return new BarVaryingDistributedLoad
+            {
+                ForceA = new Vector { X = fax, Y = fay, Z = faz },
+                ForceB = new Vector { X = fbx, Y = fby, Z = fbz },
+                DistanceFromA = distA,
+                DistanceFromB = distB,
+                Axis = axis.FromRobotLoadAxis(),
+                Projected = proj.FromRobotProjected()
+            };
         }
 
         /***************************************************/

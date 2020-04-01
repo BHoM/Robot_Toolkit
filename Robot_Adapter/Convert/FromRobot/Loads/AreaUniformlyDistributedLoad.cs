@@ -20,8 +20,13 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using BH.oM.Geometry;
 using BH.oM.Structure.Loads;
+using BH.oM.Structure.Elements;
 using RobotOM;
+using System.Collections.Generic;
+using System.Linq;
+using BH.oM.Base;
 
 namespace BH.Adapter.Robot
 {
@@ -29,20 +34,25 @@ namespace BH.Adapter.Robot
     {
         /***************************************************/
         /****           Public Methods                  ****/
-        /***************************************************/      
+        /***************************************************/
        
-        public static void ToRobot(this GravityLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
+        public static AreaUniformlyDistributedLoad FromRobotAreaUDL(this IRobotLoadRecord loadRecord)
         {
-            IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_DEAD);
-            loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
-            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_X, load.GravityDirection.X);
-            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Y, load.GravityDirection.Y);
-            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Z, load.GravityDirection.Z);
-            //loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_ENTIRE_STRUCTURE, 1);
+            double fx = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PX);
+            double fy = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PY);
+            double fz = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PZ);
+            double local = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM);
+            double projected = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PROJECTED);
+
+            return new AreaUniformlyDistributedLoad
+            {
+                Pressure = new Vector { X = fx, Y = fy, Z = fz },
+                Axis = local.FromRobotLoadAxis(),
+                Projected = projected.FromRobotProjected()
+            };
         }
 
         /***************************************************/
-
     }
 }
 

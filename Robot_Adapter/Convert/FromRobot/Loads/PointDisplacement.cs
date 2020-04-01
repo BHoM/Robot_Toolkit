@@ -20,6 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using BH.oM.Geometry;
 using BH.oM.Structure.Loads;
 using RobotOM;
 
@@ -29,20 +30,25 @@ namespace BH.Adapter.Robot
     {
         /***************************************************/
         /****           Public Methods                  ****/
-        /***************************************************/      
-       
-        public static void ToRobot(this GravityLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
+        /***************************************************/
+
+        public static PointDisplacement FromRobotPtDisp(this IRobotLoadRecord loadRecord)
         {
-            IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_DEAD);
-            loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
-            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_X, load.GravityDirection.X);
-            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Y, load.GravityDirection.Y);
-            loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Z, load.GravityDirection.Z);
-            //loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_ENTIRE_STRUCTURE, 1);
+            double ux = loadRecord.GetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_UX);
+            double uy = loadRecord.GetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_UY);
+            double uz = loadRecord.GetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_UZ);
+            double rx = loadRecord.GetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_RX);
+            double ry = loadRecord.GetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_RY);
+            double rz = loadRecord.GetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_RZ);
+
+            return new PointDisplacement
+            {
+                Translation = new Vector { X = ux, Y = uy, Z = uz },
+                Rotation = new Vector { X = rx, Y = ry, Z = rz }
+            };
         }
 
         /***************************************************/
-
     }
 }
 

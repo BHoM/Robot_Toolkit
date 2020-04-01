@@ -145,6 +145,17 @@
     <Compile Include="Convert\FromRobot\Geometry\Polyline.cs" />
     <Compile Include="Convert\FromRobot\Geometry\Point.cs" />
     <Compile Include="Convert\FromRobot\Geometry\Polycurve.cs" />
+    <Compile Include="Convert\FromRobot\Loads\AreaUniformlyDistributedLoad.cs" />
+    <Compile Include="Convert\FromRobot\Loads\BarPointLoad.cs" />
+    <Compile Include="Convert\FromRobot\Loads\BarTemperatureLoad.cs" />
+    <Compile Include="Convert\FromRobot\Loads\BarUniformlyDistributedLoad.cs" />
+    <Compile Include="Convert\FromRobot\Loads\BarVaryingDistributedLoad.cs" />
+    <Compile Include="Convert\FromRobot\Loads\GravityLoad.cs" />
+    <Compile Include="Convert\FromRobot\Loads\Load.cs" />
+    <Compile Include="Convert\FromRobot\Loads\PointAcceleration.cs" />
+    <Compile Include="Convert\FromRobot\Loads\PointDisplacement.cs" />
+    <Compile Include="Convert\FromRobot\Loads\PointLoad.cs" />
+    <Compile Include="Convert\FromRobot\Loads\PointVelocity.cs" />
     <Compile Include="Convert\ToRobot\Geometry\Circle.cs" />
     <Compile Include="Convert\ToRobot\Geometry\Arc.cs" />
     <Compile Include="Convert\ToRobot\Geometry\Polyline.cs" />
@@ -180,7 +191,6 @@
     <Compile Include="Convert\ToRobot\Geometry\Curve.cs" />
     <Compile Include="Convert\ToRobot\Groups and Lists\Group.cs" />
     <Compile Include="Convert\ToRobot\Groups and Lists\Lists.cs" />
-    <Compile Include="Convert\FromRobot\Loads\Load.cs" />
     <Compile Include="Convert\ToRobot\Properties\Material.cs" />
     <Compile Include="Convert\ToRobot\Properties\MemberType.cs" />
     <Compile Include="Convert\ToRobot\Properties\LinearRelease.cs" />
@@ -211,8 +221,11 @@
     <Compile Include="CRUD\Delete\Delete.cs" />
     <Compile Include="CRUD\Create\Create.cs" />
     <Compile Include="AdapterActions\Execute.cs" />
+    <Compile Include="CRUD\Read\Loads\ControurLoads.cs" />
+    <Compile Include="CRUD\Read\Loads\GeometricalLineLoads.cs" />
     <Compile Include="CRUD\Read\Loads\LoadCombinations.cs" />
     <Compile Include="CRUD\Read\Loads\AreaUniformlyDistributedLoad.cs" />
+    <Compile Include="CRUD\Read\Loads\PointLoads.cs" />
     <Compile Include="CRUD\Read\Properties\Labels.cs" />
     <Compile Include="CRUD\Read\Properties\LinearReleases.cs" />
     <Compile Include="CRUD\Update\Elements\Nodes.cs" />

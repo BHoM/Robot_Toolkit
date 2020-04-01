@@ -142,6 +142,12 @@ namespace BH.Adapter.Robot
 
         private static List<T> FilterLoadObjects<T>(IRobotLoadRecord loadRecord, Dictionary<int, T> objects)
         {
+            //For case of entire structure, return all obejcts
+            if (loadRecord.Type == IRobotLoadRecordType.I_LRT_DEAD && loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_ENTIRE_STRUCTURE) == 1)
+            {
+                return objects.Values.ToList();
+            }
+
             List<int> elementIds = Convert.FromRobotSelectionString(loadRecord.Objects.ToText());
             List<T> loadObjects = new List<T>();
             for (int k = 0; k < elementIds.Count; k++)

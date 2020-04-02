@@ -66,6 +66,10 @@ namespace BH.Adapter.Robot
             {
                 Engine.Reflection.Compute.RecordNote("Gravity load split into its components.");
             }
+            else if (count == 0)
+            {
+                Engine.Reflection.Compute.RecordWarning("Gravity loads with no Gravity direction is not pushed to Robot.");
+            }
         }
 
         /***************************************************/

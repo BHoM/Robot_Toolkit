@@ -36,7 +36,7 @@ namespace BH.Adapter.Robot
         {
             if (load.ForceA.Length() == 0 && load.ForceB.Length() == 0)
             {
-                Engine.Reflection.Compute.RecordError("Zero distributed forces are not pushed to Robot");
+                Engine.Reflection.Compute.RecordWarning("Zero distributed forces are not pushed to Robot");
                 return;
             }
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_TRAPEZOIDALE);
@@ -55,6 +55,8 @@ namespace BH.Adapter.Robot
 
             if (load.Projected)
                 loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PROJECTION, 1);
+
+
         }
 
         /***************************************************/

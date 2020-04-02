@@ -36,7 +36,7 @@ namespace BH.Adapter.Robot
         {
             if (load.TemperatureChange == 0)
             {
-                Engine.Reflection.Compute.RecordError("Zero temperature loads are not pushed to Robot");
+                Engine.Reflection.Compute.RecordWarning("Zero temperature loads are not pushed to Robot");
                 return;
             }
             IRobotLoadRecordThermalIn3Points loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_THERMAL_IN_3_POINTS) as IRobotLoadRecordThermalIn3Points;

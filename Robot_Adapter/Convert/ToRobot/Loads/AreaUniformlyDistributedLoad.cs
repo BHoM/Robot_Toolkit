@@ -36,7 +36,7 @@ namespace BH.Adapter.Robot
         {
             if (load.Pressure.Length() == 0)
             {
-                Engine.Reflection.Compute.RecordError("Zero pressures are not pushed to Robot");
+                Engine.Reflection.Compute.RecordWarning("Zero pressures are not pushed to Robot");
                 return;
             }
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_UNIFORM);

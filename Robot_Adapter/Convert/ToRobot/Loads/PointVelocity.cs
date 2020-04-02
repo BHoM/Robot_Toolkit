@@ -36,7 +36,7 @@ namespace BH.Adapter.Robot
         {
             if (load.TranslationalVelocity.Length() == 0)
             {
-                Engine.Reflection.Compute.RecordError("Zero point velocities are not pushed to Robot");
+                Engine.Reflection.Compute.RecordWarning("Zero point velocities are not pushed to Robot");
                 return;
             }
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_VELOCITY);

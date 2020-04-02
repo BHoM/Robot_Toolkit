@@ -64,11 +64,11 @@ namespace BH.Adapter.Robot
 
             if (count > 1)
             {
-                Engine.Reflection.Compute.RecordNote("Gravity load split into its components.");
+                Engine.Reflection.Compute.RecordNote("Gravity load split into its components resulting in more than one load record in Robot.");
             }
             else if (count == 0)
             {
-                Engine.Reflection.Compute.RecordWarning("Gravity loads with no Gravity direction is not pushed to Robot.");
+                Engine.Reflection.Compute.RecordWarning("Gravity loads with no GravityDirection are not pushed to Robot.");
             }
         }
 

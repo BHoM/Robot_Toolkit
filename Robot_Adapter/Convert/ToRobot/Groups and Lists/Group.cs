@@ -56,13 +56,14 @@ namespace BH.Adapter.Robot
         public static string CreateIdListOrGroupName<T>(this Load<T> load, RobotGroupServer rServer) where T : IBHoMObject
         {
             //For a named group, appy loads to the group name
-            if (!string.IsNullOrWhiteSpace(load.Objects.Name))
-            {
-                IRobotObjectType rType = RobotObjectType(load.Objects.GetType());
-                int gIndex = rServer.Find(rType, load.Objects.Name);
-                RobotGroup rGroup = rServer.Get(rType, gIndex);
-                return rGroup.SelList;
-            }
+            //Feature disabled until a more Robust group handling is in place in Robot_Toolkit
+            //if (!string.IsNullOrWhiteSpace(load.Objects.Name))
+            //{
+            //    IRobotObjectType rType = RobotObjectType(load.Objects.GetType());
+            //    int gIndex = rServer.Find(rType, load.Objects.Name);
+            //    RobotGroup rGroup = rServer.Get(rType, gIndex);
+            //    return rGroup.SelList;
+            //}
 
             //Otherwise apply to the corresponding indecies
             return load.Objects.Elements.Select(x => int.Parse(x.CustomData[AdapterID].ToString())).ToRobotSelectionString();

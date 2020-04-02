@@ -39,6 +39,13 @@ namespace BH.Adapter.Robot
                 Engine.Reflection.Compute.RecordWarning("Zero distributed forces are not pushed to Robot");
                 return;
             }
+
+            if (load.MomentA.Length() != 0 && load.MomentB.Length() != 0)
+            {
+                Engine.Reflection.Compute.RecordError("Varying distributed moments are not supported in Robot.");
+                return;
+            }
+
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_TRAPEZOIDALE);
             loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
             loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PX1, load.ForceA.X);

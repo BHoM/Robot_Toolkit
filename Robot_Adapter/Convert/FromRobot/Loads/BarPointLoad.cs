@@ -42,6 +42,7 @@ namespace BH.Adapter.Robot
             double mz = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CZ);
             double distA = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_X);
             double rel = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_REL);
+            double local = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_LOC);
 
             if (rel != 0)
             {
@@ -54,6 +55,7 @@ namespace BH.Adapter.Robot
                 Force = new Vector { X = fx, Y = fy, Z = fz },
                 Moment = new Vector { X = mx, Y = my, Z = mz },
                 DistanceFromA = distA,
+                Axis = local.FromRobotLoadAxis()
             };
         }
 

@@ -49,6 +49,10 @@ namespace BH.Adapter.Robot
             loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CZ, load.Moment.Z);
             loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_X, load.DistanceFromA);
             loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_REL, 0);
+
+            if (load.Axis == LoadAxis.Local)
+                loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_LOC, 1);
+
         }
 
         /***************************************************/

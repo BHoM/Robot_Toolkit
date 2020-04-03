@@ -56,6 +56,10 @@ namespace BH.Adapter.Robot
             loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MX2, load.MomentB.X);
             loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MY2, load.MomentB.Y);
             loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MZ2, load.MomentB.Z);
+
+            if(load.Axis == oM.Structure.Loads.LoadAxis.Local)
+                loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_LOCAL, 0);
+
         }
 
         /***************************************************/

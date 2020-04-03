@@ -82,6 +82,7 @@ namespace BH.Adapter.Robot
                                     double mxb = loadRecord.GetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MX2);
                                     double myb = loadRecord.GetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MY2);
                                     double mzb = loadRecord.GetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MZ2);
+                                    double local = loadRecord.GetValue((short)IRobotLinear3DRecordValues.I_L3DRV_LOCAL);
 
                                     IRobotLoadRecordLinear3D linRecord = loadRecord as IRobotLoadRecordLinear3D;
 
@@ -97,6 +98,7 @@ namespace BH.Adapter.Robot
                                         MomentA = new Vector { X = mxa, Y = mya, Z = mza },
                                         MomentB = new Vector { X = mxb, Y = myb, Z = mzb },
                                         Location = new Line { Start = new Point { X = xa, Y = ya, Z = za }, End = new Point { X = xb, Y = yb, Z = zb } },
+                                        Axis = local.FromRobotLoadAxis(),
                                         Loadcase = bhomLoadCases[sCase.Name]
                                     };
                                     bhomLoads.Add(contourLoad);

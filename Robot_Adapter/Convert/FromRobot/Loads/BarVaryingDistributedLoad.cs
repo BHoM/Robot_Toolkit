@@ -22,6 +22,12 @@
 
 using BH.oM.Geometry;
 using BH.oM.Structure.Loads;
+using System.Collections.Generic;
+using BH.Engine.External.Robot;
+using BH.oM.Base;
+using BH.oM.Structure.Elements;
+using System;
+using System.Linq;
 using RobotOM;
 
 namespace BH.Adapter.Robot
@@ -62,6 +68,23 @@ namespace BH.Adapter.Robot
                 Axis = axis.FromRobotLoadAxis(),
                 Projected = proj.FromRobotProjected()
             };
+        }
+
+        /***************************************************/
+
+        //Fixing the issue with Robot defining the second point in the BarVaryingLoad in relation to the start, while BHoM defines it in relation to the end
+        public static List<BarVaryingDistributedLoad> FixVaryingLoadEndDistances(this BarVaryingDistributedLoad load)
+        {
+            List<BarVaryingDistributedLoad> loads = new List<BarVaryingDistributedLoad>();
+
+            foreach (var lengthGroup in load.Objects.Elements.GroupBarsByLength(0.001))
+            {
+                BarVaryingDistributedLoad clone = load.GetShallowClone() as BarVaryingDistributedLoad;
+                clone.DistanceFromB = lengthGroup.Key - clone.DistanceFromB; //Set distance from B to be from end node instead of start
+                clone.Objects = new BHoMGroup<Bar>() { Elements = lengthGroup.Value };
+                loads.Add(clone);
+            }
+            return loads;
         }
 
         /***************************************************/

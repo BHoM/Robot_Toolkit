@@ -22,6 +22,7 @@
 
 using BH.Engine.Geometry;
 using BH.oM.Structure.Loads;
+using BH.Engine.External.Robot;
 using RobotOM;
 
 namespace BH.Adapter.Robot
@@ -46,22 +47,33 @@ namespace BH.Adapter.Robot
                 return;
             }
 
-            IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_TRAPEZOIDALE);
-            loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
-            loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PX1, load.ForceA.X);
-            loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PY1, load.ForceA.Y);
-            loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PZ1, load.ForceA.Z);
-            loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_X1, load.DistanceFromA);
-            loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PX2, load.ForceB.X);
-            loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PY2, load.ForceB.Y);
-            loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PZ2, load.ForceB.Z);
-            loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_X2, load.DistanceFromB);
+            int counter = 0;
+            //Group bars by length within 1 mm. Robot applies loads differently from BHoM (both points referencing the start point while BHoM references the start for A and end for B)
+            foreach (var lengthGroupedBars in load.Objects.Elements.GroupBarsByLength(0.001))
+            {
+                double dist2 = lengthGroupedBars.Key - load.DistanceFromB;
+                IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_TRAPEZOIDALE);
+                loadRecord.Objects.FromText(lengthGroupedBars.Value.ToRobotSelectionString());
+                loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PX1, load.ForceA.X);
+                loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PY1, load.ForceA.Y);
+                loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PZ1, load.ForceA.Z);
+                loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_X1, load.DistanceFromA);
+                loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PX2, load.ForceB.X);
+                loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PY2, load.ForceB.Y);
+                loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PZ2, load.ForceB.Z);
+                loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_X2, dist2);
 
-            if (load.Axis == LoadAxis.Local)
-                loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_LOCAL, 1);
+                if (load.Axis == LoadAxis.Local)
+                    loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_LOCAL, 1);
 
-            if (load.Projected)
-                loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PROJECTION, 1);
+                if (load.Projected)
+                    loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PROJECTION, 1);
+
+                counter++;
+            }
+
+            if (counter > 1)
+                Engine.Reflection.Compute.RecordNote("Varying BarLoads in BHoM meassures distans from start for the first point and from end for the second point, whilst Robot measures only from start node. To accomodate this, multiple loads have been generated in Robot.");
 
 
         }

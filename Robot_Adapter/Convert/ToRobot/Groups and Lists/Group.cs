@@ -66,8 +66,15 @@ namespace BH.Adapter.Robot
             //}
 
             //Otherwise apply to the corresponding indecies
-            return load.Objects.Elements.Select(x => int.Parse(x.CustomData[AdapterID].ToString())).ToRobotSelectionString();
+            return load.Objects.Elements.ToRobotSelectionString();
 
+        }
+
+        /***************************************************/
+
+        public static string ToRobotSelectionString<T>(this IEnumerable<T> objects) where T : IBHoMObject
+        {
+            return objects.Select(x => int.Parse(x.CustomData[AdapterID].ToString())).ToRobotSelectionString();
         }
 
         /***************************************************/

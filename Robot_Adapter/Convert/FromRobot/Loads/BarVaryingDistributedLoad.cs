@@ -77,13 +77,19 @@ namespace BH.Adapter.Robot
         {
             List<BarVaryingDistributedLoad> loads = new List<BarVaryingDistributedLoad>();
 
+            int counter = 0;
             foreach (var lengthGroup in load.Objects.Elements.GroupBarsByLength(0.001))
             {
                 BarVaryingDistributedLoad clone = load.GetShallowClone() as BarVaryingDistributedLoad;
                 clone.DistanceFromB = lengthGroup.Key - clone.DistanceFromB; //Set distance from B to be from end node instead of start
                 clone.Objects = new BHoMGroup<Bar>() { Elements = lengthGroup.Value };
                 loads.Add(clone);
+                counter++;
             }
+
+            if (counter > 1)
+                Engine.Reflection.Compute.RecordNote("Varying BarLoads in BHoM meassures distans from start for the first point and from end for the second point, whilst Robot measures only from start node. To accomodate this, load pulled from Robot as been split up in multiple loads.");
+
             return loads;
         }
 

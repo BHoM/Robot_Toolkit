@@ -88,7 +88,7 @@ namespace BH.Adapter.Robot
             }
 
             if (counter > 1)
-                Engine.Reflection.Compute.RecordNote("Varying BarLoads in BHoM meassures distans from start for the first point and from end for the second point, whilst Robot measures only from start node. To accomodate this, load pulled from Robot as been split up in multiple loads.");
+                Engine.Reflection.Compute.RecordNote("Varying BarLoads in BHoM measures distance from start for the first point and from end for the second point, whilst Robot measures only from start node. To accommodate this, load pulled from Robot as been split up in multiple loads.");
 
             return loads;
         }
@@ -96,4 +96,3 @@ namespace BH.Adapter.Robot
         /***************************************************/
     }
 }
-

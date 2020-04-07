@@ -32,7 +32,7 @@ namespace BH.Adapter.Robot
         /***************************************************/
         /****           Public Methods                  ****/
         /***************************************************/
-        
+
         public static void ToRobot(this BarVaryingDistributedLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
             if (load.ForceA.Length() == 0 && load.ForceB.Length() == 0)
@@ -73,7 +73,7 @@ namespace BH.Adapter.Robot
             }
 
             if (counter > 1)
-                Engine.Reflection.Compute.RecordNote("Varying BarLoads in BHoM meassures distans from start for the first point and from end for the second point, whilst Robot measures only from start node. To accomodate this, multiple loads have been generated in Robot.");
+                Engine.Reflection.Compute.RecordNote("Varying BarLoads in BHoM measures distance from start for the first point and from end for the second point, whilst Robot measures only from start node.To accommodate this, multiple loads have been generated in Robot, grouped by the length of the Bars the load is applied to.");
 
 
         }

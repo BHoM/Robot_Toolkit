@@ -30,8 +30,8 @@ namespace BH.oM.Adapters.Robot
         /****            Public Properties              ****/
         /***************************************************/
 
-        public AdvancedSettings AdvancedSettings { get; set; } = new AdvancedSettings();
-        public DatabaseSettings DatabaseSettings { get; set; } = new DatabaseSettings();
+        public virtual AdvancedSettings AdvancedSettings { get; set; } = new AdvancedSettings();
+        public virtual DatabaseSettings DatabaseSettings { get; set; } = new DatabaseSettings();
 
         /***************************************************/
     }

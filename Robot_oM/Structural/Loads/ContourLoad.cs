@@ -36,15 +36,15 @@ namespace BH.oM.Adapters.Robot
         /****            Public Properties              ****/
         /***************************************************/
 
-        public LoadAxis Axis { get; set; } = LoadAxis.Global;
+        public virtual LoadAxis Axis { get; set; } = LoadAxis.Global;
 
-        public Loadcase Loadcase { get; set; } = null;
+        public virtual Loadcase Loadcase { get; set; } = null;
 
-        public bool Projected { get; set; } = false;
+        public virtual bool Projected { get; set; } = false;
 
-        public Vector Force { get; set; } = new Vector();
+        public virtual Vector Force { get; set; } = new Vector();
 
-        public Polyline Contour { get; set; } = null;
+        public virtual Polyline Contour { get; set; } = null;
 
         /***************************************************/
     }

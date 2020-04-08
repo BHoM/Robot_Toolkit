@@ -112,6 +112,10 @@
       <HintPath>..\..\BHoM_Engine\Build\Serialiser_Engine.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Spatial_Engine, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BHoM_Engine\Build\Spatial_Engine.dll</HintPath>
+    </Reference>
     <Reference Include="Structure_AdapterModules">
       <HintPath>..\..\BHoM_Adapter\Build\Structure_AdapterModules.dll</HintPath>
       <Private>False</Private>

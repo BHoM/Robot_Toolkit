@@ -29,6 +29,9 @@ using RobotOM;
 using BHEG = BH.Engine.Geometry;
 using BH.oM.Structure.Constraints;
 using BH.Engine.Robot;
+using BH.Engine.Spatial;
+using BH.Engine.Geometry;
+using System;
 
 namespace BH.Adapter.Robot
 {
@@ -63,6 +66,27 @@ namespace BH.Adapter.Robot
                     robotPanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, panel.Property.Name);
 
                 RobotSelection rPanelOpenings = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_OBJECT);
+
+                Vector bhNormal = panel.Normal();
+
+                //Tolerance is lower than any geometry tolerance used in the BHoM, hence defined here
+                double tolerance = 1e-16;
+                if (Math.Abs(bhNormal.Z) > tolerance)
+                {
+                    if (bhNormal.Z < 0)
+                        robotPanel.Main.Attribs.DirZ = 1;
+                }
+                else if (Math.Abs(bhNormal.X) > tolerance)
+                {
+                    if (bhNormal.X < 0)
+                        robotPanel.Main.Attribs.DirZ = 1;
+                }
+                else
+                {
+                    if (bhNormal.Y < 0)
+                        robotPanel.Main.Attribs.DirZ = 1;
+                }
+
                 foreach (Opening opening in panel.Openings)
                 {
                     List<Edge> openingSubEdges = new List<Edge>();

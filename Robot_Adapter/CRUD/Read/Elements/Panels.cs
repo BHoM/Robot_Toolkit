@@ -20,6 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Structure.Elements;
@@ -29,6 +30,8 @@ using BH.oM.Physical.Materials;
 using BH.oM.Geometry;
 using System.Collections;
 using BH.oM.Structure.MaterialFragments;
+using BH.Engine.Spatial;
+using BH.Engine.Geometry;
 
 namespace BH.Adapter.Robot
 {
@@ -104,18 +107,37 @@ namespace BH.Adapter.Robot
                     BH.oM.Geometry.Point coordPoint = BH.Engine.Geometry.Query.StartPoint(outline as dynamic);
 
                     double x, y, z; robotPanel.Main.Attribs.GetDirX(out x, out y, out z);
-                    BH.oM.Geometry.Vector coordXAxis = BH.Engine.Geometry.Create.Vector(x, y, z);
-                    BH.oM.Geometry.Vector coordZAxis = BH.Engine.Geometry.Compute.FitPlane(outline as dynamic).Normal;
-                    if (coordZAxis.Z == 0)
-                    {
-                        if ((coordZAxis.X > coordZAxis.Y && coordZAxis.X < 1) || (coordZAxis.Y > coordZAxis.X && coordZAxis.Y < 1))
-                            coordZAxis = BH.Engine.Geometry.Modify.Reverse(coordZAxis);
-                    }
-                    if (robotPanel.Main.Attribs.DirZ == 0)
-                        coordZAxis = BH.Engine.Geometry.Modify.Reverse(coordZAxis);
+                    Vector coordXAxis = BH.Engine.Geometry.Create.Vector(x, y, z);
+                    Vector coordZAxis = panel.Normal();
 
-                    BH.oM.Geometry.CoordinateSystem.Cartesian tempCoordSys = BH.Engine.Geometry.Create.CartesianCoordinateSystem(coordPoint, coordXAxis, coordZAxis);
-                    BH.oM.Geometry.CoordinateSystem.Cartesian coordinateSystem = BH.Engine.Geometry.Create.CartesianCoordinateSystem(coordPoint, coordXAxis, tempCoordSys.Z);
+
+                    bool flip = robotPanel.Main.Attribs.DirZ == 1;
+                    double tolerance = 1e-16;
+
+                    if (Math.Abs(coordZAxis.Z) > tolerance)
+                    {
+                        if (coordZAxis.Z < 0)
+                            flip = !flip;
+                    }
+                    else if (Math.Abs(coordZAxis.X) > tolerance)
+                    {
+                        if (coordZAxis.X < 0)
+                            flip = !flip;
+                    }
+                    else
+                    {
+                        if (coordZAxis.Y < 0)
+                            flip = !flip;
+                    }
+
+                    if (flip)
+                    {
+                        coordZAxis = coordZAxis.Reverse();
+                        FlipOutline(panel);
+                    }
+
+                    Vector coordYAxis = coordZAxis.CrossProduct(coordXAxis);
+                    BH.oM.Geometry.CoordinateSystem.Cartesian coordinateSystem = BH.Engine.Geometry.Create.CartesianCoordinateSystem(coordPoint, coordXAxis, coordYAxis);
 
                     panel.CustomData["CoordinateSystem"] = coordinateSystem;
                     if (robotPanel.HasLabel(IRobotLabelType.I_LT_PANEL_THICKNESS) != 0)
@@ -176,6 +198,18 @@ namespace BH.Adapter.Robot
                 }
             }
             return panels;
+        }
+
+        /***************************************************/
+
+        //Method put here temporary until available in Spatial_Engine
+        private void FlipOutline(Panel panel)
+        {
+            foreach (Edge e in panel.ExternalEdges)
+            {
+                e.Curve = e.Curve.IFlip();
+            }
+            panel.ExternalEdges.Reverse();
         }
 
         /***************************************************/

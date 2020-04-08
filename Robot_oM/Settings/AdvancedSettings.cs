@@ -30,8 +30,8 @@ namespace BH.oM.Adapters.Robot
         /****            Public Properties              ****/
         /***************************************************/
 
-        public bool readBarsByQuery { get; set; } = false;
-        public bool readNodesByQuery { get; set; } = false;
+        public virtual bool readBarsByQuery { get; set; } = false;
+        public virtual bool readNodesByQuery { get; set; } = false;
 
         /***************************************************/
 

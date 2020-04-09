@@ -43,7 +43,7 @@ namespace BH.Adapter.Robot
 
         public static void ToRobot(this ExplicitSection section, IMaterialFragment material, IRobotBarSectionData secData)
         {
-            secData.MaterialName = material.Name;
+            secData.MaterialName = material.DescriptionOrName();
 
             secData.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, section.Area);
             secData.SetValue(IRobotBarSectionDataValue.I_BSDV_IX, section.J);
@@ -61,7 +61,7 @@ namespace BH.Adapter.Robot
 
         public static void ToRobot(this ISectionProperty section, IMaterialFragment material, IRobotBarSectionData secData)
         {
-            secData.MaterialName = material.Name;
+            secData.MaterialName = material.DescriptionOrName();
             Engine.Reflection.Compute.RecordWarning("Section of type " + section.GetType().Name + " is not yet supported in the Robot adapter. Section with name " + secData.Name + " will not have any properties set");
         }
         

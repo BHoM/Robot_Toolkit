@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using BH.oM.Structure.MaterialFragments;
+using BH.Engine.Structure;
 using RobotOM;
 
 namespace BH.Adapter.Robot
@@ -52,10 +53,11 @@ namespace BH.Adapter.Robot
                 }
                 else
                 {
-                    if (robotLabelServer.Exist(IRobotLabelType.I_LT_MATERIAL, material.Name) == -1)
-                        MaterialExistsWarning(material.Name);
+                    string name = material.DescriptionOrName();
+                    if (robotLabelServer.Exist(IRobotLabelType.I_LT_MATERIAL, name) == -1)
+                        MaterialExistsWarning(name);
                     Convert.ToRobot(matData, material);
-                    m_RobotApplication.Project.Structure.Labels.StoreWithName(label, material.Name);
+                    m_RobotApplication.Project.Structure.Labels.StoreWithName(label, name);
                 }
             }
             return true;

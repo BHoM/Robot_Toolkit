@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using BH.oM.Structure.Constraints;
+using BH.Engine.Structure;
 using RobotOM;
 
 namespace BH.Adapter.Robot
@@ -42,7 +43,7 @@ namespace BH.Adapter.Robot
             {
                 Convert.ToRobot(robotLabelData.StartNode, release.StartRelease);
                 Convert.ToRobot(robotLabelData.EndNode, release.EndRelease);
-                robotLabelServer.StoreWithName(robotLabel, release.Name);
+                robotLabelServer.StoreWithName(robotLabel, release.DescriptionOrName());
             }
             return true;
         }

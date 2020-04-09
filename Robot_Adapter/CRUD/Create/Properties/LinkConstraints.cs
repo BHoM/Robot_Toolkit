@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Structure.Constraints;
+using BH.Engine.Structure;
 using RobotOM;
 
 namespace BH.Adapter.Robot
@@ -32,8 +33,6 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
         /****           Private Methods                 ****/
-        /***************************************************/
-
         /***************************************************/
 
         private bool CreateCollection(IEnumerable<LinkConstraint> linkConstraints)
@@ -50,7 +49,7 @@ namespace BH.Adapter.Robot
                 rLinkData.RY = lConst.YYtoYY;
                 rLinkData.RZ = lConst.ZZtoZZ;
 
-                m_RobotApplication.Project.Structure.Labels.StoreWithName(rigidLink, lConst.Name);
+                m_RobotApplication.Project.Structure.Labels.StoreWithName(rigidLink, lConst.DescriptionOrName());
             }
             return true;
         }

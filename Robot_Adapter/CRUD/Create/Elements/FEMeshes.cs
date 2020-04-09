@@ -26,6 +26,7 @@ using System.Linq;
 using System;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.SurfaceProperties;
+using BH.Engine.Structure;
 using RobotOM;
 
 namespace BH.Adapter.Robot
@@ -86,10 +87,10 @@ namespace BH.Adapter.Robot
                 objServer.Objects.CreateOnFiniteElems(faceList, elemNumber);
                 mesh = objServer.Objects.Get(elemNumber) as RobotObjObject;
                 if (fEMesh.Property is LoadingPanelProperty)
-                    mesh.SetLabel(IRobotLabelType.I_LT_CLADDING, fEMesh.Property.Name);
+                    mesh.SetLabel(IRobotLabelType.I_LT_CLADDING, fEMesh.Property.DescriptionOrName());
 
                 else
-                    mesh.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, fEMesh.Property.Name);
+                    mesh.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, fEMesh.Property.DescriptionOrName());
             }
 
             return true;

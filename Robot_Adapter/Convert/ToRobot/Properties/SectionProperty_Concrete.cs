@@ -21,6 +21,7 @@
  */
 
 using BH.oM.Structure.MaterialFragments;
+using BH.Engine.Structure;
 using RobotOM;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Geometry.ShapeProfiles;
@@ -49,7 +50,7 @@ namespace BH.Adapter.Robot
             sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_RECT;
 
-            sectionData.MaterialName = material.Name;
+            sectionData.MaterialName = material.DescriptionOrName();
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
             sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_H, section.Height);
@@ -65,7 +66,7 @@ namespace BH.Adapter.Robot
             sectionData.Type = IRobotBarSectionType.I_BST_NS_T;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_T;
 
-            sectionData.MaterialName = material.Name;
+            sectionData.MaterialName = material.DescriptionOrName();
 
             sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_BF, section.Width);
             sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_H, section.Height);
@@ -81,7 +82,7 @@ namespace BH.Adapter.Robot
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_I;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_I;
-            sectionData.MaterialName = material.Name;
+            sectionData.MaterialName = material.DescriptionOrName();
 
             sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B1, section.TopFlangeWidth);
             sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B2, section.BotFlangeWidth);
@@ -100,7 +101,7 @@ namespace BH.Adapter.Robot
             sectionData.Type = IRobotBarSectionType.I_BST_NS_C;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_COL_C;
 
-            sectionData.MaterialName = material.Name;
+            sectionData.MaterialName = material.DescriptionOrName();
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
             sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_DE, section.Diameter);
@@ -114,7 +115,7 @@ namespace BH.Adapter.Robot
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_I;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_I;
-            sectionData.MaterialName = material.Name;
+            sectionData.MaterialName = material.DescriptionOrName();
 
             sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B1, section.Width);
             sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B2, section.Width);
@@ -132,7 +133,7 @@ namespace BH.Adapter.Robot
         {
             BH.Engine.Reflection.Compute.RecordWarning("Profile of type " + section.GetType().Name + "is not yet fully supported for Concrete sections. Section with name " + sectionData.Name + " set as explicit section");
 
-            sectionData.MaterialName = material.Name;
+            sectionData.MaterialName = material.DescriptionOrName();
             ConcreteSection steelSection = BH.Engine.Structure.Create.ConcreteSectionFromProfile(section, material as Concrete);
 
             sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, steelSection.Area);

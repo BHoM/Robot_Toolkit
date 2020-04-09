@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Structure.Constraints;
+using BH.Engine.Structure;
 using RobotOM;
 using BH.Engine.Robot;
 
@@ -45,7 +46,7 @@ namespace BH.Adapter.Robot
             foreach (Constraint6DOF constraint in constraints)
             {
                 Convert.ToRobot(robotLabel.Data, constraint);
-                robotLabelServer.StoreWithName(robotLabel, constraint.Name);
+                robotLabelServer.StoreWithName(robotLabel, constraint.DescriptionOrName());
             }
             return true;
         }

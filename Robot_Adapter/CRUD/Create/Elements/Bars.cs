@@ -26,6 +26,7 @@ using System;
 using BH.oM.Structure.Elements;
 using RobotOM;
 using BH.oM.Adapters.Robot;
+using BH.Engine.Structure;
 
 namespace BH.Adapter.Robot
 {
@@ -68,9 +69,9 @@ namespace BH.Adapter.Robot
                         sectionName = Convert.Match(m_dbSecPropNames, bhomBar.SectionProperty);
                         materialName = Convert.Match(m_dbMaterialNames, bhomBar.SectionProperty.Material);
                         if (sectionName == null)
-                            sectionName = bhomBar.SectionProperty.Name;
+                            sectionName = bhomBar.SectionProperty.DescriptionOrName();
                         if (materialName == null)
-                            materialName = bhomBar.SectionProperty.Material.Name;
+                            materialName = bhomBar.SectionProperty.Material.DescriptionOrName();
                     }
                     rcache.AddBar(barNum,
                                   System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterIdName]),
@@ -80,7 +81,7 @@ namespace BH.Adapter.Robot
                                   bhomBar.OrientationAngle * 180 / Math.PI);
 
                     if (bhomBar.Release != null)
-                        rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_RELEASE, bhomBar.Release.Name);
+                        rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_RELEASE, bhomBar.Release.DescriptionOrName());
                     else
                         Engine.Reflection.Compute.RecordWarning("Bar with id " + barNum + " did not have any release assigned. Default in Robot will be used");
 

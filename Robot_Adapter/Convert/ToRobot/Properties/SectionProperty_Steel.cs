@@ -21,6 +21,7 @@
  */
 
 using BH.oM.Structure.MaterialFragments;
+using BH.Engine.Structure;
 using RobotOM;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Geometry.ShapeProfiles;
@@ -49,7 +50,7 @@ namespace BH.Adapter.Robot
             sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_RECT;
 
-            sectionData.MaterialName = material.Name;
+            sectionData.MaterialName = material.DescriptionOrName();
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -66,7 +67,7 @@ namespace BH.Adapter.Robot
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_BOX_3;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_BOX_3;
-            sectionData.MaterialName = material.Name;
+            sectionData.MaterialName = material.DescriptionOrName();
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -88,7 +89,7 @@ namespace BH.Adapter.Robot
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_II;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_I_MONOSYM;
-            sectionData.MaterialName = material.Name;
+            sectionData.MaterialName = material.DescriptionOrName();
 
             RobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -108,7 +109,7 @@ namespace BH.Adapter.Robot
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_I;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_I_BISYM;
-            sectionData.MaterialName = material.Name;
+            sectionData.MaterialName = material.DescriptionOrName();
 
             RobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -127,7 +128,7 @@ namespace BH.Adapter.Robot
             sectionData.Type = IRobotBarSectionType.I_BST_NS_T;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_T_SHAPE;
 
-            sectionData.MaterialName = material.Name;
+            sectionData.MaterialName = material.DescriptionOrName();
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -146,7 +147,7 @@ namespace BH.Adapter.Robot
             sectionData.Type = IRobotBarSectionType.I_BST_NS_TUBE;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_TUBE;
 
-            sectionData.MaterialName = material.Name;
+            sectionData.MaterialName = material.DescriptionOrName();
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -163,7 +164,7 @@ namespace BH.Adapter.Robot
             sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_RECT_FILLED;
 
-            sectionData.MaterialName = material.Name;
+            sectionData.MaterialName = material.DescriptionOrName();
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -180,7 +181,7 @@ namespace BH.Adapter.Robot
             sectionData.Type = IRobotBarSectionType.I_BST_NS_TUBE;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CIRC_FILLED;
 
-            sectionData.MaterialName = material.Name;
+            sectionData.MaterialName = material.DescriptionOrName();
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -195,7 +196,7 @@ namespace BH.Adapter.Robot
             sectionData.Type = IRobotBarSectionType.I_BST_NS_L;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_UUAP;
 
-            sectionData.MaterialName = material.Name;
+            sectionData.MaterialName = material.DescriptionOrName();
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -214,7 +215,7 @@ namespace BH.Adapter.Robot
             sectionData.Type = IRobotBarSectionType.I_BST_NS_C;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_C_SHAPE;
 
-            sectionData.MaterialName = material.Name;
+            sectionData.MaterialName = material.DescriptionOrName();
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -233,7 +234,7 @@ namespace BH.Adapter.Robot
             sectionData.Type = IRobotBarSectionType.I_BST_NS_BOX_3;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_BOX_3;
 
-            sectionData.MaterialName = material.Name;
+            sectionData.MaterialName = material.DescriptionOrName();
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -256,7 +257,7 @@ namespace BH.Adapter.Robot
         {
             BH.Engine.Reflection.Compute.RecordWarning("Profile of type " + section.GetType().Name + "is not yet fully supported for Steel sections. Section with name " + sectionData.Name + " set as explicit section");
 
-            sectionData.MaterialName = material.Name;
+            sectionData.MaterialName = material.DescriptionOrName();
             SteelSection steelSection = BH.Engine.Structure.Create.SteelSectionFromProfile(section, material as Steel);
 
             sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, steelSection.Area);

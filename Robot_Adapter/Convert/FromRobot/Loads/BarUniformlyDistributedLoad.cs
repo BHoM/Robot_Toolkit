@@ -20,7 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Engine.Geometry;
+using BH.oM.Geometry;
 using BH.oM.Structure.Loads;
 using RobotOM;
 
@@ -31,28 +31,39 @@ namespace BH.Adapter.Robot
         /***************************************************/
         /****           Public Methods                  ****/
         /***************************************************/
-       
-        public static void ToRobot(this BarPointLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
+
+        public static BarUniformlyDistributedLoad FromRobotBarUDLForce(this IRobotLoadRecord loadRecord)
         {
-            if (load.Force.Length() == 0 && load.Moment.Length() == 0)
+            double fx = loadRecord.GetValue((short)IRobotBarUniformRecordValues.I_BURV_PX);
+            double fy = loadRecord.GetValue((short)IRobotBarUniformRecordValues.I_BURV_PY);
+            double fz = loadRecord.GetValue((short)IRobotBarUniformRecordValues.I_BURV_PZ);
+            double local = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM);
+            double proj = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PROJECTED);
+
+            return new BarUniformlyDistributedLoad
             {
-                Engine.Reflection.Compute.RecordWarning("Zero forces and moments are not pushed to Robot");
-                return;
-            }
-            IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_FORCE_CONCENTRATED);
-            loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FX, load.Force.X);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FY, load.Force.Y);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FZ, load.Force.Z);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CX, load.Moment.X);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CY, load.Moment.Y);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CZ, load.Moment.Z);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_X, load.DistanceFromA);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_REL, 0);
+                Force = new Vector { X = fx, Y = fy, Z = fz },
+                Projected = proj.FromRobotProjected(),
+                Axis = local.FromRobotLoadAxis()
+            };         
+        }
 
-            if (load.Axis == LoadAxis.Local)
-                loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_LOC, 1);
+        /***************************************************/
 
+        public static BarUniformlyDistributedLoad FromRobotBarUDLMoment(this IRobotLoadRecord loadRecord)
+        {
+            double mx = loadRecord.GetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MX);
+            double my = loadRecord.GetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MY);
+            double mz = loadRecord.GetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MZ);
+            double local = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM);
+            double proj = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PROJECTED);
+
+            return new BarUniformlyDistributedLoad
+            {
+                Moment = new Vector { X = mx, Y = my, Z = mz },
+                Projected = proj.FromRobotProjected(),
+                Axis = local.FromRobotLoadAxis()
+            };
         }
 
         /***************************************************/

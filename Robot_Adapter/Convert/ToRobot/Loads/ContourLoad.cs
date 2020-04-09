@@ -39,7 +39,7 @@ namespace BH.Adapter.Robot
         {
             if (load.Force.Length() == 0)
             {
-                Engine.Reflection.Compute.RecordError("Zero contour forces are not pushed to Robot");
+                Engine.Reflection.Compute.RecordWarning("Zero contour forces are not pushed to Robot");
                 return;
             }
 

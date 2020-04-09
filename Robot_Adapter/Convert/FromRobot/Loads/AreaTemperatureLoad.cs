@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -31,31 +31,32 @@ namespace BH.Adapter.Robot
         /***************************************************/
         /****           Public Methods                  ****/
         /***************************************************/
-       
-        public static void ToRobot(this BarPointLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
+
+        public static AreaTemperatureLoad FromRobotAreaTempLoad(this IRobotLoadRecord loadRecord)
         {
-            if (load.Force.Length() == 0 && load.Moment.Length() == 0)
+            double t1 = loadRecord.GetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TX1);
+            double t2 = loadRecord.GetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TX2);
+            double t3 = loadRecord.GetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TX3);
+
+            double g1 = loadRecord.GetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TZ1);
+            double g2 = loadRecord.GetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TZ2);
+            double g3 = loadRecord.GetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TZ3);
+
+            if (t2 != 0 || t2 != 0 || t3 != 0 || g1 != 0 || g2 != 0 || g3 != 0)
             {
-                Engine.Reflection.Compute.RecordWarning("Zero forces and moments are not pushed to Robot");
-                return;
+                Engine.Reflection.Compute.RecordWarning("The robot adapter currently only supports uniform temprature loads with no gradients. Area temprature load not pulled!");
+                return null;
             }
-            IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_FORCE_CONCENTRATED);
-            loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FX, load.Force.X);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FY, load.Force.Y);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FZ, load.Force.Z);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CX, load.Moment.X);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CY, load.Moment.Y);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CZ, load.Moment.Z);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_X, load.DistanceFromA);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_REL, 0);
 
-            if (load.Axis == LoadAxis.Local)
-                loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_LOC, 1);
-
+            return new AreaTemperatureLoad
+            {
+                TemperatureChange = t1,
+            };
         }
 
         /***************************************************/
+
+
     }
 }
 

@@ -35,7 +35,7 @@ namespace BH.Adapter.Robot
         {
             if (load.ForceA.Length() == 0 && load.ForceB.Length() == 0 && load.MomentA.Length() == 0 && load.MomentB.Length() == 0)
             {
-                Engine.Reflection.Compute.RecordError("Zero geometrical forces and moments are not pushed to Robot");
+                Engine.Reflection.Compute.RecordWarning("Zero geometrical forces and moments are not pushed to Robot");
                 return;
             }
             IRobotLoadRecordLinear3D loadLin3D = sCase.Records.Create(IRobotLoadRecordType.I_LRT_LINEAR_3D) as IRobotLoadRecordLinear3D;
@@ -56,6 +56,10 @@ namespace BH.Adapter.Robot
             loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MX2, load.MomentB.X);
             loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MY2, load.MomentB.Y);
             loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MZ2, load.MomentB.Z);
+
+            if(load.Axis == oM.Structure.Loads.LoadAxis.Local)
+                loadLin3D.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_LOCAL, 0);
+
         }
 
         /***************************************************/

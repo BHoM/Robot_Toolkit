@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -29,6 +29,7 @@ using BH.oM.Geometry;
 using BH.oM.Base;
 using BH.oM.Structure.Loads;
 using BH.oM.Adapters.Robot;
+using BH.Engine.Robot;
 
 
 namespace BH.Adapter.Robot
@@ -39,19 +40,18 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
 
-        private List<ILoad> ReadAreaUniformlyDistributedLoad(List<string> ids = null)
+        private List<ILoad> ReadGeometricalLineLoads(List<string> ids = null)
         {
+
             List<ILoad> bhomLoads = new List<ILoad>();
-            Dictionary<int, Panel> bhomPanel = ReadPanels().ToDictionary(x => System.Convert.ToInt32(x.CustomData[AdapterIdName]));
             Dictionary<string, Loadcase> bhomLoadCases = new Dictionary<string, Loadcase>();
             List<Loadcase> lCases = ReadLoadCase();
             for (int i = 0; i < lCases.Count; i++)
             {
-                if (!bhomLoadCases.ContainsKey(lCases[i].Name))
+                if (bhomLoadCases.ContainsKey(lCases[i].Name) == false)
                     bhomLoadCases.Add(lCases[i].Name, lCases[i]);
             }
 
-            //Dictionary<string, Loadcase> bhomLoadCases = ReadLoadCase().ToDictionary(x => x.Name);
             IRobotCaseCollection loadCollection = m_RobotApplication.Project.Structure.Cases.GetAll();
 
             for (int i = 1; i <= loadCollection.Count; i++)
@@ -65,33 +65,43 @@ namespace BH.Adapter.Robot
                         for (int j = 1; j <= sCase.Records.Count; j++)
                         {
                             IRobotLoadRecord loadRecord = sCase.Records.Get(j);
-                            List<int> elementIds = Convert.FromRobotSelectionString(loadRecord.Objects.ToText());
-                            List<Panel> objects = new List<Panel>();
-                            for (int k = 0; k < elementIds.Count; k++)
-                            {
-                                if (bhomPanel.ContainsKey(elementIds[k]))
-                                    objects.Add(bhomPanel[elementIds[k]]);
-                            }
 
                             switch (loadRecord.Type)
                             {
-                                case IRobotLoadRecordType.I_LRT_UNIFORM:
-                                    double fx = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PX);
-                                    double fy = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PY);
-                                    double fz = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PZ);
-                                    double ls = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM);
-                                    double pj = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PROJECTED);
+                                case IRobotLoadRecordType.I_LRT_LINEAR_3D:
+                                    double fxa = loadRecord.GetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PX1);
+                                    double fya = loadRecord.GetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PY1);
+                                    double fza = loadRecord.GetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PZ1);
+                                    double fxb = loadRecord.GetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PX2);
+                                    double fyb = loadRecord.GetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PY2);
+                                    double fzb = loadRecord.GetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PZ2);
 
+                                    double mxa = loadRecord.GetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MX1);
+                                    double mya = loadRecord.GetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MY1);
+                                    double mza = loadRecord.GetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MZ1);
+                                    double mxb = loadRecord.GetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MX2);
+                                    double myb = loadRecord.GetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MY2);
+                                    double mzb = loadRecord.GetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MZ2);
+                                    double local = loadRecord.GetValue((short)IRobotLinear3DRecordValues.I_L3DRV_LOCAL);
 
-                                    AreaUniformlyDistributedLoad PanelPressure = new AreaUniformlyDistributedLoad
+                                    IRobotLoadRecordLinear3D linRecord = loadRecord as IRobotLoadRecordLinear3D;
+
+                                    double xa, ya, za, xb, yb, zb;
+
+                                    linRecord.GetPoint(1, out xa, out ya, out za);
+                                    linRecord.GetPoint(2, out xb, out yb, out zb);
+
+                                    oM.Structure.Loads.GeometricalLineLoad contourLoad = new oM.Structure.Loads.GeometricalLineLoad
                                     {
-                                        Pressure = new Vector { X = fx, Y = fy, Z = fz },
-                                        Loadcase = bhomLoadCases[sCase.Name],
-                                        Objects = new BHoMGroup<IAreaElement>() { Elements = objects.ToList<IAreaElement>() },
-                                        Axis = ls == 0 ? LoadAxis.Global : LoadAxis.Local,
-                                        Projected = pj == 1
+                                        ForceA = new Vector { X = fxa, Y = fya, Z = fza },
+                                        ForceB = new Vector { X = fxb, Y = fyb, Z = fzb },
+                                        MomentA = new Vector { X = mxa, Y = mya, Z = mza },
+                                        MomentB = new Vector { X = mxb, Y = myb, Z = mzb },
+                                        Location = new Line { Start = new Point { X = xa, Y = ya, Z = za }, End = new Point { X = xb, Y = yb, Z = zb } },
+                                        Axis = local.FromRobotLoadAxis(),
+                                        Loadcase = bhomLoadCases[sCase.Name]
                                     };
-                                    bhomLoads.Add(PanelPressure);
+                                    bhomLoads.Add(contourLoad);
                                     break;
                             }
                         }
@@ -100,6 +110,7 @@ namespace BH.Adapter.Robot
             }
             return bhomLoads;
         }
+
 
         /***************************************************/
 

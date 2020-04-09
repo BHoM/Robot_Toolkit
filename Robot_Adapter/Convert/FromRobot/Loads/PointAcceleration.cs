@@ -1,4 +1,4 @@
-﻿/*
+/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -20,18 +20,32 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-namespace BH.oM.Adapters.Robot
+using BH.oM.Geometry;
+using BH.oM.Structure.Loads;
+using RobotOM;
+
+namespace BH.Adapter.Robot
 {
-    /***************************************************/
-    /****               Public Enums                ****/
-    /***************************************************/
-
-    public enum NodeProperties
+    public static partial class Convert
     {
-        CoordinateSystem
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
+
+        public static PointAcceleration FromRobotPtAccel(this IRobotLoadRecord loadRecord)
+        {
+            double ax = loadRecord.GetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UX);
+            double ay = loadRecord.GetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UY);
+            double az = loadRecord.GetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UZ);
+
+            return new PointAcceleration
+            {
+                TranslationalAcceleration = new Vector { X = ax, Y = ay, Z = az }
+            };
+
+        }
+
+        /***************************************************/
     }
-
-    /***************************************************/
-
 }
 

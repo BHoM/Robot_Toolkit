@@ -1,4 +1,4 @@
-﻿/*
+/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -20,18 +20,35 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-namespace BH.oM.Adapters.Robot
+using BH.oM.Geometry;
+using BH.oM.Structure.Loads;
+using RobotOM;
+
+namespace BH.Adapter.Robot
 {
-    /***************************************************/
-    /****               Public Enums                ****/
-    /***************************************************/
-
-    public enum Commands
+    public static partial class Convert
     {
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
 
+        public static PointLoad FromRobotPtLoad(this IRobotLoadRecord loadRecord)
+        {
+            double fx = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_FX);
+            double fy = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_FY);
+            double fz = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_FZ);
+            double mx = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_CX);
+            double my = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_CY);
+            double mz = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_CZ);
+
+            return new PointLoad
+            {
+                Force = new Vector { X = fx, Y = fy, Z = fz },
+                Moment = new Vector { X = mx, Y = my, Z = mz }
+            };
+        }
+
+        /***************************************************/
     }
-
-    /***************************************************/
-
 }
 

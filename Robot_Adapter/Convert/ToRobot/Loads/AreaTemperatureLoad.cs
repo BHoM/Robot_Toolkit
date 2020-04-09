@@ -20,20 +20,32 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-namespace BH.oM.Adapters.Robot
+using BH.Engine.Geometry;
+using BH.oM.Structure.Loads;
+using RobotOM;
+
+namespace BH.Adapter.Robot
 {
-    /***************************************************/
-    /****               Public Enums                ****/
-    /***************************************************/
-    
-    public enum BarProperties
+    public static partial class Convert
     {
-        FramingElementDesignProperties,
-        StructureObjectType
+        /***************************************************/
+        /****           Public Methods                  ****/
+        /***************************************************/
+
+        public static void ToRobot(this AreaTemperatureLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
+        {
+            if (load.TemperatureChange == 0)
+            {
+                Engine.Reflection.Compute.RecordWarning("Zero temperature loads are not pushed to Robot");
+                return;
+            }
+            IRobotLoadRecordThermalIn3Points loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_THERMAL_IN_3_POINTS) as IRobotLoadRecordThermalIn3Points;
+            loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
+            loadRecord.SetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TX1, load.TemperatureChange);
+            
+        }
+
+        /***************************************************/
     }
-
-    /***************************************************/
-    
-
 }
 

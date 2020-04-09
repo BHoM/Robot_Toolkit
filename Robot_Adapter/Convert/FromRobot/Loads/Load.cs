@@ -56,6 +56,21 @@ namespace BH.Adapter.Robot
                     return LoadNature.Other;
             }
         }
+
+        /***************************************************/
+
+        public static LoadAxis FromRobotLoadAxis(this double axisValue)
+        {
+            return axisValue == 1 ? LoadAxis.Local : LoadAxis.Global;
+        }
+
+        /***************************************************/
+
+        public static bool FromRobotProjected(this double isProjectedValue)
+        {
+            return isProjectedValue == 1;
+        }
+
         /***************************************************/
     }
 }

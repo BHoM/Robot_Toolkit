@@ -20,7 +20,6 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Engine.Geometry;
 using BH.oM.Structure.Loads;
 using RobotOM;
 
@@ -31,27 +30,22 @@ namespace BH.Adapter.Robot
         /***************************************************/
         /****           Public Methods                  ****/
         /***************************************************/
-       
-        public static void ToRobot(this BarPointLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
-        {
-            if (load.Force.Length() == 0 && load.Moment.Length() == 0)
-            {
-                Engine.Reflection.Compute.RecordWarning("Zero forces and moments are not pushed to Robot");
-                return;
-            }
-            IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_FORCE_CONCENTRATED);
-            loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FX, load.Force.X);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FY, load.Force.Y);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FZ, load.Force.Z);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CX, load.Moment.X);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CY, load.Moment.Y);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CZ, load.Moment.Z);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_X, load.DistanceFromA);
-            loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_REL, 0);
 
-            if (load.Axis == LoadAxis.Local)
-                loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_LOC, 1);
+        public static BarTemperatureLoad FromRobotBarTempLoad(this IRobotLoadRecord loadRecord)
+        {
+            double t = loadRecord.GetValue((short)IRobotBarThermalRecordValues.I_BTRV_TX);
+            double ty = loadRecord.GetValue((short)IRobotBarThermalRecordValues.I_BTRV_TY);
+            double tz = loadRecord.GetValue((short)IRobotBarThermalRecordValues.I_BTRV_TZ);
+
+            if (ty != 0 || tz != 0)
+            {
+                Engine.Reflection.Compute.RecordWarning("Temparature loads in Robot with non axial components found. BHoM Temprature loads only support uniform temprature change, only this value will be extracted.");
+            }
+
+            return new BarTemperatureLoad
+            {
+                TemperatureChange = t
+            };
 
         }
 

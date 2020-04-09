@@ -1,6 +1,6 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2019, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -20,34 +20,36 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Engine.Geometry;
-using BH.oM.Structure.Loads;
-using RobotOM;
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.ComponentModel;
+using BH.oM.Reflection.Attributes;
+using BH.oM.Structure.Elements;
+using BH.Engine.Structure;
 
-namespace BH.Adapter.Robot
+namespace BH.Engine.External.Robot
 {
-    public static partial class Convert
+    public static partial class Compute
     {
         /***************************************************/
-        /****           Public Methods                  ****/
+        /**** Public Methods                            ****/
         /***************************************************/
-         
-        public static void ToRobot(this PointAcceleration load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
-        {
-            if (load.TranslationalAcceleration.Length() == 0)
-            {
-                Engine.Reflection.Compute.RecordWarning("Zero point accelerations are not pushed to Robot");
-                return;
-            }
-            IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_ACCELERATION);
-            loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
-            loadRecord.SetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UX, load.TranslationalAcceleration.X);
-            loadRecord.SetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UY, load.TranslationalAcceleration.Y);
-            loadRecord.SetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UZ, load.TranslationalAcceleration.Z);
 
+        [Description("Groups bars by length, within a tolerance.")]
+        [Input("bars", "The bars to group.")]
+        [Input("tolerance", "Acceptable difference in length for each group")]
+        [Output("barGroup", "The bars grouped, as a dictionary, with the key being the length and the value being the corresponding bars.")]
+        public static Dictionary<double, List<Bar>> GroupBarsByLength(this IEnumerable<Bar> bars, double tolerance)
+        {
+            Dictionary<double, List<Bar>> dict = new Dictionary<double, List<Bar>>();
+            foreach (var group in bars.GroupBy(x => (int)Math.Round(x.Length() / tolerance)))
+            {
+                dict[group.Key*tolerance] = group.ToList();
+            }
+            return dict;
         }
 
         /***************************************************/
     }
 }
-

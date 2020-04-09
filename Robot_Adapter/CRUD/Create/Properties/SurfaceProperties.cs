@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using BH.oM.Structure.SurfaceProperties;
+using BH.Engine.Structure;
 using RobotOM;
 
 namespace BH.Adapter.Robot
@@ -41,13 +42,13 @@ namespace BH.Adapter.Robot
                 {
                     IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_CLADDING, "");
                     Convert.ToRobot(robotLabel, property);
-                    robotLabelServer.StoreWithName(robotLabel, property.Name);
+                    robotLabelServer.StoreWithName(robotLabel, property.DescriptionOrName());
                 }
                 else
                 {
                     IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_PANEL_THICKNESS, "");
                     Convert.ToRobot(robotLabel, property);
-                    robotLabelServer.StoreWithName(robotLabel, property.Name);
+                    robotLabelServer.StoreWithName(robotLabel, property.DescriptionOrName());
                 }
             }
             return true;

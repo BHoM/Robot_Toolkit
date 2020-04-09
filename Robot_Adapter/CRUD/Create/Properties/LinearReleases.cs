@@ -24,6 +24,7 @@ using BH.Engine.Robot;
 using BH.oM.Structure.Constraints;
 using RobotOM;
 using System.Collections.Generic;
+using BH.Engine.Structure;
 
 namespace BH.Adapter.Robot
 {
@@ -44,7 +45,7 @@ namespace BH.Adapter.Robot
             foreach (Constraint4DOF linearRelease in linearReleases)
             {
                 Convert.ToRobot(robotLabel.Data, linearRelease);
-                robotLabelServer.StoreWithName(robotLabel, linearRelease.Name);
+                robotLabelServer.StoreWithName(robotLabel, linearRelease.DescriptionOrName());
             }
             return true;
         }

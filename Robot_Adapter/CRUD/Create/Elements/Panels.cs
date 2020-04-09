@@ -27,6 +27,7 @@ using BH.oM.Geometry;
 using BH.oM.Structure.SurfaceProperties;
 using RobotOM;
 using BHEG = BH.Engine.Geometry;
+using BH.Engine.Structure;
 using BH.oM.Structure.Constraints;
 using BH.Engine.Robot;
 using BH.Engine.Spatial;
@@ -63,7 +64,7 @@ namespace BH.Adapter.Robot
                 if (panel.Property is LoadingPanelProperty)
                     robotPanel.SetLabel(IRobotLabelType.I_LT_CLADDING, (panel.Property as LoadingPanelProperty).ToRobot());
                 else
-                    robotPanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, panel.Property.Name);
+                    robotPanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, panel.Property.DescriptionOrName());
 
                 RobotSelection rPanelOpenings = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_OBJECT);
 
@@ -135,10 +136,10 @@ namespace BH.Adapter.Robot
                 IRobotObjEdge panelEdge = panelEdges.Get(i);
                 Constraint6DOF support = edges[i - 1].Support;
                 if (support != null)
-                    panelEdge.SetLabel(IRobotLabelType.I_LT_SUPPORT, support.Name);
+                    panelEdge.SetLabel(IRobotLabelType.I_LT_SUPPORT, support.DescriptionOrName());
                 Constraint4DOF release = edges[i - 1].Release;
                 if (release != null)
-                    m_RobotApplication.Project.Structure.Objects.LinearReleases.Set(panel.Number, i, panel.Number, 1, release.Name);
+                    m_RobotApplication.Project.Structure.Objects.LinearReleases.Set(panel.Number, i, panel.Number, 1, release.DescriptionOrName());
             }
         }
 

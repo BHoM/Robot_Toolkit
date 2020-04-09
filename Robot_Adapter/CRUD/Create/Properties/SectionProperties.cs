@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using BH.oM.Structure.SectionProperties;
+using BH.Engine.Structure;
 using RobotOM;
 
 namespace BH.Adapter.Robot
@@ -54,7 +55,7 @@ namespace BH.Adapter.Robot
 
                 else
                 {
-                    label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, p.Name);
+                    label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, p.DescriptionOrName());
                     secData = label.Data;
                     Convert.ToRobot(p, secData);
                     m_RobotApplication.Project.Structure.Labels.Store(label);

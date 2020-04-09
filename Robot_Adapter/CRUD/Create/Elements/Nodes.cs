@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Structure.Elements;
+using BH.Engine.Structure;
 using RobotOM;
 
 namespace BH.Adapter.Robot
@@ -35,7 +36,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private bool CreateCollection(IEnumerable<BH.oM.Structure.Elements.Node> nodes)
+        private bool CreateCollection(IEnumerable<Node> nodes)
         {
             if (nodes != null)
             {
@@ -63,7 +64,7 @@ namespace BH.Adapter.Robot
                     nodeTags[nodeNum] = node.Tags;
 
                     if (node.Support != null)
-                        robotNodeCol.Get(nodeNum).SetLabel(IRobotLabelType.I_LT_SUPPORT, node.Support.Name);
+                        robotNodeCol.Get(nodeNum).SetLabel(IRobotLabelType.I_LT_SUPPORT, node.Support.DescriptionOrName());
 
                 }
 

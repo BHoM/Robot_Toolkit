@@ -40,7 +40,10 @@ namespace BH.Adapter.Robot
         {
             if (type == typeof(Bar))
                 return IRobotObjectType.I_OT_BAR;
-            
+
+            else if (type == typeof(Panel))
+                return IRobotObjectType.I_OT_PANEL;
+
             else if (type == typeof(Node))
                 return IRobotObjectType.I_OT_NODE;
 

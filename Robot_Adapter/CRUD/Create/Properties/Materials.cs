@@ -44,14 +44,20 @@ namespace BH.Adapter.Robot
             foreach (IMaterialFragment material in materials)
             {
                 string match = Convert.Match(m_dbMaterialNames, material);
+                bool loadedFromDb = false;
                 if (match != null)
                 {
                     matData.LoadFromDBase(match);
-                    if (robotLabelServer.Exist(IRobotLabelType.I_LT_MATERIAL, match) == -1)
-                        MaterialExistsWarning(match);
-                    m_RobotApplication.Project.Structure.Labels.StoreWithName(label, match);
+                    if (matData.Type == Convert.GetMaterialType(material)) //Check that the material type matches, if not, create a new one instead of loading from DB
+                    {
+                        if (robotLabelServer.Exist(IRobotLabelType.I_LT_MATERIAL, match) == -1)
+                            MaterialExistsWarning(match);
+                        m_RobotApplication.Project.Structure.Labels.StoreWithName(label, match);
+                        loadedFromDb = true;
+                    }
                 }
-                else
+
+                if(!loadedFromDb)
                 {
                     string name = material.DescriptionOrName();
                     if (robotLabelServer.Exist(IRobotLabelType.I_LT_MATERIAL, name) == -1)

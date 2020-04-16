@@ -191,22 +191,22 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private static void ToRobotGeometricalSection(this AngleProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
-        {
-            sectionData.Type = IRobotBarSectionType.I_BST_NS_L;
-            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_UUAP;
+        //private static void ToRobotGeometricalSection(this AngleProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
+        //{
+        //    sectionData.Type = IRobotBarSectionType.I_BST_NS_L;
+        //    sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_UUAP;
 
-            sectionData.MaterialName = material.DescriptionOrName();
+        //    sectionData.MaterialName = material.DescriptionOrName();
 
-            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+        //    IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H, section.Height - section.FlangeThickness);
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B, section.Width);
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF, section.FlangeThickness);
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW, section.WebThickness);
+        //    nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H, section.Height - section.FlangeThickness);
+        //    nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B, section.Width);
+        //    nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF, section.FlangeThickness);
+        //    nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW, section.WebThickness);
 
-            sectionData.CalcNonstdGeometry();
-        }
+        //    sectionData.CalcNonstdGeometry();
+        //}
 
         /***************************************************/
 

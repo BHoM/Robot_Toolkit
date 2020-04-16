@@ -20,7 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Physical.Materials;
+using BH.oM.Geometry.ShapeProfiles;
 using BH.oM.Structure.MaterialFragments;
 using RobotOM;
 using BH.oM.Structure.SectionProperties;
@@ -38,13 +38,16 @@ namespace BH.Adapter.Robot
         {
 
             ISectionProperty prop = null;
-
-            if (material is Steel)
-                prop = FromRobotSteelSection(secData);
-            else if (material is Concrete)
-                prop = FromRobotConcreteSection(secData);
+            IProfile profile = null;
             
-            if(prop == null)
+            if (secData.IsConcrete)
+                profile = FromRobotConcreteProfile(secData);
+            else
+                profile = FromRobotGeneralProfile(secData);
+
+            if (profile != null)
+                prop = Create.SectionPropertyFromProfile(profile, material, secData.Name);            
+            else
             {
 
                 string message = "Failed to convert the section named " + secData.Name + " to a geometric section.";

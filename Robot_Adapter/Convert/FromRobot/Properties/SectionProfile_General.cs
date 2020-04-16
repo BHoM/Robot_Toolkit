@@ -35,7 +35,7 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static ISectionProperty FromRobotSteelSection(IRobotBarSectionData secData)
+        public static IProfile FromRobotGeneralProfile(IRobotBarSectionData secData)
         {
             IProfile sectionProfile = null;
 
@@ -204,10 +204,8 @@ namespace BH.Adapter.Robot
                 }
             }
 
-            if (sectionProfile != null)
-                return BH.Engine.Structure.Create.SteelSectionFromProfile(sectionProfile);
-            else
-                return null;
+            return sectionProfile;
+
         }
 
         /***************************************************/

@@ -34,7 +34,7 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static ISectionProperty FromRobot(IRobotBarSectionData secData, IMaterialFragment material)
+        public static ISectionProperty FromRobot(this IRobotBarSectionData secData, IMaterialFragment material)
         {
 
             ISectionProperty prop = null;
@@ -52,7 +52,7 @@ namespace BH.Adapter.Robot
 
                 string message = "Failed to convert the section named " + secData.Name + " to a geometric section.";
 
-                ExplicitSection exp = new ExplicitSection() { Name = secData.Name };
+                ExplicitSection exp = new ExplicitSection() { Name = secData.Name, Material = material };
 
                 try
                 {
@@ -64,6 +64,9 @@ namespace BH.Adapter.Robot
                     exp.Vz = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_VZ);
                     exp.Vpy = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_VPY);
                     exp.Vpz = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_VPZ);
+                    exp.Wply = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_ZY);
+                    exp.Wplz = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_ZZ);
+
                     message += " Section has been returned as explicit with main analytical properties set.";
                 }
                 catch (System.Exception)
@@ -71,8 +74,8 @@ namespace BH.Adapter.Robot
                     message += " Section has been returned as an empty explicit section";
                 }
                 Engine.Reflection.Compute.RecordWarning(message);
-                prop = exp;
 
+                prop = exp;
             }
 
             return prop;           

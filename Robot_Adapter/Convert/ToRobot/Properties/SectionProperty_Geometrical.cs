@@ -34,23 +34,33 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static void ToRobot(this IGeometricalSection section, IMaterialFragment material, IRobotBarSectionData secData)
+        public static void ToRobot(this IGeometricalSection section, IRobotBarSectionData secData)
         {
-            ToRobotGeometricalSection(section.SectionProfile as dynamic, material, secData);
+            if (!ToRobotGeometricalSection(section.SectionProfile as dynamic, secData))
+            {
+                //If method returns false, no profile based data has been set. Fallback to explicitly setting properties.
+                secData.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, section.Area);
+                secData.SetValue(IRobotBarSectionDataValue.I_BSDV_IX, section.J);
+                secData.SetValue(IRobotBarSectionDataValue.I_BSDV_IY, section.Iy);
+                secData.SetValue(IRobotBarSectionDataValue.I_BSDV_IZ, section.Iz);
+                secData.SetValue(IRobotBarSectionDataValue.I_BSDV_VY, section.Vy);
+                secData.SetValue(IRobotBarSectionDataValue.I_BSDV_VZ, section.Vz);
+                secData.SetValue(IRobotBarSectionDataValue.I_BSDV_VPY, section.Vpy);
+                secData.SetValue(IRobotBarSectionDataValue.I_BSDV_VPZ, section.Vpz);
+                secData.SetValue(IRobotBarSectionDataValue.I_BSDV_ZY, section.Wply);
+                secData.SetValue(IRobotBarSectionDataValue.I_BSDV_ZZ, section.Wplz);
+                secData.CalcNonstdGeometry();
+            }
         }
-
-        /***************************************************/
 
         /***************************************************/
         /****           Private Methods                  ****/
         /***************************************************/
 
-        private static void ToRobotGeometricalSection(this BoxProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
+        private static bool ToRobotGeometricalSection(this BoxProfile section, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_RECT;
-
-            sectionData.MaterialName = material.DescriptionOrName();
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -59,15 +69,15 @@ namespace BH.Adapter.Robot
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_T, section.Thickness);
 
             sectionData.CalcNonstdGeometry();
+            return true;
         }
 
         /***************************************************/
 
-        private static void ToRobotGeometricalSection(this FabricatedBoxProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
+        private static bool ToRobotGeometricalSection(this FabricatedBoxProfile section, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_BOX_3;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_BOX_3;
-            sectionData.MaterialName = material.DescriptionOrName();
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -81,15 +91,15 @@ namespace BH.Adapter.Robot
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF2, section.BotFlangeThickness);
 
             sectionData.CalcNonstdGeometry();
+            return true;
         }
 
         /***************************************************/
 
-        private static void ToRobotGeometricalSection(this FabricatedISectionProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
+        private static bool ToRobotGeometricalSection(this FabricatedISectionProfile section, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_II;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_I_MONOSYM;
-            sectionData.MaterialName = material.DescriptionOrName();
 
             RobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -101,15 +111,15 @@ namespace BH.Adapter.Robot
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TF2, section.BotFlangeThickness);
 
             sectionData.CalcNonstdGeometry();
+            return true;
         }
 
         /***************************************************/
 
-        private static void ToRobotGeometricalSection(this ISectionProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
+        private static bool ToRobotGeometricalSection(this ISectionProfile section, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_I;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_I_BISYM;
-            sectionData.MaterialName = material.DescriptionOrName();
 
             RobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -119,16 +129,15 @@ namespace BH.Adapter.Robot
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF, section.FlangeThickness);
 
             sectionData.CalcNonstdGeometry();
+            return true;
         }
 
         /***************************************************/
 
-        private static void ToRobotGeometricalSection(this TSectionProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
+        private static bool ToRobotGeometricalSection(this TSectionProfile section, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_T;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_T_SHAPE;
-
-            sectionData.MaterialName = material.DescriptionOrName();
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -138,16 +147,15 @@ namespace BH.Adapter.Robot
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_TW, section.WebThickness);
 
             sectionData.CalcNonstdGeometry();
+            return true;
         }
 
         /***************************************************/
 
-        private static void ToRobotGeometricalSection(this TubeProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
+        private static bool ToRobotGeometricalSection(this TubeProfile section, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_TUBE;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_TUBE;
-
-            sectionData.MaterialName = material.DescriptionOrName();
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -155,16 +163,15 @@ namespace BH.Adapter.Robot
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_T, section.Thickness);
 
             sectionData.CalcNonstdGeometry();
+            return true;
         }
 
         /***************************************************/
 
-        private static void ToRobotGeometricalSection(this RectangleProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
+        private static bool ToRobotGeometricalSection(this RectangleProfile section, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_RECT_FILLED;
-
-            sectionData.MaterialName = material.DescriptionOrName();
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -172,26 +179,26 @@ namespace BH.Adapter.Robot
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B, section.Width);
 
             sectionData.CalcNonstdGeometry();
+            return true;
         }
 
         /***************************************************/
 
-        private static void ToRobotGeometricalSection(this CircleProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
+        private static bool ToRobotGeometricalSection(this CircleProfile section, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_TUBE;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CIRC_FILLED;
-
-            sectionData.MaterialName = material.DescriptionOrName();
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D, section.Diameter);
             sectionData.CalcNonstdGeometry();
+            return true;
         }
 
         /***************************************************/
 
-        //private static void ToRobotGeometricalSection(this AngleProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
+        //private static bool ToRobotGeometricalSection(this AngleProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
         //{
         //    sectionData.Type = IRobotBarSectionType.I_BST_NS_L;
         //    sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_UUAP;
@@ -210,12 +217,10 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private static void ToRobotGeometricalSection(this ChannelProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
+        private static bool ToRobotGeometricalSection(this ChannelProfile section, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_C;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_C_SHAPE;
-
-            sectionData.MaterialName = material.DescriptionOrName();
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -225,16 +230,15 @@ namespace BH.Adapter.Robot
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_TF, section.FlangeThickness);
 
             sectionData.CalcNonstdGeometry();
+            return true;
         }
 
         /***************************************************/
 
-        private static void ToRobotGeometricalSection(this GeneralisedFabricatedBoxProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
+        private static bool ToRobotGeometricalSection(this GeneralisedFabricatedBoxProfile section, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_BOX_3;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_BOX_3;
-
-            sectionData.MaterialName = material.DescriptionOrName();
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
@@ -248,30 +252,18 @@ namespace BH.Adapter.Robot
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF2, section.BotFlangeThickness);
 
             sectionData.CalcNonstdGeometry();
+            return true;
 
         }
 
         /***************************************************/
 
-        private static void ToRobotGeometricalSection(this IProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
+        private static bool ToRobotGeometricalSection(this IProfile section, IRobotBarSectionData sectionData)
         {
             BH.Engine.Reflection.Compute.RecordWarning("Profile of type " + section.GetType().Name + "is not yet fully supported for Steel sections. Section with name " + sectionData.Name + " set as explicit section");
-
-            sectionData.MaterialName = material.DescriptionOrName();
-            IGeometricalSection steelSection = Create.SectionPropertyFromProfile(section, material as Steel);
-
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, steelSection.Area);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IX, steelSection.J);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IY, steelSection.Iy);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_IZ, steelSection.Iz);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VY, steelSection.Vy);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VZ, steelSection.Vz);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VPY, steelSection.Vpy);
-            sectionData.SetValue(IRobotBarSectionDataValue.I_BSDV_VPZ, steelSection.Vpz);
-
-            sectionData.CalcNonstdGeometry();
+            return false;
         }
-        
+
         /***************************************************/
     }
 }

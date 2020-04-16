@@ -57,7 +57,7 @@ namespace BH.Adapter.Robot
                 {
                     label = m_RobotApplication.Project.Structure.Labels.Create(IRobotLabelType.I_LT_BAR_SECTION, p.DescriptionOrName());
                     secData = label.Data;
-                    Convert.ToRobot(p, secData);
+                    Convert.IToRobot(p, secData);
                     m_RobotApplication.Project.Structure.Labels.Store(label);
                 }
             }

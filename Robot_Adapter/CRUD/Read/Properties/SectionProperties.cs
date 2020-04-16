@@ -36,59 +36,8 @@ namespace BH.Adapter.Robot
 
         private List<ISectionProperty> ReadSectionProperties(List<string> ids = null)
         {
-            IRobotCollection secProps = m_RobotApplication.Project.Structure.Labels.GetMany(IRobotLabelType.I_LT_BAR_SECTION);
-            List<ISectionProperty> bhomSectionProps = new List<ISectionProperty>();
             Dictionary<string, IMaterialFragment> materials = ReadMaterials().ToDictionary(x => x.Name);
-
-            for (int i = 1; i <= secProps.Count; i++)
-            {
-                ISectionProperty bhomSec = null;
-                IMaterialFragment bhomMat = null;
-                IRobotLabel rSection = secProps.Get(i);
-                IRobotBarSectionData secData = rSection.Data as IRobotBarSectionData;
-                
-                //If material not yet read out, read it by label and stor
-                if (!materials.TryGetValue(secData.MaterialName, out bhomMat))
-                {
-                    bhomMat = ReadMaterialByLabelName(secData.MaterialName);
-
-                    if (bhomMat == null)
-                    {
-                        //TODO: find a sensible way to get out the type of material that the section in expecting.
-                        //For now resorting to checking for concrete, if not true assume steal.
-                        string materialType = "";
-                        if (secData.IsConcrete)
-                        {
-                            bhomMat = new Concrete() { Name = secData.MaterialName };
-                            materialType = "Concrete";
-                        }
-                        else
-                        {
-                            bhomMat = new Steel() { Name = secData.MaterialName };
-                            materialType = "Steel";
-                        }
-
-                        Engine.Reflection.Compute.RecordWarning("Unable to extract material with label " + secData.MaterialName + ". An empty " + materialType + " with the same name has been created in its place");
-                    }
-
-                    materials[bhomMat.Name] = bhomMat;
-                }
-
-                bhomSec = Convert.FromRobot(secData, materials[secData.MaterialName]);
-
-                if (bhomSec != null)
-                {
-                    bhomSec.Material = bhomMat;
-                    bhomSec.Name = rSection.Name;
-                    bhomSec.CustomData[AdapterIdName] = rSection.Name;
-                    bhomSectionProps.Add(bhomSec);
-                }
-                else
-                {
-                    Engine.Reflection.Compute.RecordWarning("Unable to convert section named " + rSection.Name);
-                }
-            }
-            return bhomSectionProps;
+            return ReadLabels(IRobotLabelType.I_LT_BAR_SECTION, materials).Cast<ISectionProperty>().ToList();
         }
 
         /***************************************************/

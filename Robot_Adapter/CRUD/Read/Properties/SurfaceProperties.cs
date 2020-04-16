@@ -36,29 +36,11 @@ namespace BH.Adapter.Robot
 
         private List<ISurfaceProperty> ReadSurfaceProperties(List<string> names = null)
         {
-            List<ISurfaceProperty> BHoMProps = new List<ISurfaceProperty>();
-            IRobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
-            IRobotCollection rThicknessProps = labelServer.GetMany(IRobotLabelType.I_LT_PANEL_THICKNESS);
-            IRobotCollection rCladdingProps = labelServer.GetMany(IRobotLabelType.I_LT_CLADDING);
-            Dictionary<string, IMaterialFragment> BHoMMat = new Dictionary<string, IMaterialFragment>();
-            BHoMMat = (ReadMaterials().ToDictionary(x => x.Name));
+            Dictionary<string, IMaterialFragment> bhomMaterials = ReadMaterials().ToDictionary(x => x.Name);
 
-            for (int i = 1; i <= rThicknessProps.Count; i++)
-            {
-                IRobotLabel rThicknessProp = rThicknessProps.Get(i);
-                ISurfaceProperty tempProp = Convert.FromRobot(rThicknessProp, BHoMMat);
-                tempProp.CustomData.Add(AdapterIdName, tempProp.Name);
-                BHoMProps.Add(tempProp);
-            }
-
-            for (int i = 1; i <= rCladdingProps.Count; i++)
-            {
-                IRobotLabel rCladdingProp = rCladdingProps.Get(i);
-                ISurfaceProperty tempProp = Convert.FromRobot(rCladdingProp, BHoMMat);
-                tempProp.CustomData.Add(AdapterIdName, tempProp.Name);
-                BHoMProps.Add(tempProp);
-            }
-            return BHoMProps;
+            List<ISurfaceProperty> bhomProps = ReadLabels(IRobotLabelType.I_LT_PANEL_THICKNESS, bhomMaterials).Cast<ISurfaceProperty>().ToList();
+            bhomProps.AddRange(ReadLabels(IRobotLabelType.I_LT_CLADDING, bhomMaterials).Cast<ISurfaceProperty>());
+            return bhomProps;
         }
 
         /***************************************************/

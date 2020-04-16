@@ -36,15 +36,43 @@ namespace BH.Adapter.Robot
 
         public static ISectionProperty FromRobot(IRobotBarSectionData secData, IMaterialFragment material)
         {
+
+            ISectionProperty prop = null;
+
             if (material is Steel)
-                return FromRobotSteelSection(secData);
-            if (material is Concrete)
-                return FromRobotConcreteSection(secData);
-            else
+                prop = FromRobotSteelSection(secData);
+            else if (material is Concrete)
+                prop = FromRobotConcreteSection(secData);
+            
+            if(prop == null)
             {
-                Engine.Reflection.Compute.RecordWarning("Section proeprty of material type " + material.GetType().Name + " currently not supported. Section with label " + secData.Name + " was not extracted from the model");
-                return null;
-            }            
+
+                string message = "Failed to convert the section named " + secData.Name + " to a geometric section.";
+
+                ExplicitSection exp = new ExplicitSection() { Name = secData.Name };
+
+                try
+                {
+                    exp.Area = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_AX);
+                    exp.J = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_IX);
+                    exp.Iy = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_IY);
+                    exp.Iz = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_IZ);
+                    exp.Vy = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_VY);
+                    exp.Vz = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_VZ);
+                    exp.Vpy = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_VPY);
+                    exp.Vpz = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_VPZ);
+                    message += " Section has been returned as explicit with main analytical properties set.";
+                }
+                catch (System.Exception)
+                {
+                    message += " Section has been returned as an empty explicit section";
+                }
+                Engine.Reflection.Compute.RecordWarning(message);
+                prop = exp;
+
+            }
+
+            return prop;           
         }
 
         /***************************************************/

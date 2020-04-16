@@ -186,8 +186,8 @@
     <Compile Include="Convert\FromRobot\Properties\SectionProperty.cs" />
     <Compile Include="Convert\FromRobot\Properties\Support.cs" />
     <Compile Include="Convert\FromRobot\Properties\SurfaceProperty.cs" />
-    <Compile Include="Convert\FromRobot\Properties\SectionProperty_Concrete.cs" />
-    <Compile Include="Convert\FromRobot\Properties\SectionProperty_Steel.cs" />
+    <Compile Include="Convert\FromRobot\Properties\SectionProfile_Concrete.cs" />
+    <Compile Include="Convert\FromRobot\Properties\SectionProfile_General.cs" />
     <Compile Include="Convert\FromRobot\Groups and Lists\Selections.cs" />
     <Compile Include="Convert\ToRobot\Elements\Bar.cs" />
     <Compile Include="Convert\ToRobot\Geometry\Point.cs" />
@@ -202,7 +202,7 @@
     <Compile Include="Convert\ToRobot\Properties\LinearRelease.cs" />
     <Compile Include="Convert\ToRobot\Properties\SurfaceProperty.cs" />
     <Compile Include="Convert\ToRobot\Properties\SectionProperty_Concrete.cs" />
-    <Compile Include="Convert\ToRobot\Properties\SectionProperty_Steel.cs" />
+    <Compile Include="Convert\ToRobot\Properties\SectionProperty_Geometrical.cs" />
     <Compile Include="Convert\ToRobot\Properties\Support.cs" />
     <Compile Include="Convert\ToRobot\Properties\BarRelease.cs" />
     <Compile Include="Convert\ToRobot\Properties\SectionProperty.cs" />

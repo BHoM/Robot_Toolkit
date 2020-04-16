@@ -36,7 +36,7 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public List<IBHoMObject> ReadLabels(IRobotLabelType robotLabelType)
+        public List<IBHoMObject> ReadLabels(IRobotLabelType robotLabelType, object dependantObjects = null)
         {
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotNamesArray robotLabelNames = robotLabelServer.GetAvailableNames(robotLabelType);            
@@ -59,6 +59,15 @@ namespace BH.Adapter.Robot
                         case IRobotLabelType.I_LT_NODE_COMPATIBILITY:
                             break;
                         case IRobotLabelType.I_LT_BAR_SECTION:
+                            Dictionary<string, IMaterialFragment> materials = dependantObjects as Dictionary<string, IMaterialFragment>;
+                            IRobotBarSectionData secData = robotLabel.Data as IRobotBarSectionData;
+                            IMaterialFragment sectionMaterial = null;
+                            if (materials != null && !materials.TryGetValue(secData.MaterialName, out sectionMaterial))
+                            {
+                                sectionMaterial = ReadMaterialByLabelName(secData.MaterialName);
+                            }
+                            ISectionProperty section = secData.FromRobot(sectionMaterial);
+                            obj = section;
                             break;
                         case IRobotLabelType.I_LT_BAR_RELEASE:
                             BarRelease barRelease = robotLabel.FromRobot(robotLabel.Data as IRobotBarReleaseData, robotLabelName);  
@@ -119,7 +128,7 @@ namespace BH.Adapter.Robot
                     }
                     if (obj != null)
                     {
-                        obj.CustomData.Add(AdapterIdName, robotLabelName);
+                        obj.CustomData[AdapterIdName] = robotLabelName;
                         obj.Name = robotLabelName;
                         objects.Add(obj);
                     }

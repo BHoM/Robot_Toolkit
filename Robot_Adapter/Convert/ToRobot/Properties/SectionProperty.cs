@@ -34,17 +34,16 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static void ToRobot(this ISectionProperty section, IRobotBarSectionData secData)
+        public static void IToRobot(this ISectionProperty section, IRobotBarSectionData secData)
         {
-            ToRobot(section as dynamic, section.Material, secData);
+            secData.MaterialName = section.Material.DescriptionOrName(); //Set the material to the section
+            ToRobot(section as dynamic, secData);
         }
 
         /***************************************************/
 
-        public static void ToRobot(this ExplicitSection section, IMaterialFragment material, IRobotBarSectionData secData)
+        public static void ToRobot(this ExplicitSection section, IRobotBarSectionData secData)
         {
-            secData.MaterialName = material.DescriptionOrName();
-
             secData.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, section.Area);
             secData.SetValue(IRobotBarSectionDataValue.I_BSDV_IX, section.J);
             secData.SetValue(IRobotBarSectionDataValue.I_BSDV_IY, section.Iy);
@@ -53,15 +52,16 @@ namespace BH.Adapter.Robot
             secData.SetValue(IRobotBarSectionDataValue.I_BSDV_VZ, section.Vz);
             secData.SetValue(IRobotBarSectionDataValue.I_BSDV_VPY, section.Vpy);
             secData.SetValue(IRobotBarSectionDataValue.I_BSDV_VPZ, section.Vpz);
+            secData.SetValue(IRobotBarSectionDataValue.I_BSDV_ZY, section.Wply);
+            secData.SetValue(IRobotBarSectionDataValue.I_BSDV_ZZ, section.Wplz);
 
             secData.CalcNonstdGeometry();
         }
 
         /***************************************************/
 
-        public static void ToRobot(this ISectionProperty section, IMaterialFragment material, IRobotBarSectionData secData)
+        public static void ToRobot(this ISectionProperty section, IRobotBarSectionData secData)
         {
-            secData.MaterialName = material.DescriptionOrName();
             Engine.Reflection.Compute.RecordWarning("Section of type " + section.GetType().Name + " is not yet supported in the Robot adapter. Section with name " + secData.Name + " will not have any properties set");
         }
         

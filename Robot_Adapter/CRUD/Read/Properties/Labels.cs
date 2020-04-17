@@ -68,7 +68,7 @@ namespace BH.Adapter.Robot
                             {
                                 sectionMaterial = ReadMaterialByLabelName(secData.MaterialName);
                             }
-                            ISectionProperty section = secData.FromRobot(sectionMaterial);
+                            ISectionProperty section = robotLabel.FromRobot(secData, sectionMaterial);
                             obj = section;
                             break;
                         case IRobotLabelType.I_LT_BAR_RELEASE:

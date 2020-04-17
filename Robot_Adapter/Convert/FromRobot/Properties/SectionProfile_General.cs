@@ -126,10 +126,21 @@ namespace BH.Adapter.Robot
                         sectionProfile = BH.Engine.Geometry.Create.TubeProfile(D, T);
                         break;
 
-                    case IRobotBarSectionShapeType.I_BSST_USER_RECT:
+                    case IRobotBarSectionShapeType.I_BSST_RECT_FILLED:
                         B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B);
                         H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H);
                         sectionProfile = BH.Engine.Geometry.Create.RectangleProfile(H, B, 0);
+                        break;
+
+                    case IRobotBarSectionShapeType.I_BSST_USER_RECT:
+                        B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B);
+                        H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H);
+                        T = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_T);
+
+                        if(T == 0)
+                            sectionProfile = BH.Engine.Geometry.Create.RectangleProfile(H, B, 0);
+                        else
+                            sectionProfile = BH.Engine.Geometry.Create.BoxProfile(H, B, T, 0, 0);
                         break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_I_BISYM:
@@ -173,7 +184,15 @@ namespace BH.Adapter.Robot
                         if (botOutstand < 0 && Math.Abs(botOutstand) < Tolerance.MicroDistance)
                             botOutstand = 0;
 
-                        sectionProfile = BH.Engine.Geometry.Create.GeneralisedFabricatedBoxProfile(H + TF + TF2, B1 + (2 * TW), TW, TF, TF2, topOutstand, botOutstand);
+                        //If outstands are 0 (less than microdistance fraction of the width) return a standard fabricated box section.
+                        if (B1 > Tolerance.Distance && topOutstand / B1 < Tolerance.MicroDistance && botOutstand / B1 < Tolerance.MicroDistance)
+                        {
+                            sectionProfile = BH.Engine.Geometry.Create.FabricatedBoxProfile(H + TF + TF2, B1 + 2 * TW, TW, TF, TF2, 0);
+                        }
+                        else
+                        {
+                            sectionProfile = BH.Engine.Geometry.Create.GeneralisedFabricatedBoxProfile(H + TF + TF2, B1 + (2 * TW), TW, TF, TF2, topOutstand, botOutstand);
+                        }
                         break;
 
                     case IRobotBarSectionShapeType.I_BSST_BOX:

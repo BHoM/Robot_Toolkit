@@ -34,7 +34,7 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static ISectionProperty FromRobot(this IRobotBarSectionData secData, IMaterialFragment material)
+        public static ISectionProperty FromRobot(this IRobotLabel robotLabel, IRobotBarSectionData secData, IMaterialFragment material)
         {
 
             ISectionProperty prop = null;
@@ -50,7 +50,7 @@ namespace BH.Adapter.Robot
             else
             {
 
-                string message = "Failed to convert the section named " + secData.Name + " to a geometric section.";
+                string message = "Failed to convert the section named " + robotLabel.Name + " to a geometric section.";
 
                 ExplicitSection exp = new ExplicitSection() { Name = secData.Name, Material = material };
 

@@ -260,7 +260,7 @@ namespace BH.Adapter.Robot
 
         private static bool ToRobotGeometricalSection(this IProfile section, IRobotBarSectionData sectionData)
         {
-            BH.Engine.Reflection.Compute.RecordWarning("Profile of type " + section.GetType().Name + "is not yet fully supported for Steel sections. Section with name " + sectionData.Name + " set as explicit section");
+            BH.Engine.Reflection.Compute.RecordWarning("Profile of type " + section.GetType().Name + " is not yet fully supported for Steel sections. Section with name " + sectionData.Name + " set as explicit section");
             return false;
         }
 

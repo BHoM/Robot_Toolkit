@@ -35,7 +35,7 @@ namespace BH.Adapter.Robot
 
         public static IMaterialFragment FromRobot(this IRobotLabel robotLabel, IRobotMaterialData robotLabelData, string name = "")
         {
-            if(robotLabel.Name != "") name = robotLabel.Name;
+            if (robotLabel.Name != "") name = robotLabel.Name;
             IMaterialFragment material;
             switch (robotLabelData.Type)
             {
@@ -55,10 +55,13 @@ namespace BH.Adapter.Robot
                     material = Engine.Structure.Create.Timber(name, Create.Vector(robotLabelData.E, robotLabelData.E_Trans, robotLabelData.E_Trans), Create.Vector(robotLabelData.NU, robotLabelData.NU, robotLabelData.NU), Create.Vector(robotLabelData.Kirchoff, robotLabelData.Kirchoff, robotLabelData.Kirchoff), Create.Vector(robotLabelData.LX, robotLabelData.LX, robotLabelData.LX), robotLabelData.RO / Engine.Robot.Query.RobotGravityConstant, robotLabelData.DumpCoef);
                     break;
                 case IRobotMaterialType.I_MT_ALL:
+                    material = new GenericIsotropicMaterial { Density = robotLabelData.RO / Engine.Robot.Query.RobotGravityConstant, DampingRatio = robotLabelData.DumpCoef, PoissonsRatio = robotLabelData.NU, ThermalExpansionCoeff = robotLabelData.LX, YoungsModulus = robotLabelData.E, EmbodiedCarbon = 0 };
+                    break;
+
                 default:
                     Engine.Reflection.Compute.RecordWarning("Material named '" + name + "' of Robot type " + robotLabelData.Type + " not yet suported. Empty material will be provided");
                     return null;
-            }           
+            }
             return material;
         }
 

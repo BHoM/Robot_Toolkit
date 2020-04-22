@@ -46,7 +46,7 @@ namespace BH.Adapter.Robot
                 Constraint4DOF robotConstraint = Convert.FromRobot(robotLabel, robotLabel.Data as IRobotLinearReleaseData);
                 Constraint4DOFComparer constraint4DOFComparer = new Constraint4DOFComparer();
                 if (constraint4DOFComparer.Equals(constraint, robotConstraint))
-                    return true;
+                    continue;
                 else
                 {
                     Convert.ToRobot(robotLabel.Data, constraint);

@@ -42,7 +42,7 @@ namespace BH.Adapter.Robot
                 Constraint6DOF robotConstraint = Convert.FromRobot(robotLabel as RobotNodeSupport);
                 Constraint6DOFComparer constraint6DOFComparer = new Constraint6DOFComparer();
                 if (constraint6DOFComparer.Equals(support, robotConstraint))
-                    return true;
+                    continue;
                 else
                 {
                     Convert.ToRobot(robotLabel.Data, support);

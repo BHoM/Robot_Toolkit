@@ -36,6 +36,7 @@ using BH.oM.Common;
 using BH.oM.Data.Requests;
 using System.Linq;
 using BH.oM.Adapter;
+using BH.oM.Structure.MaterialFragments;
 
 namespace BH.Adapter.Robot
 {
@@ -62,7 +63,7 @@ namespace BH.Adapter.Robot
             if (type == typeof(Constraint6DOF))
                 return ReadConstraints6DOF();
         
-            if (type == typeof(Material))
+            if (typeof(IMaterialFragment).IsAssignableFrom(type))
                 return ReadMaterials();
 
             if (type == typeof(Panel))

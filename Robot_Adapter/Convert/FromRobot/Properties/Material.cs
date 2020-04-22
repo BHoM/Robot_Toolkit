@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using RobotOM;
 using BH.oM.Structure.MaterialFragments;
+using BH.Engine.Geometry;
 
 namespace BH.Adapter.Robot
 {
@@ -48,7 +49,11 @@ namespace BH.Adapter.Robot
                     material = Engine.Structure.Create.Aluminium(name, robotLabelData.E, robotLabelData.NU, robotLabelData.LX, robotLabelData.RO / Engine.Robot.Query.RobotGravityConstant, robotLabelData.DumpCoef);
                     break;
                 case IRobotMaterialType.I_MT_OTHER:
+                    material = new GenericIsotropicMaterial { Density = robotLabelData.RO / Engine.Robot.Query.RobotGravityConstant, DampingRatio = robotLabelData.DumpCoef, PoissonsRatio = robotLabelData.NU, ThermalExpansionCoeff = robotLabelData.LX, YoungsModulus = robotLabelData.E, EmbodiedCarbon = 0 }; 
+                    break;
                 case IRobotMaterialType.I_MT_TIMBER:
+                    material = Engine.Structure.Create.Timber(name, Create.Vector(robotLabelData.E, robotLabelData.E_Trans, robotLabelData.E_Trans), Create.Vector(robotLabelData.NU, robotLabelData.NU, robotLabelData.NU), Create.Vector(robotLabelData.Kirchoff, robotLabelData.Kirchoff, robotLabelData.Kirchoff), Create.Vector(robotLabelData.LX, robotLabelData.LX, robotLabelData.LX), robotLabelData.RO / Engine.Robot.Query.RobotGravityConstant, robotLabelData.DumpCoef);
+                    break;
                 case IRobotMaterialType.I_MT_ALL:
                 default:
                     Engine.Reflection.Compute.RecordWarning("Material named '" + name + "' of Robot type " + robotLabelData.Type + " not yet suported. Empty material will be provided");

@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using BH.oM.Adapter;
 using System.Linq;
 using BH.oM.Structure.Constraints;
-using BH.Engine.Robot;
+using BH.Engine.Structure;
 
 namespace BH.Adapter.Robot
 {

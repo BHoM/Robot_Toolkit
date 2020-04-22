@@ -101,8 +101,6 @@
   <ItemGroup>
     <Compile Include="Compute\GroupBarsByLength.cs" />
     <Compile Include="Objects\Comparers\LoadingPanelProperty.cs" />
-    <Compile Include="Objects\Comparers\Constraint4DOF.cs" />
-    <Compile Include="Objects\Comparers\Constraint6DOF.cs" />
     <Compile Include="Create\ContourLoad.cs" />
     <Compile Include="Create\DesignGroup.cs" />
     <Compile Include="Create\AdvancedSettings.cs" />

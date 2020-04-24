@@ -60,10 +60,6 @@
       <HintPath>..\..\BHoM_Engine\Build\BHoM_Engine.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Common_Engine">
-      <HintPath>..\..\BHoM_Engine\Build\Common_Engine.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Common_oM">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\BHoM\Build\Common_oM.dll</HintPath>

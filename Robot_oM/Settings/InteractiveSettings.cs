@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -21,20 +21,17 @@
  */
 
 using BH.oM.Base;
+using System.ComponentModel;
 
 namespace BH.oM.Adapters.Robot
 {
-    public class RobotConfig : BHoMObject
+    [Description("Settings controling if Robot should be interactive and vissible during adapter actions.")]
+    public class InteractiveSettings : BHoMObject
     {
-        /***************************************************/
-        /****            Public Properties              ****/
-        /***************************************************/
+        [Description("If set to false, Robot can not be modified through the UI during an adapter action such as Push and Pull.")]
+        public virtual bool IsInteractive { get; set; } = false;
 
-        public virtual AdvancedSettings AdvancedSettings { get; set; } = new AdvancedSettings();
-        public virtual DatabaseSettings DatabaseSettings { get; set; } = new DatabaseSettings();
-        public virtual InteractiveSettings InteractiveSettings { get; set; } = new InteractiveSettings();
-
-        /***************************************************/
+        [Description("If set to false, Changes in Robot can not be seen before an adapter action as Push or Pull has completed.")]
+        public virtual bool IsVisible { get; set; } = false;
     }
 }
-

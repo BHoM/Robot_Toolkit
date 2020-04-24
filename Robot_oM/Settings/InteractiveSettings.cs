@@ -32,6 +32,6 @@ namespace BH.oM.Adapters.Robot
         public virtual bool IsInteractive { get; set; } = false;
 
         [Description("If set to false, Changes in Robot can not be seen before an adapter action as Push or Pull has completed.")]
-        public virtual bool IsVisible { get; set; } = false;
+        public virtual bool IsVisible { get; set; } = true;
     }
 }

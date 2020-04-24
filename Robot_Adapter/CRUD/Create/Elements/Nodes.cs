@@ -40,7 +40,6 @@ namespace BH.Adapter.Robot
         {
             if (nodes != null)
             {
-                m_RobotApplication.Interactive = 0;
                 List<Node> nodeList = nodes.ToList();
                 int nodeNum = 0;
                 IRobotStructureCache rcache = m_RobotApplication.Project.Structure.CreateCache();
@@ -69,7 +68,6 @@ namespace BH.Adapter.Robot
                 }
 
                 m_tags[typeof(Node)] = nodeTags;
-                m_RobotApplication.Interactive = 1;
             }
             return true;
         }

@@ -43,8 +43,6 @@ namespace BH.Adapter.Robot
                 IRobotStructure rStructure = m_RobotApplication.Project.Structure;
                 IRobotBarServer barServer = rStructure.Bars;
 
-                m_RobotApplication.Interactive = 0;
-
                 List<Bar> bars = bhomBars.ToList();
                 IRobotStructureCache rcache = rStructure.CreateCache();
                 RobotSelection rSelect = rStructure.Selections.Create(IRobotObjectType.I_OT_BAR);
@@ -143,8 +141,6 @@ namespace BH.Adapter.Robot
                     }
                 }
                 m_tags[typeof(Bar)] = barTags;
-
-                m_RobotApplication.Interactive = 1;
 
             }
             return true;

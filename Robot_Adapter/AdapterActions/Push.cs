@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -39,9 +39,7 @@ namespace BH.Adapter.Robot
         /**** Public  Methods                           ****/
         /***************************************************/
 
-        /* Temporary override of the pull method until updates have been made to the MeshResults and IResultCOllection : IResult
-         */
-        public override IEnumerable<object> Pull(IRequest request, PullType pullType = PullType.AdapterDefault, ActionConfig actionConfig = null)
+        public override List<object> Push(IEnumerable<object> objects, string tag = "", PushType pushType = PushType.AdapterDefault, ActionConfig actionConfig = null)
         {
             //Get out the interactive settings, and make nullchecks
             InteractiveSettings interactiveSettings = m_robotConfig?.InteractiveSettings ?? new InteractiveSettings();
@@ -56,17 +54,7 @@ namespace BH.Adapter.Robot
 
             try
             {
-
-                FilterRequest filter = request as FilterRequest;
-                if (filter != null)
-                {
-                    if (filter.Type == typeof(BH.oM.Structure.Results.MeshResult))
-                    {
-                        return ReadMeshResults(filter);
-                    }
-                }
-
-                return base.Pull(request, pullType, actionConfig);
+                return base.Push(objects, tag, pushType, actionConfig);
             }
             finally
             {

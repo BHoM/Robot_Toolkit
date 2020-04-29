@@ -108,7 +108,6 @@ namespace BH.Adapter.Robot
         private List<string> m_dbMaterialNames = new List<string>();
         private Dictionary<string, oM.Physical.Materials.Material> m_dbMaterials = new Dictionary<string, oM.Physical.Materials.Material>();
         private List<string> m_dbSecPropNames = new List<string>();
-        private RobotConfig m_robotConfig = new RobotConfig();
         //private Dictionary<int, string> m_NodeTaggs = new Dictionary<int, string>();
         //private Dictionary<string, string> m_MaterialTaggs = new Dictionary<string, string>();
         //private Dictionary<string, string> m_SectionPropertyTaggs = new Dictionary<string, string>();

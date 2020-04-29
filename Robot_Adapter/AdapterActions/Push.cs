@@ -42,7 +42,7 @@ namespace BH.Adapter.Robot
         public override List<object> Push(IEnumerable<object> objects, string tag = "", PushType pushType = PushType.AdapterDefault, ActionConfig actionConfig = null)
         {
             //Get out the interactive settings, and make nullchecks
-            InteractiveSettings interactiveSettings = m_robotConfig?.InteractiveSettings ?? new InteractiveSettings();
+            InteractiveSettings interactiveSettings = RobotConfig?.InteractiveSettings ?? new InteractiveSettings();
 
             //Check interactive
             if (!interactiveSettings.IsInteractive)

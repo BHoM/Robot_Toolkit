@@ -44,7 +44,7 @@ namespace BH.Adapter.Robot
         public override IEnumerable<object> Pull(IRequest request, PullType pullType = PullType.AdapterDefault, ActionConfig actionConfig = null)
         {
             //Get out the interactive settings, and make nullchecks
-            InteractiveSettings interactiveSettings = m_robotConfig?.InteractiveSettings ?? new InteractiveSettings();
+            InteractiveSettings interactiveSettings = RobotConfig?.InteractiveSettings ?? new InteractiveSettings();
 
             //Check interactive
             if (!interactiveSettings.IsInteractive)

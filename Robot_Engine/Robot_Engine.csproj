@@ -99,9 +99,7 @@
     <Compile Include="Objects\Comparers\LoadingPanelProperty.cs" />
     <Compile Include="Create\ContourLoad.cs" />
     <Compile Include="Create\DesignGroup.cs" />
-    <Compile Include="Create\AdvancedSettings.cs" />
     <Compile Include="Create\GeometricLineLoad.cs" />
-    <Compile Include="Create\RobotConfig.cs" />
     <Compile Include="Create\DatabaseSettings.cs" />
     <Compile Include="Create\FramingElementDesignProperties.cs" />
     <Compile Include="Compute\UpgradeVersion.cs" />

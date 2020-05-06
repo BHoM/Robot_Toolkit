@@ -126,6 +126,11 @@ namespace BH.Adapter.Robot
                     success = CreateCollection(objects as IEnumerable<Panel>);
                 }
 
+                if (objects.First() is Opening)
+                {
+                    success = CreateCollection(objects as IEnumerable<Opening>);
+                }
+
                 if (typeof(ISurfaceProperty).IsAssignableFrom(objects.First().GetType()))
                 {
                     success = CreateCollection(objects as IEnumerable<ISurfaceProperty>);

@@ -39,7 +39,6 @@ namespace BH.Adapter.Robot
 
         private bool CreateCollection(IEnumerable<FEMesh> fEMeshes)
         {
-            int fMeshFaceIdx = m_RobotApplication.Project.Structure.FiniteElems.FreeNumber;
             foreach (FEMesh fEMesh in fEMeshes)
             {
                 string faceList = "";
@@ -70,6 +69,7 @@ namespace BH.Adapter.Robot
                     }
 
                     FEMeshFace clone = fMeshFace.GetShallowClone() as FEMeshFace;
+                    int fMeshFaceIdx = System.Convert.ToInt32(fMeshFace.CustomData[AdapterIdName]);
                     clone.CustomData[AdapterIdName] = fMeshFaceIdx;
                     fEMesh.Faces[i] = clone;
 

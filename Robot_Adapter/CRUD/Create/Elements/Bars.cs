@@ -50,7 +50,6 @@ namespace BH.Adapter.Robot
                 string compressionBars = "";
                 string axialBars = "";
                 int barNum = 0;
-                int freeNum = m_RobotApplication.Project.Structure.Bars.FreeNumber;
                 Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
 
                 List<Bar> nonCacheBars = new List<Bar>();
@@ -58,8 +57,6 @@ namespace BH.Adapter.Robot
                 {
                     barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterIdName]);
 
-                    //if (bhomBar.SectionProperty != null)
-                    //{
                     string sectionName = "";
                     string materialName = "";
                     if (bhomBar.SectionProperty != null)

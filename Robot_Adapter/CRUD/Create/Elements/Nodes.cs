@@ -44,7 +44,6 @@ namespace BH.Adapter.Robot
                 int nodeNum = 0;
                 IRobotStructureCache rcache = m_RobotApplication.Project.Structure.CreateCache();
                 IRobotSelection nodeSel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
-                int freeNum = m_RobotApplication.Project.Structure.Nodes.FreeNumber;
 
                 foreach (Node node in nodes)
                 {

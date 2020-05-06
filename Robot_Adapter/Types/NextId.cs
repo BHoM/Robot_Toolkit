@@ -89,6 +89,10 @@ namespace BH.Adapter.Robot
                 {
                     index = m_RobotApplication.Project.Structure.Objects.FreeNumber;
                 }
+                if (type == typeof(BH.oM.Structure.Elements.Opening)) //TODO: Check that this is the right rtype of panel
+                {
+                    index = m_RobotApplication.Project.Structure.Objects.FreeNumber;
+                }
                 m_indexDict[type] = index;
             }
             return index;

@@ -64,7 +64,11 @@ namespace BH.Adapter.Robot
             RobotSelection caseSelection = GetCaseSelection(request);
 
             if (request.ObjectIds == null || request.ObjectIds.Count == 0)
+            {
                 nodeSelection.FromText("all");
+                if (request.ResultType == NodeResultType.NodeReaction)
+                    nodeSelection = m_RobotApplication.Project.Structure.Selections.CreatePredefined(IRobotPredefinedSelection.I_PS_NODE_SUPPORTED);
+            }            
             else
                 nodeSelection.FromText(Convert.ToRobotSelectionString(CheckAndGetIds(request.ObjectIds)));
 

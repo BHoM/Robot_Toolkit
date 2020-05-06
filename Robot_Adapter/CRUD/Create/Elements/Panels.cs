@@ -87,14 +87,7 @@ namespace BH.Adapter.Robot
 
                 foreach (Opening opening in panel.Openings)
                 {
-                    List<Edge> openingSubEdges = new List<Edge>();
-                    RobotObjObject rPanelOpening = objServer.Create(System.Convert.ToInt32(opening.CustomData[AdapterIdName]));
-                    opening.CustomData[AdapterIdName] = rPanelOpening.Number.ToString();
-                    rPanelOpening.Main.Geometry = CreateRobotContour(opening.Edges, out openingSubEdges);
-                    rPanelOpening.Initialize();
-                    rPanelOpening.Update();
-                    SetRobotPanelEdgeConstraints(rPanelOpening, openingSubEdges);
-                    rPanelOpenings.AddOne(rPanelOpening.Number);
+                    rPanelOpenings.AddOne(System.Convert.ToInt32(opening.CustomData[AdapterIdName]));
                 }
                 robotPanel.SetHostedObjects(rPanelOpenings);
                 robotPanel.Initialize();
@@ -104,6 +97,26 @@ namespace BH.Adapter.Robot
             return true;
         }
 
+        /***************************************************/
+
+        private bool CreateCollection(IEnumerable<Opening> openings)
+        {
+            m_RobotApplication.Project.Structure.Objects.BeginMultiOperation();
+            RobotObjObjectServer objServer = m_RobotApplication.Project.Structure.Objects;
+
+            foreach (Opening opening in openings)
+            {
+                List<Edge> openingSubEdges = new List<Edge>();
+                RobotObjObject rPanelOpening = objServer.Create(System.Convert.ToInt32(opening.CustomData[AdapterIdName]));
+                opening.CustomData[AdapterIdName] = rPanelOpening.Number.ToString();
+                rPanelOpening.Main.Geometry = CreateRobotContour(opening.Edges, out openingSubEdges);
+                rPanelOpening.Initialize();
+                rPanelOpening.Update();
+                SetRobotPanelEdgeConstraints(rPanelOpening, openingSubEdges);
+            }
+            m_RobotApplication.Project.Structure.Objects.EndMultiOperation();
+            return true;
+        }
         /***************************************************/
 
         private RobotGeoObject CreateRobotContour(List<Edge> edges, out List<Edge> subEdges)
@@ -118,9 +131,10 @@ namespace BH.Adapter.Robot
                     subCurves.Add(curve);
                 }
             }
-            RobotGeoObject contourPanel = Convert.ToRobot(subCurves, m_RobotApplication) as RobotGeoObject;            
+            RobotGeoObject contourPanel = Convert.ToRobot(subCurves, m_RobotApplication) as RobotGeoObject;
             return contourPanel;
         }
+
 
         /***************************************************/
 

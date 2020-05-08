@@ -27,6 +27,9 @@ using BH.oM.Structure.Elements;
 using RobotOM;
 using BH.oM.Adapters.Robot;
 using BH.Engine.Structure;
+using BH.Engine.Robot;
+using BH.oM.Geometry;
+using BH.Engine.Geometry;
 
 namespace BH.Adapter.Robot
 {
@@ -68,12 +71,15 @@ namespace BH.Adapter.Robot
                         if (materialName == null)
                             materialName = bhomBar.SectionProperty.Material.DescriptionOrName();
                     }
+
+                    double orientationAngle = bhomBar.ToRobotOrientationAngle();
+                          
                     rcache.AddBar(barNum,
                                   System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterIdName]),
                                   System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterIdName]),
                                   sectionName,
                                   materialName,
-                                  bhomBar.OrientationAngle * 180 / Math.PI);
+                                  orientationAngle);
 
                     if (bhomBar.Release != null)
                         rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_RELEASE, bhomBar.Release.DescriptionOrName());

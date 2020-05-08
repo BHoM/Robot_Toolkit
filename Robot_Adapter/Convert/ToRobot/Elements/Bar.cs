@@ -22,6 +22,12 @@
 
 using RobotOM;
 using BH.oM.Structure.Elements;
+using BH.oM.Reflection.Attributes;
+using System.ComponentModel;
+using BH.oM.Geometry;
+using BH.Engine.Geometry;
+using BH.Engine.Structure;
+using System;
 
 namespace BH.Adapter.Robot
 {
@@ -45,6 +51,55 @@ namespace BH.Adapter.Robot
             {
                 rBar.TrussBar = true;
             }
+        }
+
+        /***************************************************/
+
+        public static double ToRobotOrientationAngle(this Bar bhomBar)
+        {
+            //Check vertical status
+            bool bhomVertical = bhomBar.IsVertical();
+            bool robotVertical = bhomBar.IsVerticalRobot();
+
+            double orientationAngle;
+            if (bhomVertical == robotVertical)
+            {
+                orientationAngle = bhomBar.OrientationAngle;
+            }
+            else
+            {
+                //BHoM and Robot use slightly different conditions for verticality. Calculate orientation angle that fits Robot
+                Vector normal = bhomBar.Normal();
+                Vector tan = bhomBar.Tangent(true);
+
+                Vector reference;
+
+                if (robotVertical)
+                    reference = tan.CrossProduct(Vector.YAxis);
+                else
+                    reference = Vector.ZAxis;
+
+                orientationAngle = reference.Angle(normal, new Plane { Normal = tan });
+            }
+
+            return orientationAngle * 180 / Math.PI;
+        }
+
+        /***************************************************/
+
+        [Description("Checks whether a bar is deemed vertical in Robot.")]
+        [Input("bar", "The bar to check.")]
+        [Output("isVertical", "Returns true if the bar is deemed vertical in Robot.")]
+        public static bool IsVerticalRobot(this Bar bar)
+        {
+            double length = bar.Length();
+
+            double dx = bar.StartNode.Position.X - bar.EndNode.Position.X;
+            double dy = bar.StartNode.Position.Y - bar.EndNode.Position.Y;
+
+            double projLength = Math.Sqrt(dx * dx + dy * dy);
+
+            return projLength < (length * 0.001);
         }
 
         /***************************************************/

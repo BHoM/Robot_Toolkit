@@ -75,7 +75,7 @@ namespace BH.Adapter.Robot
                 Vector reference;
 
                 if (robotVertical)
-                    reference = tan.CrossProduct(Vector.YAxis);
+                    reference = -Vector.XAxis;
                 else
                     reference = Vector.ZAxis;
 

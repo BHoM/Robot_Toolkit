@@ -28,6 +28,9 @@ using BH.oM.Structure.Elements;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.Constraints;
 using BH.oM.Adapters.Robot;
+using BH.Engine.Structure;
+using BH.oM.Geometry;
+using BH.Engine.Geometry;
 
 
 namespace BH.Adapter.Robot
@@ -145,7 +148,7 @@ namespace BH.Adapter.Robot
             }
 
             bhomBar.SectionProperty = secProp;
-            bhomBar.OrientationAngle = robotBar.Gamma * Math.PI / 180;
+            bhomBar.OrientationAngle = FromRobotOrientationAngle(bhomBar, robotBar.Gamma * Math.PI / 180);
             bhomBar.CustomData[AdapterID] = robotBar.Number;
 
             if (robotBar.TensionCompression == IRobotBarTensionCompression.I_BTC_COMPRESSION_ONLY)
@@ -161,6 +164,47 @@ namespace BH.Adapter.Robot
                 bhomBar.FEAType = BarFEAType.Axial;
             }
             return bhomBar;       
+        }
+
+        /***************************************************/
+
+        public static double FromRobotOrientationAngle(this Bar bhomBar, double robotOrientation)
+        {
+            //Check vertical status
+            bool bhomVertical = bhomBar.IsVertical();
+            bool robotVertical = bhomBar.IsVerticalRobot();
+
+            double orientationAngle;
+            if (bhomVertical == robotVertical)
+            {
+                orientationAngle = robotOrientation;
+            }
+            else
+            {
+                Vector reference;
+                Vector robotNormal;
+                Vector tan = bhomBar.Tangent(true);
+
+                if (robotVertical)
+                {
+                    //Robot is vertical, BHoM is not
+                    robotNormal = -Vector.XAxis;
+                    reference = tan.CrossProduct(Vector.YAxis);
+                }
+                else
+                {
+                    //Robot is not vertical, BHoM is vertical
+                    robotNormal = Vector.ZAxis;
+                    reference = Vector.ZAxis;
+                }
+
+                robotNormal = robotNormal.Rotate(robotOrientation, tan);         
+
+                orientationAngle = reference.Angle(robotNormal, new Plane { Normal = tan });
+
+            }
+
+            return orientationAngle;
         }
 
         /***************************************************/

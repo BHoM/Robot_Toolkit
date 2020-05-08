@@ -189,13 +189,13 @@ namespace BH.Adapter.Robot
                 {
                     //Robot is vertical, BHoM is not
                     robotNormal = -Vector.XAxis;
-                    reference = tan.CrossProduct(Vector.YAxis);
+                    reference = Vector.ZAxis;
                 }
                 else
                 {
                     //Robot is not vertical, BHoM is vertical
                     robotNormal = Vector.ZAxis;
-                    reference = Vector.ZAxis;
+                    reference = tan.CrossProduct(Vector.YAxis);
                 }
 
                 robotNormal = robotNormal.Rotate(robotOrientation, tan);         

@@ -118,7 +118,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Structure_Engine">
-      <HintPath>..\..\BHoM_Engine\Structure_Engine\obj\Debug\Structure_Engine.dll</HintPath>
+      <HintPath>..\..\BHoM_Engine\Build\Structure_Engine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Structure_oM">

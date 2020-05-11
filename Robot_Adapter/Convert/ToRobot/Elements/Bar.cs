@@ -80,6 +80,12 @@ namespace BH.Adapter.Robot
                     reference = Vector.ZAxis;
 
                 orientationAngle = reference.Angle(normal, new Plane { Normal = tan });
+
+                if (robotVertical && tan.Z < 0)
+                {
+                    orientationAngle += Math.PI;
+                    orientationAngle = orientationAngle % (2 * Math.PI);
+                }
             }
 
             return orientationAngle * 180 / Math.PI;

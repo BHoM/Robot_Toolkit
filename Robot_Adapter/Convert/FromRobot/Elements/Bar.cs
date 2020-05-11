@@ -202,6 +202,11 @@ namespace BH.Adapter.Robot
 
                 orientationAngle = reference.Angle(robotNormal, new Plane { Normal = tan });
 
+                if (robotVertical && tan.Z < 0)
+                {
+                    orientationAngle -= Math.PI;
+                    orientationAngle = orientationAngle % (2 * Math.PI);
+                }
             }
 
             return orientationAngle;

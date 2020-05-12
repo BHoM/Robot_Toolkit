@@ -50,8 +50,13 @@ namespace BH.Adapter.Robot
             }
             else
             {
-                Engine.Reflection.Compute.RecordWarning("Robot_Toolkit does currently only suport Isotropic material. No structural properties for material with name " + material.Name + " have been pushed");
-                return;
+                IOrthotropic orthotropic = material as IOrthotropic;
+                materialData.E = orthotropic.YoungsModulus.X;
+                materialData.NU = orthotropic.PoissonsRatio.X;
+                materialData.RO = orthotropic.Density * Engine.Robot.Query.RobotGravityConstant;
+                materialData.LX = orthotropic.ThermalExpansionCoeff.X;
+                materialData.Kirchoff = orthotropic.ShearModulus.X;
+                materialData.DumpCoef = orthotropic.DampingRatio;
             }
         }
 

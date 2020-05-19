@@ -57,6 +57,8 @@ namespace BH.Adapter.Robot
                 materialData.LX = orthotropic.ThermalExpansionCoeff.X;
                 materialData.Kirchoff = orthotropic.ShearModulus.X;
                 materialData.DumpCoef = orthotropic.DampingRatio;
+                string message = "Orthotropical material X-axis property value is pushed to Robot due to Robot material definition. Data pushed is limited to mutural properties between BHoM and Robot.";
+                Engine.Reflection.Compute.RecordWarning(message);
             }
         }
 

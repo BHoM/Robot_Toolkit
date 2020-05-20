@@ -20,6 +20,8 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+
+using System;
 using BH.oM.Physical.Materials;
 using BH.oM.Structure.MaterialFragments;
 using BH.Engine.Structure;
@@ -48,17 +50,36 @@ namespace BH.Adapter.Robot
                 materialData.Kirchoff = isotropic.ShearModulus();
                 materialData.DumpCoef = isotropic.DampingRatio;
             }
+            else if (material is Timber)
+            {
+                Timber timber = material as Timber;
+                materialData.E = timber.YoungsModulus.X;
+                Engine.Reflection.Compute.RecordWarning("Young's modulus in Y and Z axis are ignored due to Robot definition limitation");
+                materialData.E_Trans = Math.Abs((timber.YoungsModulus.Y+timber.YoungsModulus.Z)/2);
+                Engine.Reflection.Compute.RecordWarning("Young transverse modulue (timber) is an average between Y and Z axis due to Robot definition limitation");
+                materialData.RO = timber.Density * Engine.Robot.Query.RobotGravityConstant;
+                materialData.Kirchoff = timber.ShearModulus.X;//Since shear modulus is expressed as shear stress over shear strain, longitudinal value is used as it is likely used for cross section analysis.
+                Engine.Reflection.Compute.RecordWarning("Shear modulus in Y and Z axis are ignored due to Robot definition limitation");
+                materialData.LX = timber.ThermalExpansionCoeff.X;//Value in X axis. Longitudinal expansion for bar element is likely of interets.
+                Engine.Reflection.Compute.RecordWarning("Thermal Expansion Coefficient in Y and Z axis are ignored due to Robot definition limitation");
+                materialData.NU = timber.PoissonsRatio.X;//Poisson ratio in X axis. Longitudinal defomation under axial loading is likely of interests.
+                Engine.Reflection.Compute.RecordWarning("Poisson ratio in Y and Z axis are ignored due to Robot definition limitation");
+                materialData.DumpCoef = timber.DampingRatio;
+
+            }
             else
             {
                 IOrthotropic orthotropic = material as IOrthotropic;
                 materialData.E = orthotropic.YoungsModulus.X;
-                materialData.NU = orthotropic.PoissonsRatio.X;
+                Engine.Reflection.Compute.RecordWarning("Young's modulus in Y and Z axis are ignored due to Robot definition limitation");
+                materialData.NU = orthotropic.PoissonsRatio.X;//Poisson ratio in X axis. Longitudinal defomation under axial loading is likely of interests.
+                Engine.Reflection.Compute.RecordWarning("Poisson ratio in Y and Z axis are ignored due to Robot definition limitation");
                 materialData.RO = orthotropic.Density * Engine.Robot.Query.RobotGravityConstant;
-                materialData.LX = orthotropic.ThermalExpansionCoeff.X;
-                materialData.Kirchoff = orthotropic.ShearModulus.X;
+                materialData.LX = orthotropic.ThermalExpansionCoeff.X;//Value in X axis. Longitudinal expansion for bar element is likely of interets.
+                Engine.Reflection.Compute.RecordWarning("Thermal Expansion Coefficient in Y and Z axis are ignored due to Robot definition limitation");
+                materialData.Kirchoff = orthotropic.ShearModulus.X;//Since shear modulus is expressed as shear stress over shear strain, longitudinal value is used as it is likely used for cross section analysis.
                 materialData.DumpCoef = orthotropic.DampingRatio;
-                string message = "Orthotropical material X-axis property value is pushed to Robot due to Robot material definition. Data pushed is limited to mutural properties between BHoM and Robot.";
-                Engine.Reflection.Compute.RecordWarning(message);
+                materialData.Type = IRobotMaterialType.I_MT_OTHER;
             }
         }
 

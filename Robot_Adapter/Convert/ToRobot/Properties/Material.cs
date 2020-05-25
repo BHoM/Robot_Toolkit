@@ -60,7 +60,7 @@ namespace BH.Adapter.Robot
                 }
                 else{
                     materialData.E_Trans = Math.Abs((timber.YoungsModulus.Y + timber.YoungsModulus.Z) / 2);
-                    Engine.Reflection.Compute.RecordWarning("Due to limitations ib the Naterial model for orthotripic Timber materials in Robot, Young's modulus has been taken as an average bwtween the y and z-component of the vector in the BHoM material.");
+                    Engine.Reflection.Compute.RecordWarning("Due to limitations in the Material model for orthotripic Timber materials in Robot, Young's modulus has been taken as an average bwtween the y and z-component of the vector in the BHoM material.");
                 }
                 materialData.RO = timber.Density * Engine.Robot.Query.RobotGravityConstant;
                 materialData.GMean = Math.Abs((timber.ShearModulus.X+ timber.ShearModulus.Y+ timber.ShearModulus.Z)/3);//Since shear modulus is expressed as shear stress over shear strain, longitudinal value is used as it is likely used for cross section analysis.

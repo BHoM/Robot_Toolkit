@@ -45,11 +45,19 @@ namespace BH.Adapter.Robot
             foreach (Loadcase lCase in loadcases)
             {
                 RobotSimpleCase robotSimpCase = m_RobotApplication.Project.Structure.Cases.Get(System.Convert.ToInt32(lCase.CustomData[AdapterIdName])) as RobotSimpleCase;
+
+                if (robotSimpCase == null)
+                {
+                    Engine.Reflection.Compute.RecordError("Loadcase with number " + lCase.Number + " does not exist in the model and could not be updated.");
+                    continue;
+                }
+
                 int subNature;
                 IRobotCaseNature rNature = Convert.ToRobotLoadcaseNature(lCase, out subNature);
                 robotSimpCase.AnalizeType = IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR;
                 robotSimpCase.Nature = rNature;
                 robotSimpCase.Number = System.Convert.ToInt32(lCase.CustomData[AdapterIdName]);
+                robotSimpCase.Name = lCase.Name;
             }
             return success;
         }

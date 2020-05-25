@@ -44,7 +44,7 @@ namespace BH.Adapter.Robot
             bool success = true;
             foreach (Loadcase lCase in loadcases)
             {
-                RobotSimpleCase robotSimpCase = m_RobotApplication.Project.Structure.Cases.Get(System.Convert.ToInt32(lCase.CustomData[AdapterIdName])) as RobotSimpleCase;
+                RobotSimpleCase robotSimpCase = m_RobotApplication.Project.Structure.Cases.Get(lCase.Number) as RobotSimpleCase;
 
                 if (robotSimpCase == null)
                 {
@@ -56,7 +56,7 @@ namespace BH.Adapter.Robot
                 IRobotCaseNature rNature = Convert.ToRobotLoadcaseNature(lCase, out subNature);
                 robotSimpCase.AnalizeType = IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR;
                 robotSimpCase.Nature = rNature;
-                robotSimpCase.Number = System.Convert.ToInt32(lCase.CustomData[AdapterIdName]);
+                robotSimpCase.Number = lCase.Number;
                 robotSimpCase.Name = lCase.Name;
             }
             return success;

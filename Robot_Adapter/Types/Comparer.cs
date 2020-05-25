@@ -50,7 +50,7 @@ namespace BH.Adapter.Robot
                 {typeof(IMaterialFragment), new NameOrDescriptionComparer() },
                 {typeof(Constraint4DOF), new NameOrDescriptionComparer() },
                 {typeof(Constraint6DOF), new NameOrDescriptionComparer() },
-                {typeof(Loadcase), new NameOrDescriptionComparer() },
+                {typeof(Loadcase), new CaseNumberComaprer() },
                 {typeof(LinkConstraint), new NameOrDescriptionComparer() },
                 {typeof(ISurfaceProperty), new NameOrDescriptionComparer() },
                 {typeof(BarRelease), new NameOrDescriptionComparer() }

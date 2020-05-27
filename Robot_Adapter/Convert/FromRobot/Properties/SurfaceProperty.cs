@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using BH.oM.Structure.SurfaceProperties;
 using BH.Engine.Structure;
+using BH.oM.Structure.Fragments;
 
 namespace BH.Adapter.Robot
 {
@@ -81,7 +82,7 @@ namespace BH.Adapter.Robot
                                 BHoMProperty = new ConstantThickness { Name = robotLabelName, Thickness = orthoData.H, Material = mat };
                                 double n1 = orthoData.N1;
                                 double n2 = orthoData.N2;
-                                BHoMProperty.ApplyModifiers(n1, Math.Sqrt(n1 + n2), n2, n1, Math.Sqrt(n1 + n2), n2, n1, n2);
+                                BHoMProperty = BHoMProperty.ApplyModifiers(n1, Math.Sqrt(n1 + n2), n2, n1, Math.Sqrt(n1 + n2), n2, n1, n2);
                                 break;
                             case IRobotThicknessOrthoType.I_TOT_UNIDIR_BOX_FLOOR:
                             case IRobotThicknessOrthoType.I_TOT_SLAB_ON_TRAPEZOID_PLATE:
@@ -94,7 +95,20 @@ namespace BH.Adapter.Robot
                                 break;
                             default:
                                 BHoMProperty = new ConstantThickness { Name = robotLabelName, Thickness = orthoData.H, Material = mat };
-                                BHoMProperty.ApplyModifiers(orthoData.HA, orthoData.H0, orthoData.HB, orthoData.HC, orthoData.A, orthoData.A1, orthoData.A2, orthoData.B, 1, orthoData.B1);
+                                SurfacePropertyModifier modifier = new SurfacePropertyModifier
+                                {
+                                    FXX = orthoData.HA,
+                                    FXY = orthoData.HB,
+                                    FYY = orthoData.H0,
+                                    MXX = orthoData.HC,
+                                    MXY = orthoData.A,
+                                    MYY = orthoData.A1,
+                                    VXZ = orthoData.A2,
+                                    VYZ = orthoData.B,
+                                    Mass = 1,   //Cant extract mass via the API
+                                    Weight = orthoData.B1
+                                };
+                                BHoMProperty.Fragments.Add(modifier);
                                 break;
                         }
                         break;

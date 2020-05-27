@@ -27,6 +27,8 @@ using System;
 using System.Collections.Generic;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.SurfaceProperties;
+using BH.oM.Structure.Fragments;
+using BH.Engine.Base;
 
 namespace BH.Adapter.Robot
 {
@@ -53,22 +55,25 @@ namespace BH.Adapter.Robot
                 if (property is ConstantThickness)
                 {
                     ConstantThickness constThickness = property as ConstantThickness;
-                    if (BH.Engine.Structure.Query.HasModifiers(property))
+                    SurfacePropertyModifier modifier = property.FindFragment<SurfacePropertyModifier>();
+                    if (modifier != null)
                     {
                         thicknessData.ThicknessType = IRobotThicknessType.I_TT_ORTHOTROPIC;
                         orthoData = thicknessData.Data;
-                        orthoData.Type = (IRobotThicknessOrthoType)14;
+                        orthoData.Type = IRobotThicknessOrthoType.I_TOT_CONST_THICK_WITH_REDUCED_STIFFNESS;
                         orthoData.H = constThickness.Thickness;
-                        double[] modifiers = BH.Engine.Structure.Query.Modifiers(constThickness);
-                        orthoData.HA = modifiers[(int)PanelModifier.f11];
-                        orthoData.H0 = modifiers[(int)PanelModifier.f12];
-                        orthoData.HB = modifiers[(int)PanelModifier.f22];
-                        orthoData.HC = modifiers[(int)PanelModifier.m11];
-                        orthoData.A = modifiers[(int)PanelModifier.m12];
-                        orthoData.A1 = modifiers[(int)PanelModifier.m22];
-                        orthoData.A2 = modifiers[(int)PanelModifier.v13];
-                        orthoData.B = modifiers[(int)PanelModifier.v23];
-                        orthoData.B1 = modifiers[(int)PanelModifier.Weight];
+                        orthoData.HA = modifier.FXX;
+                        orthoData.H0 = modifier.FYY;
+                        orthoData.HB = modifier.FXY;
+                        orthoData.HC = modifier.MXX;
+                        orthoData.A = modifier.MXY;
+                        orthoData.A1 = modifier.MYY;
+                        orthoData.A2 = modifier.VXZ;
+                        orthoData.B = modifier.VYZ;
+                        orthoData.B1 = modifier.Weight;
+
+                        if (modifier.Mass != 1)
+                            Engine.Reflection.Compute.RecordNote("Can't apply modifier for mass for SurfaceProperties via the Robot API.");
                     }
                     else
                     {

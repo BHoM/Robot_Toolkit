@@ -107,6 +107,7 @@ namespace BH.Adapter.Robot
                     orthoData.HA = ribbed.TotalDepth;
                     orthoData.A = ribbed.Spacing;
                     orthoData.A1 = ribbed.StemWidth;
+                    orthoData.DirType = ribbed.Direction == PanelDirection.X ? IRobotThicknessOrthoDirType.I_TODT_DIR_X : IRobotThicknessOrthoDirType.I_TODT_DIR_Y;
                 }
             }
             return name;          

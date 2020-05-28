@@ -87,7 +87,7 @@ namespace BH.Adapter.Robot
                     Waffle waffle = property as Waffle;
                     thicknessData.ThicknessType = IRobotThicknessType.I_TT_ORTHOTROPIC;
                     orthoData = thicknessData.Data;
-                    orthoData.Type = (IRobotThicknessOrthoType)14;
+                    orthoData.Type = IRobotThicknessOrthoType.I_TOT_ONE_SIDED_BIDIR_RIBS;
                     orthoData.H = waffle.Thickness;
                     orthoData.HA = waffle.TotalDepthX;
                     orthoData.HB = waffle.TotalDepthY;
@@ -102,7 +102,7 @@ namespace BH.Adapter.Robot
                     Ribbed ribbed = property as Ribbed;
                     thicknessData.ThicknessType = IRobotThicknessType.I_TT_ORTHOTROPIC;
                     orthoData = thicknessData.Data;
-                    orthoData.Type = (IRobotThicknessOrthoType)14;
+                    orthoData.Type = IRobotThicknessOrthoType.I_TOT_ONE_SIDED_UNIDIR_RIBS;
                     orthoData.H = ribbed.Thickness;
                     orthoData.HA = ribbed.TotalDepth;
                     orthoData.A = ribbed.Spacing;

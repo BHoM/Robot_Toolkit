@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BH.oM.Reflection.Attributes;
 
 namespace BH.Engine.Adapters.Robot
 {
@@ -34,6 +35,7 @@ namespace BH.Engine.Adapters.Robot
         /****             Public Methods                ****/
         /***************************************************/
 
+        [PreviousVersion("3.2", "BH.Engine.Robot.Query.ToDictionaryDistinctCheck(System.Collections.Generic.IEnumerable<BH.Engine.Robot.T>, System.Func<BH.Engine.Robot.T, System.String>)")]
         public static Dictionary<string, T> ToDictionaryDistinctCheck<T>(this IEnumerable<T> list, Func<T, string> selector)
         {
             var group = list.GroupBy(selector);

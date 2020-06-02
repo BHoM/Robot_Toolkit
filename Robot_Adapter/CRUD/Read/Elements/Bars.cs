@@ -36,7 +36,7 @@ using BH.oM.Structure.Design;
 using BH.oM.Adapters.Robot;
 using BHE = BH.Engine.Adapters.Robot;
 using BH.Engine.Base.Objects;
-using BH.Engine.Robot;
+using BH.Engine.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {

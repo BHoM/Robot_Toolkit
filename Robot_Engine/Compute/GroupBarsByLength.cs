@@ -36,6 +36,7 @@ namespace BH.Engine.Adapters.Robot
         /**** Public Methods                            ****/
         /***************************************************/
 
+        [PreviousVersion("3.2", "BH.Engine.External.Robot.Compute.GroupBarsByLength(System.Collections.Generic.IEnumerable<BH.oM.Structure.Elements.Bar>, System.Double)")]
         [Description("Groups bars by length, within a tolerance.")]
         [Input("bars", "The bars to group.")]
         [Input("tolerance", "Acceptable difference in length for each group")]

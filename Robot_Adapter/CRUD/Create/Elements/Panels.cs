@@ -29,7 +29,6 @@ using RobotOM;
 using BHEG = BH.Engine.Geometry;
 using BH.Engine.Structure;
 using BH.oM.Structure.Constraints;
-using BH.Engine.Robot;
 using BH.Engine.Spatial;
 using BH.Engine.Geometry;
 using System;

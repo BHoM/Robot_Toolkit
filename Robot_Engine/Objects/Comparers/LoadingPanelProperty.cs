@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System;
 using BH.oM.Structure.SurfaceProperties;
 
-namespace BH.Engine.Robot
+namespace BH.Engine.Adapters.Robot
 {
     public class LoadingPanelPropertyComparer : IEqualityComparer<LoadingPanelProperty>
     {

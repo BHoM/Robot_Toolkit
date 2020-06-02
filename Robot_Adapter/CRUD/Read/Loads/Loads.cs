@@ -31,7 +31,7 @@ using BH.oM.Geometry;
 using BH.oM.Base;
 using BH.oM.Structure.Loads;
 using BH.oM.Adapters.Robot;
-using BH.Engine.Robot;
+using BH.Engine.Adapters.Robot;
 
 
 namespace BH.Adapter.Robot

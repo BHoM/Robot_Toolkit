@@ -26,7 +26,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BH.Engine.Robot
+namespace BH.Engine.Adapters.Robot
 {
     public static partial class Query
     {

@@ -28,7 +28,7 @@ using BH.oM.Reflection.Attributes;
 using BH.oM.Structure.Elements;
 using BH.Engine.Structure;
 
-namespace BH.Engine.External.Robot
+namespace BH.Engine.Adapters.Robot
 {
     public static partial class Compute
     {

@@ -45,7 +45,7 @@ namespace BH.Adapter.Robot
                 IIsotropic isotropic = material as IIsotropic;
                 materialData.E = isotropic.YoungsModulus;
                 materialData.NU = isotropic.PoissonsRatio;
-                materialData.RO = isotropic.Density * Engine.Robot.Query.RobotGravityConstant;
+                materialData.RO = isotropic.Density * Engine.Adapters.Robot.Query.RobotGravityConstant;
                 materialData.LX = isotropic.ThermalExpansionCoeff;
                 materialData.Kirchoff = isotropic.ShearModulus();
                 materialData.DumpCoef = isotropic.DampingRatio;
@@ -62,7 +62,7 @@ namespace BH.Adapter.Robot
                     materialData.E_Trans = Math.Abs((timber.YoungsModulus.Y + timber.YoungsModulus.Z) / 2);
                     Engine.Reflection.Compute.RecordWarning("Due to limitations in the Material model for orthotripic Timber materials in Robot, Young's modulus has been taken as an average bwtween the y and z-component of the vector in the BHoM material.");
                 }
-                materialData.RO = timber.Density * Engine.Robot.Query.RobotGravityConstant;
+                materialData.RO = timber.Density * Engine.Adapters.Robot.Query.RobotGravityConstant;
                 materialData.GMean = Math.Abs((timber.ShearModulus.X+ timber.ShearModulus.Y+ timber.ShearModulus.Z)/3);//Since shear modulus is expressed as shear stress over shear strain, longitudinal value is used as it is likely used for cross section analysis.
                 materialData.LX = timber.ThermalExpansionCoeff.X;//Value in X axis. Longitudinal expansion for bar element is likely of interets.
                 materialData.DumpCoef = timber.DampingRatio;
@@ -78,7 +78,7 @@ namespace BH.Adapter.Robot
                 IOrthotropic orthotropic = material as IOrthotropic;
                 materialData.E = orthotropic.YoungsModulus.X;
                 materialData.NU = orthotropic.PoissonsRatio.X;//Poisson ratio in X axis. Longitudinal defomation under axial loading is likely of interests.
-                materialData.RO = orthotropic.Density * Engine.Robot.Query.RobotGravityConstant;
+                materialData.RO = orthotropic.Density * Engine.Adapters.Robot.Query.RobotGravityConstant;
                 materialData.LX = orthotropic.ThermalExpansionCoeff.X;//Value in X axis. Longitudinal expansion for bar element is likely of interets.
                 materialData.Kirchoff = orthotropic.ShearModulus.X;//Since shear modulus is expressed as shear stress over shear strain, longitudinal value is used as it is likely used for cross section analysis.
                 materialData.DumpCoef = orthotropic.DampingRatio;

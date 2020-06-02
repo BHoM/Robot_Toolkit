@@ -37,7 +37,6 @@ using BH.oM.Structure.MaterialFragments;
 using BH.oM.Data.Requests;
 using System.Linq;
 using BH.oM.Adapter;
-using BH.oM.Structure.MaterialFragments;
 
 namespace BH.Adapter.Robot
 {

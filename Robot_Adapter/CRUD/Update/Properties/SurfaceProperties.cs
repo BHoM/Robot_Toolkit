@@ -20,12 +20,10 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Engine.Robot;
-using BH.oM.Structure.MaterialFragments;
+
+
 using BH.oM.Structure.SurfaceProperties;
-using RobotOM;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace BH.Adapter.Robot
 {

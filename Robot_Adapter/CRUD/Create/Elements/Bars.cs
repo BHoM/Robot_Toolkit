@@ -27,7 +27,6 @@ using BH.oM.Structure.Elements;
 using RobotOM;
 using BH.oM.Adapters.Robot;
 using BH.Engine.Structure;
-using BH.Engine.Robot;
 using BH.oM.Geometry;
 using BH.Engine.Geometry;
 

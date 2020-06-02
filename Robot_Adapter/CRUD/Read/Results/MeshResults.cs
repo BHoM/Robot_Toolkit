@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using BH.oM.Structure.Results;
 using RobotOM;
 using System.Collections;
-using BH.Engine.Robot;
 using BH.oM.Geometry.CoordinateSystem;
 using System.Linq;
 using BH.oM.Data.Requests;

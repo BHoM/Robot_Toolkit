@@ -28,7 +28,7 @@ using BH.oM.Geometry.CoordinateSystem;
 using System.Linq;
 using BH.oM.Data.Requests;
 using System.Collections.ObjectModel;
-using BH.oM.Common;
+using BH.oM.Analytical.Results;
 using BH.oM.Structure.Requests;
 using BH.oM.Geometry;
 using BH.Engine.Geometry;

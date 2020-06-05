@@ -32,7 +32,7 @@ using BH.oM.Base;
 using BH.oM.Physical.Materials;
 using BH.oM.Adapters.Robot;
 using BH.oM.Structure.Results;
-using BH.oM.Common;
+using BH.oM.Analytical.Results;
 using BH.oM.Structure.MaterialFragments;
 using BH.oM.Data.Requests;
 using System.Linq;

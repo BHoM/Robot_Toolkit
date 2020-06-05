@@ -27,7 +27,6 @@ using BH.oM.Structure.Results;
 using BH.oM.Structure.Requests;
 using BH.oM.Data.Requests;
 using RobotOM;
-using BH.oM.Common;
 using System;
 using System.Collections;
 

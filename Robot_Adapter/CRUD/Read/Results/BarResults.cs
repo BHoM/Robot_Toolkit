@@ -27,7 +27,7 @@ using BH.oM.Structure.Results;
 using BH.oM.Structure.Requests;
 using BH.oM.Structure.Elements;
 using RobotOM;
-using BH.oM.Common;
+using BH.oM.Analytical.Results;
 using BH.oM.Geometry;
 using BH.oM.Geometry.CoordinateSystem;
 using BH.Engine.Geometry;

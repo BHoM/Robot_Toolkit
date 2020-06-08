@@ -87,11 +87,12 @@ namespace BH.Adapter.Robot
                     RobotResultRow row = rowSet.CurrentRow;
                     int idCase = (int)row.GetParam(IRobotResultParamType.I_RPT_LOAD_CASE);
                     int idNode = (int)row.GetParam(IRobotResultParamType.I_RPT_NODE);
+                    int mode = -1; //TODO: extract mode number
 
                     switch (request.ResultType)
                     {
                         case GlobalResultType.Reactions:
-                            globalResults.Add(GetGlobalReaction(row, idCase));
+                            globalResults.Add(GetGlobalReaction(row, idCase, mode));
                             break;
                     }
 
@@ -105,7 +106,7 @@ namespace BH.Adapter.Robot
         /**** Private Methods                           ****/
         /***************************************************/
 
-        private GlobalReactions GetGlobalReaction(RobotResultRow row, int idCase)
+        private GlobalReactions GetGlobalReaction(RobotResultRow row, int idCase, int mode)
         {
             double fx = TryGetValue(row, 121);
             double fy = TryGetValue(row, 122);
@@ -115,16 +116,7 @@ namespace BH.Adapter.Robot
             double my = TryGetValue(row, 125);
             double mz = TryGetValue(row, 126);
 
-            return new GlobalReactions
-            {
-                ResultCase = idCase,
-                FX = fx,
-                FY = fy,
-                FZ = fz,
-                MX = mx,
-                MY = my,
-                MZ = mz
-            };
+            return new GlobalReactions(0, idCase, mode, 0, fx, fy, fz, mx, my, mz);
         }
 
         /***************************************************/

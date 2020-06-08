@@ -91,14 +91,15 @@ namespace BH.Adapter.Robot
                     RobotResultRow row = rowSet.CurrentRow;
                     int idCase = (int)row.GetParam(IRobotResultParamType.I_RPT_LOAD_CASE);
                     int idNode = (int)row.GetParam(IRobotResultParamType.I_RPT_NODE);
+                    int mode = -1; //TODO: extract mode number
 
                     switch (request.ResultType)
                     {
                         case NodeResultType.NodeReaction:
-                            nodeResults.Add(GetNodeReaction(row, idCase, idNode));
+                            nodeResults.Add(GetNodeReaction(row, idCase, idNode, mode));
                             break;
                         case NodeResultType.NodeDisplacement:
-                            nodeResults.Add(GetNodeDisplacement(row, idCase, idNode));
+                            nodeResults.Add(GetNodeDisplacement(row, idCase, idNode, mode));
                             break;
                     }
 
@@ -112,7 +113,7 @@ namespace BH.Adapter.Robot
         /**** Private Methods                           ****/
         /***************************************************/
 
-        private NodeDisplacement GetNodeDisplacement(RobotResultRow row, int idCase, int idNode)
+        private NodeDisplacement GetNodeDisplacement(RobotResultRow row, int idCase, int idNode, int mode)
         {
             double ux = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UX);
             double uy = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UY);
@@ -122,22 +123,13 @@ namespace BH.Adapter.Robot
             double ry = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_RY);
             double rz = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_RZ);
 
-            return new NodeDisplacement
-            {
-                ResultCase = idCase,
-                ObjectId = idNode,
-                UX = ux,
-                UY = uy,
-                UZ = uz,
-                RX = rx,
-                RY = ry,
-                RZ = rz
-            };
+            return new NodeDisplacement(idNode, idCase, mode, 0, oM.Geometry.Basis.XY, ux, uy, uz, rx, ry, rz);
+
         }
 
         /***************************************************/
 
-        private NodeReaction GetNodeReaction(RobotResultRow row, int idCase, int idNode)
+        private NodeReaction GetNodeReaction(RobotResultRow row, int idCase, int idNode, int mode)
         {
             double fx = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_REACTION_FX);
             double fy = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_REACTION_FY);
@@ -147,17 +139,7 @@ namespace BH.Adapter.Robot
             double my = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_REACTION_MY);
             double mz = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_REACTION_MZ);
 
-            return new NodeReaction
-            {
-                ResultCase = idCase,
-                ObjectId = idNode,
-                FX = fx,
-                FY = fy,
-                FZ = fz,
-                MX = mx,
-                MY = my,
-                MZ = mz
-            };
+            return new NodeReaction(idNode, idCase, mode, 0, oM.Geometry.Basis.XY, fx, fy, fz, mx, my, mz);
         }
 
         /***************************************************/

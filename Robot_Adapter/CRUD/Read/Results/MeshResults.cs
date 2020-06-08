@@ -205,19 +205,21 @@ namespace BH.Adapter.Robot
                             if (queryParams.IsParamSet(IRobotResultParamType.I_RPT_ELEMENT))
                                 idFiniteElement = System.Convert.ToInt32(row.GetParam(IRobotResultParamType.I_RPT_ELEMENT));
 
+                        int mode = -1; //TODO: extract mode number
+
                         switch (request.ResultType)
                         {
                             case MeshResultType.Stresses:
-                                meshResults.Add(GetMeshStress(row, idPanel, idNode, idFiniteElement, idCase, layer, layerPosition, smoothing, orientation));
+                                meshResults.Add(GetMeshStress(row, idPanel, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, orientation));
                                 break;
                             case MeshResultType.Forces:
-                                meshResults.Add(GetMeshForce(row, idPanel, idNode, idFiniteElement, idCase, layer, layerPosition, smoothing, orientation));
+                                meshResults.Add(GetMeshForce(row, idPanel, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, orientation));
                                 break;
                             case MeshResultType.VonMises:
-                                meshResults.Add(GetMeshVonMises(row, idPanel, idNode, idFiniteElement, idCase, layer, layerPosition, smoothing, orientation));
+                                meshResults.Add(GetMeshVonMises(row, idPanel, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, orientation));
                                 break;
                             case MeshResultType.Displacements:
-                                meshResults.Add(GetMeshDisplacement(row, idPanel, idNode, idFiniteElement, idCase, layer, layerPosition, smoothing, (Basis)globalXY));
+                                meshResults.Add(GetMeshDisplacement(row, idPanel, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, (Basis)globalXY));
                                 break;
 
                         }
@@ -225,13 +227,14 @@ namespace BH.Adapter.Robot
                     }
                 }
 
-                foreach (var resultByCase in meshResults.GroupBy(x => new { x.ResultCase, x.TimeStep }))
+                foreach (var resultByCase in meshResults.GroupBy(x => new { x.ResultCase, x.TimeStep, x.ModeNumber }))
                 {
                     System.IComparable loadCase = resultByCase.Key.ResultCase;
                     double timeStep = resultByCase.Key.TimeStep;
+                    int modeNumber = resultByCase.Key.ModeNumber;
                     List<MeshElementResult> resultList = resultByCase.ToList();
                     resultList.Sort();
-                    MeshResult meshResult = new MeshResult(panel.CustomData[AdapterIdName].ToString(), loadCase, timeStep, layer, layerPosition, smoothing, new ReadOnlyCollection<MeshElementResult>(resultList));
+                    MeshResult meshResult = new MeshResult(panel.CustomData[AdapterIdName].ToString(), loadCase, modeNumber, timeStep, layer, layerPosition, smoothing, new ReadOnlyCollection<MeshElementResult>(resultList));
                     meshResultsCollection.Add(meshResult);
                 }
             }
@@ -243,12 +246,13 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
 
-        private MeshStress GetMeshStress(RobotResultRow row, int idPanel, int idNode, int idFiniteElement, int idCase, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
+        private MeshStress GetMeshStress(RobotResultRow row, int idPanel, int idNode, int idFiniteElement, int idCase, int mode, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
         {
             return new MeshStress(idPanel,
                                   idNode,
                                   idFiniteElement,
                                   idCase,
+                                  mode,
                                   0,
                                   layer,
                                   layerPosition,
@@ -267,12 +271,13 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private MeshForce GetMeshForce(RobotResultRow row, int idPanel, int idNode, int idFiniteElement, int idCase, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
+        private MeshForce GetMeshForce(RobotResultRow row, int idPanel, int idNode, int idFiniteElement, int idCase, int mode, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
         {
             return new MeshForce(idPanel,
                                 idNode,
                                 idFiniteElement,
                                 idCase,
+                                mode,
                                 0,
                                 layer,
                                 layerPosition,
@@ -291,12 +296,13 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private MeshVonMises GetMeshVonMises(RobotResultRow row, int idPanel, int idNode, int idFiniteElement, int idCase, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
+        private MeshVonMises GetMeshVonMises(RobotResultRow row, int idPanel, int idNode, int idFiniteElement, int idCase, int mode, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
         {
             return new MeshVonMises(idPanel,
                                     idNode,
                                     idFiniteElement,
                                     idCase,
+                                    mode,
                                     0,
                                     layer,
                                     layerPosition,
@@ -310,7 +316,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private MeshDisplacement GetMeshDisplacement(RobotResultRow row, int idPanel, int idNode, int idFiniteElement, int idCase, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
+        private MeshDisplacement GetMeshDisplacement(RobotResultRow row, int idPanel, int idNode, int idFiniteElement, int idCase, int mode, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
         {
 
             Vector u = new Vector
@@ -324,6 +330,7 @@ namespace BH.Adapter.Robot
                                         idNode,
                                         idFiniteElement,
                                         idCase,
+                                        mode,
                                         0,
                                         layer,
                                         layerPosition,

@@ -81,6 +81,7 @@ namespace BH.Adapter.Robot
             queryParams.Selection.Set(IRobotObjectType.I_OT_CASE, caseSelection);
             queryParams.Selection.Set(IRobotObjectType.I_OT_BAR, barSelection);
             queryParams.SetParam(IRobotResultParamType.I_RPT_BAR_DIV_COUNT, request.Divisions);
+            
 
             RobotResultRowSet rowSet = new RobotResultRowSet();
 
@@ -110,17 +111,18 @@ namespace BH.Adapter.Robot
                     int idPoint = (int)row.GetParam(IRobotResultParamType.I_RPT_BAR_DIV_POINT);
                     int division = (int)row.GetParam(IRobotResultParamType.I_RPT_BAR_DIV_COUNT);
                     double position = (1 / (System.Convert.ToDouble(division) - 1)) * (System.Convert.ToDouble(idPoint) - 1);
+                    int mode = -1; //TODO: extract mode number
 
                     switch (request.ResultType)
                     {
                         case BarResultType.BarForce:
-                            barResults.Add(GetBarForce(row, idCase, idBar, division, position));
+                            barResults.Add(GetBarForce(row, idCase, idBar, division, position, mode));
                             break;
                         case BarResultType.BarDeformation:
-                            barResults.Add(GetBarDeformation(row, idCase, idBar, division, position));
+                            barResults.Add(GetBarDeformation(row, idCase, idBar, division, position, mode));
                             break;
                         case BarResultType.BarStress:
-                            barResults.Add(GetBarStress(row, idCase, idBar, division, position));
+                            barResults.Add(GetBarStress(row, idCase, idBar, division, position, mode));
                             break;
                         case BarResultType.BarDisplacement:
                             TransformMatrix localToGlobal;
@@ -134,7 +136,7 @@ namespace BH.Adapter.Robot
                                 transformations[idBar] = localToGlobal;
                             }
                              
-                            barResults.Add(GetBarDisplacement(row, idCase, idBar, division, position, localToGlobal));
+                            barResults.Add(GetBarDisplacement(row, idCase, idBar, division, position, mode, localToGlobal));
                             break;
                     }
 
@@ -151,7 +153,7 @@ namespace BH.Adapter.Robot
         /***************************************************/
         
 
-        private BarForce GetBarForce(RobotResultRow row, int idCase, int idBar, int divisions, double position)
+        private BarForce GetBarForce(RobotResultRow row, int idCase, int idBar, int divisions, double position, int mode)
         {
             double fx = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FX);
             double fy = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FY);
@@ -161,24 +163,12 @@ namespace BH.Adapter.Robot
             double my = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MY);
             double mz = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MZ);
 
-            return new BarForce
-            {
-                ResultCase = idCase,
-                ObjectId = idBar,
-                Divisions = divisions,
-                Position = position,
-                FX = fx * -1,
-                FY = fy * -1,
-                FZ = fz * -1,
-                MX = mx * -1,
-                MY = my * -1,
-                MZ = mz
-            };
+            return new BarForce(idBar, idCase, mode, 0, position, divisions, fx, fy, fz, mx, my, mz);
         }
 
         /***************************************************/
 
-        private BarDisplacement GetBarDisplacement(RobotResultRow row, int idCase, int idBar, int divisions, double position, TransformMatrix localToGlobal)
+        private BarDisplacement GetBarDisplacement(RobotResultRow row, int idCase, int idBar, int divisions, double position, int mode, TransformMatrix localToGlobal)
         {
             double ux = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_BAR_UX);
             double uy = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_BAR_UY);
@@ -194,44 +184,23 @@ namespace BH.Adapter.Robot
             u = u.Transform(localToGlobal);
             r = r.Transform(localToGlobal);
 
-            return new BarDisplacement
-            {
-                ResultCase = idCase,
-                ObjectId = idBar,
-                Divisions = divisions,
-                Position = position,
-                UX = u.X,
-                UY = u.Y,
-                UZ = u.Z,
-                RX = r.X,
-                RY = r.Y,
-                RZ = r.Z
-            };
+            return new BarDisplacement(idBar, idCase, mode, 0, position, divisions, u.X, u.Y, u.Z, r.X, r.Y, r.Z);
         }
 
         /***************************************************/
 
-        private BarDeformation GetBarDeformation(RobotResultRow row, int idCase, int idBar, int divisions, double position)
+        private BarDeformation GetBarDeformation(RobotResultRow row, int idCase, int idBar, int divisions, double position, int mode)
         {
             double ux = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DEFLECTION_UX);
             double uy = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DEFLECTION_UY);
             double uz = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DEFLECTION_UZ);
 
-            return new BarDeformation
-            {
-                ResultCase = idCase,
-                ObjectId = idBar,
-                Divisions = divisions,
-                Position = position,
-                UX = ux,
-                UY = uy,
-                UZ = uz,
-            };
+            return new BarDeformation(idBar, idCase, mode, 0, position, divisions, ux, uy, uz, 0, 0, 0);
         }
 
         /***************************************************/
 
-        private BarStress GetBarStress(RobotResultRow row, int idCase, int idBar, int divisions, double position)
+        private BarStress GetBarStress(RobotResultRow row, int idCase, int idBar, int divisions, double position, int mode)
         {
             double fxSx = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_FX_SX);
             double sMax = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_SMAX);
@@ -244,22 +213,7 @@ namespace BH.Adapter.Robot
             double ty = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_TY);
             double tz = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_STRESS_BAR_TZ);
 
-            return new BarStress
-            {
-                ResultCase = idCase,
-                ObjectId = idBar,
-                Divisions = divisions,
-                Position = position,
-                Axial = fxSx,
-                BendingY_Top = sMaxMy,
-                BendingY_Bot = sMinMy,
-                BendingZ_Top = sMaxMz,
-                BendingZ_Bot = sMinMz,
-                CombAxialBendingNeg = sMin,
-                CombAxialBendingPos = sMax,
-                ShearY = ty,
-                ShearZ = tz
-            };
+            return new BarStress(idBar, idCase, mode, 0, position, divisions, fxSx, ty, tz, sMaxMy, sMinMy, sMaxMz, sMinMz, sMax, sMin);
         }
 
         /***************************************************/

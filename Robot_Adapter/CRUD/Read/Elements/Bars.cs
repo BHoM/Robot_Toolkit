@@ -208,13 +208,12 @@ namespace BH.Adapter.Robot
 
                     Node startNode = null; bhomNodes.TryGetValue(nod1.ToString(), out startNode);
                     Node endNode = null; bhomNodes.TryGetValue(nod2.ToString(), out endNode);
-                    Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode, Name = bar_num.ToString() };
+                    Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode };
 
                     double gamma = TryGetValue(result_row, elemGamma_id);
 
                     bhomBar.SectionProperty = null;
-                    bhomBar.OrientationAngle = gamma;
-                    bhomBar.Name = bar_num.ToString();
+                    bhomBar.OrientationAngle = gamma;                   
 
                     bhomBar.CustomData[AdapterIdName] = bar_num.ToString();
                     bhomBars.Add(bhomBar);

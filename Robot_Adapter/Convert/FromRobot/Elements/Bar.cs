@@ -147,6 +147,9 @@ namespace BH.Adapter.Robot
                     BH.Engine.Reflection.Compute.RecordEvent("Bars with auto-generated releases will not have releases", oM.Reflection.Debugging.EventType.Warning);
             }
 
+            if (robotBar.Name != null || robotBar.Name != "")
+                bhomBar.Name = robotBar.Name;
+
             bhomBar.SectionProperty = secProp;
             bhomBar.OrientationAngle = FromRobotOrientationAngle(bhomBar, robotBar.Gamma * Math.PI / 180);
             bhomBar.CustomData[AdapterID] = robotBar.Number;

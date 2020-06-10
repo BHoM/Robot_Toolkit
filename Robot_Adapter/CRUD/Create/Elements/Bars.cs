@@ -61,7 +61,6 @@ namespace BH.Adapter.Robot
 
                     string sectionName = "";
                     string materialName = "";
-                    string barName = "";
                     if (bhomBar.SectionProperty != null)
                     {
                         sectionName = Convert.Match(m_dbSecPropNames, bhomBar.SectionProperty);
@@ -81,8 +80,8 @@ namespace BH.Adapter.Robot
                                   materialName,
                                   orientationAngle);
 
-                    if (barName != "")
-                        rcache.SetBarName(barNum, barName);
+                    if (bhomBar.Name != null || bhomBar.Name != "")
+                        rcache.SetBarName(barNum, bhomBar.Name);
 
                     if (bhomBar.Release != null)
                         rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_RELEASE, bhomBar.Release.DescriptionOrName());

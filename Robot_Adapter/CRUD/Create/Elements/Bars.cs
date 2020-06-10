@@ -80,7 +80,7 @@ namespace BH.Adapter.Robot
                                   materialName,
                                   orientationAngle);
 
-                    if (bhomBar.Name != null || bhomBar.Name != "")
+                    if (!string.IsNullOrWhiteSpace(bhomBar.Name))
                         rcache.SetBarName(barNum, bhomBar.Name);
 
                     if (bhomBar.Release != null)

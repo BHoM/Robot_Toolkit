@@ -147,7 +147,7 @@ namespace BH.Adapter.Robot
                     BH.Engine.Reflection.Compute.RecordEvent("Bars with auto-generated releases will not have releases", oM.Reflection.Debugging.EventType.Warning);
             }
 
-            if (robotBar.Name != null || robotBar.Name != "")
+            if (!string.IsNullOrWhiteSpace(robotBar.Name))
                 bhomBar.Name = robotBar.Name;
 
             bhomBar.SectionProperty = secProp;

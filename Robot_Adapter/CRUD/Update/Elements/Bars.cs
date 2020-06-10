@@ -63,6 +63,9 @@ namespace BH.Adapter.Robot
                 robotBar.StartNode = System.Convert.ToInt32(bar.StartNode.CustomData[AdapterIdName]);
                 robotBar.EndNode = System.Convert.ToInt32(bar.EndNode.CustomData[AdapterIdName]);
                 barTags[System.Convert.ToInt32(bar.CustomData[AdapterIdName])] = bar.Tags;
+
+                if (bar.Name != null || bar.Name != "")
+                    robotBar.Name.Replace(robotBar.Name, bar.Name);
                 
                 if (bar.SectionProperty != null && !string.IsNullOrWhiteSpace(bar.SectionProperty.Name))
                     robotBar.SetSection(bar.SectionProperty.Name, false);

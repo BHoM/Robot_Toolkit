@@ -28,6 +28,7 @@ using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Structure.Constraints;
 using BH.oM.Structure.Loads;
+using BH.oM.Structure.Offsets;
 using BH.oM.Base;
 using BH.oM.Physical.Materials;
 using BH.oM.Adapters.Robot;
@@ -87,6 +88,9 @@ namespace BH.Adapter.Robot
 
             if (type == typeof(BarRelease))
                 return ReadBarRelease();
+
+            if (type == typeof(Offset))
+                return ReadOffsets();
 
             if (type == typeof(Loadcase))
                 return ReadLoadCase();

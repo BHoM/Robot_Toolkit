@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.Constraints;
+using BH.oM.Structure.Offsets;
 using BH.oM.Adapters.Robot;
 using BH.Engine.Structure;
 using BH.oM.Geometry;
@@ -46,6 +47,7 @@ namespace BH.Adapter.Robot
                                         Dictionary<string, ISectionProperty> bhomSections, 
                                         Dictionary<string, IMaterialFragment> bhomMaterials, 
                                         Dictionary<string, BarRelease> barReleases,
+                                        Dictionary<string, Offset> offsets,
                                         Dictionary<string, FramingElementDesignProperties> bhomFramEleDesPropList,
                                         ref Dictionary<string, Dictionary<string, ISectionProperty>> sectionWithMaterial)
         {
@@ -145,6 +147,14 @@ namespace BH.Adapter.Robot
                     bhomBar.Release = bhomBarRel;
                 else
                     BH.Engine.Reflection.Compute.RecordEvent("Bars with auto-generated releases will not have releases", oM.Reflection.Debugging.EventType.Warning);
+            }
+
+            if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_OFFSET) == -1)
+            {
+                Offset offset;
+                string offsetName = robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_OFFSET);
+                if (offsets.TryGetValue(offsetName, out offset))
+                    bhomBar.Offset = offset;
             }
 
             if (!string.IsNullOrWhiteSpace(robotBar.Name))

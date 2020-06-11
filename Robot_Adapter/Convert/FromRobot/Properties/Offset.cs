@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -20,46 +20,45 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Engine.Base.Objects;
-using BH.Engine.Structure;
-using BH.oM.Physical.Materials;
-using BH.oM.Structure.Constraints;
-using BH.oM.Structure.Elements;
-using BH.oM.Structure.Loads;
-using BH.oM.Structure.MaterialFragments;
-using BH.oM.Structure.SectionProperties;
-using BH.oM.Structure.SurfaceProperties;
+using RobotOM;
 using BH.oM.Structure.Offsets;
-using System;
-using System.Collections.Generic;
+using BH.oM.Geometry;
 
 namespace BH.Adapter.Robot
 {
-    public partial class RobotAdapter
+    public static partial class Convert
     {
         /***************************************************/
-        /**** Protected methods                         ****/
+        /****           Public Methods                  ****/
         /***************************************************/
 
-        protected void SetupComparers()
+        public static Offset FromRobot(this IRobotLabel robotLabel, IRobotBarOffsetData offsetData)
         {
-            AdapterComparers = new Dictionary<Type, object>
+            Vector start = new Vector
             {
-                {typeof(Node), new NodeDistanceComparer(3) },
-                {typeof(Bar), new BarEndNodesDistanceComparer(3) },
-                {typeof(ISectionProperty), new NameOrDescriptionComparer() },
-                {typeof(IMaterialFragment), new NameOrDescriptionComparer() },
-                {typeof(Constraint4DOF), new NameOrDescriptionComparer() },
-                {typeof(Constraint6DOF), new NameOrDescriptionComparer() },
-                {typeof(Loadcase), new CaseNumberComaprer() },
-                {typeof(LinkConstraint), new NameOrDescriptionComparer() },
-                {typeof(ISurfaceProperty), new NameOrDescriptionComparer() },
-                {typeof(BarRelease), new NameOrDescriptionComparer() },
-                {typeof(Offset), new NameOrDescriptionComparer() }
+                X = offsetData.Start.UX,
+                Y = offsetData.Start.UY,
+                Z = offsetData.Start.UZ
             };
+
+            Vector end = new Vector
+            {
+                X = offsetData.End.UX,
+                Y = offsetData.End.UY,
+                Z = offsetData.End.UZ
+            };
+
+            Offset offset = new Offset
+            {
+                Name = robotLabel.Name,
+                Start = start,
+                End = end,
+            };
+            return offset;
         }
 
         /***************************************************/
+
     }
 }
 

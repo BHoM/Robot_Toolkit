@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -20,43 +20,25 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Engine.Base.Objects;
-using BH.Engine.Structure;
-using BH.oM.Physical.Materials;
-using BH.oM.Structure.Constraints;
-using BH.oM.Structure.Elements;
-using BH.oM.Structure.Loads;
-using BH.oM.Structure.MaterialFragments;
-using BH.oM.Structure.SectionProperties;
-using BH.oM.Structure.SurfaceProperties;
+using RobotOM;
 using BH.oM.Structure.Offsets;
-using System;
-using System.Collections.Generic;
 
 namespace BH.Adapter.Robot
 {
-    public partial class RobotAdapter
+    public static partial class Convert
     {
         /***************************************************/
-        /**** Protected methods                         ****/
+        /****           Public Methods                  ****/
         /***************************************************/
 
-        protected void SetupComparers()
+        public static void ToRobot(IRobotBarOffsetData offsetData, Offset offset)
         {
-            AdapterComparers = new Dictionary<Type, object>
-            {
-                {typeof(Node), new NodeDistanceComparer(3) },
-                {typeof(Bar), new BarEndNodesDistanceComparer(3) },
-                {typeof(ISectionProperty), new NameOrDescriptionComparer() },
-                {typeof(IMaterialFragment), new NameOrDescriptionComparer() },
-                {typeof(Constraint4DOF), new NameOrDescriptionComparer() },
-                {typeof(Constraint6DOF), new NameOrDescriptionComparer() },
-                {typeof(Loadcase), new CaseNumberComaprer() },
-                {typeof(LinkConstraint), new NameOrDescriptionComparer() },
-                {typeof(ISurfaceProperty), new NameOrDescriptionComparer() },
-                {typeof(BarRelease), new NameOrDescriptionComparer() },
-                {typeof(Offset), new NameOrDescriptionComparer() }
-            };
+            offsetData.Start.UX = offset.Start.X;
+            offsetData.Start.UY = offset.Start.Y;
+            offsetData.Start.UZ = offset.Start.Z;
+            offsetData.End.UX = offset.End.X;
+            offsetData.End.UY = offset.End.Y;
+            offsetData.End.UZ = offset.End.Z;
         }
 
         /***************************************************/

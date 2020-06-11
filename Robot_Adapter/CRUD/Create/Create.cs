@@ -28,6 +28,7 @@ using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Structure.Loads;
 using BH.oM.Structure.MaterialFragments;
+using BH.oM.Structure.Offsets;
 using BH.oM.Adapters.Robot;
 using BH.oM.Reflection.Attributes;
 using BH.Engine.Adapters.Robot;
@@ -66,6 +67,11 @@ namespace BH.Adapter.Robot
                 if (objects.First() is BarRelease)
                 {
                     success = CreateCollection(objects as IEnumerable<BarRelease>);
+                }
+
+                if (objects.First() is Offset)
+                {
+                    success = CreateCollection(objects as IEnumerable<Offset>);
                 }
 
                 if (objects.First() is LinkConstraint)

@@ -23,6 +23,8 @@
 using System.Collections.Generic;
 using System;
 using BH.oM.Structure.Elements;
+using BH.Engine.Structure;
+using BH.Engine.Geometry;
 using RobotOM;
 using BH.oM.Adapters.Robot;
 
@@ -67,11 +69,17 @@ namespace BH.Adapter.Robot
                 if (!string.IsNullOrWhiteSpace(bar.Name))
                     robotBar.NameTemplate = bar.Name;
                 
-                if (bar.SectionProperty != null && !string.IsNullOrWhiteSpace(bar.SectionProperty.Name))
-                    robotBar.SetSection(bar.SectionProperty.Name, false);
+                if (bar.SectionProperty != null && !string.IsNullOrWhiteSpace(bar.SectionProperty.DescriptionOrName()))
+                    robotBar.SetSection(bar.SectionProperty.DescriptionOrName(), false);
 
                 robotBar.Gamma = bar.ToRobotOrientationAngle();
                 Convert.SetFEAType(robotBar, bar);
+
+                if (bar.Release != null)
+                    robotBar.SetLabel(IRobotLabelType.I_LT_BAR_RELEASE, bar.Release.DescriptionOrName());
+
+                if (bar.Offset != null && bar.Offset.Start != null && bar.Offset.End != null && (bar.Offset.Start.SquareLength() > 0 || bar.Offset.End.SquareLength() > 0))
+                    robotBar.SetLabel(IRobotLabelType.I_LT_BAR_OFFSET, bar.Offset.DescriptionOrName());
 
                 if (bar.CustomData.ContainsKey("FramingElementDesignProperties"))
                 {

@@ -83,12 +83,15 @@ namespace BH.Adapter.Robot
                     if (!string.IsNullOrWhiteSpace(bhomBar.Name))
                         rcache.SetBarName(barNum, bhomBar.Name);
 
+
                     if (bhomBar.Release != null)
                         rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_RELEASE, bhomBar.Release.DescriptionOrName());
                     else
                         Engine.Reflection.Compute.RecordWarning("Bar with id " + barNum + " did not have any release assigned. Default in Robot will be used");
 
-                    
+                    if (bhomBar.Offset != null && bhomBar.Offset.Start != null && bhomBar.Offset.End != null && (bhomBar.Offset.Start.SquareLength() > 0 || bhomBar.Offset.End.SquareLength() > 0))
+                        rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_OFFSET, bhomBar.Offset.DescriptionOrName());
+
                     if (bhomBar.CustomData.ContainsKey("FramingElementDesignProperties"))
                     {
                         FramingElementDesignProperties framEleDesProps = bhomBar.CustomData["FramingElementDesignProperties"] as FramingElementDesignProperties;

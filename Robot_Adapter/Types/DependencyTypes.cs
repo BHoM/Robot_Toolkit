@@ -26,6 +26,7 @@ using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Structure.Constraints;
 using BH.oM.Structure.Loads;
+using BH.oM.Structure.Offsets;
 using BH.oM.Base;
 using System;
 using System.Collections.Generic;
@@ -43,7 +44,7 @@ namespace BH.Adapter.Robot
         {
             DependencyTypes = new Dictionary<Type, List<Type>>
             {
-                {typeof(Bar), new List<Type> { typeof(ISectionProperty), typeof(Node), typeof(BarRelease), typeof(FramingElementDesignProperties)}},
+                {typeof(Bar), new List<Type> { typeof(ISectionProperty), typeof(Node), typeof(BarRelease), typeof(Offset), typeof(FramingElementDesignProperties)}},
                 {typeof(ISectionProperty), new List<Type> { typeof(IMaterialFragment) } },
                 {typeof(Node), new List<Type> { typeof(Constraint6DOF) } },
                 {typeof(ILoad), new List<Type> { typeof(Loadcase) } },

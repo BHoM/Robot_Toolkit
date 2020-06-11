@@ -29,7 +29,7 @@ using RobotOM;
 using BH.Engine.Serialiser;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.Constraints;
-using BH.oM.Structure.Loads;
+using BH.oM.Structure.Offsets;
 using BH.oM.Base;
 using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.Design;
@@ -56,6 +56,7 @@ namespace BH.Adapter.Robot
             Dictionary<string, BarRelease> bhombarReleases = ReadBarRelease().ToDictionaryDistinctCheck(x => x.Name.ToString());
             Dictionary<string, ISectionProperty> bhomSections = ReadSectionProperties().ToDictionaryDistinctCheck(x => x.Name.ToString());
             Dictionary<string, IMaterialFragment> bhomMaterial = ReadMaterials().ToDictionaryDistinctCheck(x => x.Name.ToString());
+            Dictionary<string, Offset> offsets = ReadOffsets().ToDictionaryDistinctCheck(x => x.Name.ToString());
             Dictionary<string, FramingElementDesignProperties> bhomFramEleDesProps = ReadFramingElementDesignProperties().ToDictionaryDistinctCheck(x => x.Name.ToString());
             Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
             Dictionary<string, Dictionary<string,ISectionProperty>> sectionWithMaterial = new Dictionary<string, Dictionary<string, ISectionProperty>>();  //Used to store sections where the material differs from the default
@@ -73,6 +74,7 @@ namespace BH.Adapter.Robot
                                                      bhomSections, 
                                                      bhomMaterial, 
                                                      bhombarReleases,
+                                                     offsets,
                                                      bhomFramEleDesProps,
                                                      ref sectionWithMaterial);
                     bhomBar.CustomData[AdapterIdName] = robotBar.Number;
@@ -91,6 +93,7 @@ namespace BH.Adapter.Robot
                                                      bhomSections, 
                                                      bhomMaterial,
                                                      bhombarReleases,
+                                                     offsets,
                                                      bhomFramEleDesProps,
                                                      ref sectionWithMaterial);
                     bhomBar.CustomData[AdapterIdName] = robotBar.Number;

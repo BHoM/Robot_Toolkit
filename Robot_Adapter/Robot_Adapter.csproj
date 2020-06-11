@@ -154,6 +154,7 @@
     <Compile Include="Convert\FromRobot\Loads\PointDisplacement.cs" />
     <Compile Include="Convert\FromRobot\Loads\PointLoad.cs" />
     <Compile Include="Convert\FromRobot\Loads\PointVelocity.cs" />
+    <Compile Include="Convert\FromRobot\Properties\Offset.cs" />
     <Compile Include="Convert\ToRobot\Geometry\Circle.cs" />
     <Compile Include="Convert\ToRobot\Geometry\Arc.cs" />
     <Compile Include="Convert\ToRobot\Geometry\Polyline.cs" />
@@ -190,6 +191,7 @@
     <Compile Include="Convert\ToRobot\Geometry\Curve.cs" />
     <Compile Include="Convert\ToRobot\Groups and Lists\Group.cs" />
     <Compile Include="Convert\ToRobot\Groups and Lists\Lists.cs" />
+    <Compile Include="Convert\ToRobot\Properties\Offset.cs" />
     <Compile Include="Convert\ToRobot\Properties\Material.cs" />
     <Compile Include="Convert\ToRobot\Properties\MemberType.cs" />
     <Compile Include="Convert\ToRobot\Properties\LinearRelease.cs" />
@@ -200,6 +202,7 @@
     <Compile Include="Convert\ToRobot\Properties\BarRelease.cs" />
     <Compile Include="Convert\ToRobot\Properties\SectionProperty.cs" />
     <Compile Include="CRUD\Create\Properties\LinearReleases.cs" />
+    <Compile Include="CRUD\Create\Properties\Offset.cs" />
     <Compile Include="CRUD\Create\Properties\Supports.cs" />
     <Compile Include="CRUD\Create\Groups and Lists\DesignGroups.cs" />
     <Compile Include="CRUD\Create\Properties\FramingElementDesignProperties.cs" />
@@ -225,10 +228,12 @@
     <Compile Include="CRUD\Read\Loads\LoadCombinations.cs" />
     <Compile Include="CRUD\Read\Properties\Labels.cs" />
     <Compile Include="CRUD\Read\Properties\LinearReleases.cs" />
+    <Compile Include="CRUD\Read\Properties\Offset.cs" />
     <Compile Include="CRUD\Update\Elements\Nodes.cs" />
     <Compile Include="CRUD\Update\Loads\LoadCombinations.cs" />
     <Compile Include="CRUD\Update\Loads\Loadcases.cs" />
     <Compile Include="CRUD\Update\Properties\LinkConstraints.cs" />
+    <Compile Include="CRUD\Update\Properties\Offset.cs" />
     <Compile Include="CRUD\Update\Properties\SectionProperties.cs" />
     <Compile Include="CRUD\Update\Properties\Supports.cs" />
     <Compile Include="CRUD\Update\Properties\LinearReleases.cs" />

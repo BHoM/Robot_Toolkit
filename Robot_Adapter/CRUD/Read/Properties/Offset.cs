@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the Buildings and Habitats object Model (BHoM)
  * Copyright (c) 2015 - 2020, the respective contributors. All rights reserved.
  *
@@ -20,46 +20,28 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Engine.Base.Objects;
-using BH.Engine.Structure;
-using BH.oM.Physical.Materials;
-using BH.oM.Structure.Constraints;
-using BH.oM.Structure.Elements;
-using BH.oM.Structure.Loads;
-using BH.oM.Structure.MaterialFragments;
-using BH.oM.Structure.SectionProperties;
-using BH.oM.Structure.SurfaceProperties;
-using BH.oM.Structure.Offsets;
-using System;
 using System.Collections.Generic;
+using RobotOM;
+using BH.oM.Structure.Offsets;
+using System.Linq;
 
 namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
     {
         /***************************************************/
-        /**** Protected methods                         ****/
+        /****           Private Methods                 ****/
         /***************************************************/
 
-        protected void SetupComparers()
+        private List<Offset> ReadOffsets(List<string> ids = null)
         {
-            AdapterComparers = new Dictionary<Type, object>
-            {
-                {typeof(Node), new NodeDistanceComparer(3) },
-                {typeof(Bar), new BarEndNodesDistanceComparer(3) },
-                {typeof(ISectionProperty), new NameOrDescriptionComparer() },
-                {typeof(IMaterialFragment), new NameOrDescriptionComparer() },
-                {typeof(Constraint4DOF), new NameOrDescriptionComparer() },
-                {typeof(Constraint6DOF), new NameOrDescriptionComparer() },
-                {typeof(Loadcase), new CaseNumberComaprer() },
-                {typeof(LinkConstraint), new NameOrDescriptionComparer() },
-                {typeof(ISurfaceProperty), new NameOrDescriptionComparer() },
-                {typeof(BarRelease), new NameOrDescriptionComparer() },
-                {typeof(Offset), new NameOrDescriptionComparer() }
-            };
+            return ReadLabels(IRobotLabelType.I_LT_BAR_OFFSET).Select(x => x as Offset).ToList(); ;
         }
 
         /***************************************************/
+
+     
     }
 }
+
 

@@ -27,6 +27,7 @@ using BH.oM.Base;
 using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Structure.SectionProperties;
+using BH.oM.Structure.Offsets;
 
 namespace BH.Adapter.Robot
 {
@@ -76,6 +77,8 @@ namespace BH.Adapter.Robot
                             obj = barRelease;
                             break;
                         case IRobotLabelType.I_LT_BAR_OFFSET:
+                            Offset offset = robotLabel.FromRobot(robotLabel.Data as IRobotBarOffsetData);
+                            obj = offset;
                             break;
                         case IRobotLabelType.I_LT_BAR_CABLE:
                             break;

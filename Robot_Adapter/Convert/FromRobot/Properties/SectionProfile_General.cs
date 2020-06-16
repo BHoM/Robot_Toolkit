@@ -107,6 +107,9 @@ namespace BH.Adapter.Robot
             else
             {
                 IRobotBarSectionNonstdData nonStdData = secData.GetNonstd(1);
+                if (nonStdData == null)
+                    return null;
+
                 double D = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D);
                 double T = 0;
                 double B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B);

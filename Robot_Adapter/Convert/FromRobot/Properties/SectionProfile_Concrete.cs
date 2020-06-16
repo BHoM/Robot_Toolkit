@@ -60,7 +60,7 @@ namespace BH.Adapter.Robot
                 case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_RECT:
                     h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_H);
                     b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_B);
-                    sectionProfile = BH.Engine.Geometry.Create.RectangleProfile(b, h, 0);
+                    sectionProfile = BH.Engine.Geometry.Create.RectangleProfile(h, b, 0);
                     break;
 
                 case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_I:

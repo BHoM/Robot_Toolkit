@@ -31,7 +31,7 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static void ToRobotLoadcaseNature(ILoad load)
+        public static void ToRobot(ILoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
             if(load != null)
                 BH.Engine.Reflection.Compute.RecordWarning("Load of type '" + load.GetType() + "' not supported");

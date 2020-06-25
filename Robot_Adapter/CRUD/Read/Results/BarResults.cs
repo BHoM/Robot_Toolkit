@@ -163,7 +163,7 @@ namespace BH.Adapter.Robot
             double my = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MY);
             double mz = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_MZ);
 
-            return new BarForce(idBar, idCase, mode, 0, position, divisions, fx, fy, fz, mx, my, mz);
+            return new BarForce(idBar, idCase, mode, 0, position, divisions, -fx, -fy, -fz, -mx, -my, mz);
         }
 
         /***************************************************/

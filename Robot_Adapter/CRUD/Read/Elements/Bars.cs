@@ -69,18 +69,25 @@ namespace BH.Adapter.Robot
                 for (int i = 1; i <= robotBars.Count; i++)
                 {
                     RobotBar robotBar = robotBars.Get(i);
-                    Bar bhomBar = Convert.FromRobot( robotBar, 
-                                                     bhomNodes, 
-                                                     bhomSections, 
-                                                     bhomMaterial, 
-                                                     bhombarReleases,
-                                                     offsets,
-                                                     bhomFramEleDesProps,
-                                                     ref sectionWithMaterial);
-                    bhomBar.CustomData[AdapterIdName] = robotBar.Number;
-                    if (barTags != null && barTags.TryGetValue(robotBar.Number, out tags))
-                        bhomBar.Tags = tags;
-                    bhomBars.Add(bhomBar);
+                    if (!robotBar.IsSuperBar)
+                    {
+                        Bar bhomBar = Convert.FromRobot(robotBar,
+                                                         bhomNodes,
+                                                         bhomSections,
+                                                         bhomMaterial,
+                                                         bhombarReleases,
+                                                         offsets,
+                                                         bhomFramEleDesProps,
+                                                         ref sectionWithMaterial);
+                        bhomBar.CustomData[AdapterIdName] = robotBar.Number;
+                        if (barTags != null && barTags.TryGetValue(robotBar.Number, out tags))
+                            bhomBar.Tags = tags;
+                        bhomBars.Add(bhomBar);
+                    }
+                    else
+                    {
+                        SuperBarWarning();
+                    }
                 }
             }
             else
@@ -88,7 +95,9 @@ namespace BH.Adapter.Robot
                 for (int i = 0; i < barIds.Count; i++)
                 {
                     RobotBar robotBar = m_RobotApplication.Project.Structure.Bars.Get(barIds[i]) as RobotBar;
-                    Bar bhomBar = Convert.FromRobot( robotBar, 
+                    if (!robotBar.IsSuperBar)
+                    {
+                        Bar bhomBar = Convert.FromRobot( robotBar, 
                                                      bhomNodes, 
                                                      bhomSections, 
                                                      bhomMaterial,
@@ -100,6 +109,11 @@ namespace BH.Adapter.Robot
                     if (barTags != null && barTags.TryGetValue(robotBar.Number, out tags))
                         bhomBar.Tags = tags;
                     bhomBars.Add(bhomBar);
+                    }
+                    else
+                    {
+                        SuperBarWarning();
+                    }
                 }
             }
             m_RobotApplication.Project.Structure.Bars.EndMultiOperation();
@@ -108,6 +122,14 @@ namespace BH.Adapter.Robot
             PostProcessBarSections(sectionWithMaterial);
 
             return bhomBars;
+        }
+
+        /***************************************************/
+
+
+        private void SuperBarWarning()
+        {
+            Engine.Reflection.Compute.RecordWarning("Model contains 'Super Bars' which are not extracted. Reading Bars only extracts the idividual bar segments.");
         }
 
         /***************************************************/

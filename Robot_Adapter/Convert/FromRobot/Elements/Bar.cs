@@ -183,6 +183,10 @@ namespace BH.Adapter.Robot
 
         public static double FromRobotOrientationAngle(this Bar bhomBar, double robotOrientation)
         {
+            //Check that bar nodes have been set
+            if (bhomBar.StartNode == null || bhomBar.EndNode == null || bhomBar.StartNode.Position == null || bhomBar.EndNode.Position == null)
+                return robotOrientation;
+
             //Check vertical status
             bool bhomVertical = bhomBar.IsVertical();
             bool robotVertical = bhomBar.IsVerticalRobot();

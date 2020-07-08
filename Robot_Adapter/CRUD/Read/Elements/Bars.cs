@@ -129,7 +129,7 @@ namespace BH.Adapter.Robot
 
         private void SuperBarWarning()
         {
-            Engine.Reflection.Compute.RecordWarning("Model contains 'Super Bars' which are not extracted. Reading Bars only extracts the idividual bar segments.");
+            Engine.Reflection.Compute.RecordWarning("Model contains 'Super Bars' which are not extracted. Reading Bars only extracts the individual bar segments.");
         }
 
         /***************************************************/
@@ -256,5 +256,4 @@ namespace BH.Adapter.Robot
     }
 
 }
-
 

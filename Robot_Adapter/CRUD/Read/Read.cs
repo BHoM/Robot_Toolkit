@@ -110,6 +110,12 @@ namespace BH.Adapter.Robot
             if (type == typeof(BH.oM.Adapters.Robot.DesignGroup))
                 return ReadDesignGroups();
 
+            if (typeof(IResult).IsAssignableFrom(type))
+            {
+                Modules.Structure.ErrorMessages.ReadResultsError(type);
+                return null;
+            }
+
             if (type == typeof(BHoMObject))
             {
                 List<IBHoMObject> objects = new List<IBHoMObject>();
@@ -126,18 +132,6 @@ namespace BH.Adapter.Robot
             }
 
             return new List<IBHoMObject>();         
-        }
-
-        /***************************************************/
-
-        protected override IEnumerable<IResult> ReadResults(Type type, IList ids = null, IList cases = null, int divisions = 5, ActionConfig actionConfig = null)
-        {
-            IResultRequest request = Engine.Structure.Create.IResultRequest(type, ids?.Cast<object>(), cases?.Cast<object>(), divisions);
-
-            if (request != null)
-                return this.ReadResults(request as dynamic);
-            else
-                return base.ReadResults(type, ids, cases, divisions);
         }
 
         /***************************************************/

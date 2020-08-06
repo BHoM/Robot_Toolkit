@@ -400,36 +400,6 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private IEnumerable<IResult> ReadMeshResults(FilterRequest query = null)
-        {
-            //Method to support backwards compatibility
-            object idsObj = null;
-            object casesObj = null;
-
-            IList ids = null;
-            IList cases = null;
-
-            if (query.Equalities.TryGetValue("ObjectIds", out idsObj))
-                ids = idsObj as IList;
-            if (query.Equalities.TryGetValue("Cases", out casesObj))
-                cases = casesObj as IList;
-
-
-            MeshResultRequest request = Engine.Structure.Create.IResultRequest(query.Type, ids?.Cast<object>(), cases?.Cast<object>(), 0) as MeshResultRequest;
-
-            if (request == null)
-                return new List<MeshResult>();
-
-            request.ResultType = (MeshResultType)query.Equalities["ResultType"];
-            request.LayerPosition = (double)query.Equalities["LayerPosition"];
-            request.Layer = (MeshResultLayer)query.Equalities["Layer"];
-            request.Smoothing = (MeshResultSmoothingType)query.Equalities["Smoothing"];
-            request.Orientation = (BH.oM.Geometry.Basis)query.Equalities["CoordinateSystem"];
-
-            return ReadResults(request);
-        }
-
-        /***************************************************/
 
     }
 }

@@ -56,16 +56,6 @@ namespace BH.Adapter.Robot
 
             try
             {
-
-                FilterRequest filter = request as FilterRequest;
-                if (filter != null)
-                {
-                    if (filter.Type == typeof(BH.oM.Structure.Results.MeshResult))
-                    {
-                        return ReadMeshResults(filter);
-                    }
-                }
-
                 return base.Pull(request, pullType, actionConfig);
             }
             finally

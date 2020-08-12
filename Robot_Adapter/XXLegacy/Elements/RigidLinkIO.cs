@@ -49,8 +49,8 @@
 //            foreach (RigidLink link in links)
 //            {
 //                List<Node> nodes = new List<Node>();
-//                nodes.Add(link.MasterNode);
-//                nodes.AddRange(link.SlaveNodes);
+//                nodes.Add(link.PrimaryNode);
+//                nodes.AddRange(link.SecondaryNodes);
 //                NodeIO.CreateNodes(robot, nodes, out nodeIds);
 
 //                if (robot.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_NODE_RIGID_LINK, Utils.GetName(link)) != 0)
@@ -63,8 +63,8 @@
 //                }
 //                RobotSelection slaveNodeSel = robot.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
 
-//                slaveNodeSel.FromText(Utils.GetSelectionString<Node>(link.SlaveNodes));
-//                robot.Project.Structure.Nodes.RigidLinks.Set(int.Parse(link.MasterNode[Utils.NUM_KEY].ToString()), Utils.GetSelectionString<Node>(link.SlaveNodes), Utils.GetName(link));
+//                slaveNodeSel.FromText(Utils.GetSelectionString<Node>(link.SecondaryNodes));
+//                robot.Project.Structure.Nodes.RigidLinks.Set(int.Parse(link.PrimaryNode[Utils.NUM_KEY].ToString()), Utils.GetSelectionString<Node>(link.SecondaryNodes), Utils.GetName(link));
 
 //                IRobotNodeRigidLinkData rlinkData = rigidLink.Data;
 //                robot.Project.Structure.Labels.Store(rigidLink);

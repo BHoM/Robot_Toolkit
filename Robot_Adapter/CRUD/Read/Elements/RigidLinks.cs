@@ -56,11 +56,11 @@ namespace BH.Adapter.Robot
                     IRobotNodeRigidLinkDef robotRigidLink = m_RobotApplication.Project.Structure.Nodes.RigidLinks.Get(i) as IRobotNodeRigidLinkDef;
 
                     RigidLink bhomRigidLink = new RigidLink();
-                    bhomRigidLink.MasterNode = bhomNodes[robotRigidLink.Master.ToString()];
+                    bhomRigidLink.PrimaryNode = bhomNodes[robotRigidLink.Master.ToString()];
 
-                    string[] slaveIDs = robotRigidLink.Slaves.Split(',').Select(sl => sl.Replace(" ","")).ToArray();
+                    string[] secondaryIds = robotRigidLink.Slaves.Split(',').Select(sl => sl.Replace(" ","")).ToArray();
                
-                    bhomRigidLink.SlaveNodes = slaveIDs.Select(sl => bhomNodes[sl]).ToList();
+                    bhomRigidLink.SecondaryNodes = secondaryIds.Select(sl => bhomNodes[sl]).ToList();
 
                     bhomRigidLink.Constraint = bhomLinkConstraints[robotRigidLink.LabelName];
 
@@ -76,10 +76,10 @@ namespace BH.Adapter.Robot
                     IRobotNodeRigidLinkDef robotRigidLink = m_RobotApplication.Project.Structure.Nodes.RigidLinks.Get(linksIds[i]) as IRobotNodeRigidLinkDef;
 
                     RigidLink bhomRigidLink = new RigidLink();
-                    bhomRigidLink.MasterNode = bhomNodes[robotRigidLink.Master.ToString()];
+                    bhomRigidLink.PrimaryNode = bhomNodes[robotRigidLink.Master.ToString()];
 
-                    string[] slaveIDs = robotRigidLink.Slaves.Split(',');
-                    bhomRigidLink.SlaveNodes = slaveIDs.Select(sl => bhomNodes[sl]).ToList();
+                    string[] secondaryIds = robotRigidLink.Slaves.Split(',');
+                    bhomRigidLink.SecondaryNodes = secondaryIds.Select(sl => bhomNodes[sl]).ToList();
 
                     bhomRigidLink.Constraint = bhomLinkConstraints[robotRigidLink.LabelName];
 

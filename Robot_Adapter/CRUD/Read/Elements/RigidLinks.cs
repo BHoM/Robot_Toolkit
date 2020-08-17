@@ -46,7 +46,7 @@ namespace BH.Adapter.Robot
             List<RigidLink> bhomRigidLinks = new List<RigidLink>();
 
             IEnumerable<Node> bhomNodesList = ReadNodes();
-            Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionary(x => x.CustomData[AdapterIdName].ToString());
+            Dictionary<int, Node> bhomNodes = bhomNodesList.ToDictionary(x => System.Convert.ToInt32(x.CustomData[AdapterIdName]));
             Dictionary<string, LinkConstraint> bhomLinkConstraints = ReadLinkConstraint().ToDictionary(x => x.Name.ToString());
 
             if (linksIds == null || linksIds.Count == 0)
@@ -56,9 +56,9 @@ namespace BH.Adapter.Robot
                     IRobotNodeRigidLinkDef robotRigidLink = m_RobotApplication.Project.Structure.Nodes.RigidLinks.Get(i) as IRobotNodeRigidLinkDef;
 
                     RigidLink bhomRigidLink = new RigidLink();
-                    bhomRigidLink.PrimaryNode = bhomNodes[robotRigidLink.Master.ToString()];
+                    bhomRigidLink.PrimaryNode = bhomNodes[robotRigidLink.Master];
 
-                    string[] secondaryIds = robotRigidLink.Slaves.Split(',').Select(sl => sl.Replace(" ","")).ToArray();
+                    List<int> secondaryIds = Convert.FromRobotSelectionString(robotRigidLink.Slaves);
                
                     bhomRigidLink.SecondaryNodes = secondaryIds.Select(sl => bhomNodes[sl]).ToList();
 
@@ -76,9 +76,10 @@ namespace BH.Adapter.Robot
                     IRobotNodeRigidLinkDef robotRigidLink = m_RobotApplication.Project.Structure.Nodes.RigidLinks.Get(linksIds[i]) as IRobotNodeRigidLinkDef;
 
                     RigidLink bhomRigidLink = new RigidLink();
-                    bhomRigidLink.PrimaryNode = bhomNodes[robotRigidLink.Master.ToString()];
+                    bhomRigidLink.PrimaryNode = bhomNodes[robotRigidLink.Master];
 
-                    string[] secondaryIds = robotRigidLink.Slaves.Split(',');
+                    List<int> secondaryIds = Convert.FromRobotSelectionString(robotRigidLink.Slaves);
+
                     bhomRigidLink.SecondaryNodes = secondaryIds.Select(sl => bhomNodes[sl]).ToList();
 
                     bhomRigidLink.Constraint = bhomLinkConstraints[robotRigidLink.LabelName];

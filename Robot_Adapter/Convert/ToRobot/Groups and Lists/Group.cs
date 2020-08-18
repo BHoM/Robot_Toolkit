@@ -56,7 +56,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        public static string CreateIdListOrGroupName<T>(this Load<T> load, RobotGroupServer rServer) where T : IBHoMObject
+        public static string CreateIdListOrGroupName<T>(this IElementLoad<T> load, RobotGroupServer rServer) where T : IBHoMObject
         {
             //For a named group, appy loads to the group name
             //Feature disabled until a more Robust group handling is in place in Robot_Toolkit

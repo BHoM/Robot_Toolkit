@@ -74,9 +74,23 @@ namespace BH.Adapter.Robot
 
             queryParams.Selection.Set(IRobotObjectType.I_OT_CASE, caseSelection);
             queryParams.Selection.Set(IRobotObjectType.I_OT_NODE, nodeSelection);
-            queryParams.SetParam(IRobotResultParamType.I_RPT_MODE, 0);
-            queryParams.SetParam(IRobotResultParamType.I_RPT_MODE_CMB, IRobotModeCombinationType.I_MCT_CQC);
 
+            switch (request.ResultType)
+            {
+                case NodeResultType.NodeModalMass:
+                    queryParams.SetParam(IRobotResultParamType.I_RPT_MODE, 1);
+                    queryParams.SetParam(IRobotResultParamType.I_RPT_MODE_CMB, IRobotModeCombinationType.I_MCT_NONE);
+                    break;
+                case NodeResultType.NodeModeShape:
+                    queryParams.SetParam(IRobotResultParamType.I_RPT_MODE, 1);
+                    queryParams.SetParam(IRobotResultParamType.I_RPT_MODE_CMB, IRobotModeCombinationType.I_MCT_NONE);
+                    break;
+                default:
+                    queryParams.SetParam(IRobotResultParamType.I_RPT_MODE, 0);
+                    queryParams.SetParam(IRobotResultParamType.I_RPT_MODE_CMB, IRobotModeCombinationType.I_MCT_CQC);
+                    break;
+            }
+           
             RobotResultRowSet rowSet = new RobotResultRowSet();
 
             IRobotResultQueryReturnType ret = IRobotResultQueryReturnType.I_RQRT_MORE_AVAILABLE;
@@ -89,18 +103,28 @@ namespace BH.Adapter.Robot
                 while (isOk)
                 {
                     RobotResultRow row = rowSet.CurrentRow;
-                    int idCase = (int)row.GetParam(IRobotResultParamType.I_RPT_LOAD_CASE);
-                    int idNode = (int)row.GetParam(IRobotResultParamType.I_RPT_NODE);
-                    int mode = -1; //TODO: extract mode number
 
-                    switch (request.ResultType)
+                    int mode = (int)row.GetParam(IRobotResultParamType.I_RPT_MODE);
+                    if (request.Modes.Count < 1 || request.Modes.Contains(mode.ToString()))
                     {
-                        case NodeResultType.NodeReaction:
-                            nodeResults.Add(GetNodeReaction(row, idCase, idNode, mode));
-                            break;
-                        case NodeResultType.NodeDisplacement:
-                            nodeResults.Add(GetNodeDisplacement(row, idCase, idNode, mode));
-                            break;
+                        int idCase = (int)row.GetParam(IRobotResultParamType.I_RPT_LOAD_CASE);
+                        int idNode = (int)row.GetParam(IRobotResultParamType.I_RPT_NODE);
+
+                        switch (request.ResultType)
+                        {
+                            case NodeResultType.NodeReaction:
+                                nodeResults.Add(GetNodeReaction(row, idCase, idNode, mode));
+                                break;
+                            case NodeResultType.NodeDisplacement:
+                                nodeResults.Add(GetNodeDisplacement(row, idCase, idNode, mode));
+                                break;
+                            case NodeResultType.NodeModeShape:
+                                nodeResults.Add(GetNodeModeShape(row, idCase, idNode, mode));
+                                break;
+                            case NodeResultType.NodeModalMass:
+                                nodeResults.Add(GetNodeModalMass(row, idCase, idNode, mode));
+                                break;
+                        }
                     }
 
                     isOk = rowSet.MoveNext();
@@ -125,6 +149,36 @@ namespace BH.Adapter.Robot
 
             return new NodeDisplacement(idNode, idCase, mode, 0, oM.Geometry.Basis.XY, ux, uy, uz, rx, ry, rz);
 
+        }
+
+        /***************************************************/
+
+        private NodeModeShape GetNodeModeShape(RobotResultRow row, int idCase, int idNode, int mode)
+        {
+            int i = 234;
+            double ux = TryGetValue(row, i); // T_EIGEN_UX_1
+            double uy = TryGetValue(row, i + 1); // T_EIGEN_UY_1
+            double uz = TryGetValue(row, i + 2); // T_EIGEN_UZ_1
+
+            double rx = TryGetValue(row, i + 3); // T_EIGEN_RX_1
+            double ry = TryGetValue(row, i + 4); // T_EIGEN_RY_1
+            double rz = TryGetValue(row, i + 5); // T_EIGEN_RZ_1
+
+            return new NodeModeShape(idNode, idCase, mode, 0, oM.Geometry.Basis.XY, ux, uy, uz, rx, ry, rz);
+
+        }
+
+
+        /***************************************************/
+
+        private NodeModalMass GetNodeModalMass(RobotResultRow row, int idCase, int idNode, int mode)
+        {
+            int i = 1770;
+            double mx = TryGetValue(row, i); // Nodal modal mass X
+            double my = TryGetValue(row, i + 1); // Nodal modal mass Y
+            double mz = TryGetValue(row, i + 2); // Nodal modal mass Z
+
+            return new NodeModalMass(idNode, idCase, mode, 0, oM.Geometry.Basis.XY, mx, my, mz);
         }
 
         /***************************************************/
@@ -157,6 +211,7 @@ namespace BH.Adapter.Robot
                     results.Add((int)IRobotExtremeValueType.I_EVT_REACTION_MX);
                     results.Add((int)IRobotExtremeValueType.I_EVT_REACTION_MY);
                     results.Add((int)IRobotExtremeValueType.I_EVT_REACTION_MZ);
+
                     break;
                 case NodeResultType.NodeDisplacement:
                     results.Add((int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UX);
@@ -166,9 +221,24 @@ namespace BH.Adapter.Robot
                     results.Add((int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_RY);
                     results.Add((int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_RZ);
                     break;
+                case NodeResultType.NodeModeShape:
+                    int i = 234; // 
+                    results.Add(i); // T_EIGEN_UX_1
+                    results.Add(i + 1); // T_EIGEN_UY_1
+                    results.Add(i + 2); // T_EIGEN_UZ_1
+                    results.Add(i + 3); // T_EIGEN_RX_1
+                    results.Add(i + 4); // T_EIGEN_RY_1
+                    results.Add(i + 5); // T_EIGEN_RZ_1
+                    break;
                 case NodeResultType.NodeVelocity:
                     break;
                 case NodeResultType.NodeAcceleration:
+                    break;
+                case NodeResultType.NodeModalMass:
+                    int j = 1770;
+                    results.Add(j); // Nodal modal mass X
+                    results.Add(j + 1); // Nodal modal mass Y
+                    results.Add(j + 2); // Nodal modal mass Z
                     break;
                 default:
                     break;

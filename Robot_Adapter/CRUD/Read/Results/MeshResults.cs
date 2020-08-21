@@ -185,43 +185,48 @@ namespace BH.Adapter.Robot
                     while (isOk)
                     {
                         RobotResultRow row = rowSet.CurrentRow;
-                        int idCase = 0;
-                        if (queryParams.IsParamSet(IRobotResultParamType.I_RPT_LOAD_CASE))
-                            idCase = System.Convert.ToInt32(row.GetParam(IRobotResultParamType.I_RPT_LOAD_CASE));
 
-                        int idPanel = System.Convert.ToInt32(panel.CustomData[AdapterIdName]);
+                        int mode = (int)row.GetParam(IRobotResultParamType.I_RPT_MODE);
+                        if (request.Modes.Count < 1 || request.Modes.Contains(mode.ToString()))
+                        { 
+                            int idCase = 0;
+                            if (queryParams.IsParamSet(IRobotResultParamType.I_RPT_LOAD_CASE))
+                                idCase = System.Convert.ToInt32(row.GetParam(IRobotResultParamType.I_RPT_LOAD_CASE));
 
-                        int idNode = 0;
-                        if (request.Smoothing != MeshResultSmoothingType.ByFiniteElementCentres)
-                        {
-                            //idNode = System.Convert.ToInt32(row.GetParam(IRobotResultParamType.I_RPT_NODE));
+                            int idPanel = System.Convert.ToInt32(panel.CustomData[AdapterIdName]);
 
-                            BH.oM.Geometry.Point nodePoint = BH.Engine.Geometry.Create.Point(row.GetValue(0), row.GetValue(1), row.GetValue(2));
-                            idNode = System.Convert.ToInt32(nodes.ElementAt(nodePointList.IndexOf(BH.Engine.Geometry.Query.ClosestPoint(nodePoint, nodePointList))).CustomData[AdapterIdName]);
-                        }
+                            int idNode = 0;
+                            if (request.Smoothing != MeshResultSmoothingType.ByFiniteElementCentres)
+                            {
+                                //idNode = System.Convert.ToInt32(row.GetParam(IRobotResultParamType.I_RPT_NODE));
 
-                        int idFiniteElement = 0;
-                        if (request.Smoothing == MeshResultSmoothingType.ByFiniteElementCentres || request.Smoothing == MeshResultSmoothingType.None)
-                            if (queryParams.IsParamSet(IRobotResultParamType.I_RPT_ELEMENT))
-                                idFiniteElement = System.Convert.ToInt32(row.GetParam(IRobotResultParamType.I_RPT_ELEMENT));
+                                BH.oM.Geometry.Point nodePoint = BH.Engine.Geometry.Create.Point(row.GetValue(0), row.GetValue(1), row.GetValue(2));
+                                idNode = System.Convert.ToInt32(nodes.ElementAt(nodePointList.IndexOf(BH.Engine.Geometry.Query.ClosestPoint(nodePoint, nodePointList))).CustomData[AdapterIdName]);
+                            }
 
-                        int mode = -1; //TODO: extract mode number
+                            int idFiniteElement = 0;
+                            if (request.Smoothing == MeshResultSmoothingType.ByFiniteElementCentres || request.Smoothing == MeshResultSmoothingType.None)
+                                if (queryParams.IsParamSet(IRobotResultParamType.I_RPT_ELEMENT))
+                                    idFiniteElement = System.Convert.ToInt32(row.GetParam(IRobotResultParamType.I_RPT_ELEMENT));
 
-                        switch (request.ResultType)
-                        {
-                            case MeshResultType.Stresses:
-                                meshResults.Add(GetMeshStress(row, idPanel, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, orientation));
-                                break;
-                            case MeshResultType.Forces:
-                                meshResults.Add(GetMeshForce(row, idPanel, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, orientation));
-                                break;
-                            case MeshResultType.VonMises:
-                                meshResults.Add(GetMeshVonMises(row, idPanel, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, orientation));
-                                break;
-                            case MeshResultType.Displacements:
-                                meshResults.Add(GetMeshDisplacement(row, idPanel, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, (Basis)globalXY));
-                                break;
-
+                            switch (request.ResultType)
+                            {
+                                case MeshResultType.Stresses:
+                                    meshResults.Add(GetMeshStress(row, idPanel, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, orientation));
+                                    break;
+                                case MeshResultType.Forces:
+                                    meshResults.Add(GetMeshForce(row, idPanel, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, orientation));
+                                    break;
+                                case MeshResultType.VonMises:
+                                    meshResults.Add(GetMeshVonMises(row, idPanel, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, orientation));
+                                    break;
+                                case MeshResultType.Displacements:
+                                    meshResults.Add(GetMeshDisplacement(row, idPanel, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, (Basis)globalXY));
+                                    break;
+                                case MeshResultType.MeshModeShape:
+                                    meshResults.Add(GetMeshModeShape(row, idPanel, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, (Basis)globalXY));
+                                    break;
+                            }
                         }
                         isOk = rowSet.MoveNext();
                     }
@@ -344,6 +349,43 @@ namespace BH.Adapter.Robot
                                         0);
         }
 
+        /***************************************************/
+
+        private MeshModeShape GetMeshModeShape(RobotResultRow row, int idPanel, int idNode, int idFiniteElement, int idCase, int mode, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
+        {
+
+            Vector u = new Vector
+            {
+                X = TryGetValue(row, 234), // T_EIGEN_UX_1
+                Y = TryGetValue(row, 235), // T_EIGEN_UY_1
+                Z = TryGetValue(row, 236), // T_EIGEN_UZ_1
+                // lagg till rotations
+            };
+
+            Vector r = new Vector
+            {
+                X = TryGetValue(row, 237), // T_EIGEN_RX_1
+                Y = TryGetValue(row, 238), // T_EIGEN_RY_1
+                Z = TryGetValue(row, 239), // T_EIGEN_RZ_1
+            };
+
+            return new MeshModeShape(idPanel,
+                                        idNode,
+                                        idFiniteElement,
+                                        idCase,
+                                        mode,
+                                        0,
+                                        layer,
+                                        layerPosition,
+                                        smoothing,
+                                        orientation,
+                                        u.X,
+                                        u.Y,
+                                        u.Z,
+                                        r.X,
+                                        r.Y,
+                                        r.Z);
+        }
 
         /***************************************************/
 
@@ -392,6 +434,15 @@ namespace BH.Adapter.Robot
                     //results.Add((int)IRobotFeResultType.I_FRT_DETAILED_RYY);
                     //results.Add((int)IRobotFeResultType.I_FRT_DETAILED_RNORM);
 
+                    break;
+
+                case MeshResultType.MeshModeShape:
+                    results.Add(234);
+                    results.Add(235);
+                    results.Add(236);
+                    results.Add(237);
+                    results.Add(238);
+                    results.Add(239);
                     break;
             }
 

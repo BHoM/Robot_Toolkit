@@ -109,7 +109,7 @@ namespace BH.Adapter.Robot
         [Input("convertMethod", "Method used for turning a load record into a BHoM load, setting all properties except for objects and case. For example `record => record.FromRobotAreaUDL()` for Areaload.")]
         [Input("loadType","Robot loadtype enum corresponding to the type of load being pulled.")]
         [Input("ids", "Not yet in use.")]
-        private List<ILoad> ReadObjectLoads<T>(Func<IRobotLoadRecord, Load<T>> convertMethod, IRobotLoadRecordType loadType, List<string> ids = null) where T : IBHoMObject
+        private List<ILoad> ReadObjectLoads<T>(Func<IRobotLoadRecord, IElementLoad<T>> convertMethod, IRobotLoadRecordType loadType, List<string> ids = null) where T : IBHoMObject
         {
             //Main method looping through all loadcases and extracting the picked up load type
             List<ILoad> bhomLoads = new List<ILoad>();
@@ -133,7 +133,7 @@ namespace BH.Adapter.Robot
                             if (loadRecord.Type == loadType)
                             {
                                 List<T> objects = FilterLoadObjects(loadRecord, loadObjects);
-                                Load<T> load = convertMethod.Invoke(loadRecord);
+                                IElementLoad<T> load = convertMethod.Invoke(loadRecord);
                                 if (load != null)
                                 {
                                     SetLoadGroup(load, objects.Cast<IBHoMObject>());
@@ -170,7 +170,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private static void SetLoadGroup<T>(Load<T> load, IEnumerable<IBHoMObject> objects) where T: IBHoMObject
+        private static void SetLoadGroup<T>(IElementLoad<T> load, IEnumerable<IBHoMObject> objects) where T: IBHoMObject
         {
             BHoMGroup<T> group = new BHoMGroup<T>();
 

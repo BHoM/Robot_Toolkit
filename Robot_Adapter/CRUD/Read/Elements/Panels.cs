@@ -105,8 +105,6 @@ namespace BH.Adapter.Robot
                     panel.CustomData["RobotNodeIds"] = robotPanel.Nodes;
 
                     //Get the coordinate system for the panel
-                    BH.oM.Geometry.Point coordPoint = BH.Engine.Geometry.Query.StartPoint(outline as dynamic);
-
                     double x, y, z; robotPanel.Main.Attribs.GetDirX(out x, out y, out z);
                     Vector coordXAxis = BH.Engine.Geometry.Create.Vector(x, y, z);
                     Vector coordZAxis = panel.Normal();
@@ -138,7 +136,7 @@ namespace BH.Adapter.Robot
                     }
 
                     //Set local orientation
-                    panel = panel.SetLocalOrientation(coordXAxis);
+                    panel.OrientationAngle = Engine.Structure.Compute.OrientationAngleAreaElement(coordZAxis, coordXAxis);
 
                     if (robotPanel.HasLabel(IRobotLabelType.I_LT_PANEL_THICKNESS) != 0)
                     {
@@ -220,7 +218,7 @@ namespace BH.Adapter.Robot
             IRobotStructure robotStructureServer = m_RobotApplication.Project.Structure;
             IRobotObjObjectServer robotPanelServer = m_RobotApplication.Project.Structure.Objects;
             List<Panel> BHoMPanels = new List<Panel>();
-            Panel BHoMPanel = null;
+            Panel panel = null;
 
             List<int> panelIds = CheckAndGetIds(ids);
             RobotSelection rPanSelect = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_PANEL);
@@ -241,39 +239,54 @@ namespace BH.Adapter.Robot
 
             for (int i = 1; i <= rPanels.Count; i++)
             {
-                RobotObjObject rpanel = (RobotObjObject)rPanels.Get(i);
-                BHoMPanel = null;
+                RobotObjObject robotPanel = (RobotObjObject)rPanels.Get(i);
+                panel = null;
 
-                if (rpanel.Main.Attribs.Meshed == 1)
+                if (robotPanel.Main.Attribs.Meshed == 1)
                 {
-                    ICurve outline = Convert.FromRobot(rpanel.Main.GetGeometry() as dynamic);
+                    ICurve outline = Convert.FromRobot(robotPanel.Main.GetGeometry() as dynamic);
 
-                    BHoMPanel = new Panel();
-                    BHoMPanel.CustomData[AdapterIdName] = rpanel.Number;
-                    BHoMPanel.CustomData["RobotFiniteElementIds"] = rpanel.FiniteElems;
-                    BHoMPanel.CustomData["RobotNodeIds"] = rpanel.Nodes;
+                    panel = Engine.Structure.Create.Panel(outline, new List<ICurve>());
+                    panel.CustomData[AdapterIdName] = robotPanel.Number;
+                    panel.CustomData["RobotFiniteElementIds"] = robotPanel.FiniteElems;
+                    panel.CustomData["RobotNodeIds"] = robotPanel.Nodes;
 
                     //Get the coordinate system for the panel
-                    BH.oM.Geometry.Point coordPoint = BH.Engine.Geometry.Query.StartPoint(outline as dynamic);
+                    double x, y, z; robotPanel.Main.Attribs.GetDirX(out x, out y, out z);
+                    Vector coordXAxis = BH.Engine.Geometry.Create.Vector(x, y, z);
+                    Vector coordZAxis = panel.Normal();
 
-                    double x, y, z; rpanel.Main.Attribs.GetDirX(out x, out y, out z);
-                    BH.oM.Geometry.Vector coordXAxis = BH.Engine.Geometry.Create.Vector(x, y, z);
-                    BH.oM.Geometry.Vector coordZAxis = BH.Engine.Geometry.Compute.FitPlane(outline as dynamic).Normal;
-                    if (coordZAxis.Z == 0)
+
+                    bool flip = robotPanel.Main.Attribs.DirZ == 1;
+                    double tolerance = 1e-16;
+
+                    if (Math.Abs(coordZAxis.Z) > tolerance)
                     {
-                        if ((coordZAxis.X > coordZAxis.Y && coordZAxis.X < 1) || (coordZAxis.Y > coordZAxis.X && coordZAxis.Y < 1))
-                            coordZAxis = BH.Engine.Geometry.Modify.Reverse(coordZAxis);
+                        if (coordZAxis.Z < 0)
+                            flip = !flip;
                     }
-                    if (rpanel.Main.Attribs.DirZ == 0)
-                        coordZAxis = BH.Engine.Geometry.Modify.Reverse(coordZAxis);
+                    else if (Math.Abs(coordZAxis.X) > tolerance)
+                    {
+                        if (coordZAxis.X < 0)
+                            flip = !flip;
+                    }
+                    else
+                    {
+                        if (coordZAxis.Y < 0)
+                            flip = !flip;
+                    }
 
-                    BH.oM.Geometry.CoordinateSystem.Cartesian tempCoordSys = BH.Engine.Geometry.Create.CartesianCoordinateSystem(coordPoint, coordXAxis, coordZAxis);
-                    BH.oM.Geometry.CoordinateSystem.Cartesian coordinateSystem = BH.Engine.Geometry.Create.CartesianCoordinateSystem(coordPoint, coordXAxis, tempCoordSys.Z);
+                    if (flip)
+                    {
+                        coordZAxis = coordZAxis.Reverse();
+                        FlipOutline(panel);
+                    }
 
-                    BHoMPanel.CustomData["CoordinateSystem"] = coordinateSystem;
+                    //Set local orientation
+                    panel.OrientationAngle = Engine.Structure.Compute.OrientationAngleAreaElement(coordZAxis, coordXAxis);
 
                 }
-                BHoMPanels.Add(BHoMPanel);
+                BHoMPanels.Add(panel);
             }
             return BHoMPanels;
         }

@@ -84,13 +84,18 @@ namespace BH.Adapter.Robot
                         robotPanel.Main.Attribs.DirZ = 1;
                 }
 
+                Vector localX = panel.LocalOrientation().X;
+                robotPanel.Main.Attribs.SetDirX(IRobotObjLocalXDirDefinitionType.I_OLXDDT_CARTESIAN, localX.X, localX.Y, localX.Z);
+
                 foreach (Opening opening in panel.Openings)
                 {
                     rPanelOpenings.AddOne(System.Convert.ToInt32(opening.CustomData[AdapterIdName]));
                 }
                 robotPanel.SetHostedObjects(rPanelOpenings);
+
                 robotPanel.Initialize();
                 robotPanel.Update();
+
             }
             m_RobotApplication.Project.Structure.Objects.EndMultiOperation();
             return true;

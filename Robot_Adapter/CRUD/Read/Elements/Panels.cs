@@ -32,6 +32,7 @@ using System.Collections;
 using BH.oM.Structure.MaterialFragments;
 using BH.Engine.Spatial;
 using BH.Engine.Geometry;
+using BH.Engine.Structure;
 
 namespace BH.Adapter.Robot
 {
@@ -136,10 +137,9 @@ namespace BH.Adapter.Robot
                         FlipOutline(panel);
                     }
 
-                    Vector coordYAxis = coordZAxis.CrossProduct(coordXAxis);
-                    BH.oM.Geometry.CoordinateSystem.Cartesian coordinateSystem = BH.Engine.Geometry.Create.CartesianCoordinateSystem(coordPoint, coordXAxis, coordYAxis);
+                    //Set local orientation
+                    panel = panel.SetLocalOrientation(coordXAxis);
 
-                    panel.CustomData["CoordinateSystem"] = coordinateSystem;
                     if (robotPanel.HasLabel(IRobotLabelType.I_LT_PANEL_THICKNESS) != 0)
                     {
                         string propName = robotPanel.GetLabelName(IRobotLabelType.I_LT_PANEL_THICKNESS);

@@ -33,6 +33,7 @@ using BH.oM.Structure.Requests;
 using BH.oM.Geometry;
 using BH.Engine.Geometry;
 using BH.oM.Adapter;
+using BH.Engine.Structure;
 using BH.oM.Base;
 
 namespace BH.Adapter.Robot
@@ -135,7 +136,7 @@ namespace BH.Adapter.Robot
             foreach (BH.oM.Structure.Elements.Panel panel in panels)
             {
 
-                Basis orientation = request.Orientation ?? (Basis)(panel.CustomData["CoordinateSystem"] as dynamic);
+                Basis orientation = request.Orientation ?? panel.LocalOrientation();
                 List<MeshElementResult> meshResults = new List<MeshElementResult>();
 
                 RobotSelection panelSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_PANEL);

@@ -64,27 +64,10 @@ namespace BH.Adapter.Robot
 
                 RobotSelection rPanelOpenings = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_OBJECT);
 
-                Vector bhNormal = panel.Normal();
+                Basis localOrientation = panel.LocalOrientation();
+                robotPanel.Main.Attribs.DirZ = Convert.ToRobotFlipPanelZ(localOrientation.Z);
 
-                //Tolerance is lower than any geometry tolerance used in the BHoM, hence defined here
-                double tolerance = 1e-16;
-                if (Math.Abs(bhNormal.Z) > tolerance)
-                {
-                    if (bhNormal.Z < 0)
-                        robotPanel.Main.Attribs.DirZ = 1;
-                }
-                else if (Math.Abs(bhNormal.X) > tolerance)
-                {
-                    if (bhNormal.X < 0)
-                        robotPanel.Main.Attribs.DirZ = 1;
-                }
-                else
-                {
-                    if (bhNormal.Y < 0)
-                        robotPanel.Main.Attribs.DirZ = 1;
-                }
-
-                Vector localX = panel.LocalOrientation().X;
+                Vector localX = localOrientation.X;
                 robotPanel.Main.Attribs.SetDirX(IRobotObjLocalXDirDefinitionType.I_OLXDDT_CARTESIAN, localX.X, localX.Y, localX.Z);
 
                 foreach (Opening opening in panel.Openings)

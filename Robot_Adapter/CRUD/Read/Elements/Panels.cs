@@ -111,23 +111,7 @@ namespace BH.Adapter.Robot
 
 
                     bool flip = robotPanel.Main.Attribs.DirZ == 1;
-                    double tolerance = 1e-16;
-
-                    if (Math.Abs(coordZAxis.Z) > tolerance)
-                    {
-                        if (coordZAxis.Z < 0)
-                            flip = !flip;
-                    }
-                    else if (Math.Abs(coordZAxis.X) > tolerance)
-                    {
-                        if (coordZAxis.X < 0)
-                            flip = !flip;
-                    }
-                    else
-                    {
-                        if (coordZAxis.Y < 0)
-                            flip = !flip;
-                    }
+                    flip = Convert.FromRobotCheckFlipNormal(coordZAxis, flip);
 
                     if (flip)
                     {
@@ -258,23 +242,7 @@ namespace BH.Adapter.Robot
 
 
                     bool flip = robotPanel.Main.Attribs.DirZ == 1;
-                    double tolerance = 1e-16;
-
-                    if (Math.Abs(coordZAxis.Z) > tolerance)
-                    {
-                        if (coordZAxis.Z < 0)
-                            flip = !flip;
-                    }
-                    else if (Math.Abs(coordZAxis.X) > tolerance)
-                    {
-                        if (coordZAxis.X < 0)
-                            flip = !flip;
-                    }
-                    else
-                    {
-                        if (coordZAxis.Y < 0)
-                            flip = !flip;
-                    }
+                    flip = Convert.FromRobotCheckFlipNormal(coordZAxis, flip);
 
                     if (flip)
                     {

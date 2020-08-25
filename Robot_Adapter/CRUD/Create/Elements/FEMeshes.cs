@@ -27,6 +27,8 @@ using System;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.SurfaceProperties;
 using BH.Engine.Structure;
+using BH.oM.Geometry;
+using BH.Engine.Geometry;
 using RobotOM;
 
 namespace BH.Adapter.Robot
@@ -86,6 +88,32 @@ namespace BH.Adapter.Robot
                 fEMesh.CustomData[AdapterIdName] = elemNumber;
                 objServer.Objects.CreateOnFiniteElems(faceList, elemNumber);
                 mesh = objServer.Objects.Get(elemNumber) as RobotObjObject;
+
+                //Get local orientations for each face
+                List<Basis> orientations = fEMesh.LocalOrientations();
+
+                //Check if all orientations are the same
+                bool sameOrientation = true;
+
+                for (int i = 0; i < orientations.Count - 1; i++)
+                {
+                    sameOrientation &= orientations[i].X.Angle(orientations[i + 1].X) < Tolerance.Angle;
+                    sameOrientation &= orientations[i].Z.Angle(orientations[i + 1].Z) < Tolerance.Angle;
+                }
+
+                if (sameOrientation)
+                {
+                    mesh.Main.Attribs.DirZ = Convert.ToRobotFlipPanelZ(orientations.First().Z);
+                    Vector xDir = orientations.First().X;
+                    mesh.Main.Attribs.SetDirX(IRobotObjLocalXDirDefinitionType.I_OLXDDT_CARTESIAN, xDir.X, xDir.Y, xDir.Z);
+                    mesh.Update();
+
+                }
+                else
+                {
+                    Engine.Reflection.Compute.RecordWarning("Local orientions of the pushed FEMesh varies across the faces. Could not set local orientations to Robot.");
+                }
+
                 if (fEMesh.Property is LoadingPanelProperty)
                     mesh.SetLabel(IRobotLabelType.I_LT_CLADDING, fEMesh.Property.DescriptionOrName());
 

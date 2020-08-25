@@ -137,6 +137,7 @@
     <Compile Include="Convert\AdapterID.cs" />
     <Compile Include="Convert\FromRobot\Elements\Bar.cs" />
     <Compile Include="Convert\FromRobot\Elements\Node.cs" />
+    <Compile Include="Convert\FromRobot\Elements\Panel.cs" />
     <Compile Include="Convert\FromRobot\Geometry\Circle.cs" />
     <Compile Include="Convert\FromRobot\Geometry\Arc.cs" />
     <Compile Include="Convert\FromRobot\Geometry\Polyline.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="Convert\FromRobot\Loads\PointLoad.cs" />
     <Compile Include="Convert\FromRobot\Loads\PointVelocity.cs" />
     <Compile Include="Convert\FromRobot\Properties\Offset.cs" />
+    <Compile Include="Convert\ToRobot\Elements\Panel.cs" />
     <Compile Include="Convert\ToRobot\Geometry\Circle.cs" />
     <Compile Include="Convert\ToRobot\Geometry\Arc.cs" />
     <Compile Include="Convert\ToRobot\Geometry\Polyline.cs" />

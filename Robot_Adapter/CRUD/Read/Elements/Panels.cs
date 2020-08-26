@@ -99,6 +99,7 @@ namespace BH.Adapter.Robot
                     catch
                     {
                         BH.Engine.Reflection.Compute.RecordWarning("Geometry for panel " + robotPanel.Number.ToString() + " not supported.");
+                        continue;
                     }
                     panel.CustomData[AdapterIdName] = robotPanel.Number;
                     panel.CustomData["RobotFiniteElementIds"] = robotPanel.FiniteElems;

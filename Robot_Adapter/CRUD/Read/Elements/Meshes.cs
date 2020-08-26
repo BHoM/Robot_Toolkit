@@ -24,6 +24,9 @@ using System.Collections.Generic;
 using BH.oM.Structure.Elements;
 using RobotOM;
 using System.Linq;
+using BH.oM.Geometry;
+using BH.Engine.Geometry;
+using BH.Engine.Structure;
 
 namespace BH.Adapter.Robot
 {
@@ -145,11 +148,56 @@ namespace BH.Adapter.Robot
                     bhomMeshes[panelId].Nodes.Add(bhomNodes[nodeId]);
                 }
             }
+
+            RobotObjObjectServer robotObjectServer = m_RobotApplication.Project.Structure.Objects;
+
+            foreach (KeyValuePair<int, FEMesh> kvp in bhomMeshes)
+            {
+                int id = kvp.Key;
+                FEMesh mesh = kvp.Value;
+
+                //Get local orientations for each face
+                List<Vector> normals = mesh.Normals();
+
+                //Check if all orientations are the same
+                bool sameOrientation = true;
+
+                for (int i = 0; i < normals.Count - 1; i++)
+                {
+                    sameOrientation &= normals[i].Angle(normals[i + 1]) < Tolerance.Angle;
+                }
+
+                if (sameOrientation)
+                {
+                    Vector normal = normals.First();
+                    RobotObjObject robotPanel = robotObjectServer.Get(id) as RobotObjObject;
+
+                    double x, y, z; robotPanel.Main.Attribs.GetDirX(out x, out y, out z);
+
+                    bool flip = robotPanel.Main.Attribs.DirZ == 1;
+                    flip = Convert.FromRobotCheckFlipNormal(normal, flip);
+
+                    if (flip)
+                    {
+                        normal = normal.Reverse();
+                        foreach (FEMeshFace face in mesh.Faces)
+                            face.NodeListIndices.Reverse();
+                    }
+
+                    //Set local orientation
+                    double orientationAngle = Engine.Structure.Compute.OrientationAngleAreaElement(normal, new Vector { X = x, Y = y, Z = z });
+                    mesh.Faces.ForEach(f => f.OrientationAngle = orientationAngle);
+                }
+                else
+                {
+                    Engine.Reflection.Compute.RecordWarning("Local orientations of FEMeshes with varying orientations can not be extracted.");
+                }
+            }
+
             return bhomMeshes.Values.ToList();
         }
 
         /***************************************************/
-
     }
 
 }

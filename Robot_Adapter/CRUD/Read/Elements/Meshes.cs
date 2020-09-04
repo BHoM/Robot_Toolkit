@@ -165,21 +165,24 @@ namespace BH.Adapter.Robot
                 for (int i = 0; i < normals.Count - 1; i++)
                 {
                     sameOrientation &= normals[i].Angle(normals[i + 1]) < Tolerance.Angle;
+                    if (!sameOrientation)
+                        break;
                 }
 
-                if (sameOrientation)
+                if (sameOrientation && normals.Count != 0)
                 {
                     Vector normal = normals.First();
                     RobotObjObject robotPanel = robotObjectServer.Get(id) as RobotObjObject;
 
-                    double x, y, z; robotPanel.Main.Attribs.GetDirX(out x, out y, out z);
+                    double x, y, z;
+                    robotPanel.Main.Attribs.GetDirX(out x, out y, out z);
 
                     bool flip = robotPanel.Main.Attribs.DirZ == 1;
                     flip = Convert.FromRobotCheckFlipNormal(normal, flip);
 
                     if (flip)
                     {
-                        normal = normal.Reverse();
+                        normal *= -1;
                         foreach (FEMeshFace face in mesh.Faces)
                             face.NodeListIndices.Reverse();
                     }

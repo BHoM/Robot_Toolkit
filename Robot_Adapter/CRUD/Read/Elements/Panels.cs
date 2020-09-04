@@ -247,7 +247,7 @@ namespace BH.Adapter.Robot
 
                     if (flip)
                     {
-                        coordZAxis = coordZAxis.Reverse();
+                        coordZAxis *= -1;
                         FlipOutline(panel);
                     }
 

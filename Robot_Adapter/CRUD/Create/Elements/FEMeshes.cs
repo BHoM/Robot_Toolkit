@@ -99,15 +99,17 @@ namespace BH.Adapter.Robot
                 {
                     sameOrientation &= orientations[i].X.Angle(orientations[i + 1].X) < Tolerance.Angle;
                     sameOrientation &= orientations[i].Z.Angle(orientations[i + 1].Z) < Tolerance.Angle;
+
+                    if (!sameOrientation)
+                        break;
                 }
 
-                if (sameOrientation)
+                if (orientations.Count != 0 && sameOrientation)
                 {
                     mesh.Main.Attribs.DirZ = Convert.ToRobotFlipPanelZ(orientations.First().Z);
                     Vector xDir = orientations.First().X;
                     mesh.Main.Attribs.SetDirX(IRobotObjLocalXDirDefinitionType.I_OLXDDT_CARTESIAN, xDir.X, xDir.Y, xDir.Z);
                     mesh.Update();
-
                 }
                 else
                 {

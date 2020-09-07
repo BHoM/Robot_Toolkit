@@ -135,7 +135,31 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
+
+        public IEnumerable<IBHoMObject> Read(SelectionRequest request, ActionConfig actionConfig = null)
+        {
+            List<IBHoMObject> objects = new List<IBHoMObject>();
+            objects.AddRange(ReadSelected(typeof(Bar)));
+            objects.AddRange(ReadSelected(typeof(Panel)));
+            objects.AddRange(ReadSelected(typeof(Node)));
+            return objects;
+        }
+
+        /***************************************************/
         /****           Private Methods                 ****/
+        /***************************************************/
+
+        private IEnumerable<IBHoMObject> ReadSelected(Type type, ActionConfig actionConfig = null)
+        {
+            RobotOM.IRobotObjectType robotType = Convert.RobotObjectType(type);
+            RobotOM.IRobotSelection selection = m_RobotApplication.Project.Structure.Selections.Get(robotType);
+
+            if (selection.Count != 0)
+                return IRead(type, Convert.ToSelectionList(selection.ToText()), actionConfig);
+
+            return new List<IBHoMObject>();
+        }
+
         /***************************************************/
 
         private List<int> CheckAndGetIds(IList ids)

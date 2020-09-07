@@ -22,6 +22,9 @@
 
 using System.Collections.Generic;
 using BH.oM.Structure.Loads;
+using BH.oM.Base;
+using BH.Engine.Structure;
+using System.Linq;
 using RobotOM;
 
 namespace BH.Adapter.Robot
@@ -38,14 +41,42 @@ namespace BH.Adapter.Robot
             RobotCaseServer caseServer = m_RobotApplication.Project.Structure.Cases;
             RobotGroupServer rGroupServer = m_RobotApplication.Project.Structure.Groups;
 
+            loads = loads.Where(x => ICheckLoad(x));
+
             foreach (ILoad load in loads)
             {
                 IRobotCase rCase = caseServer.Get(load.Loadcase.Number);
                 RobotSimpleCase sCase = rCase as RobotSimpleCase;
-                Convert.ToRobot(load as dynamic, sCase, rGroupServer);
-                
+                Convert.ToRobot(load as dynamic, sCase, rGroupServer);               
             }
             
+            return true;
+        }
+
+        /***************************************************/
+
+        private bool ICheckLoad(ILoad load)
+        {
+            return CheckLoad(load as dynamic);
+        }
+
+        /***************************************************/
+
+        private bool CheckLoad<T>(IElementLoad<T> load) where T : IBHoMObject
+        {
+            if (load.HasAssignedObjectIds(AdapterIdName))
+                return true;
+            else
+            {
+                BH.Adapter.Modules.Structure.ErrorMessages.LoadsWithoutObejctIdsAssignedError(load);
+                return false;
+            }
+        }
+
+        /***************************************************/
+
+        private bool CheckLoad(ILoad load)
+        {
             return true;
         }
 

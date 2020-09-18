@@ -42,7 +42,7 @@ namespace BH.Adapter.Robot
 
         private List<RigidLink> ReadRigidLinks(IList ids = null)
         {
-            List<int> linksIds = CheckAndGetIds(ids);
+            List<int> linksIds = CheckAndGetIds<RigidLink>(ids);
             List<RigidLink> bhomRigidLinks = new List<RigidLink>();
 
             IEnumerable<Node> bhomNodesList = ReadNodes();

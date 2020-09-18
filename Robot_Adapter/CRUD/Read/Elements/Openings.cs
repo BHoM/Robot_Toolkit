@@ -40,7 +40,7 @@ namespace BH.Adapter.Robot
             IRobotStructure rStructure = m_RobotApplication.Project.Structure;
             RobotSelection rSelect = rStructure.Selections.Create(IRobotObjectType.I_OT_GEOMETRY);
 
-            List<int> openingIds = CheckAndGetIds(ids);
+            List<int> openingIds = CheckAndGetIds<Opening>(ids);
 
             if (openingIds == null)
             {

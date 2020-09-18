@@ -36,7 +36,7 @@ namespace BH.Adapter.Robot
 
         private List<Node> ReadNodes(IList ids = null)
         {
-            List<int> nodeIds = CheckAndGetIds(ids);
+            List<int> nodeIds = CheckAndGetIds<Node>(ids);
             List<Node> bhomNodes = new List<Node>();
             List<Constraint6DOF> constraints = ReadConstraints6DOF();
             Dictionary<int, HashSet<string>> nodeTags = GetTypeTags(typeof(Node));

@@ -53,7 +53,7 @@ namespace BH.Adapter.Robot
 
             Panel panel = null;
 
-            List<int> panelIds = CheckAndGetIds(ids);
+            List<int> panelIds = CheckAndGetIds<Panel>(ids);
 
             RobotSelection robotPanelSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_PANEL);
             RobotSelection robotCladdingPanelSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_GEOMETRY);
@@ -205,7 +205,7 @@ namespace BH.Adapter.Robot
             List<Panel> BHoMPanels = new List<Panel>();
             Panel panel = null;
 
-            List<int> panelIds = CheckAndGetIds(ids);
+            List<int> panelIds = CheckAndGetIds<Panel>(ids);
             RobotSelection rPanSelect = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_PANEL);
             if (panelIds == null)
             {

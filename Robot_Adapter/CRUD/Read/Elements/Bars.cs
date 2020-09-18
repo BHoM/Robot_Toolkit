@@ -48,7 +48,7 @@ namespace BH.Adapter.Robot
 
         private List<Bar> ReadBars(IList ids = null)
         {
-            List<int> barIds = CheckAndGetIds(ids);
+            List<int> barIds = CheckAndGetIds<Bar>(ids);
 
             List<Bar> bhomBars = new List<Bar>();
             IEnumerable<Node> bhomNodesList = ReadNodes();
@@ -194,7 +194,7 @@ namespace BH.Adapter.Robot
             if (ids == null || ids.Count == 0)
                 bar_sel.FromText("all");
             else
-                bar_sel.FromText(Convert.ToRobotSelectionString(CheckAndGetIds(ids)));
+                bar_sel.FromText(Convert.ToRobotSelectionString(CheckAndGetIds<Bar>(ids)));
 
 
 

@@ -162,7 +162,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private List<int> CheckAndGetIds(IList ids)
+        private List<int> CheckAndGetIds<T>(IEnumerable ids) where T : IBHoMObject
         {
             if (ids == null)
             {
@@ -170,28 +170,22 @@ namespace BH.Adapter.Robot
             }
             else
             {
-                if (ids is List<string>)
-                    return (ids as List<string>).Select(x => int.Parse(x)).ToList();
-                else if (ids is List<int>)
-                    return ids as List<int>;
-                else if (ids is List<double>)
-                    return (ids as List<double>).Select(x => (int)Math.Round(x)).ToList();
-                else
+                List<int> idsOut = new List<int>();
+                foreach (object o in ids)
                 {
-                    List<int> idsOut = new List<int>();
-                    foreach (object o in ids)
+                    int id;
+                    object idObj;
+
+                    if (o is int)
+                        idsOut.Add((int)o);
+                    if (int.TryParse(o.ToString(), out id))
                     {
-                        int id;
-                        object idObj;
-                        if (int.TryParse(o.ToString(), out id))
-                        {
-                            idsOut.Add(id);
-                        }
-                        else if (o is IBHoMObject && (o as IBHoMObject).CustomData.TryGetValue(AdapterIdName, out idObj) && int.TryParse(idObj.ToString(), out id))
-                            idsOut.Add(id);
+                        idsOut.Add(id);
                     }
-                    return idsOut;
+                    else if (o is T && ((T)o).CustomData.TryGetValue(AdapterIdName, out idObj) && int.TryParse(idObj.ToString(), out id))
+                        idsOut.Add(id);
                 }
+                return idsOut;
             }
         }
 

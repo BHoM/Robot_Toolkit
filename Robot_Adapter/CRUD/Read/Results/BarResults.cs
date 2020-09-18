@@ -76,7 +76,7 @@ namespace BH.Adapter.Robot
             if (request.ObjectIds == null || request.ObjectIds.Count == 0)
                 barSelection.FromText("all");
             else
-                barSelection.FromText(Convert.ToRobotSelectionString(CheckAndGetIds(request.ObjectIds)));
+                barSelection.FromText(Convert.ToRobotSelectionString(CheckAndGetIds<Bar>(request.ObjectIds)));
 
             queryParams.Selection.Set(IRobotObjectType.I_OT_CASE, caseSelection);
             queryParams.Selection.Set(IRobotObjectType.I_OT_BAR, barSelection);
@@ -93,7 +93,29 @@ namespace BH.Adapter.Robot
 
             if (request.ResultType == BarResultType.BarDisplacement)
             {
-                bars = ReadBarsQuery(request.ObjectIds?.Select(x => x.ToString()).ToList());
+                if (request.ObjectIds == null || request.ObjectIds.Count == 0)
+                {
+                    bars = ReadBarsQuery();
+                }
+                else
+                {
+                    List<string> barIds = new List<string>();
+                    foreach (object obj in request.ObjectIds)
+                    {
+                        if (obj.GetType() == typeof(Bar))
+                        {
+                            bars.Add(obj as Bar);
+                        }
+                        else if (obj is string || obj is int || obj is double)
+                        {
+                            barIds.Add(obj.ToString());
+                        }
+                    }
+                    if (barIds.Count > 0)
+                    {
+                        bars.AddRange(ReadBarsQuery(barIds));
+                    }
+                }
             }
 
 

@@ -28,6 +28,7 @@ using BH.oM.Structure.Requests;
 using RobotOM;
 using BH.oM.Analytical.Results;
 using BH.oM.Adapter;
+using BH.oM.Structure.Elements;
 using System;
 using System.Collections;
 
@@ -70,7 +71,7 @@ namespace BH.Adapter.Robot
                     nodeSelection = m_RobotApplication.Project.Structure.Selections.CreatePredefined(IRobotPredefinedSelection.I_PS_NODE_SUPPORTED);
             }            
             else
-                nodeSelection.FromText(Convert.ToRobotSelectionString(CheckAndGetIds(request.ObjectIds)));
+                nodeSelection.FromText(Convert.ToRobotSelectionString(CheckAndGetIds<Node>(request.ObjectIds)));
 
             queryParams.Selection.Set(IRobotObjectType.I_OT_CASE, caseSelection);
             queryParams.Selection.Set(IRobotObjectType.I_OT_NODE, nodeSelection);

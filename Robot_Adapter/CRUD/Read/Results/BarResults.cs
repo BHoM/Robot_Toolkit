@@ -99,21 +99,17 @@ namespace BH.Adapter.Robot
                 }
                 else
                 {
-                    List<string> barIds = new List<string>();
+                    List<object> barIds = new List<object>();
                     foreach (object obj in request.ObjectIds)
                     {
-                        if (obj.GetType() == typeof(Bar))
-                        {
+                        if (obj is Bar)
                             bars.Add(obj as Bar);
-                        }
-                        else if (obj is string || obj is int || obj is double)
-                        {
-                            barIds.Add(obj.ToString());
-                        }
+                        else
+                            barIds.Add(obj);
                     }
                     if (barIds.Count > 0)
                     {
-                        bars.AddRange(ReadBarsQuery(barIds));
+                        bars.AddRange(ReadBarsQuery(CheckAndGetIds<Bar>(barIds).Select(x => x.ToString()).ToList()));
                     }
                 }
             }

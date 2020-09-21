@@ -76,21 +76,17 @@ namespace BH.Adapter.Robot
             }
             else
             {
-                List<int> panelIds = new List<int>();
+                List<object> panelIds = new List<object>();
                 foreach (object obj in request.ObjectIds)
                 {
-                    if (obj.GetType() == typeof(BH.oM.Structure.Elements.Panel))
-                    {
-                        panels.Add(obj as dynamic);
-                    }
-                    else if (obj.GetType() == typeof(string) || obj.GetType() == typeof(int))
-                    {
-                        panelIds.Add(System.Convert.ToInt32(obj));
-                    }
+                    if (obj is oM.Structure.Elements.Panel)
+                        panels.Add(obj as oM.Structure.Elements.Panel);
+                    else
+                        panelIds.Add(obj);
                 }
                 if (panelIds.Count > 0)
                 {
-                    panels.AddRange(ReadPanelsLight(panelIds as dynamic));
+                    panels.AddRange(ReadPanelsLight(CheckAndGetIds<oM.Structure.Elements.FEMesh>(panelIds)));
                 }
             }
 

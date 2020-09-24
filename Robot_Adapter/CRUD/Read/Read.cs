@@ -178,7 +178,7 @@ namespace BH.Adapter.Robot
 
                     if (o is int)
                         idsOut.Add((int)o);
-                    if (int.TryParse(o.ToString(), out id))
+                    else if (int.TryParse(o.ToString(), out id))
                     {
                         idsOut.Add(id);
                     }

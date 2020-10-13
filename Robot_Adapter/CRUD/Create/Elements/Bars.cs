@@ -72,6 +72,12 @@ namespace BH.Adapter.Robot
                     }
 
                     double orientationAngle = bhomBar.ToRobotOrientationAngle();
+
+                    if (bhomBar.StartNode == null || bhomBar.EndNode == null)
+                    {
+                        Engine.Reflection.Compute.RecordError("At least one of the end nodes for a Bar are null. Unable to push bar to Robot.");
+                        continue;
+                    }
                           
                     rcache.AddBar(barNum,
                                   System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterIdName]),

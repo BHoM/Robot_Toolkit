@@ -61,7 +61,7 @@ namespace BH.Adapter.Robot
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_RECT;
-            sectionData.Type = IRobotBarSectionType.I_BST_NS_POLYGONAL;
+
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H, section.Height);

@@ -24,7 +24,7 @@ using BH.oM.Structure.MaterialFragments;
 using BH.oM.Geometry;
 using RobotOM;
 using BH.oM.Structure.SectionProperties;
-using BH.oM.Geometry.ShapeProfiles;
+using BH.oM.Spatial.ShapeProfiles;
 using System;
 
 namespace BH.Adapter.Robot
@@ -58,7 +58,7 @@ namespace BH.Adapter.Robot
                     case IRobotBarSectionShapeType.I_BSST_HEA:
                     case IRobotBarSectionShapeType.I_BSST_HEB:
                     case IRobotBarSectionShapeType.I_BSST_HEC:
-                        sectionProfile = BH.Engine.Geometry.Create.ISectionProfile(d, bf, Tw, Tf, r, ri);
+                        sectionProfile = BH.Engine.Spatial.Create.ISectionProfile(d, bf, Tw, Tf, r, ri);
                         break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_RECT:
@@ -68,32 +68,32 @@ namespace BH.Adapter.Robot
                     case IRobotBarSectionShapeType.I_BSST_TRND:
                         if (r != 0)
                         {
-                            sectionProfile = BH.Engine.Geometry.Create.BoxProfile(d, bf, Tf, r + Tf, r);
+                            sectionProfile = BH.Engine.Spatial.Create.BoxProfile(d, bf, Tf, r + Tf, r);
                         }
                         else
                         {
-                            sectionProfile = BH.Engine.Geometry.Create.BoxProfile(d, bf, Tf, 0, 0);
+                            sectionProfile = BH.Engine.Spatial.Create.BoxProfile(d, bf, Tf, 0, 0);
                         }
                         break;
 
                     case IRobotBarSectionShapeType.I_BSST_RECT_FILLED:
-                        sectionProfile = BH.Engine.Geometry.Create.RectangleProfile(d, bf, 0);
+                        sectionProfile = BH.Engine.Spatial.Create.RectangleProfile(d, bf, 0);
                         break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_T_SHAPE:
-                        sectionProfile = BH.Engine.Geometry.Create.TSectionProfile(d, bf, Tw, Tf, 0, 0);
+                        sectionProfile = BH.Engine.Spatial.Create.TSectionProfile(d, bf, Tw, Tf, 0, 0);
                         break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_TUBE:
-                        sectionProfile = BH.Engine.Geometry.Create.TubeProfile(d, Tf);
+                        sectionProfile = BH.Engine.Spatial.Create.TubeProfile(d, Tf);
                         break;
 
                     case IRobotBarSectionShapeType.I_BSST_UPN:
-                        sectionProfile = BH.Engine.Geometry.Create.ChannelProfile(d, bf, Tw, Tf, r, ri);
+                        sectionProfile = BH.Engine.Spatial.Create.ChannelProfile(d, bf, Tw, Tf, r, ri);
                         break;
 
                     case IRobotBarSectionShapeType.I_BSST_CAE:
-                        sectionProfile = BH.Engine.Geometry.Create.AngleProfile(d, bf, Tw, Tf, r, ri);
+                        sectionProfile = BH.Engine.Spatial.Create.AngleProfile(d, bf, Tw, Tf, r, ri);
                         break;
                     default:
                         return null;
@@ -126,13 +126,13 @@ namespace BH.Adapter.Robot
                     case IRobotBarSectionShapeType.I_BSST_USER_TUBE:
                         T = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_T);
                         D = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D);
-                        sectionProfile = BH.Engine.Geometry.Create.TubeProfile(D, T);
+                        sectionProfile = BH.Engine.Spatial.Create.TubeProfile(D, T);
                         break;
 
                     case IRobotBarSectionShapeType.I_BSST_RECT_FILLED:
                         B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B);
                         H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H);
-                        sectionProfile = BH.Engine.Geometry.Create.RectangleProfile(H, B, 0);
+                        sectionProfile = BH.Engine.Spatial.Create.RectangleProfile(H, B, 0);
                         break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_RECT:
@@ -141,9 +141,9 @@ namespace BH.Adapter.Robot
                         T = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_T);
 
                         if(T == 0)
-                            sectionProfile = BH.Engine.Geometry.Create.RectangleProfile(H, B, 0);
+                            sectionProfile = BH.Engine.Spatial.Create.RectangleProfile(H, B, 0);
                         else
-                            sectionProfile = BH.Engine.Geometry.Create.BoxProfile(H, B, T, 0, 0);
+                            sectionProfile = BH.Engine.Spatial.Create.BoxProfile(H, B, T, 0, 0);
                         break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_I_BISYM:
@@ -151,7 +151,7 @@ namespace BH.Adapter.Robot
                         H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H);
                         TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW);
                         TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF);
-                        sectionProfile = BH.Engine.Geometry.Create.ISectionProfile(H + (2 * TF), B, TW, TF, 0, 0);
+                        sectionProfile = BH.Engine.Spatial.Create.ISectionProfile(H + (2 * TF), B, TW, TF, 0, 0);
                         break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_BOX_2:
@@ -165,7 +165,7 @@ namespace BH.Adapter.Robot
                         if (outstand < 0 && Math.Abs(outstand) < Tolerance.MicroDistance)
                             outstand = 0;
 
-                        sectionProfile = BH.Engine.Geometry.Create.GeneralisedFabricatedBoxProfile(H + (2 * TF), B1 + (2 * TW), TW, TF, TF, outstand, outstand);
+                        sectionProfile = BH.Engine.Spatial.Create.GeneralisedFabricatedBoxProfile(H + (2 * TF), B1 + (2 * TW), TW, TF, TF, outstand, outstand);
                         break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_BOX_3:
@@ -190,11 +190,11 @@ namespace BH.Adapter.Robot
                         //If outstands are 0 (less than microdistance fraction of the width) return a standard fabricated box section.
                         if (B1 > Tolerance.Distance && topOutstand / B1 < Tolerance.MicroDistance && botOutstand / B1 < Tolerance.MicroDistance)
                         {
-                            sectionProfile = BH.Engine.Geometry.Create.FabricatedBoxProfile(H + TF + TF2, B1 + 2 * TW, TW, TF, TF2, 0);
+                            sectionProfile = BH.Engine.Spatial.Create.FabricatedBoxProfile(H + TF + TF2, B1 + 2 * TW, TW, TF, TF2, 0);
                         }
                         else
                         {
-                            sectionProfile = BH.Engine.Geometry.Create.GeneralisedFabricatedBoxProfile(H + TF + TF2, B1 + (2 * TW), TW, TF, TF2, topOutstand, botOutstand);
+                            sectionProfile = BH.Engine.Spatial.Create.GeneralisedFabricatedBoxProfile(H + TF + TF2, B1 + (2 * TW), TW, TF, TF2, topOutstand, botOutstand);
                         }
                         break;
 
@@ -204,7 +204,7 @@ namespace BH.Adapter.Robot
                         TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_TW);
                         TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_TF);
 
-                        sectionProfile = BH.Engine.Geometry.Create.FabricatedBoxProfile(H + (2 * TF), B, TW, TF, TF, 0);
+                        sectionProfile = BH.Engine.Spatial.Create.FabricatedBoxProfile(H + (2 * TF), B, TW, TF, TF, 0);
                         break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_I_MONOSYM:
@@ -214,11 +214,11 @@ namespace BH.Adapter.Robot
                         TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TW);
                         TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TF1);
                         TF2 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TF2);
-                        sectionProfile = BH.Engine.Geometry.Create.FabricatedISectionProfile(H + TF + TF2, B1, B2, TW, TF, TF2, 0);
+                        sectionProfile = BH.Engine.Spatial.Create.FabricatedISectionProfile(H + TF + TF2, B1, B2, TW, TF, TF2, 0);
                         break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_CIRC_FILLED:
-                        sectionProfile = BH.Engine.Geometry.Create.CircleProfile(D);
+                        sectionProfile = BH.Engine.Spatial.Create.CircleProfile(D);
                         break;
 
                     default:

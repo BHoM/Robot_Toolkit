@@ -24,7 +24,7 @@ using BH.oM.Structure.MaterialFragments;
 using BH.Engine.Structure;
 using RobotOM;
 using BH.oM.Structure.SectionProperties;
-using BH.oM.Geometry.ShapeProfiles;
+using BH.oM.Spatial.ShapeProfiles;
 
 namespace BH.Adapter.Robot
 {
@@ -61,7 +61,7 @@ namespace BH.Adapter.Robot
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_RECT;
-
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_POLYGONAL;
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
 
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H, section.Height);

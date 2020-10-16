@@ -24,7 +24,7 @@ using BH.oM.Structure.MaterialFragments;
 using BH.Engine.Structure;
 using RobotOM;
 using BH.oM.Structure.SectionProperties;
-using BH.oM.Geometry.ShapeProfiles;
+using BH.oM.Spatial.ShapeProfiles;
 
 namespace BH.Adapter.Robot
 {

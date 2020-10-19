@@ -45,13 +45,16 @@ namespace BH.Adapter.Robot
 
                 foreach (Node node in nodes)
                 {
-                    if (!CheckInputObject(node))
+                    //Check obejct itself is not null and id information can be extracted
+                    if (!CheckInputObjectAndExtractAdapterIdInt(node, out nodeNum, oM.Reflection.Debugging.EventType.Error))
                         continue;
 
-                    nodeNum = System.Convert.ToInt32(node.CustomData[AdapterIdName]);
+                    oM.Geometry.Point position = node.Position;
 
+                    //Check point is not null
+                    if (!CheckNotNull(position, oM.Reflection.Debugging.EventType.Error, typeof(Node)))
+                        continue;
 
-                    oM.Geometry.Point position = Engine.Structure.Query.Position(node);
                     rcache.AddNode(nodeNum, position.X, position.Y, position.Z);
                 }
                 m_RobotApplication.Project.Structure.ApplyCache(rcache as RobotStructureCache);
@@ -61,7 +64,9 @@ namespace BH.Adapter.Robot
 
                 foreach (Node node in nodes)
                 {
-                    nodeNum = System.Convert.ToInt32(node.CustomData[AdapterIdName]);
+                    if (!CheckInputObjectAndExtractAdapterIdInt(node, out nodeNum, oM.Reflection.Debugging.EventType.Error))
+                        continue;
+
                     nodeTags[nodeNum] = node.Tags;
 
                     if (node.Support != null)

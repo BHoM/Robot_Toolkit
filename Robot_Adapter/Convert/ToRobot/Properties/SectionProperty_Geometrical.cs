@@ -20,8 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Structure.MaterialFragments;
-using BH.Engine.Structure;
+using System;
 using RobotOM;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Spatial.ShapeProfiles;
@@ -36,7 +35,10 @@ namespace BH.Adapter.Robot
 
         public static void ToRobot(this IGeometricalSection section, IRobotBarSectionData secData)
         {
-            if (!ToRobotGeometricalSection(section.SectionProfile as dynamic, secData))
+            Type type = section.GetType();
+
+            if (!RobotAdapter.CheckNotNull(section.SectionProfile, oM.Reflection.Debugging.EventType.Warning, type) ||
+                !ToRobotConcreteSection(section.SectionProfile as dynamic, secData))
             {
                 //If method returns false, no profile based data has been set. Fallback to explicitly setting properties.
                 secData.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, section.Area);

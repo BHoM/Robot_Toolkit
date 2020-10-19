@@ -43,8 +43,14 @@ namespace BH.Adapter.Robot
 
             foreach (Offset offset in offsets)
             {
-                Convert.ToRobot(robotLabel.Data, offset);
-                robotLabelServer.StoreWithName(robotLabel, offset.DescriptionOrName());
+                //Check release as well as start and end are not null
+                if (CheckNotNull(offset, oM.Reflection.Debugging.EventType.Warning)
+                    && CheckNotNull(offset.Start, oM.Reflection.Debugging.EventType.Warning, typeof(Offset))
+                    && CheckNotNull(offset.End, oM.Reflection.Debugging.EventType.Warning, typeof(Offset)))
+                {
+                    Convert.ToRobot(robotLabel.Data, offset);
+                    robotLabelServer.StoreWithName(robotLabel, offset.DescriptionOrName());
+                }
             }
             return true;
         }

@@ -38,7 +38,7 @@ namespace BH.Adapter.Robot
         /**** Public Methods                            ****/
         /***************************************************/
 
-        private bool CheckNotNull<T>(T obj, EventType errorLevel = EventType.Error, Type owningType = null)
+        public static bool CheckNotNull<T>(T obj, EventType errorLevel = EventType.Error, Type owningType = null)
         {
             if (obj == null)
             {

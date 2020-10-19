@@ -227,7 +227,7 @@
     <Compile Include="CRUD\Create\Loads\Loadcase.cs" />
     <Compile Include="CRUD\Create\Properties\Materials.cs" />
     <Compile Include="CRUD\Create\Properties\SectionProperties.cs" />
-    <Compile Include="CRUD\Create\Properties\RigidLinks.cs" />
+    <Compile Include="CRUD\Create\Elements\RigidLinks.cs" />
     <Compile Include="CRUD\Delete\Delete.cs" />
     <Compile Include="CRUD\Create\Create.cs" />
     <Compile Include="AdapterActions\Execute.cs" />

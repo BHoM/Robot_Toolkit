@@ -44,8 +44,11 @@ namespace BH.Adapter.Robot
             List<Constraint4DOF> linearReleasesToUpdate = new List<Constraint4DOF>();
             foreach (Constraint4DOF linearRelease in linearReleases)
             {
-                Convert.ToRobot(robotLabel.Data, linearRelease);
-                robotLabelServer.StoreWithName(robotLabel, linearRelease.DescriptionOrName());
+                if (CheckNotNull(linearRelease, oM.Reflection.Debugging.EventType.Warning))
+                {
+                    Convert.ToRobot(robotLabel.Data, linearRelease);
+                    robotLabelServer.StoreWithName(robotLabel, linearRelease.DescriptionOrName());
+                }
             }
             return true;
         }

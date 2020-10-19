@@ -43,12 +43,15 @@ namespace BH.Adapter.Robot
             IRobotMaterialData matData = label.Data;
             foreach (IMaterialFragment material in materials)
             {
+                if (!CheckNotNull(material, oM.Reflection.Debugging.EventType.Warning))
+                    continue;
+
                 string match = Convert.Match(m_dbMaterialNames, material);
                 bool loadedFromDb = false;
                 if (match != null)
                 {
                     matData.LoadFromDBase(match);
-                    if (matData.Type == Convert.GetMaterialType(material)) //Check that the material type matches, if not, create a new one instead of loading from DB
+                    if (matData != null && matData.Type == Convert.GetMaterialType(material)) //Check that the material type matches, if not, create a new one instead of loading from DB
                     {
                         if (robotLabelServer.Exist(IRobotLabelType.I_LT_MATERIAL, match) == -1)
                             MaterialExistsWarning(match);
@@ -62,8 +65,8 @@ namespace BH.Adapter.Robot
                     string name = material.DescriptionOrName();
                     if (robotLabelServer.Exist(IRobotLabelType.I_LT_MATERIAL, name) == -1)
                         MaterialExistsWarning(name);
-                    Convert.ToRobot(matData, material);
-                    m_RobotApplication.Project.Structure.Labels.StoreWithName(label, name);
+                    if(Convert.ToRobot(matData, material))
+                        m_RobotApplication.Project.Structure.Labels.StoreWithName(label, name);
                 }
             }
             return true;

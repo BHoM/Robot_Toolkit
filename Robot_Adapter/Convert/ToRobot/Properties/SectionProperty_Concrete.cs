@@ -36,7 +36,9 @@ namespace BH.Adapter.Robot
 
         public static void ToRobot(this ConcreteSection section, IRobotBarSectionData secData)
         {
-            if (!ToRobotConcreteSection(section.SectionProfile as dynamic, secData))
+            
+            if (!RobotAdapter.CheckNotNull(section.SectionProfile, oM.Reflection.Debugging.EventType.Warning, typeof(ConcreteSection)) ||
+                !ToRobotConcreteSection(section.SectionProfile as dynamic, secData))
             {
                 //If method returns false, no profile based data has been set. Fallback to explicitly setting properties.
                 secData.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, section.Area);

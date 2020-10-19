@@ -47,14 +47,18 @@ namespace BH.Adapter.Robot
                     continue;
                 }
 
-                if (!panel.CustomData.ContainsKey(AdapterIdName))
+                int panelId;
+                object panelIdObj;
+                if (!panel.CustomData.TryGetValue(AdapterIdName, out panelIdObj) || panelIdObj == null || !(panelIdObj is int))
                 {
                     string panelName = string.IsNullOrWhiteSpace(panel.Name) ? "no name" : "name " + panel.Name;
-                    Engine.Reflection.Compute.RecordWarning("Panel with " + panelName + " did not contain any Robot id. To update panels they need this information. For this operation to work, try using a Panel that has first been pulled from Robot");
+                    Engine.Reflection.Compute.RecordWarning("Panel with " + panelName + " did not contain any Robot id in a suitable format. To update panels they need this information. For this operation to work, try using a Panel that has first been pulled from Robot");
                     continue;
                 }
+                else
+                    panelId = (int)panelIdObj;
 
-                RobotObjObject robotPanel = robotObjectServer.Get((int)panel.CustomData[AdapterIdName]) as RobotObjObject;
+                RobotObjObject robotPanel = robotObjectServer.Get(panelId) as RobotObjObject;
                 if (robotPanel == null)
                 {
                     Engine.Reflection.Compute.RecordWarning("Could not find a panel with the Id " + panel.CustomData[AdapterIdName].ToString() + " in Robot. Panel could not be updated!");
@@ -62,16 +66,24 @@ namespace BH.Adapter.Robot
                 }
                 robotObjectServer.DeleteMany(robotPanel.GetHostedObjects());
                 List<Edge> panelSubEdges = new List<Edge>();
-                robotPanel.Main.Geometry = CreateRobotContour(panel.ExternalEdges, out panelSubEdges);
+                RobotGeoObject contour = CreateRobotContour(panel.ExternalEdges, out panelSubEdges);
+
+                if (contour == null)
+                    continue;
+
+                robotPanel.Main.Geometry = contour;
                 robotPanel.Main.Attribs.Meshed = 1;
                 robotPanel.Initialize();
                 robotPanel.Update();
                 SetRobotPanelEdgeConstraints(robotPanel, panelSubEdges);
 
-                if (panel.Property is LoadingPanelProperty)
-                    robotPanel.SetLabel(IRobotLabelType.I_LT_CLADDING, panel.Property.Name);
-                else
-                    robotPanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, panel.Property.Name);                
+                if (CheckNotNull(panel.Property, oM.Reflection.Debugging.EventType.Warning, typeof(Panel)))
+                {
+                    if (panel.Property is LoadingPanelProperty)
+                        robotPanel.SetLabel(IRobotLabelType.I_LT_CLADDING, panel.Property.Name);
+                    else
+                        robotPanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, panel.Property.Name);
+                }
 
                 RobotSelection robotOpenings = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_OBJECT);
                 int freeObjectNumber = robotObjectServer.FreeNumber;
@@ -82,7 +94,13 @@ namespace BH.Adapter.Robot
                     RobotObjObject robotPanelOpening = robotObjectServer.Create(freeObjectNumber);
                     freeObjectNumber++;
                     opening.CustomData[AdapterIdName] = robotPanelOpening.Number.ToString();
-                    robotPanelOpening.Main.Geometry = CreateRobotContour(opening.Edges, out openingSubEdges);
+                    RobotGeoObject openingContour = CreateRobotContour(opening.Edges, out openingSubEdges);
+
+                    if (openingContour == null)
+                        continue;
+
+                    robotPanelOpening.Main.Geometry = openingContour;
+
                     robotPanelOpening.Initialize();
                     robotPanelOpening.Update();
                     SetRobotPanelEdgeConstraints(robotPanelOpening, openingSubEdges);

@@ -114,9 +114,11 @@ namespace BH.Adapter.Robot
                 objServer.Objects.CreateOnFiniteElems(faceList, elemNumber);
                 mesh = objServer.Objects.Get(elemNumber) as RobotObjObject;
 
-                //Get local orientations for each face
                 try
                 {
+                    //Using try catch in the event that something fails in the geometry engine or similar.
+
+                    //Get local orientations for each face
                     List<Basis> orientations = fEMesh.LocalOrientations();
 
                     //Check if all orientations are the same
@@ -143,9 +145,16 @@ namespace BH.Adapter.Robot
                         Engine.Reflection.Compute.RecordWarning("Local orientions of the pushed FEMesh varies across the faces. Could not set local orientations to Robot.");
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    Engine.Reflection.Compute.RecordWarning("Failed to set local orientations for FEMesh.");
+                    string message = "Failed to set local orientations for an FEMesh. Exception message: " + e.Message;
+
+                    if (!string.IsNullOrEmpty(e.InnerException?.Message))
+                    {
+                        message += "\nInnerException: " + e.InnerException.Message;
+                    }
+
+                    Engine.Reflection.Compute.RecordWarning(message);
                 }
 
 

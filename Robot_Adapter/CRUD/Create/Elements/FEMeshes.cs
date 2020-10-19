@@ -44,6 +44,9 @@ namespace BH.Adapter.Robot
             int fMeshFaceIdx = m_RobotApplication.Project.Structure.FiniteElems.FreeNumber;
             foreach (FEMesh fEMesh in fEMeshes)
             {
+                if (!CheckNotNull(fEMesh))
+                    continue;
+
                 string faceList = "";
 
                 IRobotStructure objServer = m_RobotApplication.Project.Structure;
@@ -54,24 +57,42 @@ namespace BH.Adapter.Robot
                 {
                     FEMeshFace fMeshFace = fEMesh.Faces[i];
 
-                    IRobotNumbersArray ptarray = new RobotNumbersArray();
-                    if (fMeshFace.NodeListIndices.Count == 3)
+                    if (!CheckNotNull(fMeshFace, oM.Reflection.Debugging.EventType.Error, typeof(FEMesh)))
+                        continue;
+
+
+                    if (fMeshFace.NodeListIndices.Count < 3 || fMeshFace.NodeListIndices.Count > 4)
                     {
-                        ptarray.SetSize(3);
-                        ptarray.Set(1, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[0]].CustomData[AdapterIdName]));
-                        ptarray.Set(2, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[1]].CustomData[AdapterIdName]));
-                        ptarray.Set(3, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[2]].CustomData[AdapterIdName]));
-                    }
-                    else if (fMeshFace.NodeListIndices.Count == 4)
-                    {
-                        ptarray.SetSize(4);
-                        ptarray.Set(1, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[0]].CustomData[AdapterIdName]));
-                        ptarray.Set(2, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[1]].CustomData[AdapterIdName]));
-                        ptarray.Set(3, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[2]].CustomData[AdapterIdName]));
-                        ptarray.Set(4, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[3]].CustomData[AdapterIdName]));
+                        Engine.Reflection.Compute.RecordError("The Robot adapter can only handle mesh faces with three or four nodes. Face with more indecies not pushed to Robot.");
+                        continue;
                     }
 
+                    IRobotNumbersArray ptarray = new RobotNumbersArray();
+                    ptarray.SetSize(fMeshFace.NodeListIndices.Count);
+
+                    bool createNodesSuccess = true;
+
+                    for (int j = 0; j < fMeshFace.NodeListIndices.Count; j++)
+                    {
+                        Node node = fEMesh.Nodes[fMeshFace.NodeListIndices[i]];
+                        //Checks that the node is not null and has AdapterId assigned
+                        if (createNodesSuccess &= CheckInputObject(node, oM.Reflection.Debugging.EventType.Error, typeof(FEMesh)))
+                        {
+                            ptarray.Set(i, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[i]].CustomData[AdapterIdName]));
+                        }
+                        else
+                            break;
+
+                    }
+
+                    if (!createNodesSuccess)
+                        continue;
+
                     FEMeshFace clone = fMeshFace.GetShallowClone() as FEMeshFace;
+
+                    if (clone.CustomData == null)
+                        clone.CustomData = new Dictionary<string, object>();
+
                     clone.CustomData[AdapterIdName] = fMeshFaceIdx;
                     fEMesh.Faces[i] = clone;
 
@@ -90,41 +111,53 @@ namespace BH.Adapter.Robot
                 mesh = objServer.Objects.Get(elemNumber) as RobotObjObject;
 
                 //Get local orientations for each face
-                List<Basis> orientations = fEMesh.LocalOrientations();
-
-                //Check if all orientations are the same
-                bool sameOrientation = true;
-
-                for (int i = 0; i < orientations.Count - 1; i++)
+                try
                 {
-                    sameOrientation &= orientations[i].X.Angle(orientations[i + 1].X) < Tolerance.Angle;
-                    sameOrientation &= orientations[i].Z.Angle(orientations[i + 1].Z) < Tolerance.Angle;
+                    List<Basis> orientations = fEMesh.LocalOrientations();
 
-                    if (!sameOrientation)
-                        break;
+                    //Check if all orientations are the same
+                    bool sameOrientation = true;
+
+                    for (int i = 0; i < orientations.Count - 1; i++)
+                    {
+                        sameOrientation &= orientations[i].X.Angle(orientations[i + 1].X) < Tolerance.Angle;
+                        sameOrientation &= orientations[i].Z.Angle(orientations[i + 1].Z) < Tolerance.Angle;
+
+                        if (!sameOrientation)
+                            break;
+                    }
+
+                    if (orientations.Count != 0 && sameOrientation)
+                    {
+                        mesh.Main.Attribs.DirZ = Convert.ToRobotFlipPanelZ(orientations.First().Z);
+                        Vector xDir = orientations.First().X;
+                        mesh.Main.Attribs.SetDirX(IRobotObjLocalXDirDefinitionType.I_OLXDDT_CARTESIAN, xDir.X, xDir.Y, xDir.Z);
+                        mesh.Update();
+                    }
+                    else
+                    {
+                        Engine.Reflection.Compute.RecordWarning("Local orientions of the pushed FEMesh varies across the faces. Could not set local orientations to Robot.");
+                    }
+                }
+                catch (Exception)
+                {
+                    Engine.Reflection.Compute.RecordWarning("Failed to set local orientations for FEMesh.");
                 }
 
-                if (orientations.Count != 0 && sameOrientation)
-                {
-                    mesh.Main.Attribs.DirZ = Convert.ToRobotFlipPanelZ(orientations.First().Z);
-                    Vector xDir = orientations.First().X;
-                    mesh.Main.Attribs.SetDirX(IRobotObjLocalXDirDefinitionType.I_OLXDDT_CARTESIAN, xDir.X, xDir.Y, xDir.Z);
-                    mesh.Update();
-                }
-                else
-                {
-                    Engine.Reflection.Compute.RecordWarning("Local orientions of the pushed FEMesh varies across the faces. Could not set local orientations to Robot.");
-                }
 
-                if (fEMesh.Property is LoadingPanelProperty)
-                    mesh.SetLabel(IRobotLabelType.I_LT_CLADDING, fEMesh.Property.DescriptionOrName());
+                if (CheckNotNull(fEMesh.Property, oM.Reflection.Debugging.EventType.Warning, typeof(FEMesh)))
+                {
+                    if (fEMesh.Property is LoadingPanelProperty)
+                        mesh.SetLabel(IRobotLabelType.I_LT_CLADDING, fEMesh.Property.DescriptionOrName());
 
-                else
-                    mesh.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, fEMesh.Property.DescriptionOrName());
+                    else
+                        mesh.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, fEMesh.Property.DescriptionOrName());
+                }
             }
 
             return true;
         }
+
 
         /***************************************************/
 

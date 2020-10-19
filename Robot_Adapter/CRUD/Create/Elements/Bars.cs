@@ -69,6 +69,11 @@ namespace BH.Adapter.Robot
                         !CheckInputObjectAndExtractAdapterIdInt(bhomBar.EndNode, out endNodeId, EventType.Error, typeof(Bar)))
                         continue;
 
+                    //Check positions of input nodes are not null
+                    if (!CheckNotNull(bhomBar.StartNode.Position, EventType.Error, typeof(Node)) ||
+                        !CheckNotNull(bhomBar.EndNode.Position, EventType.Error, typeof(Node)))
+                        continue;
+
                     string sectionName = "";
                     string materialName = "";
                     if (CheckNotNull(bhomBar.SectionProperty, EventType.Warning, typeof(Bar)))
@@ -103,7 +108,7 @@ namespace BH.Adapter.Robot
                     if (bhomBar.Release != null)
                         rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_RELEASE, bhomBar.Release.DescriptionOrName());
                     else
-                        Engine.Reflection.Compute.RecordWarning("Bar with id " + barNum + " did not have any release assigned. Default in Robot will be used");
+                        Engine.Reflection.Compute.RecordNote("Bar with id " + barNum + " did not have any release assigned. Default in Robot will be used.");
 
                     if (bhomBar.Offset != null && bhomBar.Offset.Start != null && bhomBar.Offset.End != null && (bhomBar.Offset.Start.SquareLength() > 0 || bhomBar.Offset.End.SquareLength() > 0))
                         rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_OFFSET, bhomBar.Offset.DescriptionOrName());
@@ -161,7 +166,7 @@ namespace BH.Adapter.Robot
                     }
                     catch
                     {
-                        Engine.Reflection.Compute.RecordWarning("Failed to set FEA type for at least one bar");
+                        Engine.Reflection.Compute.RecordWarning("Failed to set FEA type for at least one bar.");
                     }
                 }
                 m_tags[typeof(Bar)] = barTags;

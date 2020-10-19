@@ -22,6 +22,7 @@
 
 
 //using RobotOM;
+using BH.Engine.Adapter;
 
 //namespace Robot_Adapter
 //{

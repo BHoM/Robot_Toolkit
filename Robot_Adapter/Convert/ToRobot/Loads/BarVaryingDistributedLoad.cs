@@ -24,6 +24,7 @@ using BH.Engine.Geometry;
 using BH.oM.Structure.Loads;
 using BH.Engine.Adapters.Robot;
 using RobotOM;
+using BH.Engine.Adapter;
 
 namespace BH.Adapter.Robot
 {

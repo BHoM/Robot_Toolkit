@@ -21,6 +21,7 @@
  */
 
 using RobotOM;
+using BH.Engine.Adapter;
 using BH.oM.Structure.Elements;
 using BH.oM.Reflection.Attributes;
 using System.ComponentModel;

@@ -27,6 +27,7 @@
 //using System.Threading.Tasks;
 //using System.IO;
 //using RobotOM;
+using BH.Engine.Adapter;
 //using BHoMR = BH.oM.Structure.Results;
 //using BHoMBR = BH.oM.Base.Results;
 //using Robot_Adapter.Base;

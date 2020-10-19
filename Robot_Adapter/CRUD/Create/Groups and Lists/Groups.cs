@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Base;
 using RobotOM;
+using BH.Engine.Adapter;
 
 
 namespace BH.Adapter.Robot
@@ -46,7 +47,7 @@ namespace BH.Adapter.Robot
                 }
 
                 IRobotObjectType rType = Convert.RobotObjectType(typeof(T));
-                string members = group.Elements.Select(x => int.Parse(x.CustomData[AdapterIdName].ToString())).ToRobotSelectionString();
+                string members = group.Elements.Select(x => int.Parse(x.AdapterId().ToString())).ToRobotSelectionString();
 
                 if (string.IsNullOrWhiteSpace(group.Name))
                 {

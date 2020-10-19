@@ -26,6 +26,7 @@
 //using System.Text;
 //using System.Threading.Tasks;
 //using RobotOM;
+using BH.Engine.Adapter;
 //using BHoMG = BH.oM.Geometry;
 //using BHoME = BH.oM.Structure.Elements;
 //using BHoML = BH.oM.Structure.Loads;

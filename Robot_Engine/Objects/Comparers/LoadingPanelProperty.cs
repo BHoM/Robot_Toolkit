@@ -21,6 +21,7 @@
  */
 
 using RobotOM;
+using BH.Engine.Adapter;
 using BH.oM.Structure.Constraints;
 using System.Collections.Generic;
 using System;

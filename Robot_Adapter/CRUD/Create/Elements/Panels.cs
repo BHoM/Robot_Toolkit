@@ -26,6 +26,7 @@ using BH.oM.Structure.Elements;
 using BH.oM.Geometry;
 using BH.oM.Structure.SurfaceProperties;
 using RobotOM;
+using BH.Engine.Adapter;
 using BHEG = BH.Engine.Geometry;
 using BH.Engine.Structure;
 using BH.oM.Structure.Constraints;
@@ -49,7 +50,7 @@ namespace BH.Adapter.Robot
 
             foreach (Panel panel in panels)
             {
-                RobotObjObject robotPanel = objServer.Create(System.Convert.ToInt32(panel.CustomData[AdapterIdName]));
+                RobotObjObject robotPanel = objServer.Create(System.Convert.ToInt32(panel.AdapterId()));
                 List<Edge> panelSubEdges = new List<Edge>();
 
                 robotPanel.Main.Geometry = CreateRobotContour(panel.ExternalEdges, out panelSubEdges);
@@ -72,7 +73,7 @@ namespace BH.Adapter.Robot
 
                 foreach (Opening opening in panel.Openings)
                 {
-                    rPanelOpenings.AddOne(System.Convert.ToInt32(opening.CustomData[AdapterIdName]));
+                    rPanelOpenings.AddOne(System.Convert.ToInt32(opening.AdapterId()));
                 }
                 robotPanel.SetHostedObjects(rPanelOpenings);
 
@@ -94,8 +95,8 @@ namespace BH.Adapter.Robot
             foreach (Opening opening in openings)
             {
                 List<Edge> openingSubEdges = new List<Edge>();
-                RobotObjObject rPanelOpening = objServer.Create(System.Convert.ToInt32(opening.CustomData[AdapterIdName]));
-                opening.CustomData[AdapterIdName] = rPanelOpening.Number.ToString();
+                RobotObjObject rPanelOpening = objServer.Create(System.Convert.ToInt32(opening.AdapterId()));
+                opening.AdapterId(rPanelOpening.Number.ToString());
                 rPanelOpening.Main.Geometry = CreateRobotContour(opening.Edges, out openingSubEdges);
                 rPanelOpening.Initialize();
                 rPanelOpening.Update();

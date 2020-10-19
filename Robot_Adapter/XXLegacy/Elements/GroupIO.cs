@@ -27,6 +27,7 @@
 //using System.Threading.Tasks;
 //using BH.oM.Base;
 //using RobotOM;
+using BH.Engine.Adapter;
 //using BH.oM.Structure.Elements;
 //using BH.oM.Structure.Loads;
 //namespace Robot_Adapter.Structural.Elements

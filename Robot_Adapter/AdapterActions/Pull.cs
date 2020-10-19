@@ -24,6 +24,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using RobotOM;
+using BH.Engine.Adapter;
 using System.Diagnostics;
 using BH.oM.Adapters.Robot;
 using BH.Engine.Adapters.Robot;

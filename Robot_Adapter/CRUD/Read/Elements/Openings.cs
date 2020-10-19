@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using BH.oM.Structure.Elements;
 using RobotOM;
+using BH.Engine.Adapter;
 using BH.oM.Geometry;
 using System.Collections;
 
@@ -65,7 +66,7 @@ namespace BH.Adapter.Robot
                 }
                 if (tempOpening != null)
                 {
-                    tempOpening.CustomData[AdapterIdName] = rOpening.Number;
+                    tempOpening.AdapterId(rOpening.Number);
                     openings.Add(tempOpening);
                 }
             }

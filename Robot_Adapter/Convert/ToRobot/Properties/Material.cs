@@ -26,6 +26,7 @@ using BH.oM.Physical.Materials;
 using BH.oM.Structure.MaterialFragments;
 using BH.Engine.Structure;
 using RobotOM;
+using BH.Engine.Adapter;
 
 namespace BH.Adapter.Robot
 {

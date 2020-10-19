@@ -30,6 +30,7 @@ using BH.oM.Structure.Loads;
 using BH.oM.Physical.Materials;
 using BH.oM.Adapter;
 using RobotOM;
+using BH.Engine.Adapter;
 
 namespace BH.Adapter.Robot
 {
@@ -44,7 +45,7 @@ namespace BH.Adapter.Robot
             Dictionary<int, HashSet<string>> nodeTags = GetTypeTags(typeof(Node));
             foreach (Node node in nodes)
             {
-                RobotNode robotNode = m_RobotApplication.Project.Structure.Nodes.Get(System.Convert.ToInt32(node.CustomData[AdapterIdName])) as RobotNode;
+                RobotNode robotNode = m_RobotApplication.Project.Structure.Nodes.Get(System.Convert.ToInt32(node.AdapterId())) as RobotNode;
                 if (robotNode == null)
                     return false;
 
@@ -54,7 +55,7 @@ namespace BH.Adapter.Robot
                 robotNode.X = position.X;
                 robotNode.Y = position.Y;
                 robotNode.Z = position.Z;
-                nodeTags[System.Convert.ToInt32(node.CustomData[AdapterIdName])] = node.Tags;
+                nodeTags[System.Convert.ToInt32(node.AdapterId())] = node.Tags;
             }
             m_tags[typeof(Node)] = nodeTags;
             return true;

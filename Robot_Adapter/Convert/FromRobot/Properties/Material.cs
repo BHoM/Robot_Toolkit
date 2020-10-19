@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using RobotOM;
+using BH.Engine.Adapter;
 using BH.oM.Structure.MaterialFragments;
 using BH.Engine.Geometry;
 

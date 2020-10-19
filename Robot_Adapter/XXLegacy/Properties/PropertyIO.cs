@@ -23,6 +23,7 @@
 //using System;
 //using BH.oM.Structure;
 //using RobotOM;
+using BH.Engine.Adapter;
 //using BHoM.Materials;
 //using BHoMP = BH.oM.Structure.Properties;
 //using BHD = BH.oM.Structure.Databases;

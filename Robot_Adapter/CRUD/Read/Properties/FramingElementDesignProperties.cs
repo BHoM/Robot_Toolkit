@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using RobotOM;
+using BH.Engine.Adapter;
 using BH.oM.Adapters.Robot;
 using BHE = BH.Engine.Adapters.Robot;
 

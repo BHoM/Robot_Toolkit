@@ -21,6 +21,7 @@
  */
 
 using RobotOM;
+using BH.Engine.Adapter;
 using BH.oM.Structure.Offsets;
 using BH.oM.Geometry;
 

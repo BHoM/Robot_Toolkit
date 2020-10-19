@@ -21,6 +21,7 @@
  */
 
 using RobotOM;
+using BH.Engine.Adapter;
 using BH.oM.Structure.Constraints;
 using System.Collections.Generic;
 using BH.oM.Base;
@@ -139,7 +140,7 @@ namespace BH.Adapter.Robot
                     }
                     if (obj != null)
                     {
-                        obj.CustomData[AdapterIdName] = robotLabelName;
+                        obj.AdapterId(robotLabelName);
                         obj.Name = robotLabelName;
                         objects.Add(obj);
                     }

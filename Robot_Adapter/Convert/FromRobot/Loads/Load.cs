@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using RobotOM;
+using BH.Engine.Adapter;
 using BH.oM.Structure.Loads;
 using BH.oM.Adapters.Robot;
 using BH.oM.Geometry;

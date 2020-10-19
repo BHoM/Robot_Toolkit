@@ -25,6 +25,7 @@ using System.Linq;
 using BH.oM.Structure.Elements;
 using BH.Engine.Structure;
 using RobotOM;
+using BH.Engine.Adapter;
 
 namespace BH.Adapter.Robot
 {
@@ -47,7 +48,7 @@ namespace BH.Adapter.Robot
 
                 foreach (Node node in nodes)
                 {
-                    nodeNum = System.Convert.ToInt32(node.CustomData[AdapterIdName]);
+                    nodeNum = System.Convert.ToInt32(node.AdapterId());
                     oM.Geometry.Point position = Engine.Structure.Query.Position(node);
                     rcache.AddNode(nodeNum, position.X, position.Y, position.Z);
                 }
@@ -58,7 +59,7 @@ namespace BH.Adapter.Robot
 
                 foreach (Node node in nodes)
                 {
-                    nodeNum = System.Convert.ToInt32(node.CustomData[AdapterIdName]);
+                    nodeNum = System.Convert.ToInt32(node.AdapterId());
                     nodeTags[nodeNum] = node.Tags;
 
                     if (node.Support != null)

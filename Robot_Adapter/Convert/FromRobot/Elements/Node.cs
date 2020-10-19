@@ -22,6 +22,7 @@
 
 using BH.oM.Geometry;
 using RobotOM;
+using BH.Engine.Adapter;
 using BH.oM.Structure.Elements;
 
 

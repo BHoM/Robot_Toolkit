@@ -26,6 +26,7 @@ using BH.oM.Base;
 using BH.oM.Structure.Results;
 using BH.oM.Structure.Requests;
 using RobotOM;
+using BH.Engine.Adapter;
 using BH.oM.Analytical.Results;
 using BH.oM.Adapter;
 using System;

@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using RobotOM;
+using BH.Engine.Adapter;
 using BH.oM.Structure.Loads;
 
 namespace BH.Adapter.Robot
@@ -41,7 +42,7 @@ namespace BH.Adapter.Robot
             {
                 IRobotCase rLoadCase = rLoadCases.Get(i) as IRobotCase;
                 Loadcase lCase = BH.Engine.Structure.Create.Loadcase(rLoadCase.Name, rLoadCase.Number, Convert.FromRobot(rLoadCase.Nature));
-                lCase.CustomData[AdapterIdName] = rLoadCase.Number;
+                lCase.AdapterId(rLoadCase.Number);
                 bhomLoadCases.Add(lCase);
             }
             return bhomLoadCases;

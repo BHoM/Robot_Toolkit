@@ -22,6 +22,7 @@
 
 using BH.oM.Structure.Design;
 using RobotOM;
+using BH.Engine.Adapter;
 using System.Collections.Generic;
 
 namespace BH.Adapter.Robot

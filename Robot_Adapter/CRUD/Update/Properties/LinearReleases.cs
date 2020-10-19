@@ -23,6 +23,7 @@
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.SurfaceProperties;
 using RobotOM;
+using BH.Engine.Adapter;
 using System.Collections.Generic;
 using BH.oM.Adapter;
 using System.Linq;

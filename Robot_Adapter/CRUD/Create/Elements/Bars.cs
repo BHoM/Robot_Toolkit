@@ -25,6 +25,7 @@ using System.Linq;
 using System;
 using BH.oM.Structure.Elements;
 using RobotOM;
+using BH.Engine.Adapter;
 using BH.oM.Adapters.Robot;
 using BH.Engine.Structure;
 using BH.oM.Geometry;
@@ -57,7 +58,7 @@ namespace BH.Adapter.Robot
                 List<Bar> nonCacheBars = new List<Bar>();
                 foreach (Bar bhomBar in bars)
                 {
-                    barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterIdName]);
+                    barNum = System.Convert.ToInt32(bhomBar.AdapterId());
 
                     string sectionName = "";
                     string materialName = "";
@@ -74,8 +75,8 @@ namespace BH.Adapter.Robot
                     double orientationAngle = bhomBar.ToRobotOrientationAngle();
                           
                     rcache.AddBar(barNum,
-                                  System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterIdName]),
-                                  System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterIdName]),
+                                  System.Convert.ToInt32(bhomBar.StartNode.AdapterId()),
+                                  System.Convert.ToInt32(bhomBar.EndNode.AdapterId()),
                                   sectionName,
                                   materialName,
                                   orientationAngle);
@@ -138,7 +139,7 @@ namespace BH.Adapter.Robot
                 {
                     try
                     {
-                        barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterIdName]);
+                        barNum = System.Convert.ToInt32(bhomBar.AdapterId());
                         RobotBar rBar = barServer.Get(barNum) as RobotBar;
                         barTags[barNum] = bhomBar.Tags;
                         Convert.SetFEAType(rBar, bhomBar);

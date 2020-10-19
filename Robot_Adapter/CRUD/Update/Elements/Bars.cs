@@ -26,6 +26,7 @@ using BH.oM.Structure.Elements;
 using BH.Engine.Structure;
 using BH.Engine.Geometry;
 using RobotOM;
+using BH.Engine.Adapter;
 using BH.oM.Adapters.Robot;
 
 namespace BH.Adapter.Robot
@@ -55,16 +56,16 @@ namespace BH.Adapter.Robot
                     continue;
                 }
 
-                RobotBar robotBar = robotBarServer.Get((int)bar.CustomData[AdapterIdName]) as RobotBar;
+                RobotBar robotBar = robotBarServer.Get((int)bar.AdapterId()) as RobotBar;
                 if (robotBar == null)
                 {
-                    Engine.Reflection.Compute.RecordWarning("Could not find a bar with the Id " + bar.CustomData[AdapterIdName].ToString() + " in Robot. Bar could not be updated!");
+                    Engine.Reflection.Compute.RecordWarning("Could not find a bar with the Id " + bar.AdapterId().ToString() + " in Robot. Bar could not be updated!");
                     continue;
                 }
 
-                robotBar.StartNode = System.Convert.ToInt32(bar.StartNode.CustomData[AdapterIdName]);
-                robotBar.EndNode = System.Convert.ToInt32(bar.EndNode.CustomData[AdapterIdName]);
-                barTags[System.Convert.ToInt32(bar.CustomData[AdapterIdName])] = bar.Tags;
+                robotBar.StartNode = System.Convert.ToInt32(bar.StartNode.AdapterId());
+                robotBar.EndNode = System.Convert.ToInt32(bar.EndNode.AdapterId());
+                barTags[System.Convert.ToInt32(bar.AdapterId())] = bar.Tags;
 
                 if (!string.IsNullOrWhiteSpace(bar.Name))
                     robotBar.NameTemplate = bar.Name;

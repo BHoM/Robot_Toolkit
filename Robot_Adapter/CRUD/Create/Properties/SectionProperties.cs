@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using BH.oM.Structure.SectionProperties;
 using BH.Engine.Structure;
 using RobotOM;
+using BH.Engine.Adapter;
 
 namespace BH.Adapter.Robot
 {

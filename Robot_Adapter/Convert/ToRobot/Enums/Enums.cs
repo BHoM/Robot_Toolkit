@@ -22,6 +22,7 @@
 
 using BH.oM.Structure.SectionProperties;
 using RobotOM;
+using BH.Engine.Adapter;
 using BH.oM.Structure.Results;
 
 

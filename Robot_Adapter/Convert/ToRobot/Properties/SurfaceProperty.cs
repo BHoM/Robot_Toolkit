@@ -23,6 +23,7 @@
 using BH.oM.Geometry;
 using BH.Engine.Geometry;
 using RobotOM;
+using BH.Engine.Adapter;
 using System;
 using System.Collections.Generic;
 using BH.oM.Structure.Elements;

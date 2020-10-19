@@ -30,6 +30,7 @@ using BH.oM.Structure.Loads;
 using BH.oM.Physical.Materials;
 using BH.oM.Adapter;
 using RobotOM;
+using BH.Engine.Adapter;
 
 namespace BH.Adapter.Robot
 {

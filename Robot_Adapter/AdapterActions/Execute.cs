@@ -26,6 +26,7 @@ using System.Linq;
 using System;
 using BH.oM.Structure.Loads;
 using RobotOM;
+using BH.Engine.Adapter;
 using BH.oM.Adapter;
 using BH.oM.Reflection;
 using BH.oM.Adapter.Commands;
@@ -175,7 +176,7 @@ namespace BH.Adapter.Robot
                     {
                         caseNums.Add(System.Convert.ToInt32(lCase.Item2.Number));
                     }
-                    caseNums.Add(System.Convert.ToInt32((lComb as LoadCombination).CustomData[AdapterIdName]));
+                    caseNums.Add(System.Convert.ToInt32((lComb as LoadCombination).AdapterId()));
                 }
                 else if (o is int)
                 {

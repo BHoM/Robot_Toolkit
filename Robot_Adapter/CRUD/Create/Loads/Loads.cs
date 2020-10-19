@@ -26,6 +26,7 @@ using BH.oM.Base;
 using BH.Engine.Structure;
 using System.Linq;
 using RobotOM;
+using BH.Engine.Adapter;
 
 namespace BH.Adapter.Robot
 {

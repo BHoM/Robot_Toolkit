@@ -27,6 +27,7 @@ using System.ComponentModel;
 using BH.oM.Reflection.Attributes;
 using BH.oM.Structure.Elements;
 using RobotOM;
+using BH.Engine.Adapter;
 using BH.oM.Geometry;
 using BH.oM.Base;
 using BH.oM.Structure.Loads;
@@ -113,7 +114,7 @@ namespace BH.Adapter.Robot
         {
             //Main method looping through all loadcases and extracting the picked up load type
             List<ILoad> bhomLoads = new List<ILoad>();
-            Dictionary<int, T> loadObjects = ReadLoadCacheObjects<T>().ToDictionary(x => System.Convert.ToInt32(x.CustomData[AdapterIdName]));
+            Dictionary<int, T> loadObjects = ReadLoadCacheObjects<T>().ToDictionary(x => System.Convert.ToInt32(x.AdapterId()));
             Dictionary<string, Loadcase> bhomLoadCases = ReadLoadCase().ToDictionaryDistinctCheck(x => x.Name);
 
             IRobotCaseCollection loadCollection = m_RobotApplication.Project.Structure.Cases.GetAll();

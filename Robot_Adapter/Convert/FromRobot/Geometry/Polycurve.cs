@@ -23,6 +23,7 @@
 using BH.oM.Geometry;
 using GeometryEngine = BH.Engine.Geometry;
 using RobotOM;
+using BH.Engine.Adapter;
 
 
 namespace BH.Adapter.Robot

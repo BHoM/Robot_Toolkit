@@ -23,6 +23,7 @@
 
 using BH.oM.Structure.MaterialFragments;
 using RobotOM;
+using BH.Engine.Adapter;
 using System.Collections.Generic;
 
 namespace BH.Adapter.Robot

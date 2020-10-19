@@ -22,6 +22,7 @@
 
 using BH.oM.Structure.MaterialFragments;
 using RobotOM;
+using BH.Engine.Adapter;
 using System;
 using System.Collections.Generic;
 using BH.oM.Structure.SurfaceProperties;

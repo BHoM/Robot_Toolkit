@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using BH.oM.Structure.Elements;
 using RobotOM;
+using BH.Engine.Adapter;
 using BH.oM.Structure.Constraints;
 using System.Collections;
 
@@ -49,7 +50,7 @@ namespace BH.Adapter.Robot
                 {
                     RobotNode robotNode = robotNodes.Get(i);
                     Node bhomNode = Convert.FromRobot(robotNode);
-                    bhomNode.CustomData[AdapterIdName] = robotNode.Number;
+                    bhomNode.AdapterId(robotNode.Number);
                     if (nodeTags != null && nodeTags.TryGetValue(robotNode.Number, out tags))
                         bhomNode.Tags = tags;
 
@@ -62,7 +63,7 @@ namespace BH.Adapter.Robot
                 {
                     RobotNode robotNode = m_RobotApplication.Project.Structure.Nodes.Get(System.Convert.ToInt32(nodeIds[i])) as RobotNode;
                     Node bhomNode = Convert.FromRobot(robotNode);
-                    bhomNode.CustomData[AdapterIdName] = robotNode.Number;
+                    bhomNode.AdapterId(robotNode.Number);
                     if (nodeTags != null && nodeTags.TryGetValue(robotNode.Number, out tags))
                         bhomNode.Tags = tags;
 
@@ -73,7 +74,7 @@ namespace BH.Adapter.Robot
             return bhomNodes;
         }
 
-        /***************************************************/              
+        /***************************************************/
 
         //Fast query method - only returns basic node information, not full node objects
         private List<Node> ReadNodesQuery(List<string> ids = null)
@@ -117,7 +118,7 @@ namespace BH.Adapter.Robot
                         Z = (double)row_set.CurrentRow.GetValue(2)
                     };
                     Node bhomNode = Engine.Structure.Create.Node(point, nod_num.ToString());
-                    bhomNode.CustomData[AdapterIdName] = nod_num.ToString();
+                    bhomNode.AdapterId(nod_num.ToString());
                     bhomNodes.Add(bhomNode);
                     point = null;
                     kounta++;
@@ -128,7 +129,7 @@ namespace BH.Adapter.Robot
             result_params.Reset();
             return bhomNodes;
         }
-        
+
         /***************************************************/
 
     }

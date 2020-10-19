@@ -27,6 +27,7 @@ using BH.oM.Structure.Results;
 using BH.oM.Structure.Requests;
 using BH.oM.Structure.Elements;
 using RobotOM;
+using BH.Engine.Adapter;
 using BH.oM.Analytical.Results;
 using BH.oM.Geometry;
 using BH.oM.Geometry.CoordinateSystem;
@@ -147,7 +148,7 @@ namespace BH.Adapter.Robot
 
                             if (!transformations.TryGetValue(idBar, out localToGlobal))
                             {
-                                Bar bar = bars.First(x => x.CustomData[AdapterIdName].ToString() == idBar.ToString());
+                                Bar bar = bars.First(x => x.AdapterId().ToString() == idBar.ToString());
                                 Cartesian local = bar.CoordinateSystem();
                                 local.Origin = Point.Origin;
                                 localToGlobal = Engine.Geometry.Create.OrientationMatrix(globalXY, local);

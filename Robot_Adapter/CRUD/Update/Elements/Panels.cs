@@ -23,6 +23,7 @@
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.SurfaceProperties;
 using RobotOM;
+using BH.Engine.Adapter;
 using System.Collections.Generic;
 using BH.oM.Adapter;
 using System.Linq;
@@ -54,10 +55,10 @@ namespace BH.Adapter.Robot
                     continue;
                 }
 
-                RobotObjObject robotPanel = robotObjectServer.Get((int)panel.CustomData[AdapterIdName]) as RobotObjObject;
+                RobotObjObject robotPanel = robotObjectServer.Get((int)panel.AdapterId()) as RobotObjObject;
                 if (robotPanel == null)
                 {
-                    Engine.Reflection.Compute.RecordWarning("Could not find a panel with the Id " + panel.CustomData[AdapterIdName].ToString() + " in Robot. Panel could not be updated!");
+                    Engine.Reflection.Compute.RecordWarning("Could not find a panel with the Id " + panel.AdapterId().ToString() + " in Robot. Panel could not be updated!");
                     continue;
                 }
                 robotObjectServer.DeleteMany(robotPanel.GetHostedObjects());
@@ -81,7 +82,7 @@ namespace BH.Adapter.Robot
                     List<Edge> openingSubEdges = new List<Edge>();
                     RobotObjObject robotPanelOpening = robotObjectServer.Create(freeObjectNumber);
                     freeObjectNumber++;
-                    opening.CustomData[AdapterIdName] = robotPanelOpening.Number.ToString();
+                    opening.AdapterId(robotPanelOpening.Number.ToString());
                     robotPanelOpening.Main.Geometry = CreateRobotContour(opening.Edges, out openingSubEdges);
                     robotPanelOpening.Initialize();
                     robotPanelOpening.Update();

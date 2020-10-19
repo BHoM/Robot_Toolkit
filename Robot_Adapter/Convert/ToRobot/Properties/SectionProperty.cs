@@ -23,6 +23,7 @@
 using BH.oM.Physical.Materials;
 using BH.oM.Structure.MaterialFragments;
 using RobotOM;
+using BH.Engine.Adapter;
 using BH.oM.Structure.SectionProperties;
 using BH.Engine.Structure;
 

@@ -28,6 +28,7 @@
 //using BHoM.Global;
 //using BH.oM.Structure;
 //using RobotOM;
+using BH.Engine.Adapter;
 //using BHoME = BH.oM.Structure.Elements;
 //using BHoMP = BH.oM.Structure.Properties;
 //using BHoML = BH.oM.Structure.Loads;

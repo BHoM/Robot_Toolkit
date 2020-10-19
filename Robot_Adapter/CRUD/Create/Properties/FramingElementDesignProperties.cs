@@ -36,6 +36,9 @@ namespace BH.Adapter.Robot
         private bool Create(FramingElementDesignProperties framEleDesProps) //TODO: move the label part to convert such that duplicate code in Update can be removed
         {
 
+            if (!CheckNotNull(framEleDesProps, oM.Reflection.Debugging.EventType.Warning))
+                return false;
+
             IRobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotLabel label = labelServer.CreateLike(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name, labelServer.GetDefault(IRobotLabelType.I_LT_MEMBER_TYPE));
 
@@ -100,6 +103,10 @@ namespace BH.Adapter.Robot
 
             foreach (FramingElementDesignProperties framEleDesProps in framEleDesPropsList)
             {
+
+                if (!CheckNotNull(framEleDesProps, oM.Reflection.Debugging.EventType.Warning))
+                    continue;
+
                 IRobotLabel label = labelServer.CreateLike(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name, labelServer.GetDefault(IRobotLabelType.I_LT_MEMBER_TYPE));
 
                 labelServer.Store(label);

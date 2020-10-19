@@ -41,9 +41,15 @@ namespace BH.Adapter.Robot
 
             foreach (BarRelease release in releases)
             {
-                Convert.ToRobot(robotLabelData.StartNode, release.StartRelease);
-                Convert.ToRobot(robotLabelData.EndNode, release.EndRelease);
-                robotLabelServer.StoreWithName(robotLabel, release.DescriptionOrName());
+                //Check release as well as start and end are not null
+                if (CheckNotNull(release, oM.Reflection.Debugging.EventType.Warning)
+                    && CheckNotNull(release.StartRelease, oM.Reflection.Debugging.EventType.Warning, typeof(BarRelease))
+                    && CheckNotNull(release.EndRelease, oM.Reflection.Debugging.EventType.Warning, typeof(BarRelease)))
+                {
+                    Convert.ToRobot(robotLabelData.StartNode, release.StartRelease);
+                    Convert.ToRobot(robotLabelData.EndNode, release.EndRelease);
+                    robotLabelServer.StoreWithName(robotLabel, release.DescriptionOrName());
+                }
             }
             return true;
         }

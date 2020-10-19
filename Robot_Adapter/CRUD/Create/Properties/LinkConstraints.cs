@@ -42,14 +42,17 @@ namespace BH.Adapter.Robot
 
             foreach (LinkConstraint lConst in linkConstraints)
             {
-                rLinkData.UX = lConst.XtoX;
-                rLinkData.UY = lConst.YtoY;
-                rLinkData.UZ = lConst.ZtoZ;
-                rLinkData.RX = lConst.XXtoXX;
-                rLinkData.RY = lConst.YYtoYY;
-                rLinkData.RZ = lConst.ZZtoZZ;
+                if (CheckNotNull(lConst, oM.Reflection.Debugging.EventType.Warning))
+                {
+                    rLinkData.UX = lConst.XtoX;
+                    rLinkData.UY = lConst.YtoY;
+                    rLinkData.UZ = lConst.ZtoZ;
+                    rLinkData.RX = lConst.XXtoXX;
+                    rLinkData.RY = lConst.YYtoYY;
+                    rLinkData.RZ = lConst.ZZtoZZ;
 
-                m_RobotApplication.Project.Structure.Labels.StoreWithName(rigidLink, lConst.DescriptionOrName());
+                    m_RobotApplication.Project.Structure.Labels.StoreWithName(rigidLink, lConst.DescriptionOrName());
+                }
             }
             return true;
         }

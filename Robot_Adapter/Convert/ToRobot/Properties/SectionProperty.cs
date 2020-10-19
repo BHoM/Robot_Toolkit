@@ -20,8 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Physical.Materials;
-using BH.oM.Structure.MaterialFragments;
+using System;
 using RobotOM;
 using BH.oM.Structure.SectionProperties;
 using BH.Engine.Structure;
@@ -36,7 +35,11 @@ namespace BH.Adapter.Robot
 
         public static void IToRobot(this ISectionProperty section, IRobotBarSectionData secData)
         {
-            secData.MaterialName = section.Material.DescriptionOrName(); //Set the material to the section
+            Type type = section.GetType();
+            //Check the material is not null
+            if(RobotAdapter.CheckNotNull(section.Material, oM.Reflection.Debugging.EventType.Warning, type))
+                secData.MaterialName = section.Material.DescriptionOrName(); //Set the material to the section
+
             ToRobot(section as dynamic, secData);
         }
 

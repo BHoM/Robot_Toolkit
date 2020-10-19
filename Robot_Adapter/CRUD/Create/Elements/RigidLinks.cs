@@ -36,9 +36,45 @@ namespace BH.Adapter.Robot
         {
             foreach (RigidLink rLink in rigidLinks)
             {
-                string[] str = rLink.SecondaryNodes.Select(x => x.CustomData[AdapterIdName].ToString() + ",").ToList().ToArray();
+                //Check link is not null
+                if (!CheckNotNull(rLink))
+                    continue;
+
+                //Check primary node and try to extract Id
+                int primaryId;
+                if (!CheckInputObjectAndExtractAdapterIdInt(rLink.PrimaryNode, out primaryId, oM.Reflection.Debugging.EventType.Error, typeof(RigidLink)))
+                    continue;
+
+                List<int> secondaryIds = new List<int>();
+                bool secondaryNodesChecked = true;
+
+                foreach (Node node in rLink.SecondaryNodes)
+                {
+                    //Loop through and check that secondary ids can be extracted from rigid links
+                    int nodeId;
+                    if (CheckInputObjectAndExtractAdapterIdInt(node, out nodeId, oM.Reflection.Debugging.EventType.Error, typeof(RigidLink)))
+                    {
+                        secondaryIds.Add(nodeId);
+                    }
+                    else
+                    {
+                        secondaryNodesChecked = false;
+                        break;
+                    }
+                }
+
+                if (!secondaryNodesChecked)
+                    continue;
+
+                string[] str = secondaryIds.Select(x => x.ToString() + ",").ToArray();
                 string secondaryNodes = string.Join("", str).TrimEnd(',');
-                m_RobotApplication.Project.Structure.Nodes.RigidLinks.Set(System.Convert.ToInt32(rLink.PrimaryNode.CustomData[AdapterIdName]), secondaryNodes, rLink.Constraint.Name);
+
+                string contraintName = "";
+
+                if (CheckNotNull(rLink.Constraint, oM.Reflection.Debugging.EventType.Warning, typeof(RigidLink)))
+                    contraintName = rLink.Constraint.Name;
+
+                m_RobotApplication.Project.Structure.Nodes.RigidLinks.Set(primaryId, secondaryNodes, contraintName);
             }
             return true;
         }

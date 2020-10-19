@@ -35,7 +35,7 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static void ToRobot(IRobotMaterialData materialData, IMaterialFragment material)
+        public static bool ToRobot(IRobotMaterialData materialData, IMaterialFragment material)
         {
             materialData.Type = GetMaterialType(material);
             materialData.Name = material.Name;
@@ -53,6 +53,10 @@ namespace BH.Adapter.Robot
             else if (material is Timber)
             {
                 Timber timber = material as Timber;
+
+                if (!CheckOrthotropicMaterialProeprties(timber))
+                    return false;
+
                 materialData.E = timber.YoungsModulus.X;
                 if (timber.YoungsModulus.Y == timber.YoungsModulus.Z)
                 {
@@ -76,6 +80,10 @@ namespace BH.Adapter.Robot
             else
             {
                 IOrthotropic orthotropic = material as IOrthotropic;
+
+                if (!CheckOrthotropicMaterialProeprties(orthotropic))
+                    return false;
+
                 materialData.E = orthotropic.YoungsModulus.X;
                 materialData.NU = orthotropic.PoissonsRatio.X;//Poisson ratio in X axis. Longitudinal defomation under axial loading is likely of interests.
                 materialData.RO = orthotropic.Density * Engine.Adapters.Robot.Query.RobotGravityConstant;
@@ -85,6 +93,8 @@ namespace BH.Adapter.Robot
                 Engine.Reflection.Compute.RecordWarning("Robot does not support generic orthotropic materials. Material pushed will be treated as an isotropic material, only taking the x-component of the values into acount.\n" +
                                                         "This means the y and z-components of the vectors for YoungsModulus, ShearModulus, PoissonsRatio and ThermalExpansionCoeff will be ignored.");
             }
+
+            return true;
         }
 
         /***************************************************/
@@ -121,6 +131,17 @@ namespace BH.Adapter.Robot
                 default:
                     return MaterialType.Steel;
             }
+        }
+
+        /***************************************************/
+
+        private static bool CheckOrthotropicMaterialProeprties(IOrthotropic material)
+        {
+            Type type = material.GetType();
+            return RobotAdapter.CheckNotNull(material.YoungsModulus, oM.Reflection.Debugging.EventType.Warning, type) &&
+                   RobotAdapter.CheckNotNull(material.PoissonsRatio, oM.Reflection.Debugging.EventType.Warning, type) &&
+                   RobotAdapter.CheckNotNull(material.ThermalExpansionCoeff, oM.Reflection.Debugging.EventType.Warning, type) &&
+                   RobotAdapter.CheckNotNull(material.ShearModulus, oM.Reflection.Debugging.EventType.Warning, type);
         }
 
         /***************************************************/

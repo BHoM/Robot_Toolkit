@@ -43,7 +43,7 @@ namespace BH.Adapter.Robot
             if (type == null)
                 message = "An input object is null and could not be pushed.";
             else
-                message = $"An input object of type {type.ToString()} is null and could not be pushed.";
+                message = $"An input object of type {type.Name} is null and could not be pushed.";
 
             Compute.RecordEvent(message, errorLevel);
         }
@@ -56,7 +56,7 @@ namespace BH.Adapter.Robot
             string objectType = "object";
             if (type != null)
             {
-                message += "of type " + type.ToString();
+                message += "of type " + type.Name;
                 objectType = type.Name;
             }
 
@@ -74,12 +74,12 @@ namespace BH.Adapter.Robot
         {
             string message = "A property ";
             if (propertyType != null)
-                message += "of type " + propertyType.ToString();
+                message += "of type " + propertyType.Name;
 
             message += " of an input object ";
                 
             if(owningType != null)
-                message += "of type " + owningType.ToString();
+                message += "of type " + owningType.Name;
 
             message += " is null and could not be pushed. Please check the input data to ensure everything has been correctly assigned.";
     
@@ -93,14 +93,14 @@ namespace BH.Adapter.Robot
             string message = "A property ";
 
             if (propertyType != null)
-                message += "of type " + propertyType.ToString();
+                message += "of type " + propertyType.Name;
 
             message += " of an input object ";
 
             string objectType = "object";
             if (owningType != null)
             {
-                message += "of type " + owningType.ToString();
+                message += "of type " + owningType.Name;
                 objectType = owningType.Name;
             }
 
@@ -123,7 +123,7 @@ namespace BH.Adapter.Robot
                 objectType = type.Name;
             }
             else
-                message = $"An input object of type {type.ToString()} does not have a ID of the correct type assigned and could not be pushed.";
+                message = $"An input object of type {type.Name} does not have a ID of the correct type assigned and could not be pushed.";
 
             if (isUpdate)
                 message += $" For this operation to work, try using a {objectType} that has first been pulled from Robot";
@@ -138,14 +138,14 @@ namespace BH.Adapter.Robot
             string message = "A property ";
 
             if (propertyType != null)
-                message += "of type " + propertyType.ToString();
+                message += "of type " + propertyType.Name;
 
             message += " of an input object ";
 
             string objectType = "object";
             if (owningType != null)
             {
-                message += "of type " + owningType.ToString();
+                message += "of type " + owningType.Name;
                 objectType = owningType.Name;
             }
 

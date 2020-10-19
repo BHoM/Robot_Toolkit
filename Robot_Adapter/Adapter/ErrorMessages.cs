@@ -50,13 +50,20 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        public static void InputTypeHasNoIdMessage(Type type, EventType errorLevel = EventType.Error)
+        public static void InputTypeHasNoIdMessage(Type type, EventType errorLevel = EventType.Error, bool isUpdate = false)
         {
-            string message;
-            if (type == null)
-                message = "An input object has no ID assigned and could not be pushed.";
+            string message = "An input object ";
+            string objectType = "object";
+            if (type != null)
+            {
+                message += "of type " + type.ToString();
+                objectType = type.Name;
+            }
+
+            if(!isUpdate)
+                message += " has no ID assigned and could not be pushed.";
             else
-                message = $"An input object of type {type.ToString()} has no ID assigned and could not be pushed.";
+                message += $" has no ID assigned and could not be updated. For this operation to work, try using a {objectType} that has first been pulled from Robot";
 
             Compute.RecordEvent(message, errorLevel);
         }
@@ -81,19 +88,71 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        public static void PropertyTypeHasNoIdMessage(Type owningType, Type propertyType, EventType errorLevel = EventType.Error)
+        public static void PropertyTypeHasNoIdMessage(Type owningType, Type propertyType, EventType errorLevel = EventType.Error, bool isUpdate = false)
         {
             string message = "A property ";
+
             if (propertyType != null)
                 message += "of type " + propertyType.ToString();
 
             message += " of an input object ";
 
+            string objectType = "object";
             if (owningType != null)
+            {
                 message += "of type " + owningType.ToString();
+                objectType = owningType.Name;
+            }
 
-            message += " has no ID assigned and could not be pushed.";
+            if (!isUpdate)
+                message += " has no ID assigned and could not be pushed.";
+            else
+                message += $" has no ID assigned and could not be updated. For this operation to work, try using a {objectType} that has first been pulled from Robot";
+            Compute.RecordEvent(message, errorLevel);
+        }
 
+        /***************************************************/
+
+        public static void AdapterIdNotCorrectTypeMessage(Type type, EventType errorLevel = EventType.Error, bool isUpdate = false)
+        {
+            string message;
+            string objectType = "object";
+            if (type == null)
+            {
+                message = "An input object does not have a ID of the correct type assigned and could not be pushed.";
+                objectType = type.Name;
+            }
+            else
+                message = $"An input object of type {type.ToString()} does not have a ID of the correct type assigned and could not be pushed.";
+
+            if (isUpdate)
+                message += $" For this operation to work, try using a {objectType} that has first been pulled from Robot";
+
+            Compute.RecordEvent(message, errorLevel);
+        }
+
+        /***************************************************/
+
+        public static void PropertyAdapterIdNotCorrectTypeMessage(Type owningType, Type propertyType, EventType errorLevel = EventType.Error, bool isUpdate = false)
+        {
+            string message = "A property ";
+
+            if (propertyType != null)
+                message += "of type " + propertyType.ToString();
+
+            message += " of an input object ";
+
+            string objectType = "object";
+            if (owningType != null)
+            {
+                message += "of type " + owningType.ToString();
+                objectType = owningType.Name;
+            }
+
+            if (!isUpdate)
+                message += " does not have a ID of the correct type assigned and could not be pushed.";
+            else
+                message += $" does not have a ID of the correct type assigned and could not be updated. For this operation to work, try using a {objectType} that has first been pulled from Robot";
             Compute.RecordEvent(message, errorLevel);
         }
 

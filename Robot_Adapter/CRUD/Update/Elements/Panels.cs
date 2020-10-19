@@ -41,22 +41,10 @@ namespace BH.Adapter.Robot
             RobotObjObjectServer robotObjectServer = m_RobotApplication.Project.Structure.Objects;
             foreach (Panel panel in panels)
             {
-                if (panel == null)
-                {
-                    Engine.Reflection.Compute.RecordWarning("At least one provided panel is null and is not updated!");
-                    continue;
-                }
-
                 int panelId;
-                object panelIdObj;
-                if (!panel.CustomData.TryGetValue(AdapterIdName, out panelIdObj) || panelIdObj == null || !(panelIdObj is int))
-                {
-                    string panelName = string.IsNullOrWhiteSpace(panel.Name) ? "no name" : "name " + panel.Name;
-                    Engine.Reflection.Compute.RecordWarning("Panel with " + panelName + " did not contain any Robot id in a suitable format. To update panels they need this information. For this operation to work, try using a Panel that has first been pulled from Robot");
+
+                if (!CheckInputObjectAndExtractAdapterIdInt(panel, out panelId, oM.Reflection.Debugging.EventType.Error, null, true))
                     continue;
-                }
-                else
-                    panelId = (int)panelIdObj;
 
                 RobotObjObject robotPanel = robotObjectServer.Get(panelId) as RobotObjObject;
                 if (robotPanel == null)
@@ -90,6 +78,9 @@ namespace BH.Adapter.Robot
                 robotObjectServer.BeginMultiOperation();
                 foreach (Opening opening in panel.Openings)
                 {
+                    if (!CheckNotNull(opening, oM.Reflection.Debugging.EventType.Warning))
+                        continue;
+
                     List<Edge> openingSubEdges = new List<Edge>();
                     RobotObjObject robotPanelOpening = robotObjectServer.Create(freeObjectNumber);
                     freeObjectNumber++;

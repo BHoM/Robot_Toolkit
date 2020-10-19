@@ -42,18 +42,10 @@ namespace BH.Adapter.Robot
             Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
             foreach (Bar bar in bars)
             {
-                if (bar == null)
-                {
-                    Engine.Reflection.Compute.RecordWarning("At least one provided panel is null and is not updated!");
-                    continue;
-                }
+                int barId;
 
-                if (!bar.CustomData.ContainsKey(AdapterIdName))
-                {
-                    string panelName = string.IsNullOrWhiteSpace(bar.Name) ? "no name" : "name " + bar.Name;
-                    Engine.Reflection.Compute.RecordWarning("Bar with " + panelName + " did not contain any Robot id. To update bars they need this information. For this operation to work, try using a bar that has first been pulled from Robot");
+                if (!CheckInputObjectAndExtractAdapterIdInt(bar, out barId, oM.Reflection.Debugging.EventType.Error, null, true))
                     continue;
-                }
 
                 RobotBar robotBar = robotBarServer.Get((int)bar.CustomData[AdapterIdName]) as RobotBar;
                 if (robotBar == null)
@@ -62,14 +54,22 @@ namespace BH.Adapter.Robot
                     continue;
                 }
 
-                robotBar.StartNode = System.Convert.ToInt32(bar.StartNode.CustomData[AdapterIdName]);
-                robotBar.EndNode = System.Convert.ToInt32(bar.EndNode.CustomData[AdapterIdName]);
-                barTags[System.Convert.ToInt32(bar.CustomData[AdapterIdName])] = bar.Tags;
+
+                int stNodeId, endNodeId;
+
+                //Check nodes are not null and correctly set up and extract id information
+                if (!CheckInputObjectAndExtractAdapterIdInt(bar.StartNode, out stNodeId, oM.Reflection.Debugging.EventType.Error, typeof(Bar)) ||
+                    !CheckInputObjectAndExtractAdapterIdInt(bar.EndNode, out endNodeId, oM.Reflection.Debugging.EventType.Error, typeof(Bar)))
+                    continue;
+
+                robotBar.StartNode = stNodeId;
+                robotBar.EndNode = endNodeId;
+                barTags[barId] = bar.Tags;
 
                 if (!string.IsNullOrWhiteSpace(bar.Name))
                     robotBar.NameTemplate = bar.Name;
                 
-                if (bar.SectionProperty != null && !string.IsNullOrWhiteSpace(bar.SectionProperty.DescriptionOrName()))
+                if (CheckNotNull(bar.SectionProperty, oM.Reflection.Debugging.EventType.Warning, typeof(Bar)))
                     robotBar.SetSection(bar.SectionProperty.DescriptionOrName(), false);
 
                 robotBar.Gamma = bar.ToRobotOrientationAngle();

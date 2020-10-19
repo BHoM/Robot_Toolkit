@@ -49,30 +49,60 @@ namespace BH.Adapter.Robot
 
             foreach (Panel panel in panels)
             {
-                RobotObjObject robotPanel = objServer.Create(System.Convert.ToInt32(panel.CustomData[AdapterIdName]));
-                List<Edge> panelSubEdges = new List<Edge>();
+                int panelId;
 
-                robotPanel.Main.Geometry = CreateRobotContour(panel.ExternalEdges, out panelSubEdges);
+                if (!CheckInputObjectAndExtractAdapterIdInt(panel, out panelId))
+                    continue;
+
+                RobotObjObject robotPanel = objServer.Create(panelId);
+                List<Edge> panelSubEdges = new List<Edge>();
+                RobotGeoObject contour = CreateRobotContour(panel.ExternalEdges, out panelSubEdges);
+
+                if (contour == null)
+                    continue;
+
+                robotPanel.Main.Geometry = contour;
                 robotPanel.Main.Attribs.Meshed = 1;
                 robotPanel.Initialize();
                 robotPanel.Update();
                 SetRobotPanelEdgeConstraints(robotPanel, panelSubEdges);
-                if (panel.Property is LoadingPanelProperty)
-                    robotPanel.SetLabel(IRobotLabelType.I_LT_CLADDING, (panel.Property as LoadingPanelProperty).ToRobot());
-                else
-                    robotPanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, panel.Property.DescriptionOrName());
+
+                if (CheckNotNull(panel.Property, oM.Reflection.Debugging.EventType.Warning, typeof(Panel)))
+                {
+                    if (panel.Property is LoadingPanelProperty)
+                        robotPanel.SetLabel(IRobotLabelType.I_LT_CLADDING, (panel.Property as LoadingPanelProperty).ToRobot());
+                    else
+                        robotPanel.SetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS, panel.Property.DescriptionOrName());
+                }
 
                 RobotSelection rPanelOpenings = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_OBJECT);
 
-                Basis localOrientation = panel.LocalOrientation();
-                robotPanel.Main.Attribs.DirZ = Convert.ToRobotFlipPanelZ(localOrientation.Z);
+                try
+                {
+                    //Using try catch in the event that something fails in the geometry engine or similar.
+                    Basis localOrientation = panel.LocalOrientation();
+                    robotPanel.Main.Attribs.DirZ = Convert.ToRobotFlipPanelZ(localOrientation.Z);
 
-                Vector localX = localOrientation.X;
-                robotPanel.Main.Attribs.SetDirX(IRobotObjLocalXDirDefinitionType.I_OLXDDT_CARTESIAN, localX.X, localX.Y, localX.Z);
+                    Vector localX = localOrientation.X;
+                    robotPanel.Main.Attribs.SetDirX(IRobotObjLocalXDirDefinitionType.I_OLXDDT_CARTESIAN, localX.X, localX.Y, localX.Z);
+                }
+                catch (Exception e)
+                {
+                    string message = "Failed to set local orientations for a Panel. Exception message: " + e.Message;
+
+                    if (!string.IsNullOrEmpty(e.InnerException?.Message))
+                    {
+                        message += "\nInnerException: " + e.InnerException.Message;
+                    }
+
+                    Engine.Reflection.Compute.RecordWarning(message);
+                }
 
                 foreach (Opening opening in panel.Openings)
                 {
-                    rPanelOpenings.AddOne(System.Convert.ToInt32(opening.CustomData[AdapterIdName]));
+                    int openingId;
+                    if(CheckInputObjectAndExtractAdapterIdInt(opening, out openingId, oM.Reflection.Debugging.EventType.Error, typeof(Panel)))
+                        rPanelOpenings.AddOne(openingId);
                 }
                 robotPanel.SetHostedObjects(rPanelOpenings);
 
@@ -112,11 +142,23 @@ namespace BH.Adapter.Robot
             List<ICurve> subCurves = new List<ICurve>();
             foreach (Edge edge in edges) //Explode Edges into sub edges (as BHoM edges can contain polycurves, polylines etc.)
             {
-                foreach (ICurve curve in BHEG.Query.ISubParts(edge.Curve).ToList())
+                //Check edge not null
+                if (CheckNotNull(edge, oM.Reflection.Debugging.EventType.Error, typeof(Panel)))
                 {
-                    subEdges.Add(BH.Engine.Structure.Create.Edge(curve, edge.Support, edge.Release, edge.Name));
-                    subCurves.Add(curve);
+                    foreach (ICurve curve in BHEG.Query.ISubParts(edge.Curve).ToList())
+                    {
+                        //Check curves not null
+                        if (CheckNotNull(curve, oM.Reflection.Debugging.EventType.Error, typeof(Edge)))
+                        {
+                            subEdges.Add(BH.Engine.Structure.Create.Edge(curve, edge.Support, edge.Release, edge.Name));
+                            subCurves.Add(curve);
+                        }
+                        else
+                            return null;
+                    }
                 }
+                else
+                    return null;
             }
             RobotGeoObject contourPanel = Convert.ToRobot(subCurves, m_RobotApplication) as RobotGeoObject;
             return contourPanel;
@@ -128,9 +170,19 @@ namespace BH.Adapter.Robot
         private void SetRobotPanelEdgeConstraints(RobotObjObject panel, List<Edge> edges)
         {
             IRobotCollection panelEdges = panel.Main.Edges;
+
+            if (panelEdges.Count != edges.Count)
+            {
+                Engine.Reflection.Compute.RecordWarning("Could not set supports and releases to panel edges.");
+                return;
+            }
+
             for (int i = 1; i <= panelEdges.Count; i++)
             {
                 IRobotObjEdge panelEdge = panelEdges.Get(i);
+                if (panelEdge == null)
+                    continue;
+
                 Constraint6DOF support = edges[i - 1].Support;
                 if (support != null)
                     panelEdge.SetLabel(IRobotLabelType.I_LT_SUPPORT, support.DescriptionOrName());

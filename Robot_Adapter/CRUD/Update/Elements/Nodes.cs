@@ -23,12 +23,7 @@
 using System.Collections.Generic;
 using BH.oM.Base;
 using BH.oM.Structure.Elements;
-using BH.oM.Structure.SectionProperties;
-using BH.oM.Structure.SurfaceProperties;
-using BH.oM.Structure.Constraints;
-using BH.oM.Structure.Loads;
-using BH.oM.Physical.Materials;
-using BH.oM.Adapter;
+using BH.Engine.Structure;
 using RobotOM;
 
 namespace BH.Adapter.Robot
@@ -44,17 +39,28 @@ namespace BH.Adapter.Robot
             Dictionary<int, HashSet<string>> nodeTags = GetTypeTags(typeof(Node));
             foreach (Node node in nodes)
             {
-                RobotNode robotNode = m_RobotApplication.Project.Structure.Nodes.Get(System.Convert.ToInt32(node.CustomData[AdapterIdName])) as RobotNode;
+
+                int nodeId;
+                if (!CheckInputObjectAndExtractAdapterIdInt(node, out nodeId, oM.Reflection.Debugging.EventType.Warning))
+                    continue;
+
+                RobotNode robotNode = m_RobotApplication.Project.Structure.Nodes.Get(nodeId) as RobotNode;
                 if (robotNode == null)
                     return false;
 
-                if (node.Support != null && !string.IsNullOrWhiteSpace(node.Support.Name))
-                    robotNode.SetLabel(IRobotLabelType.I_LT_SUPPORT, node.Support.Name);
-                oM.Geometry.Point position = Engine.Structure.Query.Position(node);
+                if (node.Support != null && !string.IsNullOrWhiteSpace(node.Support.DescriptionOrName()))
+                    robotNode.SetLabel(IRobotLabelType.I_LT_SUPPORT, node.Support.DescriptionOrName());
+
+                oM.Geometry.Point position = node.Position;
+
+                //Check point is not null
+                if (!CheckNotNull(position, oM.Reflection.Debugging.EventType.Error, typeof(Node)))
+                    continue;
+
                 robotNode.X = position.X;
                 robotNode.Y = position.Y;
                 robotNode.Z = position.Z;
-                nodeTags[System.Convert.ToInt32(node.CustomData[AdapterIdName])] = node.Tags;
+                nodeTags[nodeId] = node.Tags;
             }
             m_tags[typeof(Node)] = nodeTags;
             return true;

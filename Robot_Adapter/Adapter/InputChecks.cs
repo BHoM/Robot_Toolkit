@@ -55,14 +55,14 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private bool CheckHasAdapterId<T>(T obj, EventType errorLevel = EventType.Error, Type owningType = null) where T : BHoMObject
+        private bool CheckHasAdapterId<T>(T obj, EventType errorLevel = EventType.Error, Type owningType = null, bool isUpdate = false) where T : BHoMObject
         {
             if (obj == null || obj.CustomData == null || !obj.CustomData.ContainsKey(AdapterIdName))
             {
                 if (owningType == null)
-                    InputTypeIsNullMessage(typeof(T), errorLevel);
+                    InputTypeHasNoIdMessage(typeof(T), errorLevel, isUpdate);
                 else
-                    PropertyTypeHasNoIdMessage(owningType, typeof(T), errorLevel);
+                    PropertyTypeHasNoIdMessage(owningType, typeof(T), errorLevel, isUpdate);
 
                 return false;
             }
@@ -72,23 +72,23 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private bool CheckInputObject<T>(T obj, EventType errorLevel = EventType.Error, Type owningType = null) where T : BHoMObject
+        private bool CheckInputObject<T>(T obj, EventType errorLevel = EventType.Error, Type owningType = null, bool isUpdate = false) where T : BHoMObject
         {
-            return CheckNotNull(obj, errorLevel, owningType) && CheckHasAdapterId(obj, errorLevel, owningType);
+            return CheckNotNull(obj, errorLevel, owningType) && CheckHasAdapterId(obj, errorLevel, owningType, isUpdate);
         }
 
         /***************************************************/
 
-        private bool CheckInputObjectAndExtractAdapterIdInt<T>(T obj, out int id, EventType errorLevel = EventType.Error, Type owningType = null) where T : BHoMObject
+        private bool CheckInputObjectAndExtractAdapterIdInt<T>(T obj, out int id, EventType errorLevel = EventType.Error, Type owningType = null, bool isUpdate = false) where T : BHoMObject
         {
-            if (!CheckInputObject(obj, errorLevel, owningType))
+            if (!CheckInputObject(obj, errorLevel, owningType, isUpdate))
             {
                 id = -1;
                 return false;
             }
 
             object idObject;
-            if (obj != null && obj.CustomData != null && obj.CustomData.TryGetValue(AdapterIdName, out idObject) && idObject != null)
+            if (obj.CustomData.TryGetValue(AdapterIdName, out idObject) && idObject != null)
             {
                 if (idObject is int)
                 {
@@ -99,7 +99,11 @@ namespace BH.Adapter.Robot
                 return int.TryParse(idObject.ToString(), out id);
             }
 
-            Compute.RecordEvent("Could not extract id information from an object of type " + typeof(T), errorLevel);
+            if (owningType == null)
+                AdapterIdNotCorrectTypeMessage(typeof(T), EventType.Error, isUpdate);
+            else
+                PropertyAdapterIdNotCorrectTypeMessage(owningType, typeof(T), errorLevel, isUpdate);
+
             id = -1;
             return false;
         }

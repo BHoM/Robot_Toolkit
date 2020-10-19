@@ -69,8 +69,6 @@ namespace BH.Adapter.Robot
                         !CheckInputObjectAndExtractAdapterIdInt(bhomBar.EndNode, out endNodeId, EventType.Error, typeof(Bar)))
                         continue;
 
-                    barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterIdName]);
-
                     string sectionName = "";
                     string materialName = "";
                     if (CheckNotNull(bhomBar.SectionProperty, EventType.Warning, typeof(Bar)))

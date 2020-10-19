@@ -100,6 +100,12 @@ namespace BH.Adapter.Robot
         {
             double length = bar.Length();
 
+            if (bar.StartNode == null || bar.StartNode.Position == null || bar.EndNode == null || bar.EndNode.Position == null)
+            {
+                Engine.Reflection.Compute.RecordError("At least one of a bars end nodes or end nodes positions are null. Could not calculate verticality.");
+                return false;
+            }
+
             double dx = bar.StartNode.Position.X - bar.EndNode.Position.X;
             double dy = bar.StartNode.Position.Y - bar.EndNode.Position.Y;
 

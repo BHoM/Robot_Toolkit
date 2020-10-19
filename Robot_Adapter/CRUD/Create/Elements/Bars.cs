@@ -25,6 +25,7 @@ using System.Linq;
 using System;
 using BH.oM.Structure.Elements;
 using RobotOM;
+using BH.oM.Reflection.Debugging;
 using BH.oM.Adapters.Robot;
 using BH.Engine.Structure;
 using BH.oM.Geometry;
@@ -57,19 +58,34 @@ namespace BH.Adapter.Robot
                 List<Bar> nonCacheBars = new List<Bar>();
                 foreach (Bar bhomBar in bars)
                 {
+                    //Check bar itself is not null and correctly set up
+                    if (!CheckInputObject(bhomBar))
+                        continue;
+
+                    //Check nodes are not null and correctly set up
+                    if (!CheckInputObject(bhomBar.StartNode, EventType.Error, typeof(Bar)) ||
+                        !CheckInputObject(bhomBar.EndNode, EventType.Error, typeof(Bar)))
+                        continue;
+
                     barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterIdName]);
 
                     string sectionName = "";
                     string materialName = "";
-                    if (bhomBar.SectionProperty != null)
+                    if (CheckNotNull(bhomBar.SectionProperty, EventType.Warning, typeof(Bar)))
                     {
                         sectionName = Convert.Match(m_dbSecPropNames, bhomBar.SectionProperty);
-                        materialName = Convert.Match(m_dbMaterialNames, bhomBar.SectionProperty.Material);
                         if (sectionName == null)
                             sectionName = bhomBar.SectionProperty.DescriptionOrName();
-                        if (materialName == null)
-                            materialName = bhomBar.SectionProperty.Material.DescriptionOrName();
+
+                        if (CheckNotNull(bhomBar.SectionProperty.Material, EventType.Warning, typeof(Bar)))
+                        {
+                            materialName = Convert.Match(m_dbMaterialNames, bhomBar.SectionProperty.Material);
+
+                            if (materialName == null)
+                                materialName = bhomBar.SectionProperty.Material.DescriptionOrName();
+                        }
                     }
+
 
                     double orientationAngle = bhomBar.ToRobotOrientationAngle();
                           

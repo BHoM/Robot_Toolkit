@@ -38,7 +38,7 @@ namespace BH.Adapter.Robot
         /**** Public Methods                            ****/
         /***************************************************/
 
-        public bool CheckNotNull<T>(T obj, EventType errorLevel = EventType.Error, Type owningType = null)
+        private bool CheckNotNull<T>(T obj, EventType errorLevel = EventType.Error, Type owningType = null)
         {
             if (obj == null)
             {
@@ -55,7 +55,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        public bool CheckHasAdapterId<T>(T obj, EventType errorLevel = EventType.Error, Type owningType = null) where T : BHoMObject
+        private bool CheckHasAdapterId<T>(T obj, EventType errorLevel = EventType.Error, Type owningType = null) where T : BHoMObject
         {
             if (obj == null || obj.CustomData == null || !obj.CustomData.ContainsKey(AdapterIdName))
             {
@@ -72,9 +72,36 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        public bool CheckInputObject<T>(T obj, EventType errorLevel = EventType.Error, Type owningType = null) where T : BHoMObject
+        private bool CheckInputObject<T>(T obj, EventType errorLevel = EventType.Error, Type owningType = null) where T : BHoMObject
         {
             return CheckNotNull(obj, errorLevel, owningType) && CheckHasAdapterId(obj, errorLevel, owningType);
+        }
+
+        /***************************************************/
+
+        private bool CheckInputObjectAndExtractAdapterIdInt<T>(T obj, out int id, EventType errorLevel = EventType.Error, Type owningType = null) where T : BHoMObject
+        {
+            if (!CheckInputObject(obj, errorLevel, owningType))
+            {
+                id = -1;
+                return false;
+            }
+
+            object idObject;
+            if (obj != null && obj.CustomData != null && obj.CustomData.TryGetValue(AdapterIdName, out idObject) && idObject != null)
+            {
+                if (idObject is int)
+                {
+                    id = (int)idObject;
+                    return true;
+                }
+
+                return int.TryParse(idObject.ToString(), out id);
+            }
+
+            Compute.RecordEvent("Could not extract id information from an object of type " + typeof(T), errorLevel);
+            id = -1;
+            return false;
         }
 
         /***************************************************/

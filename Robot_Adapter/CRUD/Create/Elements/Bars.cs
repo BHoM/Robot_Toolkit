@@ -58,13 +58,15 @@ namespace BH.Adapter.Robot
                 List<Bar> nonCacheBars = new List<Bar>();
                 foreach (Bar bhomBar in bars)
                 {
-                    //Check bar itself is not null and correctly set up
-                    if (!CheckInputObject(bhomBar))
+                    //Check bar itself is not null and correctly set up and extract ID information
+                    if (!CheckInputObjectAndExtractAdapterIdInt(bhomBar, out barNum, EventType.Error))
                         continue;
 
-                    //Check nodes are not null and correctly set up
-                    if (!CheckInputObject(bhomBar.StartNode, EventType.Error, typeof(Bar)) ||
-                        !CheckInputObject(bhomBar.EndNode, EventType.Error, typeof(Bar)))
+                    int stNodeId, endNodeId;
+
+                    //Check nodes are not null and correctly set up and extract id information
+                    if (!CheckInputObjectAndExtractAdapterIdInt(bhomBar.StartNode, out stNodeId, EventType.Error, typeof(Bar)) ||
+                        !CheckInputObjectAndExtractAdapterIdInt(bhomBar.EndNode, out endNodeId, EventType.Error, typeof(Bar)))
                         continue;
 
                     barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterIdName]);
@@ -90,8 +92,8 @@ namespace BH.Adapter.Robot
                     double orientationAngle = bhomBar.ToRobotOrientationAngle();
                           
                     rcache.AddBar(barNum,
-                                  System.Convert.ToInt32(bhomBar.StartNode.CustomData[AdapterIdName]),
-                                  System.Convert.ToInt32(bhomBar.EndNode.CustomData[AdapterIdName]),
+                                  stNodeId,
+                                  endNodeId,
                                   sectionName,
                                   materialName,
                                   orientationAngle);

@@ -34,8 +34,6 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
 
-        /***************************************************/
-
         private bool CreateCollection(IEnumerable<Node> nodes)
         {
             if (nodes != null)
@@ -47,7 +45,12 @@ namespace BH.Adapter.Robot
 
                 foreach (Node node in nodes)
                 {
+                    if (!CheckInputObject(node))
+                        continue;
+
                     nodeNum = System.Convert.ToInt32(node.CustomData[AdapterIdName]);
+
+
                     oM.Geometry.Point position = Engine.Structure.Query.Position(node);
                     rcache.AddNode(nodeNum, position.X, position.Y, position.Z);
                 }

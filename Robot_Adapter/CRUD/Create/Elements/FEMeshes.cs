@@ -75,13 +75,17 @@ namespace BH.Adapter.Robot
                     for (int j = 0; j < fMeshFace.NodeListIndices.Count; j++)
                     {
                         Node node = fEMesh.Nodes[fMeshFace.NodeListIndices[i]];
+                        int nodeId;
                         //Checks that the node is not null and has AdapterId assigned
-                        if (createNodesSuccess &= CheckInputObject(node, oM.Reflection.Debugging.EventType.Error, typeof(FEMesh)))
+                        if (CheckInputObjectAndExtractAdapterIdInt(node, out nodeId, oM.Reflection.Debugging.EventType.Error, typeof(FEMesh)))
                         {
-                            ptarray.Set(i, System.Convert.ToInt32(fEMesh.Nodes[fMeshFace.NodeListIndices[i]].CustomData[AdapterIdName]));
+                            ptarray.Set(i, nodeId);
                         }
                         else
+                        {
+                            createNodesSuccess = false;
                             break;
+                        }
 
                     }
 

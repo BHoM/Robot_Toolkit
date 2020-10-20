@@ -81,10 +81,18 @@ namespace BH.Adapter.Robot
                 {
                     //Using try catch in the event that something fails in the geometry engine or similar.
                     Basis localOrientation = panel.LocalOrientation();
-                    robotPanel.Main.Attribs.DirZ = Convert.ToRobotFlipPanelZ(localOrientation.Z);
 
-                    Vector localX = localOrientation.X;
-                    robotPanel.Main.Attribs.SetDirX(IRobotObjLocalXDirDefinitionType.I_OLXDDT_CARTESIAN, localX.X, localX.Y, localX.Z);
+                    if (localOrientation != null)
+                    {
+                        robotPanel.Main.Attribs.DirZ = Convert.ToRobotFlipPanelZ(localOrientation.Z);
+
+                        Vector localX = localOrientation.X;
+                        robotPanel.Main.Attribs.SetDirX(IRobotObjLocalXDirDefinitionType.I_OLXDDT_CARTESIAN, localX.X, localX.Y, localX.Z);
+                    }
+                    else
+                    {
+                        Engine.Reflection.Compute.RecordWarning("Could not extract local orientation of a Panel. Could not set local orientations to Robot.");
+                    }
                 }
                 catch (Exception e)
                 {

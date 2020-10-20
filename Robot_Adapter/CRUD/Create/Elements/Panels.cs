@@ -167,7 +167,8 @@ namespace BH.Adapter.Robot
                 foreach (Edge edge in edges) //Explode Edges into sub edges (as BHoM edges can contain polycurves, polylines etc.)
                 {
                     //Check edge not null
-                    if (CheckNotNull(edge, oM.Reflection.Debugging.EventType.Error, typeof(Panel)))
+                    if (CheckNotNull(edge, oM.Reflection.Debugging.EventType.Error, typeof(Panel)) &&
+                        CheckNotNull(edge.Curve, oM.Reflection.Debugging.EventType.Error, typeof(Edge)))
                     {
                         foreach (ICurve curve in BHEG.Query.ISubParts(edge.Curve).ToList())
                         {

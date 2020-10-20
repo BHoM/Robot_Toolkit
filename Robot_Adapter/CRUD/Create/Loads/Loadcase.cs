@@ -40,7 +40,10 @@ namespace BH.Adapter.Robot
 
             m_RobotApplication.Project.Structure.Cases.BeginMultiOperation();
             for (int i = 0; i < caseList.Count; i++)
-            {                
+            {
+                if (!CheckNotNull(caseList[i]))
+                    continue;
+                                
                 int subNature;
                 IRobotCaseNature rNature = Convert.ToRobotLoadcaseNature(caseList[i], out subNature);
                 m_RobotApplication.Project.Structure.Cases.CreateSimple(caseList[i].Number, caseList[i].Name, rNature, IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);

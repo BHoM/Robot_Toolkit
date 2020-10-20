@@ -37,15 +37,23 @@ namespace BH.Adapter.Robot
             m_RobotApplication.Project.Structure.Cases.BeginMultiOperation();
             foreach (LoadCombination lComb in lComabinations)
             {
+                //Check combination itself is not null
+                if (!CheckNotNull(lComb))
+                    continue;
+
                 if (m_RobotApplication.Project.Structure.Cases.Exist(lComb.Number)!=-1)
                 {
                     RobotCaseCombination rCaseCombination = m_RobotApplication.Project.Structure.Cases.CreateCombination(lComb.Number, lComb.Name, IRobotCombinationType.I_CBT_ULS, IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_COMB);
                     for (int i = 0; i < lComb.LoadCases.Count; i++)
                     {
-                        System.Tuple<double, ICase> loadcase = lComb.LoadCases[i];
-                        rCaseCombination.CaseFactors.New(lComb.LoadCases[i].Item2.Number, lComb.LoadCases[i].Item1);
+                        //Check tuple as well as case not null
+                        if (CheckNotNull(lComb.LoadCases[i], oM.Reflection.Debugging.EventType.Error, typeof(LoadCombination)) &&
+                            CheckNotNull(lComb.LoadCases[i].Item2, oM.Reflection.Debugging.EventType.Error, typeof(LoadCombination)))
+                        {
+                            System.Tuple<double, ICase> loadcase = lComb.LoadCases[i];
+                            rCaseCombination.CaseFactors.New(lComb.LoadCases[i].Item2.Number, lComb.LoadCases[i].Item1);
+                        }
                     }
-                    UpdateView();
                 }
                 else
                 {

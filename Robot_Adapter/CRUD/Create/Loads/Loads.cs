@@ -20,6 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using System;
 using System.Collections.Generic;
 using BH.oM.Structure.Loads;
 using BH.oM.Base;
@@ -45,6 +46,9 @@ namespace BH.Adapter.Robot
 
             foreach (ILoad load in loads)
             {
+                if (!CheckNotNull(load.Loadcase, oM.Reflection.Debugging.EventType.Error, load.GetType()))
+                    continue;
+
                 IRobotCase rCase = caseServer.Get(load.Loadcase.Number);
                 RobotSimpleCase sCase = rCase as RobotSimpleCase;
                 Convert.ToRobot(load as dynamic, sCase, rGroupServer);               
@@ -64,6 +68,13 @@ namespace BH.Adapter.Robot
 
         private bool CheckLoad<T>(IElementLoad<T> load) where T : IBHoMObject
         {
+            if (!CheckNotNull(load))
+                return false;
+
+            Type type = load.GetType();
+            if (load.Objects.Elements.Any(x => !CheckNotNull(x, oM.Reflection.Debugging.EventType.Error, type)))
+                return false;
+
             if (load.HasAssignedObjectIds(AdapterIdName))
                 return true;
             else
@@ -77,7 +88,7 @@ namespace BH.Adapter.Robot
 
         private bool CheckLoad(ILoad load)
         {
-            return true;
+            return CheckNotNull(load);
         }
 
         /***************************************************/

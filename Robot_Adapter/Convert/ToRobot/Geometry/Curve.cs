@@ -39,6 +39,10 @@ namespace BH.Adapter.Robot
             if (curves.Count == 1 && curves[0] is Circle)
             {
                 RobotGeoObject circleContour = Convert.ToRobot(curves[0] as Circle, robotApplication) as RobotGeoObject;
+
+                if (circleContour == null)
+                    return null;
+
                 circleContour.Initialize();
                 return circleContour;
             }
@@ -48,14 +52,40 @@ namespace BH.Adapter.Robot
                 foreach (ICurve curve in curves)
                 {
                     if (curve is Line)
-                        contour.Add(Convert.ToRobot(curve as Line, robotApplication) as RobotGeoSegment);
+                    {
+                        RobotGeoSegment lineSegment = Convert.ToRobot(curve as Line, robotApplication) as RobotGeoSegment;
+
+                        if (lineSegment != null)
+                            contour.Add(lineSegment);
+                    }
                     else if (curve is Arc)
-                        contour.Add(Convert.ToRobot(curve as Arc, robotApplication) as RobotGeoSegment);
+                    {
+                        RobotGeoSegment arcSegment = Convert.ToRobot(curve as Arc, robotApplication) as RobotGeoSegment;
+
+                        if(arcSegment != null)
+                            contour.Add(arcSegment);
+                    }
                     else
                         BH.Engine.Reflection.Compute.RecordError("Only line, arc and circle curve geometry is supported for contours in Robot");
                 }
-                contour.Initialize();
-                return contour as RobotGeoObject;
+                try
+                {
+                    contour.Initialize();
+                    return contour as RobotGeoObject;
+                }
+                catch (Exception e)
+                {
+                    string message = "Failed to generate Robot contour. Exception message: " + e.Message;
+
+                    if (!string.IsNullOrEmpty(e.InnerException?.Message))
+                    {
+                        message += "\nInnerException: " + e.InnerException.Message;
+                    }
+
+                    Engine.Reflection.Compute.RecordError(message);
+                    return null;
+                }
+
             }
         }
 

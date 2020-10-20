@@ -36,6 +36,15 @@ namespace BH.Adapter.Robot
 
         public static RobotGeoSegment ToRobot(Arc arc, RobotApplication robotApplication)
         {
+            Type arcType = typeof(Arc);
+            //Check inner properties are not null
+            if (RobotAdapter.CheckNotNull(arc.CoordinateSystem, oM.Reflection.Debugging.EventType.Error, arcType) ||
+                RobotAdapter.CheckNotNull(arc.CoordinateSystem.Origin, oM.Reflection.Debugging.EventType.Error, arcType) ||
+                RobotAdapter.CheckNotNull(arc.CoordinateSystem.X, oM.Reflection.Debugging.EventType.Error, arcType) ||
+                RobotAdapter.CheckNotNull(arc.CoordinateSystem.Y, oM.Reflection.Debugging.EventType.Error, arcType) ||
+                RobotAdapter.CheckNotNull(arc.CoordinateSystem.Z, oM.Reflection.Debugging.EventType.Error, arcType))
+                return null;
+
             RobotGeoSegmentArc robotArc = robotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_SEGMENT_ARC);
             Point start = arc.StartPoint();
             Point middle = arc.PointAtParameter(0.5);

@@ -121,28 +121,35 @@ namespace BH.Adapter.Robot
                     //Get local orientations for each face
                     List<Basis> orientations = fEMesh.LocalOrientations();
 
-                    //Check if all orientations are the same
-                    bool sameOrientation = true;
-
-                    for (int i = 0; i < orientations.Count - 1; i++)
+                    if (orientations.All(x => x != null))
                     {
-                        sameOrientation &= orientations[i].X.Angle(orientations[i + 1].X) < Tolerance.Angle;
-                        sameOrientation &= orientations[i].Z.Angle(orientations[i + 1].Z) < Tolerance.Angle;
+                        //Check if all orientations are the same
+                        bool sameOrientation = true;
 
-                        if (!sameOrientation)
-                            break;
-                    }
+                        for (int i = 0; i < orientations.Count - 1; i++)
+                        {
+                            sameOrientation &= orientations[i].X.Angle(orientations[i + 1].X) < Tolerance.Angle;
+                            sameOrientation &= orientations[i].Z.Angle(orientations[i + 1].Z) < Tolerance.Angle;
 
-                    if (orientations.Count != 0 && sameOrientation)
-                    {
-                        mesh.Main.Attribs.DirZ = Convert.ToRobotFlipPanelZ(orientations.First().Z);
-                        Vector xDir = orientations.First().X;
-                        mesh.Main.Attribs.SetDirX(IRobotObjLocalXDirDefinitionType.I_OLXDDT_CARTESIAN, xDir.X, xDir.Y, xDir.Z);
-                        mesh.Update();
+                            if (!sameOrientation)
+                                break;
+                        }
+
+                        if (orientations.Count != 0 && sameOrientation)
+                        {
+                            mesh.Main.Attribs.DirZ = Convert.ToRobotFlipPanelZ(orientations.First().Z);
+                            Vector xDir = orientations.First().X;
+                            mesh.Main.Attribs.SetDirX(IRobotObjLocalXDirDefinitionType.I_OLXDDT_CARTESIAN, xDir.X, xDir.Y, xDir.Z);
+                            mesh.Update();
+                        }
+                        else
+                        {
+                            Engine.Reflection.Compute.RecordWarning("Local orientions of the pushed FEMesh varies across the faces. Could not set local orientations to Robot.");
+                        }
                     }
                     else
                     {
-                        Engine.Reflection.Compute.RecordWarning("Local orientions of the pushed FEMesh varies across the faces. Could not set local orientations to Robot.");
+                        Engine.Reflection.Compute.RecordWarning("Could not extract local orientations of a FEMesh. Could not set local orientations to Robot.");
                     }
                 }
                 catch (Exception e)

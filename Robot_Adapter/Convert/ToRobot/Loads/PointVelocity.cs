@@ -34,11 +34,22 @@ namespace BH.Adapter.Robot
          
         public static void ToRobot(this PointVelocity load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
+            //Replace null vectors with empty vector
+            load.TranslationalVelocity = load.TranslationalVelocity ?? new oM.Geometry.Vector();
+            load.RotationalVelocity = load.RotationalVelocity ?? new oM.Geometry.Vector();
+
             if (load.TranslationalVelocity.Length() == 0)
             {
                 Engine.Reflection.Compute.RecordWarning("Zero point velocities are not pushed to Robot");
                 return;
             }
+
+            if (load.RotationalVelocity.Length() != 0)
+            {
+                Engine.Reflection.Compute.RecordError("Rotational velocities are not yet supported in the Robot Adapter.");
+                return;
+            }
+
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_VELOCITY);
             loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
             loadRecord.SetValue((short)IRobotNodeVelocityRecordValues.I_NVRV_UX, load.TranslationalVelocity.X);

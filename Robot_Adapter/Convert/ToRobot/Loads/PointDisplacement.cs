@@ -34,6 +34,10 @@ namespace BH.Adapter.Robot
              
         public static void ToRobot(this PointDisplacement load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
+            //Replace null vectors with empty vector
+            load.Translation = load.Translation ?? new oM.Geometry.Vector();
+            load.Rotation = load.Rotation ?? new oM.Geometry.Vector();
+
             if (load.Translation.Length() == 0 && load.Rotation.Length() == 0)
             {
                 Engine.Reflection.Compute.RecordWarning("Zero point displacements are not pushed to Robot");

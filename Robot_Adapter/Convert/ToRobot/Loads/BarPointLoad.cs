@@ -34,6 +34,10 @@ namespace BH.Adapter.Robot
        
         public static void ToRobot(this BarPointLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
+            //Replace null vectors with empty vector
+            load.Force = load.Force ?? new oM.Geometry.Vector();
+            load.Moment = load.Moment ?? new oM.Geometry.Vector();
+
             if (load.Force.Length() == 0 && load.Moment.Length() == 0)
             {
                 Engine.Reflection.Compute.RecordWarning("Zero forces and moments are not pushed to Robot");

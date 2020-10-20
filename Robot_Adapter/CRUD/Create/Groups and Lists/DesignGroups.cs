@@ -36,14 +36,22 @@ namespace BH.Adapter.Robot
         {
             foreach (DesignGroup bhomdesignGroup in bhomdesignGroups)
             {
+                if (!CheckNotNull(bhomdesignGroup, oM.Reflection.Debugging.EventType.Warning))
+                    continue;
+
                 RDimServer RDServer = m_RobotApplication.Kernel.GetExtension("RDimServer");
                 RDServer.Mode = RobotOM.IRDimServerMode.I_DSM_STEEL;
                 RDimStream RDStream = RDServer.Connection.GetStream();
                 RDimGroups RDGroups = RDServer.GroupsService;
                 RDimGrpProfs RDGroupProfs = RDServer.Connection.GetGrpProfs();               
                 RDimGroup designGroup = RDGroups.New(0, bhomdesignGroup.Number);
-                designGroup.Name = bhomdesignGroup.Name;
-                designGroup.Material = bhomdesignGroup.MaterialName;
+
+                if(!string.IsNullOrWhiteSpace(bhomdesignGroup.Name))
+                    designGroup.Name = bhomdesignGroup.Name;
+
+                if(!string.IsNullOrWhiteSpace(bhomdesignGroup.MaterialName))
+                    designGroup.Material = bhomdesignGroup.MaterialName;
+
                 RDStream.Clear();
                 RDStream.WriteText(Convert.FromSelectionList(bhomdesignGroup.MemberIds));
                 designGroup.SetMembList(RDStream);

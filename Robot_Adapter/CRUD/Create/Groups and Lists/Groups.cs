@@ -20,6 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Base;
@@ -39,6 +40,17 @@ namespace BH.Adapter.Robot
             RobotGroupServer rGroupServer = m_RobotApplication.Project.Structure.Groups;
             foreach (BHoMGroup<T> group in groups)
             {
+                //Check group is not null
+                if (!CheckNotNull(group))
+                    continue;
+
+                Type groupType = group.GetType();
+
+
+                if (!CheckNotNull(group.Elements, oM.Reflection.Debugging.EventType.Error, groupType) ||
+                   group.Elements.Any(x => !CheckNotNull(x, oM.Reflection.Debugging.EventType.Error, groupType)))
+                    continue;
+
                 if (group.Elements.Any(x => !x.CustomData.ContainsKey(AdapterIdName)))
                 {
                     Engine.Reflection.Compute.RecordError("The Elements of the Group needs to be pre pushed/pulled to assign their Adapter Ids. The Group containing the element(s) with missing Ids have not been created.");

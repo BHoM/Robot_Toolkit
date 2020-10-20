@@ -35,6 +35,12 @@ namespace BH.Adapter.Robot
 
         public static void ToRobot(this BarVaryingDistributedLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
+            //Replace null vectors with empty vector
+            load.ForceA = load.ForceA ?? new oM.Geometry.Vector();
+            load.ForceB = load.ForceB ?? new oM.Geometry.Vector();
+            load.MomentA = load.MomentA ?? new oM.Geometry.Vector();
+            load.MomentB = load.MomentB ?? new oM.Geometry.Vector();
+
             if (load.ForceA.Length() == 0 && load.ForceB.Length() == 0)
             {
                 Engine.Reflection.Compute.RecordWarning("Zero distributed forces are not pushed to Robot");

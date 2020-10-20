@@ -34,6 +34,9 @@ namespace BH.Adapter.Robot
        
         public static void ToRobot(this AreaUniformlyDistributedLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
+            //Replace null vector with empty vector
+            load.Pressure = load.Pressure ?? new oM.Geometry.Vector();
+
             if (load.Pressure.Length() == 0)
             {
                 Engine.Reflection.Compute.RecordWarning("Zero pressures are not pushed to Robot");

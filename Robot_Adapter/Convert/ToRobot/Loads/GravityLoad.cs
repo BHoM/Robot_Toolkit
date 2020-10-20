@@ -34,6 +34,9 @@ namespace BH.Adapter.Robot
        
         public static void ToRobot(this GravityLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
+            //Replace null vectors with empty vector
+            load.GravityDirection = load.GravityDirection ?? new oM.Geometry.Vector();
+
             int count = 0;
             if (load.GravityDirection.X != 0)
             {

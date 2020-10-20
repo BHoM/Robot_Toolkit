@@ -35,8 +35,11 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
        
-        public static void ToRobot(this oM.Structure.Loads.ContourLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
+        public static void ToRobot(this ContourLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
+            //Replace null vectors with empty vector
+            load.Force = load.Force ?? new Vector();
+
             if (load.Force.Length() == 0)
             {
                 Engine.Reflection.Compute.RecordWarning("Zero contour forces are not pushed to Robot");

@@ -48,7 +48,6 @@ namespace BH.Adapter.Robot
             bool success = true;
             if (objects.Count() > 0)
             {
-                var watch = new System.Diagnostics.Stopwatch();
                 if (objects.First() is Constraint6DOF)
                 {
                     success = CreateCollection(objects as IEnumerable<Constraint6DOF>);

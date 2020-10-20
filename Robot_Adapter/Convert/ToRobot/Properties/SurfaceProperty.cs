@@ -38,20 +38,24 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static string ToRobot(IRobotLabel rLabel, ISurfaceProperty property)
+        public static bool ToRobot(IRobotLabel rLabel, ISurfaceProperty property)
         {
-            string name = "";
 
             if (property is LoadingPanelProperty)
             {
-                return (property as LoadingPanelProperty).ToRobot();
+                (property as LoadingPanelProperty).ToRobot();
+                return true;
             }
             else
             {
+                Type propType = property.GetType();
+
                 RobotThicknessOrthoData orthoData = null;
                 RobotThicknessData thicknessData = rLabel.Data;
-                thicknessData.MaterialName = property.Material.Name;
-                name = property.Name;
+
+                if (RobotAdapter.CheckNotNull(property.Material, oM.Reflection.Debugging.EventType.Warning, propType))
+                    thicknessData.MaterialName = property.Material.Name;
+
                 if (property is ConstantThickness)
                 {
                     ConstantThickness constThickness = property as ConstantThickness;
@@ -110,7 +114,7 @@ namespace BH.Adapter.Robot
                     orthoData.DirType = ribbed.Direction == PanelDirection.X ? IRobotThicknessOrthoDirType.I_TODT_DIR_X : IRobotThicknessOrthoDirType.I_TODT_DIR_Y;
                 }
             }
-            return name;          
+            return true;
         }
 
         /***************************************************/

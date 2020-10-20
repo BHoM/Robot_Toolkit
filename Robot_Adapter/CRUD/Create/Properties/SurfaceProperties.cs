@@ -43,14 +43,15 @@ namespace BH.Adapter.Robot
                     if (property is LoadingPanelProperty)
                     {
                         IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_CLADDING, "");
-                        Convert.ToRobot(robotLabel, property);
-                        robotLabelServer.StoreWithName(robotLabel, property.DescriptionOrName());
+                        if(Convert.ToRobot(robotLabel, property))
+                            robotLabelServer.StoreWithName(robotLabel, property.DescriptionOrName());
                     }
                     else
                     {
                         IRobotLabel robotLabel = robotLabelServer.Create(IRobotLabelType.I_LT_PANEL_THICKNESS, "");
-                        Convert.ToRobot(robotLabel, property);
-                        robotLabelServer.StoreWithName(robotLabel, property.DescriptionOrName());
+
+                        if(Convert.ToRobot(robotLabel, property))
+                            robotLabelServer.StoreWithName(robotLabel, property.DescriptionOrName());
                     }
                 }
             }

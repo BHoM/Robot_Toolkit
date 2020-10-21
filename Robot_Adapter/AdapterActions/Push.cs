@@ -41,6 +41,12 @@ namespace BH.Adapter.Robot
 
         public override List<object> Push(IEnumerable<object> objects, string tag = "", PushType pushType = PushType.AdapterDefault, ActionConfig actionConfig = null)
         {
+            if (m_RobotApplication == null)
+            {
+                Engine.Reflection.Compute.RecordWarning("The link to the Robot application is not established. Please make sure the RobotAdapter is activated!");
+                return new List<object>();
+            }
+
             //Get out the interactive settings, and make nullchecks
             InteractiveSettings interactiveSettings = RobotConfig?.InteractiveSettings ?? new InteractiveSettings();
 

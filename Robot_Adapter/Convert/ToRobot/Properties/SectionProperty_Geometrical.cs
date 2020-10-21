@@ -38,7 +38,7 @@ namespace BH.Adapter.Robot
             Type type = section.GetType();
 
             if (!RobotAdapter.CheckNotNull(section.SectionProfile, oM.Reflection.Debugging.EventType.Warning, type) ||
-                !ToRobotConcreteSection(section.SectionProfile as dynamic, secData))
+                !ToRobotGeometricalSection(section.SectionProfile as dynamic, secData))
             {
                 //If method returns false, no profile based data has been set. Fallback to explicitly setting properties.
                 secData.SetValue(IRobotBarSectionDataValue.I_BSDV_AX, section.Area);

@@ -44,9 +44,14 @@ namespace BH.Adapter.Robot
             int fMeshFaceIdx = m_RobotApplication.Project.Structure.FiniteElems.FreeNumber;
             foreach (FEMesh fEMesh in fEMeshes)
             {
-                if (!CheckNotNull(fEMesh))
+                if (!CheckNotNull(fEMesh) || !CheckNotNull(fEMesh.Faces, oM.Reflection.Debugging.EventType.Error, typeof(FEMesh)))
                     continue;
 
+                if (fEMesh.Faces.Count == 0)
+                {
+                    Engine.Reflection.Compute.RecordWarning("Meshes with no faces are not pushed to Robot!");
+                    continue;
+                }
                 string faceList = "";
 
                 IRobotStructure objServer = m_RobotApplication.Project.Structure;
@@ -79,7 +84,7 @@ namespace BH.Adapter.Robot
                         //Checks that the node is not null and has AdapterId assigned
                         if (CheckInputObjectAndExtractAdapterIdInt(node, out nodeId, oM.Reflection.Debugging.EventType.Error, typeof(FEMesh)))
                         {
-                            ptarray.Set(i, nodeId);
+                            ptarray.Set(j + 1, nodeId);
                         }
                         else
                         {
@@ -106,6 +111,9 @@ namespace BH.Adapter.Robot
 
                     fMeshFaceIdx += 1;
                 }
+
+                if (faceList == "")
+                    continue;
 
                 faceList.TrimEnd(',');
 

@@ -79,6 +79,13 @@ namespace BH.Adapter.Robot
 
                     for (int j = 0; j < fMeshFace.NodeListIndices.Count; j++)
                     {
+                        if (fMeshFace.NodeListIndices[j] >= fEMesh.Nodes.Count)
+                        {
+                            //Index is out of bounds
+                            Engine.Reflection.Compute.RecordError("The node indecies on one of the FEMeshFaces of an FEMesh does not exist in the Node list of the parent FEMesh.");
+                            createNodesSuccess = false;
+                            break;
+                        }
                         Node node = fEMesh.Nodes[fMeshFace.NodeListIndices[j]];
                         int nodeId;
                         //Checks that the node is not null and has AdapterId assigned

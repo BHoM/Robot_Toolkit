@@ -79,7 +79,7 @@ namespace BH.Adapter.Robot
 
                     for (int j = 0; j < fMeshFace.NodeListIndices.Count; j++)
                     {
-                        Node node = fEMesh.Nodes[fMeshFace.NodeListIndices[i]];
+                        Node node = fEMesh.Nodes[fMeshFace.NodeListIndices[j]];
                         int nodeId;
                         //Checks that the node is not null and has AdapterId assigned
                         if (CheckInputObjectAndExtractAdapterIdInt(node, out nodeId, oM.Reflection.Debugging.EventType.Error, typeof(FEMesh)))

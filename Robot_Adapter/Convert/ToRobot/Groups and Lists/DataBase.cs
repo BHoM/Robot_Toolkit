@@ -112,13 +112,20 @@ namespace BH.Adapter.Robot
 
         private static string DataBaseStringFormat(IMaterialFragment material)
         {
-            string objectName = material.Name;
+            string objectName = material?.Name;
+
+            if (objectName == null)
+                return "";
+
             objectName = objectName.TrimEnd(' ').TrimStart(' ');
             return objectName;
         }
 
         public static string Match(List<string> dbNames, IBHoMObject obj)
         {
+            if (obj == null || obj.Name == null)
+                return null;
+
             if (dbNames.Contains(obj.Name))
                 return obj.Name;
 

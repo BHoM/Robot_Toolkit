@@ -44,7 +44,7 @@ namespace BH.Adapter.Robot
 
         private static string DataBaseStringFormat(ISectionProperty sectionProperty)
         {
-            string objName = sectionProperty.Name;
+            string objName = sectionProperty?.Name;
             try
             {
                 char[] charArray = objName.ToCharArray();
@@ -132,6 +132,10 @@ namespace BH.Adapter.Robot
             else
             {
                 string objectName = IDataBaseStringFormat(obj);
+
+                if (objectName == null)
+                    return null;
+
                 objectName = objectName.Replace(" ", "");
                 objectName = objectName.ToUpper();
 

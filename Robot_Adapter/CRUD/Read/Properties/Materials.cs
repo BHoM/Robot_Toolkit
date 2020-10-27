@@ -43,8 +43,12 @@ namespace BH.Adapter.Robot
         private IMaterialFragment ReadMaterialByLabelName(string labelName)
         {
             IRobotLabel materialLabel = m_RobotApplication.Project.Structure.Labels.Get(IRobotLabelType.I_LT_MATERIAL, labelName);
-            if(materialLabel != null)
-                return Convert.FromRobot(materialLabel, materialLabel.Data as RobotMaterialData);
+            if (materialLabel != null)
+            {
+                IMaterialFragment material = Convert.FromRobot(materialLabel, materialLabel.Data as RobotMaterialData);
+                SetAdapterId(material, material.Name);
+                return material;
+            }
             return null;
         }
 
@@ -73,7 +77,10 @@ namespace BH.Adapter.Robot
             IRobotLabel robotLabel = (thicknessData == null) ? null : robotLabelServer.Get(IRobotLabelType.I_LT_MATERIAL, thicknessData.MaterialName);
             IMaterialFragment material = (robotLabel == null)? null : Convert.FromRobot(robotLabel, robotLabel.Data as RobotMaterialData);
             if (material != null && materials != null)
+            {
+                SetAdapterId(material, material.Name);
                 materials.Add(material.Name, material);
+            }
             return material;
         }
     }

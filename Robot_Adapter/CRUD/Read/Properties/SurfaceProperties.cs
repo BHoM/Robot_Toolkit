@@ -71,7 +71,10 @@ namespace BH.Adapter.Robot
                 return null;
             }
             else
+            {
+                SetAdapterId(thicknessProperty, thicknessProperty.Name);
                 return thicknessProperty;
+            }
         }
     }
 }

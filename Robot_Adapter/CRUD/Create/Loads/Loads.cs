@@ -75,7 +75,7 @@ namespace BH.Adapter.Robot
             if (load.Objects.Elements.Any(x => !CheckNotNull(x, oM.Reflection.Debugging.EventType.Error, type)))
                 return false;
 
-            if (load.HasAssignedObjectIds(AdapterIdName))
+            if (load.HasAssignedObjectIds(AdapterIdFragmentType))
                 return true;
             else
             {

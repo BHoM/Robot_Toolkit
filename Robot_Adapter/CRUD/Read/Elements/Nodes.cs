@@ -49,7 +49,7 @@ namespace BH.Adapter.Robot
                 {
                     RobotNode robotNode = robotNodes.Get(i);
                     Node bhomNode = Convert.FromRobot(robotNode);
-                    bhomNode.CustomData[AdapterIdName] = robotNode.Number;
+                    SetAdapterId(bhomNode, robotNode.Number);
                     if (nodeTags != null && nodeTags.TryGetValue(robotNode.Number, out tags))
                         bhomNode.Tags = tags;
 
@@ -62,7 +62,7 @@ namespace BH.Adapter.Robot
                 {
                     RobotNode robotNode = m_RobotApplication.Project.Structure.Nodes.Get(System.Convert.ToInt32(nodeIds[i])) as RobotNode;
                     Node bhomNode = Convert.FromRobot(robotNode);
-                    bhomNode.CustomData[AdapterIdName] = robotNode.Number;
+                    SetAdapterId(bhomNode, robotNode.Number);
                     if (nodeTags != null && nodeTags.TryGetValue(robotNode.Number, out tags))
                         bhomNode.Tags = tags;
 
@@ -117,7 +117,7 @@ namespace BH.Adapter.Robot
                         Z = (double)row_set.CurrentRow.GetValue(2)
                     };
                     Node bhomNode = Engine.Structure.Create.Node(point, nod_num.ToString());
-                    bhomNode.CustomData[AdapterIdName] = nod_num.ToString();
+                    SetAdapterId(bhomNode, nod_num);
                     bhomNodes.Add(bhomNode);
                     point = null;
                     kounta++;

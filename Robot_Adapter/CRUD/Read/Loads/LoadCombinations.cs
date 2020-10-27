@@ -50,13 +50,13 @@ namespace BH.Adapter.Robot
                     {
                         IRobotCase rCaseIn = rLoadCollection.Get(rCaseCombination.CaseFactors.Get(j).CaseNumber) as IRobotCase;
                         Loadcase lCase = BH.Engine.Structure.Create.Loadcase(rCaseIn.Name, rCaseIn.Number, Convert.FromRobot(rCaseIn.Nature));
-                        lCase.CustomData[AdapterIdName] = rCaseCombination.Number;
+                        SetAdapterId(lCase, rCaseCombination.Number);
                         bCaseFactors.Add(new System.Tuple<double, ICase>(rCaseCombination.CaseFactors.Get(j).Factor, lCase));
                     }
 
                     LoadCombination lCombination = BH.Engine.Structure.Create.LoadCombination(rCaseCombination.Name, rCaseCombination.Number, bCaseFactors);
 
-                    lCombination.CustomData[AdapterIdName] = rCaseCombination.Number;
+                    SetAdapterId(lCombination, rCaseCombination.Number);
                     bhomLoadCombinations.Add(lCombination);
                 }
             }

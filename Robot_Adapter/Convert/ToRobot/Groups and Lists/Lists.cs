@@ -54,20 +54,6 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
-
-        public static string FromSelectionList<T>(IEnumerable<T> objects) where T : IBHoMObject
-        {
-            string selection = "";
-            foreach (T obj in objects)
-            {
-                object objNumber = null;
-                obj.CustomData.TryGetValue("Robot Number", out objNumber);                
-                selection += objNumber.ToString() + " ";
-            }
-            return selection.Trim();
-        }
-
-        /***************************************************/
     }
 }
 

@@ -175,7 +175,7 @@ namespace BH.Adapter.Robot
                     {
                         caseNums.Add(System.Convert.ToInt32(lCase.Item2.Number));
                     }
-                    caseNums.Add(System.Convert.ToInt32((lComb as LoadCombination).CustomData[AdapterIdName]));
+                    caseNums.Add(GetAdapterId<int>(lComb));
                 }
                 else if (o is int)
                 {

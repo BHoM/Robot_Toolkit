@@ -106,10 +106,7 @@ namespace BH.Adapter.Robot
 
                     FEMeshFace clone = fMeshFace.GetShallowClone() as FEMeshFace;
 
-                    if (clone.CustomData == null)
-                        clone.CustomData = new Dictionary<string, object>();
-
-                    clone.CustomData[AdapterIdName] = fMeshFaceIdx;
+                    SetAdapterId(clone, fMeshFaceIdx);
                     fEMesh.Faces[i] = clone;
 
                     faceList = faceList + fMeshFaceIdx.ToString() + ",";
@@ -125,7 +122,7 @@ namespace BH.Adapter.Robot
                 faceList.TrimEnd(',');
 
                 int elemNumber = objServer.Objects.FreeNumber;
-                fEMesh.CustomData[AdapterIdName] = elemNumber;
+                SetAdapterId(fEMesh, elemNumber);
                 objServer.Objects.CreateOnFiniteElems(faceList, elemNumber);
                 mesh = objServer.Objects.Get(elemNumber) as RobotObjObject;
 

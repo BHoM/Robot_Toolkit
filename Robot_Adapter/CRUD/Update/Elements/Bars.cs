@@ -47,10 +47,10 @@ namespace BH.Adapter.Robot
                 if (!CheckInputObjectAndExtractAdapterIdInt(bar, out barId, oM.Reflection.Debugging.EventType.Error, null, true))
                     continue;
 
-                RobotBar robotBar = robotBarServer.Get((int)bar.CustomData[AdapterIdName]) as RobotBar;
+                RobotBar robotBar = robotBarServer.Get(barId) as RobotBar;
                 if (robotBar == null)
                 {
-                    Engine.Reflection.Compute.RecordWarning("Could not find a bar with the Id " + bar.CustomData[AdapterIdName].ToString() + " in Robot. Bar could not be updated!");
+                    Engine.Reflection.Compute.RecordWarning("Could not find a bar with the Id " + barId.ToString() + " in Robot. Bar could not be updated!");
                     continue;
                 }
 

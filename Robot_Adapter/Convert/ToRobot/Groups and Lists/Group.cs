@@ -27,6 +27,8 @@ using System.Collections.Generic;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.Loads;
 using System.Linq;
+using BH.Engine.Adapter;
+using BH.oM.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {
@@ -77,7 +79,7 @@ namespace BH.Adapter.Robot
 
         public static string ToRobotSelectionString<T>(this IEnumerable<T> objects) where T : IBHoMObject
         {
-            return objects.Select(x => int.Parse(x.CustomData[AdapterID].ToString())).ToRobotSelectionString();
+            return objects.Select(x => x.AdapterId<int>(typeof(RobotId))).ToRobotSelectionString();
         }
 
         /***************************************************/

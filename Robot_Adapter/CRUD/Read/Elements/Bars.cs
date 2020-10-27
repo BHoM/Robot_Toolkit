@@ -52,7 +52,7 @@ namespace BH.Adapter.Robot
 
             List<Bar> bhomBars = new List<Bar>();
             IEnumerable<Node> bhomNodesList = ReadNodes();
-            Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionaryDistinctCheck(x => x.CustomData[AdapterIdName].ToString());
+            Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionaryDistinctCheck(x => GetAdapterId<int>(x).ToString());
             Dictionary<string, BarRelease> bhombarReleases = ReadBarRelease().ToDictionaryDistinctCheck(x => x.Name.ToString());
             Dictionary<string, ISectionProperty> bhomSections = ReadSectionProperties().ToDictionaryDistinctCheck(x => x.Name.ToString());
             Dictionary<string, IMaterialFragment> bhomMaterial = ReadMaterials().ToDictionaryDistinctCheck(x => x.Name.ToString());
@@ -79,7 +79,7 @@ namespace BH.Adapter.Robot
                                                          offsets,
                                                          bhomFramEleDesProps,
                                                          ref sectionWithMaterial);
-                        bhomBar.CustomData[AdapterIdName] = robotBar.Number;
+                        SetAdapterId(bhomBar, robotBar.Number);
                         if (barTags != null && barTags.TryGetValue(robotBar.Number, out tags))
                             bhomBar.Tags = tags;
                         bhomBars.Add(bhomBar);
@@ -97,18 +97,18 @@ namespace BH.Adapter.Robot
                     RobotBar robotBar = m_RobotApplication.Project.Structure.Bars.Get(barIds[i]) as RobotBar;
                     if (!robotBar.IsSuperBar)
                     {
-                        Bar bhomBar = Convert.FromRobot( robotBar, 
-                                                     bhomNodes, 
-                                                     bhomSections, 
+                        Bar bhomBar = Convert.FromRobot(robotBar,
+                                                     bhomNodes,
+                                                     bhomSections,
                                                      bhomMaterial,
                                                      bhombarReleases,
                                                      offsets,
                                                      bhomFramEleDesProps,
                                                      ref sectionWithMaterial);
-                    bhomBar.CustomData[AdapterIdName] = robotBar.Number;
-                    if (barTags != null && barTags.TryGetValue(robotBar.Number, out tags))
-                        bhomBar.Tags = tags;
-                    bhomBars.Add(bhomBar);
+                        SetAdapterId(bhomBar, robotBar.Number);
+                        if (barTags != null && barTags.TryGetValue(robotBar.Number, out tags))
+                            bhomBar.Tags = tags;
+                        bhomBars.Add(bhomBar);
                     }
                     else
                     {
@@ -238,9 +238,8 @@ namespace BH.Adapter.Robot
                     double gamma = TryGetValue(result_row, elemGamma_id);
 
                     bhomBar.SectionProperty = null;
-                    bhomBar.OrientationAngle = gamma;                   
-
-                    bhomBar.CustomData[AdapterIdName] = bar_num.ToString();
+                    bhomBar.OrientationAngle = gamma;
+                    SetAdapterId(bhomBar, bar_num);
                     bhomBars.Add(bhomBar);
 
                     ok = row_set.MoveNext();

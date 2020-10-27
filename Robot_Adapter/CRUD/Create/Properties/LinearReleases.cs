@@ -48,6 +48,7 @@ namespace BH.Adapter.Robot
                 {
                     Convert.ToRobot(robotLabel.Data, linearRelease);
                     robotLabelServer.StoreWithName(robotLabel, linearRelease.DescriptionOrName());
+                    SetAdapterId(linearRelease, linearRelease.DescriptionOrName());
                 }
             }
             return true;

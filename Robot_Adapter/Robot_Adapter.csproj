@@ -140,7 +140,6 @@
     <Compile Include="AdapterActions\Push.cs" />
     <Compile Include="Adapter\ErrorMessages.cs" />
     <Compile Include="Adapter\InputChecks.cs" />
-    <Compile Include="Convert\AdapterID.cs" />
     <Compile Include="Convert\FromRobot\Elements\Bar.cs" />
     <Compile Include="Convert\FromRobot\Elements\Node.cs" />
     <Compile Include="Convert\FromRobot\Elements\Panel.cs" />

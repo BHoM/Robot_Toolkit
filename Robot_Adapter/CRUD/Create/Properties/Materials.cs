@@ -34,8 +34,6 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
 
-        /***************************************************/
-
         private bool CreateCollection(IEnumerable<IMaterialFragment> materials, bool overwrite = true)
         {
             RobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
@@ -68,6 +66,8 @@ namespace BH.Adapter.Robot
                     if(Convert.ToRobot(matData, material))
                         m_RobotApplication.Project.Structure.Labels.StoreWithName(label, name);
                 }
+
+                SetAdapterId(material, match ?? material.DescriptionOrName());
             }
             return true;
         }

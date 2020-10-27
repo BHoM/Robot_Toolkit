@@ -46,7 +46,7 @@ namespace BH.Adapter.Robot
         public RobotAdapter(string filePath = "", RobotConfig robotConfig = null, bool active = false)
         {
             //Initialise
-            AdapterIdName = Convert.AdapterID;
+            AdapterIdFragmentType = typeof(RobotId);
             SetupComparers();
             SetupDependencies();
             BH.Adapter.Modules.Structure.ModuleLoader.LoadModules(this);

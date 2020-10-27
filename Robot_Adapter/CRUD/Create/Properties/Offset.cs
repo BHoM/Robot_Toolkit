@@ -50,6 +50,7 @@ namespace BH.Adapter.Robot
                 {
                     Convert.ToRobot(robotLabel.Data, offset);
                     robotLabelServer.StoreWithName(robotLabel, offset.DescriptionOrName());
+                    SetAdapterId(offset, offset.DescriptionOrName());
                 }
             }
             return true;

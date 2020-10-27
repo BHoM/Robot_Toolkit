@@ -46,7 +46,7 @@ namespace BH.Adapter.Robot
             List<RigidLink> bhomRigidLinks = new List<RigidLink>();
 
             IEnumerable<Node> bhomNodesList = ReadNodes();
-            Dictionary<int, Node> bhomNodes = bhomNodesList.ToDictionary(x => System.Convert.ToInt32(x.CustomData[AdapterIdName]));
+            Dictionary<int, Node> bhomNodes = bhomNodesList.ToDictionary(x => GetAdapterId<int>(x));
             Dictionary<string, LinkConstraint> bhomLinkConstraints = ReadLinkConstraint().ToDictionary(x => x.Name.ToString());
 
             if (linksIds == null || linksIds.Count == 0)
@@ -64,7 +64,7 @@ namespace BH.Adapter.Robot
 
                     bhomRigidLink.Constraint = bhomLinkConstraints[robotRigidLink.LabelName];
 
-                    bhomRigidLink.CustomData[AdapterIdName] = i;
+                    SetAdapterId(bhomRigidLink, i);
 
                     bhomRigidLinks.Add(bhomRigidLink);
                 }
@@ -84,7 +84,7 @@ namespace BH.Adapter.Robot
 
                     bhomRigidLink.Constraint = bhomLinkConstraints[robotRigidLink.LabelName];
 
-                    bhomRigidLink.CustomData[AdapterIdName] = linksIds[i];
+                    SetAdapterId(bhomRigidLink, linksIds[i]);
 
                     bhomRigidLinks.Add(bhomRigidLink);
                 }

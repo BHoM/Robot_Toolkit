@@ -49,6 +49,7 @@ namespace BH.Adapter.Robot
                 {
                     Convert.ToRobot(robotLabel.Data, constraint);
                     robotLabelServer.StoreWithName(robotLabel, constraint.DescriptionOrName());
+                    SetAdapterId(constraint, constraint.DescriptionOrName());
                 }
             }
             return true;

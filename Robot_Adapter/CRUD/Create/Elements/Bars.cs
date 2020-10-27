@@ -159,7 +159,7 @@ namespace BH.Adapter.Robot
                 {
                     try
                     {
-                        barNum = System.Convert.ToInt32(bhomBar.CustomData[AdapterIdName]);
+                        barNum = GetAdapterId<int>(bhomBar);
                         RobotBar rBar = barServer.Get(barNum) as RobotBar;
                         barTags[barNum] = bhomBar.Tags;
                         Convert.SetFEAType(rBar, bhomBar);

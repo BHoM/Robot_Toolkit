@@ -57,7 +57,7 @@ namespace BH.Adapter.Robot
 
         private bool CheckHasAdapterId<T>(T obj, EventType errorLevel = EventType.Error, Type owningType = null, bool isUpdate = false) where T : BHoMObject
         {
-            if (obj == null || obj.CustomData == null || !obj.CustomData.ContainsKey(AdapterIdName))
+            if (obj == null || !obj.Fragments.Contains(AdapterIdFragmentType))
             {
                 if (owningType == null)
                     InputTypeHasNoIdMessage(typeof(T), errorLevel, isUpdate);
@@ -87,17 +87,10 @@ namespace BH.Adapter.Robot
                 return false;
             }
 
-            object idObject;
-            if (obj.CustomData.TryGetValue(AdapterIdName, out idObject) && idObject != null)
-            {
-                if (idObject is int)
-                {
-                    id = (int)idObject;
-                    return true;
-                }
+            id = GetAdapterId<int>(obj);
 
-                return int.TryParse(idObject.ToString(), out id);
-            }
+            if (id != 0)
+                return true;
 
             if (owningType == null)
                 AdapterIdNotCorrectTypeMessage(typeof(T), EventType.Error, isUpdate);

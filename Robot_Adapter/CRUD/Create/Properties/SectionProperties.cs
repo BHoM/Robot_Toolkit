@@ -64,6 +64,7 @@ namespace BH.Adapter.Robot
                     Convert.IToRobot(p, secData);
                     m_RobotApplication.Project.Structure.Labels.Store(label);
                 }
+                SetAdapterId(p, p.DescriptionOrName());
             }
             return true;
         }

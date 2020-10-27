@@ -52,6 +52,7 @@ namespace BH.Adapter.Robot
                     rLinkData.RZ = lConst.ZZtoZZ;
 
                     m_RobotApplication.Project.Structure.Labels.StoreWithName(rigidLink, lConst.DescriptionOrName());
+                    SetAdapterId(lConst, lConst.DescriptionOrName());
                 }
             }
             return true;

@@ -113,7 +113,7 @@ namespace BH.Adapter.Robot
         {
             //Main method looping through all loadcases and extracting the picked up load type
             List<ILoad> bhomLoads = new List<ILoad>();
-            Dictionary<int, T> loadObjects = ReadLoadCacheObjects<T>().ToDictionary(x => System.Convert.ToInt32(x.CustomData[AdapterIdName]));
+            Dictionary<int, T> loadObjects = ReadLoadCacheObjects<T>().ToDictionary(x => GetAdapterId<int>(x));
             Dictionary<string, Loadcase> bhomLoadCases = ReadLoadCase().ToDictionaryDistinctCheck(x => x.Name);
 
             IRobotCaseCollection loadCollection = m_RobotApplication.Project.Structure.Cases.GetAll();
@@ -129,7 +129,7 @@ namespace BH.Adapter.Robot
                         for (int j = 1; j <= sCase.Records.Count; j++)
                         {
                             IRobotLoadRecord loadRecord = sCase.Records.Get(j);
-
+                            
                             if (loadRecord.Type == loadType)
                             {
                                 List<T> objects = FilterLoadObjects(loadRecord, loadObjects);

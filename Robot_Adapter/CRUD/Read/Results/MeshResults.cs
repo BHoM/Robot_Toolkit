@@ -136,7 +136,7 @@ namespace BH.Adapter.Robot
                 List<MeshElementResult> meshResults = new List<MeshElementResult>();
 
                 RobotSelection panelSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_PANEL);
-                panelSelection.FromText(panel.CustomData[AdapterIdName].ToString());
+                panelSelection.FromText(GetAdapterId<int>(panel).ToString());
 
                 RobotSelection finiteElementSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_FINITE_ELEMENT);
                 finiteElementSelection.FromText(panel.CustomData["RobotFiniteElementIds"].ToString());
@@ -190,7 +190,7 @@ namespace BH.Adapter.Robot
                             if (queryParams.IsParamSet(IRobotResultParamType.I_RPT_LOAD_CASE))
                                 idCase = System.Convert.ToInt32(row.GetParam(IRobotResultParamType.I_RPT_LOAD_CASE));
 
-                            int idPanel = System.Convert.ToInt32(panel.CustomData[AdapterIdName]);
+                            int idPanel = GetAdapterId<int>(panel);
 
                             int idNode = 0;
                             if (request.Smoothing != MeshResultSmoothingType.ByFiniteElementCentres)
@@ -198,7 +198,7 @@ namespace BH.Adapter.Robot
                                 //idNode = System.Convert.ToInt32(row.GetParam(IRobotResultParamType.I_RPT_NODE));
 
                                 BH.oM.Geometry.Point nodePoint = BH.Engine.Geometry.Create.Point(row.GetValue(0), row.GetValue(1), row.GetValue(2));
-                                idNode = System.Convert.ToInt32(nodes.ElementAt(nodePointList.IndexOf(BH.Engine.Geometry.Query.ClosestPoint(nodePoint, nodePointList))).CustomData[AdapterIdName]);
+                                idNode = GetAdapterId<int>(nodes.ElementAt(nodePointList.IndexOf(BH.Engine.Geometry.Query.ClosestPoint(nodePoint, nodePointList))));
                             }
 
                             int idFiniteElement = 0;
@@ -236,11 +236,12 @@ namespace BH.Adapter.Robot
                     int modeNumber = resultByCase.Key.ModeNumber;
                     List<MeshElementResult> resultList = resultByCase.ToList();
                     resultList.Sort();
-                    MeshResult meshResult = new MeshResult(panel.CustomData[AdapterIdName].ToString(), loadCase, modeNumber, timeStep, layer, layerPosition, smoothing, new ReadOnlyCollection<MeshElementResult>(resultList));
+                    MeshResult meshResult = new MeshResult(GetAdapterId<int>(panel), loadCase, modeNumber, timeStep, layer, layerPosition, smoothing, new ReadOnlyCollection<MeshElementResult>(resultList));
                     meshResultsCollection.Add(meshResult);
                 }
             }
 
+            meshResultsCollection.Sort();
             return meshResultsCollection;
         }
 

@@ -32,6 +32,7 @@ using BH.oM.Adapters.Robot;
 using BH.Engine.Structure;
 using BH.oM.Geometry;
 using BH.Engine.Geometry;
+using BH.Engine.Adapter;
 
 
 namespace BH.Adapter.Robot
@@ -162,7 +163,6 @@ namespace BH.Adapter.Robot
 
             bhomBar.SectionProperty = secProp;
             bhomBar.OrientationAngle = FromRobotOrientationAngle(bhomBar, robotBar.Gamma * Math.PI / 180);
-            bhomBar.CustomData[AdapterID] = robotBar.Number;
 
             if (robotBar.TensionCompression == IRobotBarTensionCompression.I_BTC_COMPRESSION_ONLY)
             {

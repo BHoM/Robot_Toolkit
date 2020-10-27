@@ -20,21 +20,20 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-namespace BH.Adapter.Robot
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using BH.oM.Base;
+using System.ComponentModel;
+
+namespace BH.oM.Adapters.Robot
 {
-    public partial class Convert
+    [Description("Fragment storing identifier information of the object in Robot.")]
+    public class RobotId : IAdapterId
     {
-
-        /***************************************************/
-        /****           Public Fields                   ****/
-        /***************************************************/
-
-        public const string AdapterID = "Robot_id";
-        public const string AdapterName = "Robot_name";
-
-        /***************************************************/
-
+        [Description("The identifier of the obejct in robot. Will be an integer for element types and cases and string for property types.")]
+        public object Id { get; set; }
     }
-
-
 }

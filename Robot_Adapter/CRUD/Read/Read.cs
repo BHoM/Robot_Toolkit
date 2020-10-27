@@ -174,7 +174,6 @@ namespace BH.Adapter.Robot
                 foreach (object o in ids)
                 {
                     int id;
-                    object idObj;
 
                     if (o is int)
                         idsOut.Add((int)o);
@@ -182,8 +181,13 @@ namespace BH.Adapter.Robot
                     {
                         idsOut.Add(id);
                     }
-                    else if (o is T && ((T)o).CustomData.TryGetValue(AdapterIdName, out idObj) && int.TryParse(idObj.ToString(), out id))
-                        idsOut.Add(id);
+                    else if (o is T)
+                    {
+                        id = GetAdapterId<int>((T)o);
+                        if (id != 0)
+                            idsOut.Add(id);
+                    }
+
                 }
                 return idsOut;
             }

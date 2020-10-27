@@ -35,16 +35,6 @@ namespace BH.Adapter.Robot
 
         private List<BarRelease> ReadBarRelease(List<string> ids = null)
         {
-            //IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            //IRobotNamesArray robotLabelNames = robotLabelServer.GetAvailableNames(IRobotLabelType.I_LT_BAR_RELEASE);
-            //List<BarRelease> releases = new List<BarRelease>();
-            //for (int i = 1; i <= robotLabelNames.Count; i++)
-            //{
-            //    IRobotLabel robotLabel = robotLabelServer.Get(IRobotLabelType.I_LT_BAR_RELEASE, robotLabelNames.Get(i));
-            //    BarRelease release = Convert.FromRobot(robotLabel, robotLabel.Data as IRobotBarReleaseData);
-            //    release.CustomData.Add(AdapterIdName, robotLabel.Name);
-            //    releases.Add(release);
-            //}
             return ReadLabels(IRobotLabelType.I_LT_BAR_RELEASE).Select(x => x as BarRelease).ToList();
         }
 

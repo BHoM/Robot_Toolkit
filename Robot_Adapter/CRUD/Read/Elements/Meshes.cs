@@ -42,7 +42,7 @@ namespace BH.Adapter.Robot
 
             List<FEMeshFace> meshFaces = new List<FEMeshFace>();
 
-            Dictionary<int, Node> bhomNodes = ReadNodesQuery().ToDictionary(x => System.Convert.ToInt32(x.CustomData[AdapterIdName]));
+            Dictionary<int, Node> bhomNodes = ReadNodesQuery().ToDictionary(x => GetAdapterId<int>(x));
 
             Dictionary<int, List<Node>> meshNodes_allMeshes = new Dictionary<int, List<Node>>();
 
@@ -98,7 +98,7 @@ namespace BH.Adapter.Robot
                     int[] robotNodeIds = new int[3];
 
                     int faceId = row.GetParam(IRobotResultParamType.I_RPT_ELEMENT);
-                    meshFace.CustomData[AdapterIdName] = faceId;
+                    SetAdapterId(meshFace, faceId);
 
                     robotNodeIds[0] = System.Convert.ToInt32(row.GetValue(564));
                     robotNodeIds[1] = System.Convert.ToInt32(row.GetValue(565));
@@ -127,13 +127,13 @@ namespace BH.Adapter.Robot
                     if (bhomMeshes.ContainsKey(panelNumber))
                     {
                         bhomMeshes[panelNumber].Faces.Add(meshFace);
-                        bhomMeshes[panelNumber].CustomData[AdapterIdName] = panelNumber;
+                        SetAdapterId(bhomMeshes[panelNumber], panelNumber);
                     }
                     else
                     {
                         FEMesh mesh = new FEMesh();
                         mesh.Faces.Add(meshFace);
-                        mesh.CustomData[AdapterIdName] = panelNumber;
+                        SetAdapterId(mesh, panelNumber);
                         bhomMeshes.Add(panelNumber, mesh);
                     }
                     isOk = rowSet.MoveNext();

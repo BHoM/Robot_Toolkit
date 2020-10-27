@@ -140,7 +140,7 @@ namespace BH.Adapter.Robot
 
                 List<Edge> openingSubEdges = new List<Edge>();
                 RobotObjObject rPanelOpening = objServer.Create(openingId);
-                opening.CustomData[AdapterIdName] = rPanelOpening.Number.ToString();
+                SetAdapterId(opening, rPanelOpening.Number);
 
                 RobotGeoObject contour = CreateRobotContour(opening.Edges, out openingSubEdges);
 

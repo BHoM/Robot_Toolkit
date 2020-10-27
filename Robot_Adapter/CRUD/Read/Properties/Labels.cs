@@ -139,7 +139,7 @@ namespace BH.Adapter.Robot
                     }
                     if (obj != null)
                     {
-                        obj.CustomData[AdapterIdName] = robotLabelName;
+                        SetAdapterId(obj, robotLabelName);
                         obj.Name = robotLabelName;
                         objects.Add(obj);
                     }

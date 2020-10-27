@@ -101,7 +101,7 @@ namespace BH.Adapter.Robot
                         BH.Engine.Reflection.Compute.RecordWarning("Geometry for panel " + robotPanel.Number.ToString() + " not supported.");
                         continue;
                     }
-                    panel.CustomData[AdapterIdName] = robotPanel.Number;
+                    SetAdapterId(panel, robotPanel.Number);
                     panel.CustomData["RobotFiniteElementIds"] = robotPanel.FiniteElems;
                     panel.CustomData["RobotNodeIds"] = robotPanel.Nodes;
 
@@ -165,7 +165,7 @@ namespace BH.Adapter.Robot
                     }
                     if (claddingPanel != null)
                     {
-                        claddingPanel.CustomData[AdapterIdName] = robotCladdingPanel.Number;
+                        SetAdapterId(claddingPanel, robotCladdingPanel.Number);
                         string propName = robotCladdingPanel.GetLabelName(IRobotLabelType.I_LT_CLADDING);
                         if (propName != "")
                         {
@@ -232,7 +232,7 @@ namespace BH.Adapter.Robot
                     ICurve outline = Convert.FromRobot(robotPanel.Main.GetGeometry() as dynamic);
 
                     panel = Engine.Structure.Create.Panel(outline, new List<ICurve>());
-                    panel.CustomData[AdapterIdName] = robotPanel.Number;
+                    SetAdapterId(panel, robotPanel.Number);
                     panel.CustomData["RobotFiniteElementIds"] = robotPanel.FiniteElems;
                     panel.CustomData["RobotNodeIds"] = robotPanel.Nodes;
 

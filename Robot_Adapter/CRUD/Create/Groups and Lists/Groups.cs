@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Base;
 using RobotOM;
+using BH.Engine.Adapter;
 
 
 namespace BH.Adapter.Robot
@@ -51,14 +52,14 @@ namespace BH.Adapter.Robot
                    group.Elements.Any(x => !CheckNotNull(x, oM.Reflection.Debugging.EventType.Error, groupType)))
                     continue;
 
-                if (group.Elements.Any(x => !x.CustomData.ContainsKey(AdapterIdName)))
+                if (group.Elements.Any(x => !x.HasAdapterIdFragment(AdapterIdFragmentType)))
                 {
                     Engine.Reflection.Compute.RecordError("The Elements of the Group needs to be pre pushed/pulled to assign their Adapter Ids. The Group containing the element(s) with missing Ids have not been created.");
                     continue;
                 }
 
                 IRobotObjectType rType = Convert.RobotObjectType(typeof(T));
-                string members = group.Elements.Select(x => int.Parse(x.CustomData[AdapterIdName].ToString())).ToRobotSelectionString();
+                string members = group.Elements.Select(x => GetAdapterId<int>(x)).ToRobotSelectionString();
 
                 if (string.IsNullOrWhiteSpace(group.Name))
                 {

@@ -90,7 +90,9 @@ namespace BH.Adapter.Robot
                     for (int j = 1; j <= robotOpenings.Count; j++)
                     {
                         RobotObjObject robotOpening = (RobotObjObject)robotOpenings.Get(j);
-                        openings.Add(BH.Engine.Structure.Create.Opening(Convert.FromRobot(robotOpening.Main.GetGeometry() as dynamic)));
+                        Opening opening = BH.Engine.Structure.Create.Opening(Convert.FromRobot(robotOpening.Main.GetGeometry() as dynamic));
+                        SetAdapterId(opening, robotOpening.Number);
+                        openings.Add(opening);
                     }
                     try
                     {

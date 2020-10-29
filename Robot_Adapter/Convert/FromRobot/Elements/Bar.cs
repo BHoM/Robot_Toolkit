@@ -131,7 +131,7 @@ namespace BH.Adapter.Robot
                 string framEleDesPropsName = robotBar.GetLabelName(IRobotLabelType.I_LT_MEMBER_TYPE);
                 if (bhomFramEleDesPropList.TryGetValue(framEleDesPropsName, out bhomFramEleDesignProps) && bhomFramEleDesignProps != null)
                 {
-                    bhomBar.CustomData["FramingElementDesignProperties"] = bhomFramEleDesignProps;
+                    bhomBar.Fragments.AddOrReplace(bhomFramEleDesignProps);
                 }
                 else
                 { 

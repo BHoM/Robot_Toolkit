@@ -24,7 +24,7 @@ using BH.oM.Base;
 
 namespace BH.oM.Adapters.Robot
 {
-    public class FramingElementDesignProperties : BHoMObject
+    public class FramingElementDesignProperties : BHoMObject, IFragment
     {
         /***************************************************/
         /****            Public Properties              ****/

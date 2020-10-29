@@ -24,6 +24,8 @@ using System.Collections.Generic;
 using System.Linq;
 using BH.oM.Structure.Loads;
 using RobotOM;
+using BH.Engine.Base;
+using BH.oM.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {
@@ -48,8 +50,9 @@ namespace BH.Adapter.Robot
                 IRobotCaseNature rNature = Convert.ToRobotLoadcaseNature(caseList[i], out subNature);
                 m_RobotApplication.Project.Structure.Cases.CreateSimple(caseList[i].Number, caseList[i].Name, rNature, IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
                 IRobotSimpleCase sCase = caseServer.Get(caseList[i].Number) as IRobotSimpleCase;
-                object labelName;
-                sCase.label = (caseList[i].CustomData.TryGetValue("Label", out labelName) && labelName is string)? labelName as string: "";
+
+                sCase.label = caseList[i].FindFragment<LoadCaseLabel>()?.Label ?? "";
+
                 if (subNature >= 0)               
                     sCase.SetNatureExt(subNature);
             }

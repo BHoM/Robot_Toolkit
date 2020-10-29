@@ -30,6 +30,8 @@ using BH.oM.Adapters.Robot;
 using BH.Engine.Structure;
 using BH.oM.Geometry;
 using BH.Engine.Geometry;
+using BH.Engine.Base;
+using BH.oM.Base;
 
 namespace BH.Adapter.Robot
 {
@@ -113,9 +115,11 @@ namespace BH.Adapter.Robot
                     if (bhomBar.Offset != null && bhomBar.Offset.Start != null && bhomBar.Offset.End != null && (bhomBar.Offset.Start.SquareLength() > 0 || bhomBar.Offset.End.SquareLength() > 0))
                         rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_OFFSET, bhomBar.Offset.DescriptionOrName());
 
-                    if (bhomBar.CustomData.ContainsKey("FramingElementDesignProperties"))
+
+                    IFragment designFragment;
+                    if (bhomBar.Fragments.TryGetValue(typeof(FramingElementDesignProperties), out designFragment))
                     {
-                        FramingElementDesignProperties framEleDesProps = bhomBar.CustomData["FramingElementDesignProperties"] as FramingElementDesignProperties;
+                        FramingElementDesignProperties framEleDesProps = designFragment as FramingElementDesignProperties;
                         if (framEleDesProps != null)
                         {
                             if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name) != -1)

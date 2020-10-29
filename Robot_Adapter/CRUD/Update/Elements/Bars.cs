@@ -27,6 +27,8 @@ using BH.Engine.Structure;
 using BH.Engine.Geometry;
 using RobotOM;
 using BH.oM.Adapters.Robot;
+using BH.oM.Base;
+using BH.Engine.Base;
 
 namespace BH.Adapter.Robot
 {
@@ -81,9 +83,10 @@ namespace BH.Adapter.Robot
                 if (bar.Offset != null && bar.Offset.Start != null && bar.Offset.End != null && (bar.Offset.Start.SquareLength() > 0 || bar.Offset.End.SquareLength() > 0))
                     robotBar.SetLabel(IRobotLabelType.I_LT_BAR_OFFSET, bar.Offset.DescriptionOrName());
 
-                if (bar.CustomData.ContainsKey("FramingElementDesignProperties"))
+                IFragment designFragment;
+                if (bar.Fragments.TryGetValue(typeof(FramingElementDesignProperties), out designFragment))
                 {
-                    FramingElementDesignProperties framEleDesProps = bar.CustomData["FramingElementDesignProperties"] as FramingElementDesignProperties;
+                    FramingElementDesignProperties framEleDesProps = designFragment as FramingElementDesignProperties;
                     if (framEleDesProps != null)
                     {
                         if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name) != -1)

@@ -64,6 +64,7 @@
     <Compile Include="Enums\MaterialDB.cs" />
     <Compile Include="Enums\SectionDB.cs" />
     <Compile Include="Fragments\LoadCaseLabel.cs" />
+    <Compile Include="Fragments\PanelFiniteElementIds.cs" />
     <Compile Include="Fragments\RobotId.cs" />
     <Compile Include="Settings\DesignGroup.cs" />
     <Compile Include="Settings\InteractiveSettings.cs" />

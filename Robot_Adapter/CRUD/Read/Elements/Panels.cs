@@ -33,6 +33,7 @@ using BH.oM.Structure.MaterialFragments;
 using BH.Engine.Spatial;
 using BH.Engine.Geometry;
 using BH.Engine.Structure;
+using BH.oM.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {
@@ -104,8 +105,17 @@ namespace BH.Adapter.Robot
                         continue;
                     }
                     SetAdapterId(panel, robotPanel.Number);
-                    panel.CustomData["RobotFiniteElementIds"] = robotPanel.FiniteElems;
-                    panel.CustomData["RobotNodeIds"] = robotPanel.Nodes;
+
+                    panel = Engine.Structure.Create.Panel(outline, new List<ICurve>());
+                    SetAdapterId(panel, robotPanel.Number);
+
+                    PanelFiniteElementIds feIds = new PanelFiniteElementIds
+                    {
+                        FiniteElementIds = robotPanel.FiniteElems,
+                        NodeIds = robotPanel.Nodes
+                    };
+
+                    panel.Fragments.Add(feIds);
 
                     //Get the coordinate system for the panel
                     double x, y, z; robotPanel.Main.Attribs.GetDirX(out x, out y, out z);
@@ -235,8 +245,14 @@ namespace BH.Adapter.Robot
 
                     panel = Engine.Structure.Create.Panel(outline, new List<ICurve>());
                     SetAdapterId(panel, robotPanel.Number);
-                    panel.CustomData["RobotFiniteElementIds"] = robotPanel.FiniteElems;
-                    panel.CustomData["RobotNodeIds"] = robotPanel.Nodes;
+
+                    PanelFiniteElementIds feIds = new PanelFiniteElementIds
+                    {
+                        FiniteElementIds = robotPanel.FiniteElems,
+                        NodeIds = robotPanel.Nodes
+                    };
+
+                    panel.Fragments.Add(feIds);
 
                     //Get the coordinate system for the panel
                     double x, y, z; robotPanel.Main.Attribs.GetDirX(out x, out y, out z);

@@ -34,7 +34,8 @@ using BH.oM.Geometry;
 using BH.Engine.Geometry;
 using BH.oM.Adapter;
 using BH.Engine.Structure;
-using BH.oM.Base;
+using BH.Engine.Base;
+using BH.oM.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {
@@ -138,11 +139,19 @@ namespace BH.Adapter.Robot
                 RobotSelection panelSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_PANEL);
                 panelSelection.FromText(GetAdapterId<int>(panel).ToString());
 
+                PanelFiniteElementIds feIds = panel.FindFragment<PanelFiniteElementIds>();
+
+                if (feIds == null)
+                {
+                    Engine.Reflection.Compute.RecordWarning($"Could not access finite element ids for panel with id : { GetAdapterId<int>(panel) }. No results will be extracted for this element.");
+                    continue;
+                }
+
                 RobotSelection finiteElementSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_FINITE_ELEMENT);
-                finiteElementSelection.FromText(panel.CustomData["RobotFiniteElementIds"].ToString());
+                finiteElementSelection.FromText(feIds.FiniteElementIds);
 
                 RobotSelection nodeSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_NODE);
-                nodeSelection.FromText(panel.CustomData["RobotNodeIds"].ToString());
+                nodeSelection.FromText(feIds.NodeIds);
 
                 queryParams.Selection.Set(IRobotObjectType.I_OT_PANEL, panelSelection);
                 queryParams.Selection.Set(IRobotObjectType.I_OT_CASE, caseSelection);

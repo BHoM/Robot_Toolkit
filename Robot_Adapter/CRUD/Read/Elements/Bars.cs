@@ -78,6 +78,13 @@ namespace BH.Adapter.Robot
             for (int i = 1; i <= robotBars.Count; i++)
             {
                 RobotBar robotBar = robotBars.Get(i);
+
+                if (robotBar == null)
+                {
+                    Engine.Reflection.Compute.RecordError("At least one bar failed to get extracted from the Robot API.");
+                    continue;
+                }
+
                 if (!robotBar.IsSuperBar)
                 {
                     Bar bhomBar = Convert.FromRobot(robotBar,
@@ -88,6 +95,13 @@ namespace BH.Adapter.Robot
                                                      offsets,
                                                      bhomFramEleDesProps,
                                                      ref sectionWithMaterial);
+
+                    if (bhomBar == null)
+                    {
+                        Engine.Reflection.Compute.RecordError($"Failed convert Bar with number {robotBar.Number}. This bar in not extracted from the model.");
+                        continue;
+                    }
+
                     SetAdapterId(bhomBar, robotBar.Number);
                     if (barTags != null && barTags.TryGetValue(robotBar.Number, out tags))
                         bhomBar.Tags = tags;

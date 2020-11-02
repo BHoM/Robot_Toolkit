@@ -38,7 +38,7 @@ namespace BH.Engine.Adapters.Robot
         [PreviousVersion("3.2", "BH.Engine.Robot.Query.ToDictionaryDistinctCheck(System.Collections.Generic.IEnumerable<BH.Engine.Robot.T>, System.Func<BH.Engine.Robot.T, System.String>)")]
         public static Dictionary<string, T> ToDictionaryDistinctCheck<T>(this IEnumerable<T> list, Func<T, string> selector)
         {
-            var group = list.GroupBy(selector);
+            var group = list.Where(x => x != null && selector(x) != null).GroupBy(selector);
 
             foreach (var item in group.Where(x => x.Count() > 1))
             {

@@ -156,7 +156,7 @@ namespace BH.Adapter.Robot
         {
             List<Bar> bhomBars = new List<Bar>();
             IEnumerable<Node> bhomNodesList = ReadNodesQuery();
-            Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionary(x => x.Name.ToString());
+            Dictionary<int, Node> bhomNodes = bhomNodesList.ToDictionary(x => GetAdapterId<int>(x));
 
             RobotResultQueryParams result_params = default(RobotResultQueryParams);
             result_params = (RobotResultQueryParams)m_RobotApplication.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
@@ -193,8 +193,6 @@ namespace BH.Adapter.Robot
             else
                 bar_sel.FromText(Convert.ToRobotSelectionString(CheckAndGetIds<Bar>(ids)));
 
-
-
             int elemGamma_id = 20;
             int membGamma_id = 274;
 
@@ -204,10 +202,8 @@ namespace BH.Adapter.Robot
             result_params.ResultIds.Set(3, 269);
             result_params.ResultIds.Set(4, 270);
             result_params.ResultIds.Set(5, elemGamma_id); //Gamma angle
-            result_params.ResultIds.Set(6, membGamma_id); //Gamma angle
-            result_params.ResultIds.Set(7, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FX);
-
-
+            result_params.ResultIds.Set(6, membGamma_id); //Member gamma angle. Without this the element gamma angle is not extract for whatever reason.
+            result_params.ResultIds.Set(7, (int)IRobotExtremeValueType.I_EVT_FORCE_BAR_FX); //Seem to be needed to force some proeprties above to be extracted.
 
             result_params.SetParam(IRobotResultParamType.I_RPT_BAR_RELATIVE_POINT, 0);
             result_params.Selection.Set(IRobotObjectType.I_OT_BAR, bar_sel);
@@ -225,17 +221,25 @@ namespace BH.Adapter.Robot
                     result_row = row_set.CurrentRow;
                     bar_num = (int)result_row.GetParam(IRobotResultParamType.I_RPT_BAR);
 
-                    nod1 = (int)result_row.GetValue(nod1_id);
-                    nod2 = (int)result_row.GetValue(nod2_id);
+                    nod1 = (int)TryGetValue(result_row, nod1_id);
+                    nod2 = (int)TryGetValue(result_row, nod2_id);
 
-                    Node startNode = null; bhomNodes.TryGetValue(nod1.ToString(), out startNode);
-                    Node endNode = null; bhomNodes.TryGetValue(nod2.ToString(), out endNode);
+                    Node startNode = null;
+                    if (!bhomNodes.TryGetValue(nod1, out startNode))
+                        Engine.Reflection.Compute.RecordError($"Failed to extract the start node of the Bar with number {bar_num}.");
+
+                    Node endNode = null;
+                    if (!bhomNodes.TryGetValue(nod2, out endNode))
+                        Engine.Reflection.Compute.RecordError($"Failed to extract the end node of the Bar with number {bar_num}.");
+
                     Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode };
 
                     double gamma = TryGetValue(result_row, elemGamma_id);
 
+                    gamma = double.IsNaN(gamma) ? 0 : gamma;
+
                     bhomBar.SectionProperty = null;
-                    bhomBar.OrientationAngle = gamma;
+                    bhomBar.OrientationAngle = Convert.FromRobotOrientationAngle(bhomBar, gamma);
                     SetAdapterId(bhomBar, bar_num);
                     bhomBars.Add(bhomBar);
 

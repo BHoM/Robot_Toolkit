@@ -52,8 +52,17 @@ namespace BH.Adapter.Robot
                                         Dictionary<string, FramingElementDesignProperties> bhomFramEleDesPropList,
                                         ref Dictionary<string, Dictionary<string, ISectionProperty>> sectionWithMaterial)
         {
-            Node startNode = null;  bhomNodes.TryGetValue(robotBar.StartNode.ToString(), out startNode);
-            Node endNode = null; bhomNodes.TryGetValue(robotBar.EndNode.ToString(), out endNode);
+            if (robotBar == null)
+                return null;
+
+            Node startNode = null;
+            if (!bhomNodes.TryGetValue(robotBar.StartNode.ToString(), out startNode))
+                Engine.Reflection.Compute.RecordError($"Failed to extract the start node of the Bar with number {robotBar.Number}.");
+
+            Node endNode = null;
+            if (!bhomNodes.TryGetValue(robotBar.EndNode.ToString(), out endNode))
+                Engine.Reflection.Compute.RecordError($"Failed to extract the end node of the Bar with number {robotBar.Number}.");
+
             Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode, Name = robotBar.Name };
             ISectionProperty secProp = null;
             IMaterialFragment barMaterial = null;
@@ -73,7 +82,7 @@ namespace BH.Adapter.Robot
 
                     if (!bhomMaterials.TryGetValue(matName, out barMaterial))
                     {
-                        BH.Engine.Reflection.Compute.RecordWarning("Could not extract material with name" + matName + "null material will be provided for the crossection for bars with this material.");
+                        BH.Engine.Reflection.Compute.RecordWarning($"Could not extract material with name {matName}. null material will be provided for the crossection for bars with this material.");
                     }
 
 
@@ -147,7 +156,7 @@ namespace BH.Adapter.Robot
                 if (barReleases.TryGetValue(releaseName, out bhomBarRel))
                     bhomBar.Release = bhomBarRel;
                 else
-                    BH.Engine.Reflection.Compute.RecordEvent("Bars with auto-generated releases will not have releases", oM.Reflection.Debugging.EventType.Warning);
+                    BH.Engine.Reflection.Compute.RecordNote("Bars with auto-generated releases in Robot will be pulled with null releases in BHoM.");
             }
 
             if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_OFFSET) == -1)

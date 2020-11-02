@@ -59,45 +59,28 @@ namespace BH.Adapter.Robot
             Dictionary<string, Offset> offsets = ReadOffsets().ToDictionaryDistinctCheck(x => x.Name.ToString());
             Dictionary<string, FramingElementDesignProperties> bhomFramEleDesProps = ReadFramingElementDesignProperties().ToDictionaryDistinctCheck(x => x.Name.ToString());
             Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
-            Dictionary<string, Dictionary<string,ISectionProperty>> sectionWithMaterial = new Dictionary<string, Dictionary<string, ISectionProperty>>();  //Used to store sections where the material differs from the default
+            Dictionary<string, Dictionary<string, ISectionProperty>> sectionWithMaterial = new Dictionary<string, Dictionary<string, ISectionProperty>>();  //Used to store sections where the material differs from the default
             HashSet<string> tags = new HashSet<string>();
 
             m_RobotApplication.Project.Structure.Bars.BeginMultiOperation();
+
+            IRobotCollection robotBars;
+
             if (barIds == null || barIds.Count == 0)
-            {
-                IRobotCollection robotBars = m_RobotApplication.Project.Structure.Bars.GetAll();
-                for (int i = 1; i <= robotBars.Count; i++)
-                {
-                    RobotBar robotBar = robotBars.Get(i);
-                    if (!robotBar.IsSuperBar)
-                    {
-                        Bar bhomBar = Convert.FromRobot(robotBar,
-                                                         bhomNodes,
-                                                         bhomSections,
-                                                         bhomMaterial,
-                                                         bhombarReleases,
-                                                         offsets,
-                                                         bhomFramEleDesProps,
-                                                         ref sectionWithMaterial);
-                        SetAdapterId(bhomBar, robotBar.Number);
-                        if (barTags != null && barTags.TryGetValue(robotBar.Number, out tags))
-                            bhomBar.Tags = tags;
-                        bhomBars.Add(bhomBar);
-                    }
-                    else
-                    {
-                        SuperBarWarning();
-                    }
-                }
-            }
+                robotBars = m_RobotApplication.Project.Structure.Bars.GetAll();
             else
             {
-                for (int i = 0; i < barIds.Count; i++)
+                RobotSelection barSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
+                barSelection.FromText(Convert.ToRobotSelectionString(barIds));
+                robotBars = m_RobotApplication.Project.Structure.Bars.GetMany(barSelection);
+            }
+
+            for (int i = 1; i <= robotBars.Count; i++)
+            {
+                RobotBar robotBar = robotBars.Get(i);
+                if (!robotBar.IsSuperBar)
                 {
-                    RobotBar robotBar = m_RobotApplication.Project.Structure.Bars.Get(barIds[i]) as RobotBar;
-                    if (!robotBar.IsSuperBar)
-                    {
-                        Bar bhomBar = Convert.FromRobot(robotBar,
+                    Bar bhomBar = Convert.FromRobot(robotBar,
                                                      bhomNodes,
                                                      bhomSections,
                                                      bhomMaterial,
@@ -105,17 +88,17 @@ namespace BH.Adapter.Robot
                                                      offsets,
                                                      bhomFramEleDesProps,
                                                      ref sectionWithMaterial);
-                        SetAdapterId(bhomBar, robotBar.Number);
-                        if (barTags != null && barTags.TryGetValue(robotBar.Number, out tags))
-                            bhomBar.Tags = tags;
-                        bhomBars.Add(bhomBar);
-                    }
-                    else
-                    {
-                        SuperBarWarning();
-                    }
+                    SetAdapterId(bhomBar, robotBar.Number);
+                    if (barTags != null && barTags.TryGetValue(robotBar.Number, out tags))
+                        bhomBar.Tags = tags;
+                    bhomBars.Add(bhomBar);
+                }
+                else
+                {
+                    SuperBarWarning();
                 }
             }
+
             m_RobotApplication.Project.Structure.Bars.EndMultiOperation();
 
             //Postprocess the used sections

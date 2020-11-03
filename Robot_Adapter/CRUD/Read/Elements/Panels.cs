@@ -52,18 +52,11 @@ namespace BH.Adapter.Robot
             IRobotObjObjectServer robotPanelServer = m_RobotApplication.Project.Structure.Objects;
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
 
-            Panel panel = null;
-
             List<int> panelIds = CheckAndGetIds<Panel>(ids);
 
             RobotSelection robotPanelSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_PANEL);
             RobotSelection robotCladdingPanelSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_GEOMETRY);
-            if (panelIds == null)
-            {
-                robotPanelSelection.FromText("all");
-                robotCladdingPanelSelection.FromText("all");
-            }
-            else if (panelIds.Count == 0)
+            if (panelIds == null || panelIds.Count == 0)
             {
                 robotPanelSelection.FromText("all");
                 robotCladdingPanelSelection.FromText("all");
@@ -80,33 +73,47 @@ namespace BH.Adapter.Robot
             for (int i = 1; i <= robotPanels.Count; i++)
             {
                 RobotObjObject robotPanel = (RobotObjObject)robotPanels.Get(i);
-                panel = null;
+                Panel panel = null;
 
                 if (robotPanel.Main.Attribs.Meshed == 1)
                 {
-                    ICurve outline = Convert.FromRobot(robotPanel.Main.GetGeometry() as dynamic);
+                    ICurve outline = Convert.IFromRobot(robotPanel.Main.GetGeometry());
                     List<Opening> openings = new List<Opening>();
 
                     IRobotCollection robotOpenings = robotPanelServer.GetMany(robotPanel.GetHostedObjects());
                     for (int j = 1; j <= robotOpenings.Count; j++)
                     {
+                        Opening opening;
                         RobotObjObject robotOpening = (RobotObjObject)robotOpenings.Get(j);
-                        Opening opening = BH.Engine.Structure.Create.Opening(Convert.FromRobot(robotOpening.Main.GetGeometry() as dynamic));
+                        ICurve openingOutline = Convert.IFromRobot(robotOpening.Main.GetGeometry());
+
+                        if (openingOutline != null)
+                            opening = BH.Engine.Structure.Create.Opening(openingOutline);
+                        else
+                        {
+                            Engine.Reflection.Compute.RecordError($"Failed to extract the outline geometry for Opening with id {robotOpening.Number} on Panel with id {robotPanel.Number}.");
+                            opening = new Opening();
+                        }
+
                         SetAdapterId(opening, robotOpening.Number);
                         openings.Add(opening);
                     }
                     try
                     {
-                        panel = BH.Engine.Structure.Create.Panel(outline, openings);
+                        if (outline != null)
+                            panel = BH.Engine.Structure.Create.Panel(outline, openings);
+                        else
+                        {
+                            BH.Engine.Reflection.Compute.RecordError($"Failed to extract the outline geometry for Panel with id {robotPanel.Number}.");
+                            panel = new Panel { Openings = openings };
+                        }
                     }
                     catch
                     {
-                        BH.Engine.Reflection.Compute.RecordWarning("Geometry for panel " + robotPanel.Number.ToString() + " not supported.");
+                        BH.Engine.Reflection.Compute.RecordWarning($"Geometry for Panel with id {robotPanel.Number} not supported.");
                         continue;
                     }
-                    SetAdapterId(panel, robotPanel.Number);
 
-                    panel = Engine.Structure.Create.Panel(outline, new List<ICurve>());
                     SetAdapterId(panel, robotPanel.Number);
 
                     PanelFiniteElementIds feIds = new PanelFiniteElementIds
@@ -155,23 +162,21 @@ namespace BH.Adapter.Robot
                         Engine.Reflection.Compute.RecordWarning(message);
                     }
 
-
-
                     if (robotPanel.HasLabel(IRobotLabelType.I_LT_PANEL_THICKNESS) != 0)
                     {
                         string propName = robotPanel.GetLabelName(IRobotLabelType.I_LT_PANEL_THICKNESS);
                         if (!surfaceProperties.ContainsKey(propName))
                         {
-                            ISurfaceProperty SurfaceProperty = ReadSurfacePropertyFromPanel(robotPanel, materials);
-                            if (SurfaceProperty.Material == null)
+                            ISurfaceProperty surfaceProperty = ReadSurfacePropertyFromPanel(robotPanel, materials);
+                            if (surfaceProperty != null && surfaceProperty.Material == null)
                             {
-                                SurfaceProperty.Material = ReadMaterialFromPanel(robotPanel);
-                                if (SurfaceProperty.Material != null && SurfaceProperty.Material.Name != "" && !materials.ContainsKey(SurfaceProperty.Name))
+                                surfaceProperty.Material = ReadMaterialFromPanel(robotPanel);
+                                if (surfaceProperty.Material != null && !string.IsNullOrEmpty(surfaceProperty.Material.Name) && !materials.ContainsKey(surfaceProperty.Name))
                                 {
-                                    materials.Add(SurfaceProperty.Material.Name, SurfaceProperty.Material);
+                                    materials.Add(surfaceProperty.Material.Name, surfaceProperty.Material);
                                 }
                             }
-                            surfaceProperties.Add(propName, SurfaceProperty);
+                            surfaceProperties.Add(propName, surfaceProperty);
                         }
                         panel.Property = surfaceProperties[propName];
                     }

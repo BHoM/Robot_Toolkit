@@ -34,7 +34,10 @@ namespace BH.Adapter.Robot
         /***************************************************/
 
         public static PolyCurve FromRobot(this RobotGeoContour contour)
-        {            
+        {
+            if (contour == null)
+                return null;
+                        
             PolyCurve polycurve = new PolyCurve();
             RobotGeoSegment segment1, segment2;
             
@@ -51,10 +54,51 @@ namespace BH.Adapter.Robot
                 }
                 else
                 {
-                    polycurve.Curves.Add(new Line { Start = FromRobot(segment1.P1 as dynamic), End = FromRobot(segment2.P1 as dynamic) });
+                    polycurve.Curves.Add(new Line { Start = FromRobot(segment1.P1), End = FromRobot(segment2.P1) });
                 }
             }
             return polycurve;
+        }
+
+        /***************************************************/
+
+        public static Circle FromRobot(RobotGeoCircle circle)
+        {
+            return (GeometryEngine.Create.Circle(FromRobot(circle.P1), FromRobot(circle.P2), FromRobot(circle.P3)));
+        }
+
+        /***************************************************/
+
+        public static Arc FromRobot(this IRobotGeoArc arc)
+        {
+            return GeometryEngine.Create.Arc(FromRobot(arc.P1), FromRobot(arc.P2), FromRobot(arc.P3));
+        }
+
+        /***************************************************/
+
+        public static Polyline FromRobot(this RobotGeoPolyline polyline)
+        {
+            Polyline bhomPolyline = new Polyline();
+
+            for (int j = 1; j <= polyline.Segments.Count; j++)
+            {
+                bhomPolyline.ControlPoints.Add(FromRobot(polyline.Segments.Get(j).P1));
+            }
+            bhomPolyline.ControlPoints.Add(FromRobot(polyline.Segments.Get(1).P1));
+
+            return bhomPolyline;
+        }
+
+        /***************************************************/
+        /**** Public Methods - Interface                ****/
+        /***************************************************/
+
+        public static ICurve IFromRobot(RobotGeoObject geoObject)
+        {
+            if (geoObject == null)
+                return null;
+
+            return FromRobot(geoObject as dynamic);
         }
 
         /***************************************************/

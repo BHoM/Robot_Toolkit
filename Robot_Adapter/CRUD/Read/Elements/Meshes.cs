@@ -93,6 +93,7 @@ namespace BH.Adapter.Robot
                     else
                     {
                         Engine.Reflection.Compute.RecordError("At least one FEMeshFace could not be extracted from Robot");
+                        isOk = rowSet.MoveNext();
                         continue;
                     }
 
@@ -121,6 +122,7 @@ namespace BH.Adapter.Robot
                     else
                     {
                         Engine.Reflection.Compute.RecordError($"Failed to extract topological information for at least one FEMeshFace for FEMesh with index {panelNumber}. This face will not be pulled.");
+                        isOk = rowSet.MoveNext();
                         continue;
                     }
 

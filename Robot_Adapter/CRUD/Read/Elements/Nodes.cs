@@ -144,7 +144,7 @@ namespace BH.Adapter.Robot
                     }
                     else
                     {
-                        Engine.Reflection.Compute.RecordError($"Failed to extract Node with id {nod_num}.")
+                        Engine.Reflection.Compute.RecordError($"Failed to extract Node with id {nod_num}.");
                     }
                     ok = row_set.MoveNext();
                 }

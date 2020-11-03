@@ -42,33 +42,27 @@ namespace BH.Adapter.Robot
             Dictionary<int, HashSet<string>> nodeTags = GetTypeTags(typeof(Node));
             HashSet<string> tags = new HashSet<string>();
 
+            IRobotCollection robotNodes;
             if (nodeIds == null || nodeIds.Count == 0)
-            {
-                IRobotCollection robotNodes = m_RobotApplication.Project.Structure.Nodes.GetAll();
-                for (int i = 1; i <= robotNodes.Count; i++)
-                {
-                    RobotNode robotNode = robotNodes.Get(i);
-                    Node bhomNode = Convert.FromRobot(robotNode);
-                    SetAdapterId(bhomNode, robotNode.Number);
-                    if (nodeTags != null && nodeTags.TryGetValue(robotNode.Number, out tags))
-                        bhomNode.Tags = tags;
-
-                    bhomNodes.Add(bhomNode);
-                }
-            }
+                robotNodes = m_RobotApplication.Project.Structure.Nodes.GetAll();
             else
             {
-                for (int i = 0; i < nodeIds.Count; i++)
-                {
-                    RobotNode robotNode = m_RobotApplication.Project.Structure.Nodes.Get(System.Convert.ToInt32(nodeIds[i])) as RobotNode;
-                    Node bhomNode = Convert.FromRobot(robotNode);
-                    SetAdapterId(bhomNode, robotNode.Number);
-                    if (nodeTags != null && nodeTags.TryGetValue(robotNode.Number, out tags))
-                        bhomNode.Tags = tags;
-
-                    bhomNodes.Add(bhomNode);
-                }
+                RobotSelection nodeSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_NODE);
+                nodeSelection.FromText(Convert.ToRobotSelectionString(nodeIds));
+                robotNodes = m_RobotApplication.Project.Structure.Nodes.GetMany(nodeSelection);
             }
+
+            for (int i = 1; i <= robotNodes.Count; i++)
+            {
+                RobotNode robotNode = robotNodes.Get(i);
+                Node bhomNode = Convert.FromRobot(robotNode);
+                SetAdapterId(bhomNode, robotNode.Number);
+                if (nodeTags != null && nodeTags.TryGetValue(robotNode.Number, out tags))
+                    bhomNode.Tags = tags;
+
+                bhomNodes.Add(bhomNode);
+            }
+
 
             return bhomNodes;
         }

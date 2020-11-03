@@ -55,7 +55,21 @@ namespace BH.Adapter.Robot
             for (int i = 1; i <= robotNodes.Count; i++)
             {
                 RobotNode robotNode = robotNodes.Get(i);
+
+                if (robotNode == null)
+                {
+                    Engine.Reflection.Compute.RecordError("At least one Node failed to get extracted from the Robot API.");
+                    continue;
+                }
+
                 Node bhomNode = Convert.FromRobot(robotNode);
+
+                if (bhomNode == null)
+                {
+                    Engine.Reflection.Compute.RecordError($"Failed convert Node with number {robotNode.Number}. This Node in not extracted from the model.");
+                    continue;
+                }
+
                 SetAdapterId(bhomNode, robotNode.Number);
                 if (nodeTags != null && nodeTags.TryGetValue(robotNode.Number, out tags))
                     bhomNode.Tags = tags;

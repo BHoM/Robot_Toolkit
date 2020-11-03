@@ -40,11 +40,7 @@ namespace BH.Adapter.Robot
         {
             SortedDictionary<int, FEMesh> bhomMeshes = new SortedDictionary<int, FEMesh>();
 
-            List<FEMeshFace> meshFaces = new List<FEMeshFace>();
-
             Dictionary<int, Node> bhomNodes = ReadNodesQuery().ToDictionary(x => GetAdapterId<int>(x));
-
-            Dictionary<int, List<Node>> meshNodes_allMeshes = new Dictionary<int, List<Node>>();
 
             Dictionary<int, List<int>> meshNodeIds_allMeshes = new Dictionary<int, List<int>>();
 
@@ -85,28 +81,53 @@ namespace BH.Adapter.Robot
                 ret = m_RobotApplication.Kernel.Structure.Results.Query(queryParams, rowSet);
 
                 bool isOk = rowSet.MoveFirst();
+
+                //Fetches each face, one by one
                 while (isOk)
                 {
                     RobotResultRow row = rowSet.CurrentRow;
 
-                    int panelNumber = System.Convert.ToInt32(row.GetValue(1252));
+                    int panelNumber;
+                    if (row.IsAvailable(1252))
+                        panelNumber = System.Convert.ToInt32(row.GetValue(1252));
+                    else
+                    {
+                        Engine.Reflection.Compute.RecordError("At least one FEMeshFace could not be extracted from Robot");
+                        continue;
+                    }
 
-                    List<int> meshNodeIds = (meshNodeIds_allMeshes.ContainsKey(panelNumber) ? meshNodeIds_allMeshes[panelNumber] : new List<int>());
+                    List<int> meshNodeIds;
+
+                    if (!meshNodeIds_allMeshes.TryGetValue(panelNumber, out meshNodeIds))
+                    {
+                        meshNodeIds = new List<int>();
+                        meshNodeIds_allMeshes[panelNumber] = meshNodeIds;
+                    }
+                    
                     List<int> meshFaceNodeIds = new List<int>();
                     FEMeshFace meshFace = new FEMeshFace();
 
-                    int[] robotNodeIds = new int[3];
+                    List<int> robotNodeIds = new List<int>();
 
                     int faceId = row.GetParam(IRobotResultParamType.I_RPT_ELEMENT);
                     SetAdapterId(meshFace, faceId);
 
-                    robotNodeIds[0] = System.Convert.ToInt32(row.GetValue(564));
-                    robotNodeIds[1] = System.Convert.ToInt32(row.GetValue(565));
-                    robotNodeIds[2] = System.Convert.ToInt32(row.GetValue(566));
+                    if (row.IsAvailable(564) && row.IsAvailable(565) && row.IsAvailable(566))
+                    {
+                        robotNodeIds.Add(System.Convert.ToInt32(row.GetValue(564)));
+                        robotNodeIds.Add(System.Convert.ToInt32(row.GetValue(565)));
+                        robotNodeIds.Add(System.Convert.ToInt32(row.GetValue(566)));
+                    }
+                    else
+                    {
+                        Engine.Reflection.Compute.RecordError($"Failed to extract topological information for at least one FEMeshFace for FEMesh with index {panelNumber}. This face will not be pulled.");
+                        continue;
+                    }
+
+
                     if (row.IsAvailable(567))
                     {
-                        System.Array.Resize(ref robotNodeIds, 4);
-                        robotNodeIds[3] = System.Convert.ToInt32(row.GetValue(567));
+                        robotNodeIds.Add(System.Convert.ToInt32(row.GetValue(567)));
                     }
 
                     for (int i = 0; i < robotNodeIds.Count(); i++)
@@ -118,22 +139,14 @@ namespace BH.Adapter.Robot
                         meshFace.NodeListIndices.Add(meshNodeIds.IndexOf(robotNodeIds[i]));
                     }                    
 
-                    if (!meshNodeIds_allMeshes.ContainsKey(panelNumber))
-                        meshNodeIds_allMeshes.Add(panelNumber, meshNodeIds);
-
-
-                    meshFaces.Add(meshFace);
-
                     if (bhomMeshes.ContainsKey(panelNumber))
                     {
                         bhomMeshes[panelNumber].Faces.Add(meshFace);
-                        SetAdapterId(bhomMeshes[panelNumber], panelNumber);
                     }
                     else
                     {
                         FEMesh mesh = new FEMesh();
                         mesh.Faces.Add(meshFace);
-                        SetAdapterId(mesh, panelNumber);
                         bhomMeshes.Add(panelNumber, mesh);
                     }
                     isOk = rowSet.MoveNext();
@@ -141,13 +154,28 @@ namespace BH.Adapter.Robot
                 rowSet.Clear();
             }
             queryParams.Reset();
-            foreach (int panelId in meshNodeIds_allMeshes.Keys)
+
+            foreach (KeyValuePair<int,List<int>> kvp in meshNodeIds_allMeshes)
             {
-                foreach (int nodeId in meshNodeIds_allMeshes[panelId])
+                FEMesh mesh;
+                if (bhomMeshes.TryGetValue(kvp.Key, out mesh))
                 {
-                    bhomMeshes[panelId].Nodes.Add(bhomNodes[nodeId]);
+                    SetAdapterId(mesh, kvp.Key);
+                    foreach (int nodeId in kvp.Value)
+                    {
+                        Node node;
+                        if (bhomNodes.TryGetValue(nodeId, out node))
+                        {
+                            mesh.Nodes.Add(node);
+                        }
+                        else
+                            Engine.Reflection.Compute.RecordError($"Failed to find node with id {nodeId}. FEMesh with id {kvp.Key} might be invalid.");
+                    }
                 }
+                else
+                    Engine.Reflection.Compute.RecordError($"Failed to assign nodes to FEMesh with id {kvp.Key}.");
             }
+
 
             RobotObjObjectServer robotObjectServer = m_RobotApplication.Project.Structure.Objects;
 
@@ -156,45 +184,60 @@ namespace BH.Adapter.Robot
                 int id = kvp.Key;
                 FEMesh mesh = kvp.Value;
 
-                //Get local orientations for each face
-                List<Vector> normals = mesh.Normals();
-
-                //Check if all orientations are the same
-                bool sameOrientation = true;
-
-                for (int i = 0; i < normals.Count - 1; i++)
+                try
                 {
-                    sameOrientation &= normals[i].Angle(normals[i + 1]) < Tolerance.Angle;
-                    if (!sameOrientation)
-                        break;
-                }
+                    //Get local orientations for each face
+                    List<Vector> normals = mesh.Normals().Where(x => x!= null).ToList();
 
-                if (sameOrientation && normals.Count != 0)
-                {
-                    Vector normal = normals.First();
-                    RobotObjObject robotPanel = robotObjectServer.Get(id) as RobotObjObject;
+                    //Check if all orientations are the same
+                    bool sameOrientation = true;
 
-                    double x, y, z;
-                    robotPanel.Main.Attribs.GetDirX(out x, out y, out z);
-
-                    bool flip = robotPanel.Main.Attribs.DirZ == 1;
-                    flip = Convert.FromRobotCheckFlipNormal(normal, flip);
-
-                    if (flip)
+                    for (int i = 0; i < normals.Count - 1; i++)
                     {
-                        normal *= -1;
-                        foreach (FEMeshFace face in mesh.Faces)
-                            face.NodeListIndices.Reverse();
+                        sameOrientation &= normals[i].Angle(normals[i + 1]) < Tolerance.Angle;
+                        if (!sameOrientation)
+                            break;
                     }
 
-                    //Set local orientation
-                    double orientationAngle = Engine.Structure.Compute.OrientationAngleAreaElement(normal, new Vector { X = x, Y = y, Z = z });
-                    mesh.Faces.ForEach(f => f.OrientationAngle = orientationAngle);
+                    if (sameOrientation && normals.Count != 0)
+                    {
+                        Vector normal = normals.First();
+                        RobotObjObject robotPanel = robotObjectServer.Get(id) as RobotObjObject;
+
+                        double x, y, z;
+                        robotPanel.Main.Attribs.GetDirX(out x, out y, out z);
+
+                        bool flip = robotPanel.Main.Attribs.DirZ == 1;
+                        flip = Convert.FromRobotCheckFlipNormal(normal, flip);
+
+                        if (flip)
+                        {
+                            normal *= -1;
+                            foreach (FEMeshFace face in mesh.Faces)
+                                face.NodeListIndices.Reverse();
+                        }
+
+                        //Set local orientation
+                        double orientationAngle = Engine.Structure.Compute.OrientationAngleAreaElement(normal, new Vector { X = x, Y = y, Z = z });
+                        mesh.Faces.ForEach(f => f.OrientationAngle = orientationAngle);
+                    }
+                    else
+                    {
+                        Engine.Reflection.Compute.RecordWarning("Local orientations of FEMeshes with varying orientations can not be extracted.");
+                    }
                 }
-                else
+                catch (System.Exception e)
                 {
-                    Engine.Reflection.Compute.RecordWarning("Local orientations of FEMeshes with varying orientations can not be extracted.");
+                    string message = "Failed to read local orientations for an FEMesh. Exception message: " + e.Message;
+
+                    if (!string.IsNullOrEmpty(e.InnerException?.Message))
+                    {
+                        message += "\nInnerException: " + e.InnerException.Message;
+                    }
+
+                    Engine.Reflection.Compute.RecordWarning(message);
                 }
+                
             }
 
             return bhomMeshes.Values.ToList();

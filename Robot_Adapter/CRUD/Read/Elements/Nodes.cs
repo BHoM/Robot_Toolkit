@@ -121,7 +121,6 @@ namespace BH.Adapter.Robot
 
             RobotResultRow result_row = default(RobotResultRow);
             int nod_num = 0;
-            int kounta = 0;
 
             while (!(query_return == IRobotResultQueryReturnType.I_RQRT_DONE))
             {
@@ -131,17 +130,22 @@ namespace BH.Adapter.Robot
                 {
                     result_row = row_set.CurrentRow;
                     nod_num = (int)result_row.GetParam(IRobotResultParamType.I_RPT_NODE);
-                    BH.oM.Geometry.Point point = new BH.oM.Geometry.Point
+                    if (result_row.IsAvailable(0) && result_row.IsAvailable(1) && result_row.IsAvailable(2))
                     {
-                        X = (double)row_set.CurrentRow.GetValue(0),
-                        Y = (double)row_set.CurrentRow.GetValue(1),
-                        Z = (double)row_set.CurrentRow.GetValue(2)
-                    };
-                    Node bhomNode = Engine.Structure.Create.Node(point, nod_num.ToString());
-                    SetAdapterId(bhomNode, nod_num);
-                    bhomNodes.Add(bhomNode);
-                    point = null;
-                    kounta++;
+                        BH.oM.Geometry.Point point = new BH.oM.Geometry.Point
+                        {
+                            X = (double)row_set.CurrentRow.GetValue(0),
+                            Y = (double)row_set.CurrentRow.GetValue(1),
+                            Z = (double)row_set.CurrentRow.GetValue(2)
+                        };
+                        Node bhomNode = Engine.Structure.Create.Node(point);
+                        SetAdapterId(bhomNode, nod_num);
+                        bhomNodes.Add(bhomNode);
+                    }
+                    else
+                    {
+                        Engine.Reflection.Compute.RecordError($"Failed to extract Node with id {nod_num}.")
+                    }
                     ok = row_set.MoveNext();
                 }
                 row_set.Clear();

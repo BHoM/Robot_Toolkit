@@ -99,7 +99,20 @@ namespace BH.Adapter.Robot
             result_params.ResultIds.Set(2, 1);
             result_params.ResultIds.Set(3, 2);
 
+            //Setting case selection to only pull the mesh faces once
+            RobotSelection caseSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
+            try
+            {
+                caseSelection.FromText(m_RobotApplication.Project.Structure.Cases.Get(1).Number.ToString());
+            }
+            catch
+            {
+                m_RobotApplication.Project.Structure.Cases.CreateSimple(1, "Dead Load", IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
+                caseSelection.FromText(m_RobotApplication.Project.Structure.Cases.Get(1).Number.ToString());
+            }
+
             result_params.Selection.Set(IRobotObjectType.I_OT_NODE, nod_sel);
+            result_params.Selection.Set(IRobotObjectType.I_OT_CASE, caseSelection);
             result_params.SetParam(IRobotResultParamType.I_RPT_MULTI_THREADS, true);
             result_params.SetParam(IRobotResultParamType.I_RPT_THREAD_COUNT, 4);
             query_return = IRobotResultQueryReturnType.I_RQRT_MORE_AVAILABLE;

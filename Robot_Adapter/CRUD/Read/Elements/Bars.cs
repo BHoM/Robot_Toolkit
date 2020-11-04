@@ -81,7 +81,7 @@ namespace BH.Adapter.Robot
 
                 if (robotBar == null)
                 {
-                    Engine.Reflection.Compute.RecordError("At least one bar failed to get extracted from the Robot API.");
+                    Engine.Reflection.Compute.RecordError("At least one Bar failed to get extracted from the Robot API.");
                     continue;
                 }
 

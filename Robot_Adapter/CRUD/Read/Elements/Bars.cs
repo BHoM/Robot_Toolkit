@@ -188,10 +188,12 @@ namespace BH.Adapter.Robot
                 cas_sel.FromText(m_RobotApplication.Project.Structure.Cases.Get(1).Number.ToString());
             }
 
-            if (ids == null || ids.Count == 0)
+            List<int> barIds = CheckAndGetIds<Bar>(ids);
+
+            if (barIds == null || barIds.Count == 0)
                 bar_sel.FromText("all");
             else
-                bar_sel.FromText(Convert.ToRobotSelectionString(CheckAndGetIds<Bar>(ids)));
+                bar_sel.FromText(Convert.ToRobotSelectionString(barIds));
 
             int elemGamma_id = 20;
             int membGamma_id = 274;

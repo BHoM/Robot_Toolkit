@@ -55,18 +55,15 @@ namespace BH.Adapter.Robot
                 {
                     IRobotNodeRigidLinkDef robotRigidLink = m_RobotApplication.Project.Structure.Nodes.RigidLinks.Get(i) as IRobotNodeRigidLinkDef;
 
-                    RigidLink bhomRigidLink = new RigidLink();
-                    bhomRigidLink.PrimaryNode = bhomNodes[robotRigidLink.Master];
+                    RigidLink bhomRigidLink = Convert.FromRobot(robotRigidLink, bhomNodes, bhomLinkConstraints);
 
-                    List<int> secondaryIds = Convert.FromRobotSelectionString(robotRigidLink.Slaves);
-               
-                    bhomRigidLink.SecondaryNodes = secondaryIds.Select(sl => bhomNodes[sl]).ToList();
-
-                    bhomRigidLink.Constraint = bhomLinkConstraints[robotRigidLink.LabelName];
-
-                    SetAdapterId(bhomRigidLink, i);
-
-                    bhomRigidLinks.Add(bhomRigidLink);
+                    if (bhomRigidLink != null)
+                    {
+                        SetAdapterId(bhomRigidLink, i);
+                        bhomRigidLinks.Add(bhomRigidLink);
+                    }
+                    else
+                        Engine.Reflection.Compute.RecordError("Failed to extract at least one RigidLink from the Robot API.");
                 }
             }
             else
@@ -74,24 +71,22 @@ namespace BH.Adapter.Robot
                 for (int i = 0; i < linksIds.Count; i++)
                 {
                     IRobotNodeRigidLinkDef robotRigidLink = m_RobotApplication.Project.Structure.Nodes.RigidLinks.Get(linksIds[i]) as IRobotNodeRigidLinkDef;
+                    RigidLink bhomRigidLink = Convert.FromRobot(robotRigidLink, bhomNodes, bhomLinkConstraints);
 
-                    RigidLink bhomRigidLink = new RigidLink();
-                    bhomRigidLink.PrimaryNode = bhomNodes[robotRigidLink.Master];
-
-                    List<int> secondaryIds = Convert.FromRobotSelectionString(robotRigidLink.Slaves);
-
-                    bhomRigidLink.SecondaryNodes = secondaryIds.Select(sl => bhomNodes[sl]).ToList();
-
-                    bhomRigidLink.Constraint = bhomLinkConstraints[robotRigidLink.LabelName];
-
-                    SetAdapterId(bhomRigidLink, linksIds[i]);
-
-                    bhomRigidLinks.Add(bhomRigidLink);
+                    if (bhomRigidLink != null)
+                    {
+                        SetAdapterId(bhomRigidLink, i);
+                        bhomRigidLinks.Add(bhomRigidLink);
+                    }
+                    else
+                        Engine.Reflection.Compute.RecordError("Failed to extract at least one RigidLink from the Robot API.");
                 }
             }
 
             return bhomRigidLinks;
         }
+
+        /***************************************************/
 
     }
 }

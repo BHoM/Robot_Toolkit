@@ -123,7 +123,9 @@ namespace BH.Adapter.Robot
 
         public static List<int> FromRobotSelectionString(string selection)
         {
-            if (selection.Contains("EDGE")) return null;
+            if (selection.Contains("EDGE"))
+                return null;
+
             List<int> output = new List<int>();
             string[] numbers = selection.Split(' ');
             for (int i = 0; i < numbers.Length; i++)

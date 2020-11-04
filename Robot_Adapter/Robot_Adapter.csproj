@@ -143,6 +143,7 @@
     <Compile Include="Convert\FromRobot\Elements\Bar.cs" />
     <Compile Include="Convert\FromRobot\Elements\Node.cs" />
     <Compile Include="Convert\FromRobot\Elements\Panel.cs" />
+    <Compile Include="Convert\FromRobot\Elements\RigidLink.cs" />
     <Compile Include="Convert\FromRobot\Geometry\Point.cs" />
     <Compile Include="Convert\FromRobot\Geometry\Curve.cs" />
     <Compile Include="Convert\FromRobot\Loads\AreaTemperatureLoad.cs" />

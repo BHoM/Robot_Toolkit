@@ -35,6 +35,12 @@ namespace BH.Adapter.Robot
 
         public static Constraint6DOF FromRobot(this RobotNodeSupport robotSupport)
         {
+            if (robotSupport?.Data == null)
+            {
+                Engine.Reflection.Compute.RecordWarning("Failed to extract at least one Constraint6DOF from Robot.");
+                return null;
+            }
+
             RobotNodeSupportData robotSupportData = robotSupport.Data;
             string name = robotSupport.Name;
             List<bool> fixity = new List<bool>();

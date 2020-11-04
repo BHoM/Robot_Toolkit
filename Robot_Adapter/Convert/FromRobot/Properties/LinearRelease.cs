@@ -33,6 +33,12 @@ namespace BH.Adapter.Robot
        
         public static Constraint4DOF FromRobot(this IRobotLabel robotLabel, IRobotLinearReleaseData robotLinearReleaseData)
         {
+            if (robotLabel == null || robotLinearReleaseData == null)
+            {
+                Engine.Reflection.Compute.RecordWarning("Failed to extract at least one Constraint4DOF from Robot.");
+                return null;
+            }
+
             Constraint4DOF linearRelease = new Constraint4DOF();
             linearRelease.Name = robotLabel.Name;
             linearRelease.TranslationX = GetLinearReleaseType(robotLinearReleaseData.UX);

@@ -38,8 +38,8 @@ namespace BH.Adapter.Robot
         {
             Dictionary<string, IMaterialFragment> bhomMaterials = ReadMaterials().ToDictionary(x => x.Name);
 
-            List<ISurfaceProperty> bhomProps = ReadLabels(IRobotLabelType.I_LT_PANEL_THICKNESS, bhomMaterials).Cast<ISurfaceProperty>().ToList();
-            bhomProps.AddRange(ReadLabels(IRobotLabelType.I_LT_CLADDING, bhomMaterials).Cast<ISurfaceProperty>());
+            List<ISurfaceProperty> bhomProps = ReadLabels(IRobotLabelType.I_LT_PANEL_THICKNESS, bhomMaterials).Select(x => x as ISurfaceProperty).Where(x => x != null).ToList();
+            bhomProps.AddRange(ReadLabels(IRobotLabelType.I_LT_CLADDING, bhomMaterials).Select(x => x as ISurfaceProperty).Where(x => x != null).ToList());
             return bhomProps;
         }
 
@@ -47,34 +47,46 @@ namespace BH.Adapter.Robot
         
         private ISurfaceProperty ReadSurfacePropertyFromPanel(IRobotObjObject robotPanel, Dictionary<string, IMaterialFragment> materials = null, bool isCladding = false)
         {
-            IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            if (materials == null) materials = new Dictionary<string, IMaterialFragment>();
-            ISurfaceProperty thicknessProperty = null;
-            IRobotLabel robotThicknessLabel = null;
-            if (!isCladding)
+            try
             {
-                if (robotPanel.HasLabel(IRobotLabelType.I_LT_PANEL_THICKNESS) == -1)
-                { 
-                    robotThicknessLabel = robotPanel.GetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS);                  
-                    IMaterialFragment material = ReadMaterialFromPanel(robotPanel, materials);
+                IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
+                if (materials == null)
+                    materials = new Dictionary<string, IMaterialFragment>();
+
+                ISurfaceProperty thicknessProperty = null;
+                IRobotLabel robotThicknessLabel = null;
+                if (!isCladding)
+                {
+                    if (robotPanel.HasLabel(IRobotLabelType.I_LT_PANEL_THICKNESS) == -1)
+                    {
+                        robotThicknessLabel = robotPanel.GetLabel(IRobotLabelType.I_LT_PANEL_THICKNESS);
+                        IMaterialFragment material = ReadMaterialFromPanel(robotPanel, materials);
+                    }
+                    thicknessProperty = (robotThicknessLabel == null) ? null : Convert.FromRobot(robotThicknessLabel, materials);
                 }
-                thicknessProperty = (robotThicknessLabel == null)? null : Convert.FromRobot(robotThicknessLabel, materials);
+                else
+                {
+                    IRobotLabel robotCladdingLabel = robotPanel.GetLabel(IRobotLabelType.I_LT_CLADDING);
+                    thicknessProperty = Convert.FromRobot(robotCladdingLabel, materials);
+                }
+                if (thicknessProperty == null)
+                {
+                    BH.Engine.Reflection.Compute.RecordEvent("Failed to convert/create ConstantThickness property for panel " + robotPanel.Number.ToString(), oM.Reflection.Debugging.EventType.Warning);
+                    return null;
+                }
+                else
+                {
+                    SetAdapterId(thicknessProperty, thicknessProperty.Name);
+                    return thicknessProperty;
+                }
             }
-            else
+            catch (System.Exception)
             {
-                IRobotLabel robotCladdingLabel = robotPanel.GetLabel(IRobotLabelType.I_LT_CLADDING);
-                thicknessProperty = Convert.FromRobot(robotCladdingLabel, materials);
-            }
-            if (thicknessProperty == null)
-            {
-                BH.Engine.Reflection.Compute.RecordEvent("Failed to convert/create ConstantThickness property for panel " + robotPanel.Number.ToString(), oM.Reflection.Debugging.EventType.Warning);
+                Engine.Reflection.Compute.RecordWarning("Failed to extract a SurfaceProperty from a Panel");
                 return null;
             }
-            else
-            {
-                SetAdapterId(thicknessProperty, thicknessProperty.Name);
-                return thicknessProperty;
-            }
         }
+
+        /***************************************************/
     }
 }

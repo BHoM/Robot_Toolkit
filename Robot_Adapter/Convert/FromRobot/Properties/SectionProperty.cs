@@ -39,11 +39,17 @@ namespace BH.Adapter.Robot
 
             ISectionProperty prop = null;
             IProfile profile = null;
-            
-            if (secData.IsConcrete)
-                profile = FromRobotConcreteProfile(secData);
-            else
-                profile = FromRobotGeneralProfile(secData);
+            try
+            {
+                if (secData.IsConcrete)
+                    profile = FromRobotConcreteProfile(secData);
+                else
+                    profile = FromRobotGeneralProfile(secData);
+            }
+            catch (System.Exception)
+            {
+
+            }
 
             if (profile != null)
                 prop = Create.SectionPropertyFromProfile(profile, material, secData.Name);            

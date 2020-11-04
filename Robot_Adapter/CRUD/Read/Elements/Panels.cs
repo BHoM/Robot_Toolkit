@@ -73,6 +73,13 @@ namespace BH.Adapter.Robot
             for (int i = 1; i <= robotPanels.Count; i++)
             {
                 RobotObjObject robotPanel = (RobotObjObject)robotPanels.Get(i);
+
+                if (robotPanel == null)
+                {
+                    Engine.Reflection.Compute.RecordError("At least one Panel failed to get extracted from the Robot API.");
+                    continue;
+                }
+
                 Panel panel = null;
 
                 if (robotPanel.Main.Attribs.Meshed == 1)
@@ -188,34 +195,72 @@ namespace BH.Adapter.Robot
             {
                 Panel claddingPanel = null;
                 RobotObjObject robotCladdingPanel = (RobotObjObject)robotCladdingPanels.Get(i);
+
+                if (robotCladdingPanel == null)
+                {
+                    Engine.Reflection.Compute.RecordError("At least one cladding Panel failed to get extracted from the Robot API.");
+                    continue;
+                }
+
                 if (robotCladdingPanel.HasLabel(IRobotLabelType.I_LT_CLADDING) != 0)
                 {
                     List<Opening> claddingOpenings = new List<Opening>();
                     IRobotCollection robotCladdingOpenings = robotPanelServer.GetMany(robotCladdingPanel.GetHostedObjects());
                     for (int j = 1; j <= robotCladdingOpenings.Count; j++)
                     {
+                        Opening opening;
                         RobotObjObject robotOpening = (RobotObjObject)robotCladdingOpenings.Get(j);
-                        claddingOpenings.Add(BH.Engine.Structure.Create.Opening(Convert.FromRobot(robotOpening.Main.GetGeometry() as RobotGeoContour)));
+                        ICurve openingOutline = Convert.IFromRobot(robotOpening.Main.GetGeometry());
+
+                        if (openingOutline != null)
+                            opening = BH.Engine.Structure.Create.Opening(openingOutline);
+                        else
+                        {
+                            Engine.Reflection.Compute.RecordError($"Failed to extract the outline geometry for Opening with id {robotOpening.Number} on Panel with id {robotCladdingPanel.Number}.");
+                            opening = new Opening();
+                        }
+
+                        SetAdapterId(opening, robotOpening.Number);
+                        claddingOpenings.Add(opening);
                     }
                     if (robotCladdingPanel.Main.Attribs.Meshed == 1)
                     {
-                        ICurve outline = Convert.FromRobot(robotCladdingPanel.Main.GetGeometry() as dynamic);
-                        claddingPanel = BH.Engine.Structure.Create.Panel(outline, claddingOpenings);
+                        ICurve outline = Convert.IFromRobot(robotCladdingPanel.Main.GetGeometry());
+                        try
+                        {
+                            if (outline != null)
+                                claddingPanel = BH.Engine.Structure.Create.Panel(outline, claddingOpenings);
+                            else
+                            {
+                                BH.Engine.Reflection.Compute.RecordError($"Failed to extract the outline geometry for Panel with id {robotCladdingPanel.Number}.");
+                                claddingPanel = new Panel { Openings = claddingOpenings };
+                            }
+                        }
+                        catch
+                        {
+                            BH.Engine.Reflection.Compute.RecordWarning($"Geometry for Panel with id {robotCladdingPanel.Number} not supported.");
+                            continue;
+                        }
+
                     }
                     if (claddingPanel != null)
                     {
                         SetAdapterId(claddingPanel, robotCladdingPanel.Number);
                         string propName = robotCladdingPanel.GetLabelName(IRobotLabelType.I_LT_CLADDING);
-                        if (propName != "")
+                        if (!string.IsNullOrEmpty(propName))
                         {
                             if (!surfaceProperties.ContainsKey(propName))
                             {
-                                ISurfaceProperty SurfaceProperty = ReadSurfacePropertyFromPanel(robotCladdingPanel, materials, true);
-                                surfaceProperties.Add(propName, SurfaceProperty);
+                                ISurfaceProperty surfaceProperty = ReadSurfacePropertyFromPanel(robotCladdingPanel, materials, true);
+                                surfaceProperties.Add(propName, surfaceProperty);
                             }
                             claddingPanel.Property = surfaceProperties[propName];
                         }
                         panels.Add(claddingPanel);
+                    }
+                    else
+                    {
+                        Engine.Reflection.Compute.RecordError($"Failed to extract cladding Panel with id {robotCladdingPanel.Number}.");
                     }
                 }
             }
@@ -229,7 +274,8 @@ namespace BH.Adapter.Robot
         {
             foreach (Edge e in panel.ExternalEdges)
             {
-                e.Curve = e.Curve.IFlip();
+                if(e?.Curve != null)
+                    e.Curve = e.Curve.IFlip();
             }
             panel.ExternalEdges.Reverse();
         }

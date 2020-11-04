@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using RobotOM;
 using BH.oM.Structure.Loads;
+using System;
 
 namespace BH.Adapter.Robot
 {
@@ -39,10 +40,26 @@ namespace BH.Adapter.Robot
 
             for (int i = 1; i <= rLoadCases.Count; i++)
             {
-                IRobotCase rLoadCase = rLoadCases.Get(i) as IRobotCase;
-                Loadcase lCase = BH.Engine.Structure.Create.Loadcase(rLoadCase.Name, rLoadCase.Number, Convert.FromRobot(rLoadCase.Nature));
-                SetAdapterId(lCase, rLoadCase.Number);
-                bhomLoadCases.Add(lCase);
+                try
+                {
+                    IRobotCase rLoadCase = rLoadCases.Get(i) as IRobotCase;
+                    Loadcase lCase = BH.Engine.Structure.Create.Loadcase(rLoadCase.Name, rLoadCase.Number, Convert.FromRobot(rLoadCase.Nature));
+                    SetAdapterId(lCase, rLoadCase.Number);
+                    bhomLoadCases.Add(lCase);
+
+                }
+                catch (Exception e)
+                {
+                    string message = "Failed to extract a Loadcase. Exception message: " + e.Message;
+
+                    if (!string.IsNullOrEmpty(e.InnerException?.Message))
+                    {
+                        message += "\nInnerException: " + e.InnerException.Message;
+                    }
+
+                    Engine.Reflection.Compute.RecordError(message);
+                }
+
             }
             return bhomLoadCases;
         }

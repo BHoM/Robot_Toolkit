@@ -33,19 +33,29 @@ namespace BH.Adapter.Robot
 
         public static BarTemperatureLoad FromRobotBarTempLoad(this IRobotLoadRecord loadRecord)
         {
-            double t = loadRecord.GetValue((short)IRobotBarThermalRecordValues.I_BTRV_TX);
-            double ty = loadRecord.GetValue((short)IRobotBarThermalRecordValues.I_BTRV_TY);
-            double tz = loadRecord.GetValue((short)IRobotBarThermalRecordValues.I_BTRV_TZ);
+            if (loadRecord == null)
+                return null;
 
-            if (ty != 0 || tz != 0)
+            try
             {
-                Engine.Reflection.Compute.RecordWarning("Temparature loads in Robot with non axial components found. BHoM Temprature loads only support uniform temprature change, only this value will be extracted.");
+                double t = loadRecord.GetValue((short)IRobotBarThermalRecordValues.I_BTRV_TX);
+                double ty = loadRecord.GetValue((short)IRobotBarThermalRecordValues.I_BTRV_TY);
+                double tz = loadRecord.GetValue((short)IRobotBarThermalRecordValues.I_BTRV_TZ);
+
+                if (ty != 0 || tz != 0)
+                {
+                    Engine.Reflection.Compute.RecordWarning("Temparature loads in Robot with non axial components found. BHoM Temprature loads only support uniform temprature change, only this value will be extracted.");
+                }
+
+                return new BarTemperatureLoad
+                {
+                    TemperatureChange = t
+                };
             }
-
-            return new BarTemperatureLoad
+            catch (System.Exception)
             {
-                TemperatureChange = t
-            };
+                return null;
+            }
 
         }
 

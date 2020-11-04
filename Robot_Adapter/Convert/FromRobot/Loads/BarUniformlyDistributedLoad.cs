@@ -34,36 +34,56 @@ namespace BH.Adapter.Robot
 
         public static BarUniformlyDistributedLoad FromRobotBarUDLForce(this IRobotLoadRecord loadRecord)
         {
-            double fx = loadRecord.GetValue((short)IRobotBarUniformRecordValues.I_BURV_PX);
-            double fy = loadRecord.GetValue((short)IRobotBarUniformRecordValues.I_BURV_PY);
-            double fz = loadRecord.GetValue((short)IRobotBarUniformRecordValues.I_BURV_PZ);
-            double local = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM);
-            double proj = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PROJECTED);
+            if (loadRecord == null)
+                return null;
 
-            return new BarUniformlyDistributedLoad
+            try
             {
-                Force = new Vector { X = fx, Y = fy, Z = fz },
-                Projected = proj.FromRobotProjected(),
-                Axis = local.FromRobotLoadAxis()
-            };         
+                double fx = loadRecord.GetValue((short)IRobotBarUniformRecordValues.I_BURV_PX);
+                double fy = loadRecord.GetValue((short)IRobotBarUniformRecordValues.I_BURV_PY);
+                double fz = loadRecord.GetValue((short)IRobotBarUniformRecordValues.I_BURV_PZ);
+                double local = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM);
+                double proj = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PROJECTED);
+
+                return new BarUniformlyDistributedLoad
+                {
+                    Force = new Vector { X = fx, Y = fy, Z = fz },
+                    Projected = proj.FromRobotProjected(),
+                    Axis = local.FromRobotLoadAxis()
+                };
+            }
+            catch (System.Exception)
+            {
+                return null;
+            }
         }
 
         /***************************************************/
 
         public static BarUniformlyDistributedLoad FromRobotBarUDLMoment(this IRobotLoadRecord loadRecord)
         {
-            double mx = loadRecord.GetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MX);
-            double my = loadRecord.GetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MY);
-            double mz = loadRecord.GetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MZ);
-            double local = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM);
-            double proj = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PROJECTED);
+            if (loadRecord == null)
+                return null;
 
-            return new BarUniformlyDistributedLoad
+            try
             {
-                Moment = new Vector { X = mx, Y = my, Z = mz },
-                Projected = proj.FromRobotProjected(),
-                Axis = local.FromRobotLoadAxis()
-            };
+                double mx = loadRecord.GetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MX);
+                double my = loadRecord.GetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MY);
+                double mz = loadRecord.GetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MZ);
+                double local = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM);
+                double proj = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PROJECTED);
+
+                return new BarUniformlyDistributedLoad
+                {
+                    Moment = new Vector { X = mx, Y = my, Z = mz },
+                    Projected = proj.FromRobotProjected(),
+                    Axis = local.FromRobotLoadAxis()
+                };
+            }
+            catch (System.Exception)
+            {
+                return null;
+            }
         }
 
         /***************************************************/

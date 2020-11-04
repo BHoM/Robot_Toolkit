@@ -34,15 +34,25 @@ namespace BH.Adapter.Robot
 
         public static GravityLoad FromRobotGravityLoad(this IRobotLoadRecord loadRecord)
         {
-            double dx = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_X);
-            double dy = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_Y);
-            double dz = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_Z);
-            double coef = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_COEFF);
+            if (loadRecord == null)
+                return null;
 
-            return new GravityLoad
+            try
             {
-                GravityDirection = new Vector { X = dx * coef, Y = dy * coef, Z = dz * coef }
-            };
+                double dx = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_X);
+                double dy = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_Y);
+                double dz = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_Z);
+                double coef = loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_COEFF);
+
+                return new GravityLoad
+                {
+                    GravityDirection = new Vector { X = dx * coef, Y = dy * coef, Z = dz * coef }
+                };
+            }
+            catch (System.Exception)
+            {
+                return null;
+            }
         }
 
         /***************************************************/

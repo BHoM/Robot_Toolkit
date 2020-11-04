@@ -23,6 +23,7 @@
 using BH.oM.Structure.Loads;
 using RobotOM;
 using System.Collections.Generic;
+using System;
 
 namespace BH.Adapter.Robot
 {
@@ -40,6 +41,8 @@ namespace BH.Adapter.Robot
 
             for (int i = 1; i <= rLoadCollection.Count; i++)
             {
+                try
+                {
                 IRobotCase rCase = rLoadCollection.Get(i) as IRobotCase;
                 if (rCase.Type == IRobotCaseType.I_CT_COMBINATION) // No support for code combinations for now as it needs building support for components
                 {
@@ -58,6 +61,18 @@ namespace BH.Adapter.Robot
 
                     SetAdapterId(lCombination, rCaseCombination.Number);
                     bhomLoadCombinations.Add(lCombination);
+                }
+                }
+                catch (Exception e)
+                {
+                    string message = "Failed to extract a LoadCombination. Exception message: " + e.Message;
+
+                    if (!string.IsNullOrEmpty(e.InnerException?.Message))
+                    {
+                        message += "\nInnerException: " + e.InnerException.Message;
+                    }
+
+                    Engine.Reflection.Compute.RecordError(message);
                 }
             }
             m_RobotApplication.Project.Structure.Cases.EndMultiOperation();

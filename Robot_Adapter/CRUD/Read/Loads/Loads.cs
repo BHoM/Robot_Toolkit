@@ -121,15 +121,32 @@ namespace BH.Adapter.Robot
             for (int i = 1; i <= loadCollection.Count; i++)
             {
                 IRobotCase lCase = loadCollection.Get(i) as IRobotCase;
+
+                if (lCase == null)
+                {
+                    Engine.Reflection.Compute.RecordError($"Failed to extract a loadcase trying to read a {typeof(T).Name}. Load for the failed case is not extracted.");
+                    continue;
+                }
+
                 if (lCase.Type == IRobotCaseType.I_CT_SIMPLE)
                 {
                     IRobotSimpleCase sCase = lCase as IRobotSimpleCase;
+
+                    if (sCase == null)
+                    {
+                        Engine.Reflection.Compute.RecordError($"Failed to extract a loadcase trying to read a {typeof(T).Name}. Load for the failed case is not extracted.");
+                        continue;
+                    }
+
                     if (bhomLoadCases.ContainsKey(sCase.Name))
                     {
                         for (int j = 1; j <= sCase.Records.Count; j++)
                         {
                             IRobotLoadRecord loadRecord = sCase.Records.Get(j);
-                            
+
+                            if (loadRecord == null)
+                                continue;
+
                             if (loadRecord.Type == loadType)
                             {
                                 List<T> objects = FilterLoadObjects(loadRecord, loadObjects);
@@ -140,8 +157,16 @@ namespace BH.Adapter.Robot
                                     load.Loadcase = bhomLoadCases[sCase.Name];
                                     bhomLoads.Add(load);
                                 }
+                                else
+                                {
+                                    Engine.Reflection.Compute.RecordError($"Failed to convert a {typeof(T).Name} for for the loadcase {sCase.Name}.");
+                                }
                             }
                         }
+                    }
+                    else
+                    {
+                        Engine.Reflection.Compute.RecordError($"Failed to extract a loadcase named {sCase.Name} trying to read a {typeof(T).Name}. Load for the failed case is not extracted.");
                     }
                 }
             }
@@ -152,20 +177,30 @@ namespace BH.Adapter.Robot
 
         private static List<T> FilterLoadObjects<T>(IRobotLoadRecord loadRecord, Dictionary<int, T> objects)
         {
-            //For case of entire structure, return all obejcts
-            if (loadRecord.Type == IRobotLoadRecordType.I_LRT_DEAD && loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_ENTIRE_STRUCTURE) == 1)
+            try
             {
-                return objects.Values.ToList();
-            }
+                //For case of entire structure, return all obejcts
+                if (loadRecord.Type == IRobotLoadRecordType.I_LRT_DEAD && loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_ENTIRE_STRUCTURE) == 1)
+                {
+                    return objects.Values.ToList();
+                }
 
-            List<int> elementIds = Convert.FromRobotSelectionString(loadRecord.Objects.ToText());
-            List<T> loadObjects = new List<T>();
-            for (int k = 0; k < elementIds.Count; k++)
-            {
-                if (objects.ContainsKey(elementIds[k]))
-                    loadObjects.Add(objects[elementIds[k]]);
+                List<int> elementIds = Convert.FromRobotSelectionString(loadRecord.Objects.ToText());
+                List<T> loadObjects = new List<T>();
+                for (int k = 0; k < elementIds.Count; k++)
+                {
+                    if (objects.ContainsKey(elementIds[k]))
+                        loadObjects.Add(objects[elementIds[k]]);
+                    else
+                        Engine.Reflection.Compute.RecordWarning($"Failed to find a {typeof(T).Name} to apply to a Load being read.");
+                }
+                return loadObjects;
             }
-            return loadObjects;
+            catch (Exception)
+            {
+                Engine.Reflection.Compute.RecordWarning($"Failed extract obejcts of type {typeof(T).Name} to apply to a Load being read.");
+                return new List<T>();
+            }
         }
 
         /***************************************************/
@@ -188,6 +223,9 @@ namespace BH.Adapter.Robot
         {
             //Reads elements of a particular type.
 
+            if (m_LoadObjectCache == null)
+                m_LoadObjectCache = new Dictionary<Type, IEnumerable<IBHoMObject>>();
+
             Type type = typeof(T);
 
             if (type == typeof(BHoMObject))
@@ -204,7 +242,7 @@ namespace BH.Adapter.Robot
             if (type == typeof(IAreaElement))
                 readType = typeof(Panel);
 
-            IEnumerable<IBHoMObject> readObjs = IRead(readType, null);
+            IEnumerable<IBHoMObject> readObjs = IRead(readType, null).Where(x => x != null).ToList();
             m_LoadObjectCache[type] = readObjs;
             return readObjs.Cast<T>();
         }

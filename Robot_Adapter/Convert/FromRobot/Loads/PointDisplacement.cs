@@ -34,18 +34,28 @@ namespace BH.Adapter.Robot
 
         public static PointDisplacement FromRobotPtDisp(this IRobotLoadRecord loadRecord)
         {
-            double ux = loadRecord.GetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_UX);
-            double uy = loadRecord.GetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_UY);
-            double uz = loadRecord.GetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_UZ);
-            double rx = loadRecord.GetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_RX);
-            double ry = loadRecord.GetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_RY);
-            double rz = loadRecord.GetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_RZ);
+            if (loadRecord == null)
+                return null;
 
-            return new PointDisplacement
+            try
             {
-                Translation = new Vector { X = ux, Y = uy, Z = uz },
-                Rotation = new Vector { X = rx, Y = ry, Z = rz }
-            };
+                double ux = loadRecord.GetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_UX);
+                double uy = loadRecord.GetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_UY);
+                double uz = loadRecord.GetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_UZ);
+                double rx = loadRecord.GetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_RX);
+                double ry = loadRecord.GetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_RY);
+                double rz = loadRecord.GetValue((short)IRobotNodeDisplacementRecordValues.I_NDRV_RZ);
+
+                return new PointDisplacement
+                {
+                    Translation = new Vector { X = ux, Y = uy, Z = uz },
+                    Rotation = new Vector { X = rx, Y = ry, Z = rz }
+                };
+            }
+            catch (System.Exception)
+            {
+                return null;
+            }
         }
 
         /***************************************************/

@@ -28,7 +28,7 @@ using RobotOM;
 using BH.oM.Geometry;
 using BH.oM.Base;
 using BH.oM.Structure.Loads;
-
+using BH.Engine.Adapters.Robot;
 
 
 namespace BH.Adapter.Robot
@@ -43,65 +43,72 @@ namespace BH.Adapter.Robot
         {
 
             List<ILoad> bhomLoads = new List<ILoad>();
-            Dictionary<string, Loadcase> bhomLoadCases = new Dictionary<string, Loadcase>();
-            List<Loadcase> lCases = ReadLoadCase();
-            for (int i = 0; i < lCases.Count; i++)
-            {
-                if (bhomLoadCases.ContainsKey(lCases[i].Name) == false)
-                    bhomLoadCases.Add(lCases[i].Name, lCases[i]);
-            }
-
+            Dictionary<string, Loadcase> bhomLoadCases = ReadLoadCase().ToDictionaryDistinctCheck(x => x.Name);
             IRobotCaseCollection loadCollection = m_RobotApplication.Project.Structure.Cases.GetAll();
 
             for (int i = 1; i <= loadCollection.Count; i++)
             {
-                IRobotCase lCase = loadCollection.Get(i) as IRobotCase;
-                if (lCase.Type == IRobotCaseType.I_CT_SIMPLE)
+                try
                 {
-                    IRobotSimpleCase sCase = lCase as IRobotSimpleCase;
-                    if (bhomLoadCases.ContainsKey(sCase.Name))
+                    IRobotCase lCase = loadCollection.Get(i) as IRobotCase;
+                    if (lCase.Type == IRobotCaseType.I_CT_SIMPLE)
                     {
-                        for (int j = 1; j <= sCase.Records.Count; j++)
+                        IRobotSimpleCase sCase = lCase as IRobotSimpleCase;
+                        if (bhomLoadCases.ContainsKey(sCase.Name))
                         {
-                            IRobotLoadRecord loadRecord = sCase.Records.Get(j);
-
-                            switch (loadRecord.Type)
+                            for (int j = 1; j <= sCase.Records.Count; j++)
                             {
-                                case IRobotLoadRecordType.I_LRT_IN_CONTOUR:
-                                    double fx = loadRecord.GetValue((short)IRobotInContourRecordValues.I_ICRV_PX1);
-                                    double fy = loadRecord.GetValue((short)IRobotInContourRecordValues.I_ICRV_PY1);
-                                    double fz = loadRecord.GetValue((short)IRobotInContourRecordValues.I_ICRV_PZ1);
-                                    double nbPoints = loadRecord.GetValue((short)IRobotInContourRecordValues.I_ICRV_NPOINTS);
-                                    double localAxis = loadRecord.GetValue((short)IRobotInContourRecordValues.I_ICRV_LOCAL);
-                                    double projectedLoad = loadRecord.GetValue((short)IRobotInContourRecordValues.I_ICRV_PROJECTION);
+                                IRobotLoadRecord loadRecord = sCase.Records.Get(j);
 
-                                    RobotLoadRecordInContour contourRecord = loadRecord as RobotLoadRecordInContour;
+                                switch (loadRecord.Type)
+                                {
+                                    case IRobotLoadRecordType.I_LRT_IN_CONTOUR:
+                                        double fx = loadRecord.GetValue((short)IRobotInContourRecordValues.I_ICRV_PX1);
+                                        double fy = loadRecord.GetValue((short)IRobotInContourRecordValues.I_ICRV_PY1);
+                                        double fz = loadRecord.GetValue((short)IRobotInContourRecordValues.I_ICRV_PZ1);
+                                        double nbPoints = loadRecord.GetValue((short)IRobotInContourRecordValues.I_ICRV_NPOINTS);
+                                        double localAxis = loadRecord.GetValue((short)IRobotInContourRecordValues.I_ICRV_LOCAL);
+                                        double projectedLoad = loadRecord.GetValue((short)IRobotInContourRecordValues.I_ICRV_PROJECTION);
 
-                                    List<Point> contourPoints = new List<Point>();
+                                        RobotLoadRecordInContour contourRecord = loadRecord as RobotLoadRecordInContour;
 
-                                    for (int k = 0; k < nbPoints; k++)
-                                    {
-                                        double x, y, z;
+                                        List<Point> contourPoints = new List<Point>();
 
-                                        contourRecord.GetContourPoint(k + 1, out x, out y, out z);
-                                        contourPoints.Add(new Point { X = x, Y = y, Z = z });
-                                    }
+                                        for (int k = 0; k < nbPoints; k++)
+                                        {
+                                            double x, y, z;
 
-                                    contourPoints.Add(contourPoints.First());
+                                            contourRecord.GetContourPoint(k + 1, out x, out y, out z);
+                                            contourPoints.Add(new Point { X = x, Y = y, Z = z });
+                                        }
 
-                                    oM.Structure.Loads.ContourLoad contourLoad = new oM.Structure.Loads.ContourLoad
-                                    {
-                                        Force = new Vector { X = fx, Y = fy, Z = fz },
-                                        Contour = new Polyline { ControlPoints = contourPoints },
-                                        Loadcase = bhomLoadCases[sCase.Name],
-                                        Axis = localAxis == 1 ? LoadAxis.Local : LoadAxis.Global,
-                                        Projected = projectedLoad == 1
-                                    };
-                                    bhomLoads.Add(contourLoad);
-                                    break;
+                                        contourPoints.Add(contourPoints.First());
+
+                                        oM.Structure.Loads.ContourLoad contourLoad = new oM.Structure.Loads.ContourLoad
+                                        {
+                                            Force = new Vector { X = fx, Y = fy, Z = fz },
+                                            Contour = new Polyline { ControlPoints = contourPoints },
+                                            Loadcase = bhomLoadCases[sCase.Name],
+                                            Axis = localAxis == 1 ? LoadAxis.Local : LoadAxis.Global,
+                                            Projected = projectedLoad == 1
+                                        };
+                                        bhomLoads.Add(contourLoad);
+                                        break;
+                                }
                             }
                         }
                     }
+                }
+                catch (Exception e)
+                {
+                    string message = "Failed to extract a contour load. Exception message: " + e.Message;
+
+                    if (!string.IsNullOrEmpty(e.InnerException?.Message))
+                    {
+                        message += "\nInnerException: " + e.InnerException.Message;
+                    }
+
+                    Engine.Reflection.Compute.RecordError(message);
                 }
             }
             return bhomLoads;

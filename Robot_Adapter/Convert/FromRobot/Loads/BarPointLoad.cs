@@ -34,29 +34,39 @@ namespace BH.Adapter.Robot
 
         public static BarPointLoad FromRobotBarPtLoad(this IRobotLoadRecord loadRecord)
         {
-            double fx = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FX);
-            double fy = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FY);
-            double fz = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FZ);
-            double mx = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CX);
-            double my = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CY);
-            double mz = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CZ);
-            double distA = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_X);
-            double rel = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_REL);
-            double local = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_LOC);
+            if (loadRecord == null)
+                return null;
 
-            if (rel != 0)
+            try
             {
-                Engine.Reflection.Compute.RecordWarning("Currently no support for BarPointLoads with relative distance from ends");
+                double fx = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FX);
+                double fy = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FY);
+                double fz = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FZ);
+                double mx = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CX);
+                double my = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CY);
+                double mz = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CZ);
+                double distA = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_X);
+                double rel = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_REL);
+                double local = loadRecord.GetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_LOC);
+
+                if (rel != 0)
+                {
+                    Engine.Reflection.Compute.RecordWarning("Currently no support for BarPointLoads with relative distance from ends");
+                    return null;
+                }
+
+                return new BarPointLoad
+                {
+                    Force = new Vector { X = fx, Y = fy, Z = fz },
+                    Moment = new Vector { X = mx, Y = my, Z = mz },
+                    DistanceFromA = distA,
+                    Axis = local.FromRobotLoadAxis()
+                };
+            }
+            catch (System.Exception)
+            {
                 return null;
             }
-
-            return new BarPointLoad
-            {
-                Force = new Vector { X = fx, Y = fy, Z = fz },
-                Moment = new Vector { X = mx, Y = my, Z = mz },
-                DistanceFromA = distA,
-                Axis = local.FromRobotLoadAxis()
-            };
         }
 
         /***************************************************/

@@ -40,34 +40,44 @@ namespace BH.Adapter.Robot
 
         public static BarVaryingDistributedLoad FromRobotBarVarDistLoad(this IRobotLoadRecord loadRecord)
         {
-            double fax = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PX1);
-            double fay = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PY1);
-            double faz = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PZ1);
-            double distA = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_X1);
-            double fbx = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PX2);
-            double fby = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PY2);
-            double fbz = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PZ2);
-            double distB = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_X2);
+            if (loadRecord == null)
+                return null;
 
-            double rel = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_RELATIVE);
-            double axis = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_LOCAL);
-            double proj = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PROJECTION);
-
-            if (rel != 0)
+            try
             {
-                Engine.Reflection.Compute.RecordWarning("Currently no support for BarVaryingDistributedLoad with relative distance from ends");
+                double fax = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PX1);
+                double fay = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PY1);
+                double faz = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PZ1);
+                double distA = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_X1);
+                double fbx = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PX2);
+                double fby = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PY2);
+                double fbz = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PZ2);
+                double distB = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_X2);
+
+                double rel = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_RELATIVE);
+                double axis = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_LOCAL);
+                double proj = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PROJECTION);
+
+                if (rel != 0)
+                {
+                    Engine.Reflection.Compute.RecordWarning("Currently no support for BarVaryingDistributedLoad with relative distance from ends");
+                    return null;
+                }
+
+                return new BarVaryingDistributedLoad
+                {
+                    ForceA = new Vector { X = fax, Y = fay, Z = faz },
+                    ForceB = new Vector { X = fbx, Y = fby, Z = fbz },
+                    DistanceFromA = distA,
+                    DistanceFromB = distB,
+                    Axis = axis.FromRobotLoadAxis(),
+                    Projected = proj.FromRobotProjected()
+                };
+            }
+            catch (System.Exception)
+            {
                 return null;
             }
-
-            return new BarVaryingDistributedLoad
-            {
-                ForceA = new Vector { X = fax, Y = fay, Z = faz },
-                ForceB = new Vector { X = fbx, Y = fby, Z = fbz },
-                DistanceFromA = distA,
-                DistanceFromB = distB,
-                Axis = axis.FromRobotLoadAxis(),
-                Projected = proj.FromRobotProjected()
-            };
         }
 
         /***************************************************/

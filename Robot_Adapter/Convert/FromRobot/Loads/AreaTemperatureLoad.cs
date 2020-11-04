@@ -34,24 +34,34 @@ namespace BH.Adapter.Robot
 
         public static AreaTemperatureLoad FromRobotAreaTempLoad(this IRobotLoadRecord loadRecord)
         {
-            double t1 = loadRecord.GetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TX1);
-            double t2 = loadRecord.GetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TX2);
-            double t3 = loadRecord.GetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TX3);
+            if (loadRecord == null)
+                return null;
 
-            double g1 = loadRecord.GetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TZ1);
-            double g2 = loadRecord.GetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TZ2);
-            double g3 = loadRecord.GetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TZ3);
-
-            if (t2 != 0 || t2 != 0 || t3 != 0 || g1 != 0 || g2 != 0 || g3 != 0)
+            try
             {
-                Engine.Reflection.Compute.RecordWarning("The robot adapter currently only supports uniform temprature loads with no gradients. Area temprature load not pulled!");
+                double t1 = loadRecord.GetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TX1);
+                double t2 = loadRecord.GetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TX2);
+                double t3 = loadRecord.GetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TX3);
+
+                double g1 = loadRecord.GetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TZ1);
+                double g2 = loadRecord.GetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TZ2);
+                double g3 = loadRecord.GetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TZ3);
+
+                if (t2 != 0 || t2 != 0 || t3 != 0 || g1 != 0 || g2 != 0 || g3 != 0)
+                {
+                    Engine.Reflection.Compute.RecordWarning("The robot adapter currently only supports uniform temprature loads with no gradients. Area temprature load not pulled!");
+                    return null;
+                }
+
+                return new AreaTemperatureLoad
+                {
+                    TemperatureChange = t1,
+                };
+            }
+            catch (System.Exception)
+            {
                 return null;
             }
-
-            return new AreaTemperatureLoad
-            {
-                TemperatureChange = t1,
-            };
         }
 
         /***************************************************/

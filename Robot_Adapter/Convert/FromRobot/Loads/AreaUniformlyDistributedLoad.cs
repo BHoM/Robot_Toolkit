@@ -35,21 +35,31 @@ namespace BH.Adapter.Robot
         /***************************************************/
         /****           Public Methods                  ****/
         /***************************************************/
-       
+
         public static AreaUniformlyDistributedLoad FromRobotAreaUDL(this IRobotLoadRecord loadRecord)
         {
-            double fx = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PX);
-            double fy = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PY);
-            double fz = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PZ);
-            double local = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM);
-            double projected = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PROJECTED);
+            if (loadRecord == null)
+                return null;
 
-            return new AreaUniformlyDistributedLoad
+            try
             {
-                Pressure = new Vector { X = fx, Y = fy, Z = fz },
-                Axis = local.FromRobotLoadAxis(),
-                Projected = projected.FromRobotProjected()
-            };
+                double fx = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PX);
+                double fy = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PY);
+                double fz = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PZ);
+                double local = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_LOCAL_SYSTEM);
+                double projected = loadRecord.GetValue((short)IRobotUniformRecordValues.I_URV_PROJECTED);
+
+                return new AreaUniformlyDistributedLoad
+                {
+                    Pressure = new Vector { X = fx, Y = fy, Z = fz },
+                    Axis = local.FromRobotLoadAxis(),
+                    Projected = projected.FromRobotProjected()
+                };
+            }
+            catch (System.Exception)
+            {
+                return null;
+            }
         }
 
         /***************************************************/

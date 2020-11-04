@@ -34,15 +34,24 @@ namespace BH.Adapter.Robot
 
         public static PointAcceleration FromRobotPtAccel(this IRobotLoadRecord loadRecord)
         {
-            double ax = loadRecord.GetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UX);
-            double ay = loadRecord.GetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UY);
-            double az = loadRecord.GetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UZ);
+            if (loadRecord == null)
+                return null;
 
-            return new PointAcceleration
+            try
             {
-                TranslationalAcceleration = new Vector { X = ax, Y = ay, Z = az }
-            };
+                double ax = loadRecord.GetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UX);
+                double ay = loadRecord.GetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UY);
+                double az = loadRecord.GetValue((short)IRobotNodeAccelerationRecordValues.I_NACRV_UZ);
 
+                return new PointAcceleration
+                {
+                    TranslationalAcceleration = new Vector { X = ax, Y = ay, Z = az }
+                };
+            }
+            catch (System.Exception)
+            {
+                return null;
+            }
         }
 
         /***************************************************/

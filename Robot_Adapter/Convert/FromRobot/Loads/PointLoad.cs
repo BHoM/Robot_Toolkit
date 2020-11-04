@@ -34,18 +34,28 @@ namespace BH.Adapter.Robot
 
         public static PointLoad FromRobotPtLoad(this IRobotLoadRecord loadRecord)
         {
-            double fx = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_FX);
-            double fy = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_FY);
-            double fz = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_FZ);
-            double mx = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_CX);
-            double my = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_CY);
-            double mz = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_CZ);
+            if (loadRecord == null)
+                return null;
 
-            return new PointLoad
+            try
             {
-                Force = new Vector { X = fx, Y = fy, Z = fz },
-                Moment = new Vector { X = mx, Y = my, Z = mz }
-            };
+                double fx = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_FX);
+                double fy = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_FY);
+                double fz = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_FZ);
+                double mx = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_CX);
+                double my = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_CY);
+                double mz = loadRecord.GetValue((short)IRobotNodeForceRecordValues.I_NFRV_CZ);
+
+                return new PointLoad
+                {
+                    Force = new Vector { X = fx, Y = fy, Z = fz },
+                    Moment = new Vector { X = mx, Y = my, Z = mz }
+                };
+            }
+            catch (System.Exception)
+            {
+                return null;
+            }
         }
 
         /***************************************************/

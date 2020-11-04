@@ -34,14 +34,24 @@ namespace BH.Adapter.Robot
 
         public static PointVelocity FromRobotPtVel(this IRobotLoadRecord loadRecord)
         {
-            double vx = loadRecord.GetValue((short)IRobotNodeVelocityRecordValues.I_NVRV_UX);
-            double vy = loadRecord.GetValue((short)IRobotNodeVelocityRecordValues.I_NVRV_UY);
-            double vz = loadRecord.GetValue((short)IRobotNodeVelocityRecordValues.I_NVRV_UZ);
+            if (loadRecord == null)
+                return null;
 
-            return new PointVelocity
+            try
             {
-                TranslationalVelocity = new Vector { X = vx, Y = vy, Z = vz }
-            };
+                double vx = loadRecord.GetValue((short)IRobotNodeVelocityRecordValues.I_NVRV_UX);
+                double vy = loadRecord.GetValue((short)IRobotNodeVelocityRecordValues.I_NVRV_UY);
+                double vz = loadRecord.GetValue((short)IRobotNodeVelocityRecordValues.I_NVRV_UZ);
+
+                return new PointVelocity
+                {
+                    TranslationalVelocity = new Vector { X = vx, Y = vy, Z = vz }
+                };
+            }
+            catch (System.Exception)
+            {
+                return null;
+            }
         }
 
         /***************************************************/

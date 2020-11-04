@@ -49,74 +49,58 @@ namespace BH.Adapter.Robot
         
         protected override IEnumerable<IBHoMObject> IRead(Type type, IList indices, ActionConfig actionConfig = null)
         {
+            if (type == null)
+            {
+                Engine.Reflection.Compute.RecordWarning("No Type was provided. No objects where read.");
+                return new List<IBHoMObject>();
+            }
+
             if (type == typeof(Node))
                 return ReadNodes(indices);
-
-            if (type == typeof(Bar))
+            else if (type == typeof(Bar))
                 return ReadBars(indices);
-
-            if (type == typeof(Opening))
+            else if (type == typeof(Opening))
                 return ReadOpenings();
-
-            if (type == typeof(Constraint4DOF))
+            else if (type == typeof(Constraint4DOF))
                 return ReadConstraints4DOF();
-
-            if (type == typeof(Constraint6DOF))
+            else if (type == typeof(Constraint6DOF))
                 return ReadConstraints6DOF();
-        
-            if (typeof(IMaterialFragment).IsAssignableFrom(type))
+            else if (typeof(IMaterialFragment).IsAssignableFrom(type))
                 return ReadMaterials();
-
-            if (type == typeof(Panel))
+            else if (type == typeof(Panel))
                 return ReadPanels(indices);
-
-            if (type == typeof(FEMesh))
+            else if (type == typeof(FEMesh))
                 return ReadMeshes();
-
-            if (typeof(ISurfaceProperty).IsAssignableFrom(type))
+            else if (typeof(ISurfaceProperty).IsAssignableFrom(type))
                 return ReadSurfaceProperties();
-
-            if (type == typeof(RigidLink))
+            else if (type == typeof(RigidLink))
                 return ReadRigidLinks();
-                //return new List<RigidLink>();
-
-            if (type == typeof(LoadCombination))
+            else if (type == typeof(LoadCombination))
                 return ReadLoadCombinations();
-
-            if (type == typeof(LinkConstraint))
+            else if (type == typeof(LinkConstraint))
                 return new List<LinkConstraint>();
-
-            if (type == typeof(BarRelease))
+            else if (type == typeof(BarRelease))
                 return ReadBarRelease();
-
-            if (type == typeof(Offset))
+            else if (type == typeof(Offset))
                 return ReadOffsets();
-
-            if (type == typeof(Loadcase))
+            else if (type == typeof(Loadcase))
                 return ReadLoadCase();
-
-            if (typeof(ISectionProperty).IsAssignableFrom(type))
+            else if (typeof(ISectionProperty).IsAssignableFrom(type))
                 return ReadSectionProperties();
-
-            if (typeof(ILoad).IsAssignableFrom(type))
+            else if (typeof(ILoad).IsAssignableFrom(type))
                 return ReadLoads(type); //TODO: Implement load extraction
-
-            if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
+            else if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)
                 return ReadGroups();
-
-            if (type == typeof(FramingElementDesignProperties))
+            else if (type == typeof(FramingElementDesignProperties))
                 return ReadFramingElementDesignProperties();
-
-            if (type == typeof(BH.oM.Adapters.Robot.DesignGroup))
+            else if (type == typeof(BH.oM.Adapters.Robot.DesignGroup))
                 return ReadDesignGroups();
-
-            if (typeof(IResult).IsAssignableFrom(type))
+            else if (typeof(IResult).IsAssignableFrom(type))
             {
                 Modules.Structure.ErrorMessages.ReadResultsError(type);
                 return null;
             }
-
-            if (type == typeof(BHoMObject))
+            else if (type == typeof(BHoMObject))
             {
                 List<IBHoMObject> objects = new List<IBHoMObject>();
                 objects.AddRange(ReadConstraints6DOF());
@@ -129,6 +113,10 @@ namespace BH.Adapter.Robot
                 objects.AddRange(ReadPanels());
                 objects.AddRange(ReadFramingElementDesignProperties());
                 return objects;
+            }
+            else
+            {
+                Engine.Reflection.Compute.RecordWarning($"The provided Type {type.Name} is not supported to pull from RobotToolkit.");
             }
 
             return new List<IBHoMObject>();         
@@ -173,8 +161,10 @@ namespace BH.Adapter.Robot
                 List<int> idsOut = new List<int>();
                 foreach (object o in ids)
                 {
-                    int id;
+                    if (o == null)
+                        continue;
 
+                    int id;
                     if (o is int)
                         idsOut.Add((int)o);
                     else if (int.TryParse(o.ToString(), out id))

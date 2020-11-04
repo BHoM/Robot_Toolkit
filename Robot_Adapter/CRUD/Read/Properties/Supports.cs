@@ -35,7 +35,7 @@ namespace BH.Adapter.Robot
 
         private List<Constraint6DOF> ReadConstraints6DOF(List<string> ids = null)
         {
-            return ReadLabels(IRobotLabelType.I_LT_SUPPORT).Select(x => x as Constraint6DOF).ToList() ;
+            return ReadLabels(IRobotLabelType.I_LT_SUPPORT).OfType<Constraint6DOF>().ToList();
         }
 
         /***************************************************/

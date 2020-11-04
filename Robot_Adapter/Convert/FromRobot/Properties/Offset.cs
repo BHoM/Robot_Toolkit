@@ -34,6 +34,12 @@ namespace BH.Adapter.Robot
 
         public static Offset FromRobot(this IRobotLabel robotLabel, IRobotBarOffsetData offsetData)
         {
+            if (robotLabel == null || offsetData == null)
+            {
+                Engine.Reflection.Compute.RecordWarning("Failed to extract at least one Offset from Robot.");
+                return null;
+            }
+
             Vector start = new Vector
             {
                 X = offsetData.Start.UX,

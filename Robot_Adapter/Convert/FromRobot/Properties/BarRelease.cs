@@ -33,7 +33,9 @@ namespace BH.Adapter.Robot
         
         public static BarRelease FromRobot(this IRobotLabel robotLabel, IRobotBarReleaseData robotBarReleaseData, string name = "")
         {
-            if (robotLabel.Name != "") name = robotLabel.Name;    
+            if (robotLabel.Name != "")
+                name = robotLabel.Name;
+
             BarRelease release = new BarRelease
             {
                 Name = name,
@@ -48,6 +50,12 @@ namespace BH.Adapter.Robot
 
         public static Constraint6DOF FromRobot(this IRobotBarEndReleaseData barEndReleaseData)
         {
+            if (barEndReleaseData == null)
+            {
+                Engine.Reflection.Compute.RecordWarning("At least one constraint on at least on BarRelease could not be accessed from Robot and is returned as null.");
+                return null;
+            }
+
             Constraint6DOF endRelease = new Constraint6DOF();
             endRelease.TranslationX = FromRobot(barEndReleaseData.UX);
             endRelease.TranslationY = FromRobot(barEndReleaseData.UY);

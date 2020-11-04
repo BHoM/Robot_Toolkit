@@ -35,7 +35,7 @@ namespace BH.Adapter.Robot
 
         private List<Offset> ReadOffsets(List<string> ids = null)
         {
-            return ReadLabels(IRobotLabelType.I_LT_BAR_OFFSET).Select(x => x as Offset).ToList(); ;
+            return ReadLabels(IRobotLabelType.I_LT_BAR_OFFSET).OfType<Offset>().ToList(); ;
         }
 
         /***************************************************/

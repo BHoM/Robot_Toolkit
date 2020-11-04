@@ -42,7 +42,7 @@ namespace BH.Adapter.Robot
 
             List<int> openingIds = CheckAndGetIds<Opening>(ids);
 
-            if (openingIds == null)
+            if (openingIds == null || openingIds.Count == 0)
             {
                 rSelect.FromText("all");
             }
@@ -50,18 +50,26 @@ namespace BH.Adapter.Robot
             {
                 rSelect.FromText(Convert.ToRobotSelectionString(openingIds));
             }
+
             IRobotCollection rOpenings = rStructure.Objects.GetMany(rSelect);
-            Opening tempOpening = null;
             
             for (int i = 1; i <= rOpenings.Count; i++)
             {
+                Opening tempOpening = null;
                 RobotObjObject rOpening = (RobotObjObject)rOpenings.Get(i);
                 System.Type type = rOpening.GetType(); 
                
                 if (rOpening.Main.Attribs.Meshed != 1)
                 {
-                    ICurve outline = Convert.FromRobot(rOpening.Main.GetGeometry() as dynamic);
-                    tempOpening = BH.Engine.Structure.Create.Opening(outline);
+                    ICurve openingOutline = Convert.IFromRobot(rOpening.Main.GetGeometry());
+
+                    if (openingOutline != null)
+                        tempOpening = BH.Engine.Structure.Create.Opening(openingOutline);
+                    else
+                    {
+                        Engine.Reflection.Compute.RecordError($"Failed to extract the outline geometry for Opening with id {rOpening.Number}.");
+                        tempOpening = new Opening();
+                    }
                 }
                 if (tempOpening != null)
                 {

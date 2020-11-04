@@ -44,15 +44,21 @@ namespace BH.Adapter.Robot
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotNamesArray robotLabelNames = robotLabelServer.GetAvailableNames(robotLabelType);            
             List<IBHoMObject> objects = new List<IBHoMObject>();
-            IRobotLabel robotLabel = null;
+
             for (int i = 1; i <= robotLabelNames.Count; i++)
             {
                 string robotLabelName = robotLabelNames.Get(i);
+
+                if (string.IsNullOrEmpty(robotLabelName))
+                    continue;
+
+                IRobotLabel robotLabel = null;
+
                 if (robotLabelServer.IsUsed(robotLabelType, robotLabelName))
                     robotLabel = robotLabelServer.Get(robotLabelType, robotLabelNames.Get(i)) as dynamic;
                 else
                     robotLabel = robotLabelServer.CreateLike(robotLabelType, "", robotLabelName) as dynamic;
-                if (robotLabel == null)
+                if (robotLabel == null || robotLabel.Data == null)
                     BH.Engine.Reflection.Compute.RecordWarning("Failed to read label '" + robotLabelName);
                 else
                 {
@@ -64,6 +70,13 @@ namespace BH.Adapter.Robot
                         case IRobotLabelType.I_LT_BAR_SECTION:
                             Dictionary<string, IMaterialFragment> bhomMaterials = dependantObjects as Dictionary<string, IMaterialFragment>;
                             IRobotBarSectionData secData = robotLabel.Data as IRobotBarSectionData;
+
+                            if (secData == null)
+                            {
+                                BH.Engine.Reflection.Compute.RecordWarning($"Failed to read section with name {robotLabelName}");
+                                continue;
+                            }
+
                             IMaterialFragment sectionMaterial = null;
                             if (bhomMaterials != null && !bhomMaterials.TryGetValue(secData.MaterialName, out sectionMaterial))
                             {

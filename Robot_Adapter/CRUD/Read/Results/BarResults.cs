@@ -73,10 +73,12 @@ namespace BH.Adapter.Robot
             RobotSelection barSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_BAR);
             RobotSelection caseSelection = GetCaseSelection(request);
 
-            if (request.ObjectIds == null || request.ObjectIds.Count == 0)
+            List<int> barIds = CheckAndGetIds<Bar>(request.ObjectIds);
+
+            if (barIds == null || barIds.Count == 0)
                 barSelection.FromText("all");
             else
-                barSelection.FromText(Convert.ToRobotSelectionString(CheckAndGetIds<Bar>(request.ObjectIds)));
+                barSelection.FromText(Convert.ToRobotSelectionString(barIds));
 
             queryParams.Selection.Set(IRobotObjectType.I_OT_CASE, caseSelection);
             queryParams.Selection.Set(IRobotObjectType.I_OT_BAR, barSelection);
@@ -99,17 +101,17 @@ namespace BH.Adapter.Robot
                 }
                 else
                 {
-                    List<object> barIds = new List<object>();
+                    List<object> barIdObj = new List<object>();
                     foreach (object obj in request.ObjectIds)
                     {
                         if (obj is Bar)
                             bars.Add(obj as Bar);
                         else
-                            barIds.Add(obj);
+                            barIdObj.Add(obj);
                     }
                     if (barIds.Count > 0)
                     {
-                        bars.AddRange(ReadBarsQuery(CheckAndGetIds<Bar>(barIds).Select(x => x.ToString()).ToList()));
+                        bars.AddRange(ReadBarsQuery(CheckAndGetIds<Bar>(barIdObj).Select(x => x.ToString()).ToList()));
                     }
                 }
             }

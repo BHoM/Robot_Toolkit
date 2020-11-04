@@ -292,11 +292,7 @@ namespace BH.Adapter.Robot
 
             List<int> panelIds = CheckAndGetIds<Panel>(ids);
             RobotSelection rPanSelect = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_PANEL);
-            if (panelIds == null)
-            {
-                rPanSelect.FromText("all");
-            }
-            else if (panelIds.Count == 0)
+            if (panelIds == null || panelIds.Count == 0)
             {
                 rPanSelect.FromText("all");
             }

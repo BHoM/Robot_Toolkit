@@ -132,8 +132,16 @@ namespace BH.Adapter.Robot
             List<MeshResult> meshResultsCollection = new List<MeshResult>();
             foreach (BH.oM.Structure.Elements.Panel panel in panels)
             {
+                Basis orientation = null;
+                try
+                {
+                    orientation = request.Orientation ?? panel.LocalOrientation();
+                }
+                catch (System.Exception)
+                {
+                    Engine.Reflection.Compute.RecordWarning($"Could not extract local orientation for Panel with id {GetAdapterId<int>(panel)}. Default orientation will be used for this panel.");
+                }
 
-                Basis orientation = request.Orientation ?? panel.LocalOrientation();
                 List<MeshElementResult> meshResults = new List<MeshElementResult>();
 
                 RobotSelection panelSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_PANEL);

@@ -323,23 +323,43 @@ namespace BH.Adapter.Robot
 
                     panel.Fragments.Add(feIds);
 
-                    //Get the coordinate system for the panel
-                    double x, y, z; robotPanel.Main.Attribs.GetDirX(out x, out y, out z);
-                    Vector coordXAxis = BH.Engine.Geometry.Create.Vector(x, y, z);
-                    Vector coordZAxis = panel.Normal();
-
-
-                    bool flip = robotPanel.Main.Attribs.DirZ == 1;
-                    flip = Convert.FromRobotCheckFlipNormal(coordZAxis, flip);
-
-                    if (flip)
+                    try
                     {
-                        coordZAxis *= -1;
-                        FlipOutline(panel);
-                    }
+                        //Get the coordinate system for the panel
+                        double x, y, z; robotPanel.Main.Attribs.GetDirX(out x, out y, out z);
+                        Vector coordXAxis = BH.Engine.Geometry.Create.Vector(x, y, z);
+                        Vector coordZAxis = panel.Normal();
 
-                    //Set local orientation
-                    panel.OrientationAngle = Engine.Structure.Compute.OrientationAngleAreaElement(coordZAxis, coordXAxis);
+                        if (coordZAxis != null)
+                        {
+                            bool flip = robotPanel.Main.Attribs.DirZ == 1;
+                            flip = Convert.FromRobotCheckFlipNormal(coordZAxis, flip);
+
+                            if (flip)
+                            {
+                                coordZAxis = coordZAxis.Reverse();
+                                FlipOutline(panel);
+                            }
+
+                            //Set local orientation
+                            panel.OrientationAngle = Engine.Structure.Compute.OrientationAngleAreaElement(coordZAxis, coordXAxis);
+                        }
+                        else
+                        {
+                            Engine.Reflection.Compute.RecordWarning("Failed to extract local Orientations for at least one Panel.");
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        string message = "Failed to get local orientations for a Panel. Exception message: " + e.Message;
+
+                        if (!string.IsNullOrEmpty(e.InnerException?.Message))
+                        {
+                            message += "\nInnerException: " + e.InnerException.Message;
+                        }
+
+                        Engine.Reflection.Compute.RecordWarning(message);
+                    }
 
                 }
                 BHoMPanels.Add(panel);

@@ -110,7 +110,7 @@
 //                        case BHoML.LoadType.AreaTemperature:
 //                            break;
 //                        case BHoML.LoadType.BarTemperature:
-//                            BHoML.BarTemperatureLoad tL = load as BHoML.BarTemperatureLoad;
+//                            BHoML.BarUniformTemperatureLoad tL = load as BHoML.BarUniformTemperatureLoad;
 //                            loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_THERMAL);
 //                            loadRecord.Objects.FromText(Utils.GetSelectionString(tL.Objects.Data));
 //                            loadRecord.SetValue((short)IRobotThermalRecordValues.I_TRV_T_1, tL.TemperatureChange.X);
@@ -293,7 +293,7 @@
 //                                        double Tx = loadRecord.GetValue((short)IRobotThermalRecordValues.I_TRV_T_1);
 //                                        double Ty = loadRecord.GetValue((short)IRobotThermalRecordValues.I_TRV_T_2);
 //                                        double Tz = loadRecord.GetValue((short)IRobotThermalRecordValues.I_TRV_T_3);
-//                                        BHoML.Load<BHoME.Bar> barTemp = new BHoML.BarTemperatureLoad(bhCase, Tx, Ty, Tz);
+//                                        BHoML.Load<BHoME.Bar> barTemp = new BHoML.BarUniformTemperatureLoad(bhCase, Tx, Ty, Tz);
 //                                        barTemp.Objects = bars.GetRange(objects);
 //                                        loads.Add(barTemp);
 //                                        break;

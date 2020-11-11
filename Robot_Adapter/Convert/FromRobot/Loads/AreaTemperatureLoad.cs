@@ -32,7 +32,7 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static AreaTemperatureLoad FromRobotAreaTempLoad(this IRobotLoadRecord loadRecord)
+        public static AreaUniformTemperatureLoad FromRobotAreaTempLoad(this IRobotLoadRecord loadRecord)
         {
             if (loadRecord == null)
                 return null;
@@ -53,7 +53,7 @@ namespace BH.Adapter.Robot
                     return null;
                 }
 
-                return new AreaTemperatureLoad
+                return new AreaUniformTemperatureLoad
                 {
                     TemperatureChange = t1,
                 };

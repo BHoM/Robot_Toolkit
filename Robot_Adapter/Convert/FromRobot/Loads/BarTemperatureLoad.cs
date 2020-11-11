@@ -31,7 +31,7 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static BarTemperatureLoad FromRobotBarTempLoad(this IRobotLoadRecord loadRecord)
+        public static BarUniformTemperatureLoad FromRobotBarTempLoad(this IRobotLoadRecord loadRecord)
         {
             if (loadRecord == null)
                 return null;
@@ -47,7 +47,7 @@ namespace BH.Adapter.Robot
                     Engine.Reflection.Compute.RecordWarning("Temparature loads in Robot with non axial components found. BHoM Temprature loads only support uniform temprature change, only this value will be extracted.");
                 }
 
-                return new BarTemperatureLoad
+                return new BarUniformTemperatureLoad
                 {
                     TemperatureChange = t
                 };

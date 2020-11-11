@@ -31,7 +31,7 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
        
-        public static void ToRobot(this BarTemperatureLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
+        public static void ToRobot(this BarUniformTemperatureLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
             if (load.TemperatureChange == 0)
             {

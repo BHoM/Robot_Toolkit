@@ -53,13 +53,13 @@ namespace BH.Adapter.Robot
             if (type.IsAssignableFrom(typeof(AreaUniformlyDistributedLoad)))
                 loads.AddRange(ReadObjectLoads(record => record.FromRobotAreaUDL(), IRobotLoadRecordType.I_LRT_UNIFORM, ids));
 
-            if (type.IsAssignableFrom(typeof(AreaTemperatureLoad)))
+            if (type.IsAssignableFrom(typeof(AreaUniformTemperatureLoad)))
                 loads.AddRange(ReadObjectLoads(record => record.FromRobotAreaTempLoad(), IRobotLoadRecordType.I_LRT_THERMAL_IN_3_POINTS, ids));
 
             if (type.IsAssignableFrom(typeof(BarPointLoad)))
                 loads.AddRange(ReadObjectLoads(record => record.FromRobotBarPtLoad(), IRobotLoadRecordType.I_LRT_BAR_FORCE_CONCENTRATED, ids));
 
-            if (type.IsAssignableFrom(typeof(BarTemperatureLoad)))
+            if (type.IsAssignableFrom(typeof(BarUniformTemperatureLoad)))
                 loads.AddRange(ReadObjectLoads(record => record.FromRobotBarTempLoad(), IRobotLoadRecordType.I_LRT_BAR_THERMAL, ids));
 
             if (type.IsAssignableFrom(typeof(BarUniformlyDistributedLoad)))

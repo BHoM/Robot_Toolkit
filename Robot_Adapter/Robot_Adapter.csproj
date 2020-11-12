@@ -146,10 +146,10 @@
     <Compile Include="Convert\FromRobot\Elements\RigidLink.cs" />
     <Compile Include="Convert\FromRobot\Geometry\Point.cs" />
     <Compile Include="Convert\FromRobot\Geometry\Curve.cs" />
-    <Compile Include="Convert\FromRobot\Loads\AreaTemperatureLoad.cs" />
+    <Compile Include="Convert\FromRobot\Loads\AreaUniformTemperatureLoad.cs" />
     <Compile Include="Convert\FromRobot\Loads\AreaUniformlyDistributedLoad.cs" />
     <Compile Include="Convert\FromRobot\Loads\BarPointLoad.cs" />
-    <Compile Include="Convert\FromRobot\Loads\BarTemperatureLoad.cs" />
+    <Compile Include="Convert\FromRobot\Loads\BarUniformTemperatureLoad.cs" />
     <Compile Include="Convert\FromRobot\Loads\BarUniformlyDistributedLoad.cs" />
     <Compile Include="Convert\FromRobot\Loads\BarVaryingDistributedLoad.cs" />
     <Compile Include="Convert\FromRobot\Loads\GravityLoad.cs" />
@@ -164,10 +164,10 @@
     <Compile Include="Convert\ToRobot\Geometry\Arc.cs" />
     <Compile Include="Convert\ToRobot\Geometry\Polyline.cs" />
     <Compile Include="Convert\ToRobot\Geometry\Line.cs" />
-    <Compile Include="Convert\ToRobot\Loads\AreaTemperatureLoad.cs" />
+    <Compile Include="Convert\ToRobot\Loads\AreaUniformTemperatureLoad.cs" />
     <Compile Include="Convert\ToRobot\Loads\GeometricalLineLoad.cs" />
     <Compile Include="Convert\ToRobot\Loads\ContourLoad.cs" />
-    <Compile Include="Convert\ToRobot\Loads\BarTemperatureLoad.cs" />
+    <Compile Include="Convert\ToRobot\Loads\BarUniformTemperatureLoad.cs" />
     <Compile Include="Convert\ToRobot\Loads\BarVaryingDistributedLoad.cs" />
     <Compile Include="Convert\ToRobot\Loads\ILoad.cs" />
     <Compile Include="Convert\ToRobot\Loads\PointAcceleration.cs" />

@@ -27,6 +27,7 @@ using System.ComponentModel;
 using BH.oM.Geometry;
 using BH.Engine.Geometry;
 using BH.Engine.Structure;
+using BH.Engine.Spatial;
 using System;
 
 namespace BH.Adapter.Robot

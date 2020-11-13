@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using BH.oM.Reflection.Attributes;
 using BH.oM.Structure.Elements;
-using BH.Engine.Structure;
+using BH.Engine.Spatial;
 
 namespace BH.Engine.Adapters.Robot
 {

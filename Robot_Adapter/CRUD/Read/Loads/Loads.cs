@@ -70,9 +70,7 @@ namespace BH.Adapter.Robot
 
             if (type.IsAssignableFrom(typeof(BarVaryingDistributedLoad)))
             {
-                var unFormatedBarVarLoads = ReadObjectLoads(record => record.FromRobotBarVarDistLoad(), IRobotLoadRecordType.I_LRT_BAR_TRAPEZOIDALE, ids);
-                //Fixes the issue with BarVaryingLoads having different definition in relation to DistanceFromB
-                loads.AddRange(unFormatedBarVarLoads.SelectMany(x => (x as BarVaryingDistributedLoad).FixVaryingLoadEndDistances()));
+                loads.AddRange(ReadObjectLoads(record => record.FromRobotBarVarDistLoad(), IRobotLoadRecordType.I_LRT_BAR_TRAPEZOIDALE, ids));
             }
 
             if (type.IsAssignableFrom(typeof(GravityLoad)))

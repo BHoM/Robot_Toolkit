@@ -58,20 +58,16 @@ namespace BH.Adapter.Robot
                 double axis = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_LOCAL);
                 double proj = loadRecord.GetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PROJECTION);
 
-                if (rel != 0)
-                {
-                    Engine.Reflection.Compute.RecordWarning("Currently no support for BarVaryingDistributedLoad with relative distance from ends");
-                    return null;
-                }
 
                 return new BarVaryingDistributedLoad
                 {
-                    ForceA = new Vector { X = fax, Y = fay, Z = faz },
-                    ForceB = new Vector { X = fbx, Y = fby, Z = fbz },
-                    DistanceFromA = distA,
-                    DistanceFromB = distB,
+                    ForceAtStart = new Vector { X = fax, Y = fay, Z = faz },
+                    ForceAtEnd = new Vector { X = fbx, Y = fby, Z = fbz },
+                    StartPosition = distA,
+                    EndPosition = distB,
                     Axis = axis.FromRobotLoadAxis(),
-                    Projected = proj.FromRobotProjected()
+                    Projected = proj.FromRobotProjected(),
+                    RelativePositions = rel == 1
                 };
             }
             catch (System.Exception)
@@ -82,28 +78,6 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        //Fixing the issue with Robot defining the second point in the BarVaryingLoad in relation to the start, while BHoM defines it in relation to the end
-        public static List<BarVaryingDistributedLoad> FixVaryingLoadEndDistances(this BarVaryingDistributedLoad load)
-        {
-            List<BarVaryingDistributedLoad> loads = new List<BarVaryingDistributedLoad>();
-
-            int counter = 0;
-            foreach (var lengthGroup in load.Objects.Elements.GroupBarsByLength(0.001))
-            {
-                BarVaryingDistributedLoad clone = load.GetShallowClone() as BarVaryingDistributedLoad;
-                clone.DistanceFromB = lengthGroup.Key - clone.DistanceFromB; //Set distance from B to be from end node instead of start
-                clone.Objects = new BHoMGroup<Bar>() { Elements = lengthGroup.Value };
-                loads.Add(clone);
-                counter++;
-            }
-
-            if (counter > 1)
-                Engine.Reflection.Compute.RecordNote("Varying BarLoads in BHoM measures distance from start for the first point and from end for the second point, whilst Robot measures only from start node. To accommodate this, load pulled from Robot has been split up in multiple loads, grouped by the length of the Bars the load is applied to.");
-
-            return loads;
-        }
-
-        /***************************************************/
     }
 }
 

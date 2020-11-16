@@ -106,7 +106,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Compute\GroupBarsByLength.cs" />
     <Compile Include="Objects\Comparers\LoadingPanelProperty.cs" />
     <Compile Include="Create\ContourLoad.cs" />
     <Compile Include="Create\DesignGroup.cs" />

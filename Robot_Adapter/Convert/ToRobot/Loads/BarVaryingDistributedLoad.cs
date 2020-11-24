@@ -47,10 +47,9 @@ namespace BH.Adapter.Robot
                 return;
             }
 
-            if (load.MomentAtStart.Length() != 0 && load.MomentAtEnd.Length() != 0)
+            if (load.MomentAtStart.Length() != 0 || load.MomentAtEnd.Length() != 0)
             {
-                Engine.Reflection.Compute.RecordError("Varying distributed moments are not supported in Robot.");
-                return;
+                Engine.Reflection.Compute.RecordError("Varying distributed moments are not supported in Robot and will not be pushed.");
             }
 
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_TRAPEZOIDALE);

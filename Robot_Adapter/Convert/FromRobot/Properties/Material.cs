@@ -64,7 +64,7 @@ namespace BH.Adapter.Robot
                     case IRobotMaterialType.I_MT_OTHER:
                     case IRobotMaterialType.I_MT_ALL:
                     default:
-                        material = new GenericIsotropicMaterial { Density = robotLabelData.RO / Engine.Adapters.Robot.Query.RobotGravityConstant, DampingRatio = robotLabelData.DumpCoef, PoissonsRatio = robotLabelData.NU, ThermalExpansionCoeff = robotLabelData.LX, YoungsModulus = robotLabelData.E, EmbodiedCarbon = 0 };
+                        material = new GenericIsotropicMaterial { Density = robotLabelData.RO / Engine.Adapters.Robot.Query.RobotGravityConstant, DampingRatio = robotLabelData.DumpCoef, PoissonsRatio = robotLabelData.NU, ThermalExpansionCoeff = robotLabelData.LX, YoungsModulus = robotLabelData.E};
                         break;
                 }
                 return material;

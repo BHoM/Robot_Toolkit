@@ -71,7 +71,6 @@ namespace BH.Adapter.Robot
 
             List<BH.oM.Structure.Elements.Node> nodes = ReadNodesQuery();
             List<BH.oM.Structure.Elements.FEMesh> feMeshList = new List<oM.Structure.Elements.FEMesh>();
-
             
             if (request.ObjectIds == null || request.ObjectIds.Count == 0)
             {
@@ -79,21 +78,20 @@ namespace BH.Adapter.Robot
             }
             else
             {
-                List<object> panelIds = new List<object>();
+                List<object> meshIds = new List<object>();
                 foreach (object obj in request.ObjectIds)
                 {
                     if (obj is oM.Structure.Elements.FEMesh)
                         feMeshList.Add(obj as oM.Structure.Elements.FEMesh);
                     else
-                        panelIds.Add(obj);
+                        meshIds.Add(obj);
                 }
-                if (panelIds.Count > 0)
+                if (meshIds.Count > 0)
                 {
-                    List<string> idList = CheckAndGetIds<oM.Structure.Elements.FEMesh>(panelIds).Select(x => x.ToString()).ToList();
+                    List<string> idList = CheckAndGetIds<oM.Structure.Elements.FEMesh>(meshIds).Select(x => x.ToString()).ToList();
                     feMeshList.AddRange(ReadMeshes(idList));
                 }
             }
-
 
             List<BH.oM.Geometry.Point> nodePointList = nodes.Select(x => Engine.Structure.Query.Position(x)).ToList();
 
@@ -135,17 +133,32 @@ namespace BH.Adapter.Robot
             List<MeshResult> meshResultsCollection = new List<MeshResult>();
             foreach (BH.oM.Structure.Elements.FEMesh feMesh in feMeshList)
             {
-                Basis orientation = null;
+                Basis orientation = request.Orientation;
 
-                /*
-                try
+                if (orientation == null)
                 {
-                    orientation = request.Orientation ?? panel.LocalOrientation();
+                    try
+                    {
+                        //Get local orientations for each face
+                        List<Basis> orientations = feMesh.LocalOrientations();
+
+                        //Check if all orientations are the same
+                        bool sameOrientation = true;
+
+                        for (int i = 0; i < orientations.Count - 1; i++)
+                        {
+                            sameOrientation &= orientations[i].Z.Angle(orientations[i].Z) < Tolerance.Angle;
+                            if (!sameOrientation)
+                                break;
+                        }
+                        if (sameOrientation && orientations.Count > 0)
+                            orientation = orientations.First();
+                    }
+                    catch (System.Exception)
+                    {
+                        Engine.Reflection.Compute.RecordWarning($"Could not extract local orientation for FEMesh with id {GetAdapterId<int>(feMesh)}. Default orientation will be used for this FEMesh.");
+                    }
                 }
-                catch (System.Exception)
-                {
-                    Engine.Reflection.Compute.RecordWarning($"Could not extract local orientation for Panel with id {GetAdapterId<int>(panel)}. Default orientation will be used for this panel.");
-                }*/
 
                 List<MeshElementResult> meshResults = new List<MeshElementResult>();
 
@@ -216,7 +229,7 @@ namespace BH.Adapter.Robot
                             if (queryParams.IsParamSet(IRobotResultParamType.I_RPT_LOAD_CASE))
                                 idCase = System.Convert.ToInt32(row.GetParam(IRobotResultParamType.I_RPT_LOAD_CASE));
 
-                            int idPanel = GetAdapterId<int>(feMesh);
+                            int idFEMesh = GetAdapterId<int>(feMesh);
 
                             int idNode = 0;
                             if (request.Smoothing != MeshResultSmoothingType.ByFiniteElementCentres)
@@ -235,19 +248,19 @@ namespace BH.Adapter.Robot
                             switch (request.ResultType)
                             {
                                 case MeshResultType.Stresses:
-                                    meshResults.Add(GetMeshStress(row, idPanel, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, orientation));
+                                    meshResults.Add(GetMeshStress(row, idFEMesh, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, orientation));
                                     break;
                                 case MeshResultType.Forces:
-                                    meshResults.Add(GetMeshForce(row, idPanel, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, orientation));
+                                    meshResults.Add(GetMeshForce(row, idFEMesh, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, orientation));
                                     break;
                                 case MeshResultType.VonMises:
-                                    meshResults.Add(GetMeshVonMises(row, idPanel, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, orientation));
+                                    meshResults.Add(GetMeshVonMises(row, idFEMesh, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, orientation));
                                     break;
                                 case MeshResultType.Displacements:
-                                    meshResults.Add(GetMeshDisplacement(row, idPanel, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, (Basis)globalXY));
+                                    meshResults.Add(GetMeshDisplacement(row, idFEMesh, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, (Basis)globalXY));
                                     break;
                                 case MeshResultType.MeshModeShape:
-                                    meshResults.Add(GetMeshModeShape(row, idPanel, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, (Basis)globalXY));
+                                    meshResults.Add(GetMeshModeShape(row, idFEMesh, idNode, idFiniteElement, idCase, mode, layer, layerPosition, smoothing, (Basis)globalXY));
                                     break;
                             }
                         }
@@ -275,9 +288,9 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
 
-        private MeshStress GetMeshStress(RobotResultRow row, int idPanel, int idNode, int idFiniteElement, int idCase, int mode, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
+        private MeshStress GetMeshStress(RobotResultRow row, int idFEMesh, int idNode, int idFiniteElement, int idCase, int mode, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
         {
-            return new MeshStress(idPanel,
+            return new MeshStress(idFEMesh,
                                   idNode,
                                   idFiniteElement,
                                   idCase,
@@ -300,9 +313,9 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private MeshForce GetMeshForce(RobotResultRow row, int idPanel, int idNode, int idFiniteElement, int idCase, int mode, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
+        private MeshForce GetMeshForce(RobotResultRow row, int idFEMesh, int idNode, int idFiniteElement, int idCase, int mode, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
         {
-            return new MeshForce(idPanel,
+            return new MeshForce(idFEMesh,
                                 idNode,
                                 idFiniteElement,
                                 idCase,
@@ -325,9 +338,9 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private MeshVonMises GetMeshVonMises(RobotResultRow row, int idPanel, int idNode, int idFiniteElement, int idCase, int mode, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
+        private MeshVonMises GetMeshVonMises(RobotResultRow row, int idFEMesh, int idNode, int idFiniteElement, int idCase, int mode, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
         {
-            return new MeshVonMises(idPanel,
+            return new MeshVonMises(idFEMesh,
                                     idNode,
                                     idFiniteElement,
                                     idCase,
@@ -345,7 +358,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private MeshDisplacement GetMeshDisplacement(RobotResultRow row, int idPanel, int idNode, int idFiniteElement, int idCase, int mode, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
+        private MeshDisplacement GetMeshDisplacement(RobotResultRow row, int idFEMesh, int idNode, int idFiniteElement, int idCase, int mode, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
         {
 
             Vector u = new Vector
@@ -355,7 +368,7 @@ namespace BH.Adapter.Robot
                 Z = TryGetValue(row, (int)IRobotExtremeValueType.I_EVT_DISPLACEMENT_NODE_UZ),
             };
 
-            return new MeshDisplacement(idPanel,
+            return new MeshDisplacement(idFEMesh,
                                         idNode,
                                         idFiniteElement,
                                         idCase,
@@ -375,7 +388,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private MeshModeShape GetMeshModeShape(RobotResultRow row, int idPanel, int idNode, int idFiniteElement, int idCase, int mode, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
+        private MeshModeShape GetMeshModeShape(RobotResultRow row, int idFEMesh, int idNode, int idFiniteElement, int idCase, int mode, MeshResultLayer layer, double layerPosition, MeshResultSmoothingType smoothing, oM.Geometry.Basis orientation)
         {
 
             Vector u = new Vector
@@ -393,7 +406,7 @@ namespace BH.Adapter.Robot
                 Z = TryGetValue(row, 239), // T_EIGEN_RZ_1
             };
 
-            return new MeshModeShape(idPanel,
+            return new MeshModeShape(idFEMesh,
                                         idNode,
                                         idFiniteElement,
                                         idCase,

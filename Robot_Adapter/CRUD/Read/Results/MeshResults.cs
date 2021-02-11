@@ -70,7 +70,10 @@ namespace BH.Adapter.Robot
             IRobotStructure robotStructureServer = m_RobotApplication.Project.Structure;
 
             List<BH.oM.Structure.Elements.Node> nodes = ReadNodesQuery();
-            List<BH.oM.Structure.Elements.Panel> panels = new List<oM.Structure.Elements.Panel>();
+            //List<BH.oM.Structure.Elements.Panel> panels = new List<oM.Structure.Elements.Panel>();
+            List<BH.oM.Structure.Elements.FEMesh> feMeshList = new List<oM.Structure.Elements.FEMesh>();
+
+            /*
             if (request.ObjectIds == null || request.ObjectIds.Count == 0)
             {
                 panels = ReadPanelsLight();
@@ -90,6 +93,9 @@ namespace BH.Adapter.Robot
                     panels.AddRange(ReadPanelsLight(CheckAndGetIds<oM.Structure.Elements.FEMesh>(panelIds)));
                 }
             }
+            */
+
+            feMeshList = ReadMeshes();
 
 
             List<BH.oM.Geometry.Point> nodePointList = nodes.Select(x => Engine.Structure.Query.Position(x)).ToList();
@@ -130,9 +136,10 @@ namespace BH.Adapter.Robot
             }
 
             List<MeshResult> meshResultsCollection = new List<MeshResult>();
-            foreach (BH.oM.Structure.Elements.Panel panel in panels)
+            foreach (BH.oM.Structure.Elements.FEMesh feMesh in feMeshList)
             {
                 Basis orientation = null;
+                /*
                 try
                 {
                     orientation = request.Orientation ?? panel.LocalOrientation();
@@ -140,18 +147,31 @@ namespace BH.Adapter.Robot
                 catch (System.Exception)
                 {
                     Engine.Reflection.Compute.RecordWarning($"Could not extract local orientation for Panel with id {GetAdapterId<int>(panel)}. Default orientation will be used for this panel.");
-                }
+                }*/
 
                 List<MeshElementResult> meshResults = new List<MeshElementResult>();
 
                 RobotSelection panelSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_PANEL);
-                panelSelection.FromText(GetAdapterId<int>(panel).ToString());
+                panelSelection.FromText(GetAdapterId<int>(feMesh).ToString());
 
-                PanelFiniteElementIds feIds = panel.FindFragment<PanelFiniteElementIds>();
+                //< null >
+                //" 1to182"
+
+                string nodeIds = " ";
+                nodeIds += feMesh.Nodes[0].FindFragment<RobotId>().ToString();
+                nodeIds += "to";
+                nodeIds += feMesh.Nodes[feMesh.Nodes.Count - 1].FindFragment<RobotId>().ToString();
+
+                string faceIds = " ";
+                faceIds += feMesh.Faces[0].FindFragment<RobotId>().ToString();
+                faceIds += "to";
+                faceIds += feMesh.Faces[feMesh.Faces.Count - 1].FindFragment<RobotId>().ToString();
+
+                PanelFiniteElementIds feIds = new PanelFiniteElementIds() { NodeIds = nodeIds, FiniteElementIds = faceIds };
 
                 if (feIds == null)
                 {
-                    Engine.Reflection.Compute.RecordWarning($"Could not access finite element ids for panel with id : { GetAdapterId<int>(panel) }. No results will be extracted for this element.");
+                    Engine.Reflection.Compute.RecordWarning($"Could not access finite element ids for FEMesh with id : { GetAdapterId<int>(feMesh) }. No results will be extracted for this element.");
                     continue;
                 }
 
@@ -207,7 +227,7 @@ namespace BH.Adapter.Robot
                             if (queryParams.IsParamSet(IRobotResultParamType.I_RPT_LOAD_CASE))
                                 idCase = System.Convert.ToInt32(row.GetParam(IRobotResultParamType.I_RPT_LOAD_CASE));
 
-                            int idPanel = GetAdapterId<int>(panel);
+                            int idPanel = GetAdapterId<int>(feMesh);
 
                             int idNode = 0;
                             if (request.Smoothing != MeshResultSmoothingType.ByFiniteElementCentres)
@@ -253,7 +273,7 @@ namespace BH.Adapter.Robot
                     int modeNumber = resultByCase.Key.ModeNumber;
                     List<MeshElementResult> resultList = resultByCase.ToList();
                     resultList.Sort();
-                    MeshResult meshResult = new MeshResult(GetAdapterId<int>(panel), loadCase, modeNumber, timeStep, layer, layerPosition, smoothing, new ReadOnlyCollection<MeshElementResult>(resultList));
+                    MeshResult meshResult = new MeshResult(GetAdapterId<int>(feMesh), loadCase, modeNumber, timeStep, layer, layerPosition, smoothing, new ReadOnlyCollection<MeshElementResult>(resultList));
                     meshResultsCollection.Add(meshResult);
                 }
             }

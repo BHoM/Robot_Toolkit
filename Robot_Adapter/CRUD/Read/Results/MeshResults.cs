@@ -70,32 +70,29 @@ namespace BH.Adapter.Robot
             IRobotStructure robotStructureServer = m_RobotApplication.Project.Structure;
 
             List<BH.oM.Structure.Elements.Node> nodes = ReadNodesQuery();
-            //List<BH.oM.Structure.Elements.Panel> panels = new List<oM.Structure.Elements.Panel>();
             List<BH.oM.Structure.Elements.FEMesh> feMeshList = new List<oM.Structure.Elements.FEMesh>();
 
-            /*
+            
             if (request.ObjectIds == null || request.ObjectIds.Count == 0)
             {
-                panels = ReadPanelsLight();
+                feMeshList = ReadMeshes();
             }
             else
             {
                 List<object> panelIds = new List<object>();
                 foreach (object obj in request.ObjectIds)
                 {
-                    if (obj is oM.Structure.Elements.Panel)
-                        panels.Add(obj as oM.Structure.Elements.Panel);
+                    if (obj is oM.Structure.Elements.FEMesh)
+                        feMeshList.Add(obj as oM.Structure.Elements.FEMesh);
                     else
                         panelIds.Add(obj);
                 }
                 if (panelIds.Count > 0)
                 {
-                    panels.AddRange(ReadPanelsLight(CheckAndGetIds<oM.Structure.Elements.FEMesh>(panelIds)));
+                    List<string> idList = CheckAndGetIds<oM.Structure.Elements.FEMesh>(panelIds).Select(x => x.ToString()).ToList();
+                    feMeshList.AddRange(ReadMeshes(idList));
                 }
             }
-            */
-
-            feMeshList = ReadMeshes();
 
 
             List<BH.oM.Geometry.Point> nodePointList = nodes.Select(x => Engine.Structure.Query.Position(x)).ToList();
@@ -139,6 +136,7 @@ namespace BH.Adapter.Robot
             foreach (BH.oM.Structure.Elements.FEMesh feMesh in feMeshList)
             {
                 Basis orientation = null;
+
                 /*
                 try
                 {
@@ -154,32 +152,23 @@ namespace BH.Adapter.Robot
                 RobotSelection panelSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_PANEL);
                 panelSelection.FromText(GetAdapterId<int>(feMesh).ToString());
 
-                //< null >
-                //" 1to182"
+                IEnumerable<string> nodeIdList = feMesh.Nodes.Select(x => x.FindFragment<RobotId>().ToString());
+                string nodeIds = string.Join(" ", nodeIdList);
 
-                string nodeIds = " ";
-                nodeIds += feMesh.Nodes[0].FindFragment<RobotId>().ToString();
-                nodeIds += "to";
-                nodeIds += feMesh.Nodes[feMesh.Nodes.Count - 1].FindFragment<RobotId>().ToString();
+                IEnumerable<string> faceIdList = feMesh.Faces.Select(x => x.FindFragment<RobotId>().ToString());
+                string faceIds = string.Join(" ", faceIdList);
 
-                string faceIds = " ";
-                faceIds += feMesh.Faces[0].FindFragment<RobotId>().ToString();
-                faceIds += "to";
-                faceIds += feMesh.Faces[feMesh.Faces.Count - 1].FindFragment<RobotId>().ToString();
-
-                PanelFiniteElementIds feIds = new PanelFiniteElementIds() { NodeIds = nodeIds, FiniteElementIds = faceIds };
-
-                if (feIds == null)
+                if (nodeIds == "" || faceIds == "")
                 {
                     Engine.Reflection.Compute.RecordWarning($"Could not access finite element ids for FEMesh with id : { GetAdapterId<int>(feMesh) }. No results will be extracted for this element.");
                     continue;
                 }
 
                 RobotSelection finiteElementSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_FINITE_ELEMENT);
-                finiteElementSelection.FromText(feIds.FiniteElementIds);
+                finiteElementSelection.FromText(faceIds);
 
                 RobotSelection nodeSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_NODE);
-                nodeSelection.FromText(feIds.NodeIds);
+                nodeSelection.FromText(nodeIds);
 
                 queryParams.Selection.Set(IRobotObjectType.I_OT_PANEL, panelSelection);
                 queryParams.Selection.Set(IRobotObjectType.I_OT_CASE, caseSelection);

@@ -23,10 +23,7 @@
 using System.Collections.Generic;
 using BH.oM.Structure.Results;
 using RobotOM;
-using System.Collections;
-using BH.oM.Geometry.CoordinateSystem;
 using System.Linq;
-using BH.oM.Data.Requests;
 using System.Collections.ObjectModel;
 using BH.oM.Analytical.Results;
 using BH.oM.Structure.Requests;
@@ -93,7 +90,7 @@ namespace BH.Adapter.Robot
                 }
             }
 
-            List<BH.oM.Geometry.Point> nodePointList = nodes.Select(x => Engine.Structure.Query.Position(x)).ToList();
+            List<Point> nodePointList = nodes.Select(x => Engine.Structure.Query.Position(x)).ToList();
 
             RobotResultQueryParams queryParams = (RobotResultQueryParams)m_RobotApplication.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
 
@@ -151,6 +148,7 @@ namespace BH.Adapter.Robot
                             if (!sameOrientation)
                                 break;
                         }
+
                         if (sameOrientation && orientations.Count > 0)
                             orientation = orientations.First();
                     }
@@ -236,7 +234,7 @@ namespace BH.Adapter.Robot
                             {
                                 //idNode = System.Convert.ToInt32(row.GetParam(IRobotResultParamType.I_RPT_NODE));
 
-                                BH.oM.Geometry.Point nodePoint = BH.Engine.Geometry.Create.Point(row.GetValue(0), row.GetValue(1), row.GetValue(2));
+                                Point nodePoint = BH.Engine.Geometry.Create.Point(row.GetValue(0), row.GetValue(1), row.GetValue(2));
                                 idNode = GetAdapterId<int>(nodes.ElementAt(nodePointList.IndexOf(BH.Engine.Geometry.Query.ClosestPoint(nodePoint, nodePointList))));
                             }
 
@@ -396,7 +394,7 @@ namespace BH.Adapter.Robot
                 X = TryGetValue(row, 234), // T_EIGEN_UX_1
                 Y = TryGetValue(row, 235), // T_EIGEN_UY_1
                 Z = TryGetValue(row, 236), // T_EIGEN_UZ_1
-                // lagg till rotations
+                // add rotations
             };
 
             Vector r = new Vector

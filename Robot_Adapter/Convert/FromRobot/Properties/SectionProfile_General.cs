@@ -63,7 +63,6 @@ namespace BH.Adapter.Robot
 
                     case IRobotBarSectionShapeType.I_BSST_USER_RECT:
                     case IRobotBarSectionShapeType.I_BSST_TREC:
-                    case IRobotBarSectionShapeType.I_BSST_TRON:
                     case IRobotBarSectionShapeType.I_BSST_TCAR:
                     case IRobotBarSectionShapeType.I_BSST_TRND:
                         if (r != 0)
@@ -85,6 +84,7 @@ namespace BH.Adapter.Robot
                         break;
 
                     case IRobotBarSectionShapeType.I_BSST_USER_TUBE:
+                    case IRobotBarSectionShapeType.I_BSST_TRON:
                         sectionProfile = BH.Engine.Spatial.Create.TubeProfile(d, Tf);
                         break;
 

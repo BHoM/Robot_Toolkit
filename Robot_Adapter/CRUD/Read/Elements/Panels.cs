@@ -92,8 +92,12 @@ namespace BH.Adapter.Robot
                     {
                         Opening opening;
                         RobotObjObject robotOpening = (RobotObjObject)robotOpenings.Get(j);
-                        ICurve openingOutline = Convert.IFromRobot(robotOpening.Main.GetGeometry());
 
+                        // Skipping hosted Beams and Columns - should we keep Slabs and Walls? Normal type for openings seems to be Undefined.
+                        if (robotOpening.StructuralType == IRobotObjectStructuralType.I_OST_BEAM || robotOpening.StructuralType == IRobotObjectStructuralType.I_OST_COLUMN)
+                            continue;
+
+                        ICurve openingOutline = Convert.IFromRobot(robotOpening.Main.GetGeometry());
                         if (openingOutline != null)
                             opening = BH.Engine.Structure.Create.Opening(openingOutline);
                         else

@@ -30,6 +30,7 @@ using BH.Engine.Structure;
 using BH.oM.Geometry;
 using BH.Engine.Geometry;
 using RobotOM;
+using BH.Engine.Base;
 
 namespace BH.Adapter.Robot
 {
@@ -104,7 +105,7 @@ namespace BH.Adapter.Robot
                     if (!createNodesSuccess)
                         continue;
 
-                    FEMeshFace clone = fMeshFace.GetShallowClone() as FEMeshFace;
+                    FEMeshFace clone = fMeshFace.ShallowClone() as FEMeshFace;
 
                     SetAdapterId(clone, fMeshFaceIdx);
                     fEMesh.Faces[i] = clone;

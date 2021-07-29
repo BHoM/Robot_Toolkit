@@ -101,7 +101,7 @@ namespace BH.Adapter.Robot
                         if (bhomSections.TryGetValue(secName, out secProp))
                         {
                             //Construct and store a copy of the section, with new material
-                            secProp = secProp.ShallowClone(true) as ISectionProperty;
+                            secProp = secProp.ShallowClone(true);
                             secProp.Material = barMaterial;
                             innerDict[matName] = secProp;
                             sectionWithMaterial[secName] = innerDict;
@@ -243,5 +243,4 @@ namespace BH.Adapter.Robot
     }
 
 }
-
 

@@ -105,7 +105,7 @@ namespace BH.Adapter.Robot
                     if (!createNodesSuccess)
                         continue;
 
-                    FEMeshFace clone = fMeshFace.ShallowClone() as FEMeshFace;
+                    FEMeshFace clone = fMeshFace.ShallowClone();
 
                     SetAdapterId(clone, fMeshFaceIdx);
                     fEMesh.Faces[i] = clone;
@@ -196,4 +196,3 @@ namespace BH.Adapter.Robot
 
     }
 }
-

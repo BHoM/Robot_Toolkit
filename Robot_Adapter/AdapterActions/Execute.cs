@@ -101,6 +101,20 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
+        public bool RunCommand(Exit command)
+        {
+            if (command.SaveBeforeClose)
+                m_RobotApplication.Project.Save();
+
+            m_RobotApplication.Project.Close();
+
+            m_RobotApplication.Quit(IRobotQuitOption.I_QO_DISCARD_CHANGES);
+            m_RobotApplication = null;
+            return true;
+        }
+
+        /***************************************************/
+
         public bool RunCommand(IExecuteCommand command)
         {
             Engine.Reflection.Compute.RecordWarning($"The command {command.GetType().Name} is not supported by this Adapter.");

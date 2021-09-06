@@ -137,7 +137,6 @@ namespace BH.Adapter.Robot
             //end of the name of the section
             foreach (KeyValuePair<string,Dictionary<string, ISectionProperty>> outerKvp in sectionsWithMaterial)
             {
-
                 if (outerKvp.Value.Count == 1)
                     continue;
 

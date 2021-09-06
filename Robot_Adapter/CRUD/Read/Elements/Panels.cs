@@ -98,12 +98,20 @@ namespace BH.Adapter.Robot
                             continue;
 
                         ICurve openingOutline = Convert.IFromRobot(robotOpening.Main.GetGeometry());
-                        if (openingOutline != null)
-                            opening = BH.Engine.Structure.Create.Opening(openingOutline);
-                        else
+
+                        if (openingOutline == null)
                         {
                             Engine.Reflection.Compute.RecordError($"Failed to extract the outline geometry for Opening with id {robotOpening.Number} on Panel with id {robotPanel.Number}.");
                             opening = new Opening();
+                        }
+                        else if (openingOutline is PolyCurve && (openingOutline as PolyCurve).Curves.Count == 0)
+                        {
+                            Engine.Reflection.Compute.RecordWarning($"Opening with id {robotOpening.Number} on Panel with id {robotPanel.Number} does not contain any geometry.");
+                            opening = new Opening();
+                        }
+                        else
+                        {
+                            opening = BH.Engine.Structure.Create.Opening(openingOutline);
                         }
 
                         SetAdapterId(opening, robotOpening.Number);
@@ -278,7 +286,7 @@ namespace BH.Adapter.Robot
         {
             foreach (Edge e in panel.ExternalEdges)
             {
-                if(e?.Curve != null)
+                if (e?.Curve != null)
                     e.Curve = e.Curve.IFlip();
             }
             panel.ExternalEdges.Reverse();

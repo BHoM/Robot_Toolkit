@@ -20,6 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using System.Collections.Generic;
 using BH.oM.Geometry;
 using GeometryEngine = BH.Engine.Geometry;
 using RobotOM;
@@ -48,9 +49,17 @@ namespace BH.Adapter.Robot
                 if (segment1.Type == IRobotGeoSegmentType.I_GST_ARC)
                 {
                     RobotGeoSegmentArc arcSeg = segment1 as RobotGeoSegmentArc;
-
-                    BH.oM.Geometry.Arc bhomArc = GeometryEngine.Create.Arc(arcSeg.P1.FromRobot(), arcSeg.P2.FromRobot(), segment2.P1.FromRobot());
-                    polycurve.Curves.Add(bhomArc);
+                    ICurve segment;
+                    try
+                    {
+                        segment = GeometryEngine.Create.Arc(arcSeg.P1.FromRobot(), arcSeg.P2.FromRobot(), segment2.P1.FromRobot());
+                    }
+                    catch (System.Exception)
+                    {
+                        segment = new Polyline { ControlPoints = new List<Point> { arcSeg.P1.FromRobot(), arcSeg.P2.FromRobot(), segment2.P1.FromRobot() } };
+                        Engine.Reflection.Compute.RecordWarning("Failed to extract arc segment of polycurve as arc. Polyline segment returned in its place.");
+                    }
+                    polycurve.Curves.Add(segment);
                 }
                 else
                 {

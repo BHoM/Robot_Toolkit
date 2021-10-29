@@ -113,7 +113,8 @@ namespace BH.Adapter.Robot
                     {
                         if (outline != null)
                             panel = BH.Engine.Structure.Create.Panel(outline, openings);
-                        else
+
+                        if(panel == null)
                         {
                             BH.Engine.Reflection.Compute.RecordError($"Failed to extract the outline geometry for Panel with id {robotPanel.Number}.");
                             panel = new Panel { Openings = openings };

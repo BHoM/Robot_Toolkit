@@ -54,6 +54,7 @@ namespace BH.Adapter.Robot
                             rCaseCombination.CaseFactors.New(lComb.LoadCases[i].Item2.Number, lComb.LoadCases[i].Item1);
                         }
                     }
+                    this.SetAdapterId(lComb, lComb.Number);
                 }
                 else
                 {

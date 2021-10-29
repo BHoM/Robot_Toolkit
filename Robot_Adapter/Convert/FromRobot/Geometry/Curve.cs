@@ -102,6 +102,17 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
+
+        private static ICurve FromRobot(object geoObject)
+        {
+            if (geoObject == null)
+                return null;
+
+            Engine.Reflection.Compute.RecordError($"Can not convert object of typ {geoObject.GetType().Name} to a Curve.");
+            return null;
+        }
+
+        /***************************************************/
     }
 }
 

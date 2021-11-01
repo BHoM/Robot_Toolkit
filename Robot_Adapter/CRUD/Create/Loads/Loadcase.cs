@@ -55,6 +55,8 @@ namespace BH.Adapter.Robot
 
                 if (subNature >= 0)               
                     sCase.SetNatureExt(subNature);
+
+                this.SetAdapterId(caseList[i], caseList[i].Number);
             }
             m_RobotApplication.Project.Structure.Cases.EndMultiOperation();
             return true;

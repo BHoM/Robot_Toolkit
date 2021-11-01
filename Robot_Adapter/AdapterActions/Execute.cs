@@ -101,6 +101,27 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
+        public bool RunCommand(Exit command)
+        {
+            if (command.SaveBeforeClose)
+            {
+                if (string.IsNullOrEmpty(m_RobotApplication.Project.FileName))
+                {
+                    Engine.Reflection.Compute.RecordError($"Application not exited. File does not have a name. Please manually save the file or use the {nameof(SaveAs)} command before trying to Exit the application. If you want to close the application anyway, please toggle {nameof(Exit.SaveBeforeClose)} to false.");
+                    return false;
+                }
+                m_RobotApplication.Project.Save();
+            }
+
+            m_RobotApplication.Project.Close();
+
+            m_RobotApplication.Quit(IRobotQuitOption.I_QO_DISCARD_CHANGES);
+            m_RobotApplication = null;
+            return true;
+        }
+
+        /***************************************************/
+
         public bool RunCommand(IExecuteCommand command)
         {
             Engine.Reflection.Compute.RecordWarning($"The command {command.GetType().Name} is not supported by this Adapter.");

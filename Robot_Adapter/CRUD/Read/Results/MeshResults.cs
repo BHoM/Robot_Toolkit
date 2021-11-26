@@ -163,10 +163,10 @@ namespace BH.Adapter.Robot
                 RobotSelection panelSelection = robotStructureServer.Selections.Create(IRobotObjectType.I_OT_PANEL);
                 panelSelection.FromText(GetAdapterId<int>(feMesh).ToString());
 
-                IEnumerable<string> nodeIdList = feMesh.Nodes.Select(x => x.FindFragment<RobotId>().ToString());
+                IEnumerable<string> nodeIdList = feMesh.Nodes.Select(x => GetAdapterId(x).ToString());
                 string nodeIds = string.Join(" ", nodeIdList);
 
-                IEnumerable<string> faceIdList = feMesh.Faces.Select(x => x.FindFragment<RobotId>().ToString());
+                IEnumerable<string> faceIdList = feMesh.Faces.Select(x => GetAdapterId(x).ToString());
                 string faceIds = string.Join(" ", faceIdList);
 
                 if (nodeIds == "" || faceIds == "")

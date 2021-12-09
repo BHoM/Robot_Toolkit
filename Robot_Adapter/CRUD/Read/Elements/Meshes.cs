@@ -21,6 +21,7 @@
  */
 
 using System.Collections.Generic;
+using System.Collections;
 using BH.oM.Structure.Elements;
 using RobotOM;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
 
-        private List<FEMesh> ReadMeshes(List<string> ids = null)
+        private List<FEMesh> ReadMeshes(IList ids = null)
         {
             SortedDictionary<int, FEMesh> bhomMeshes = new SortedDictionary<int, FEMesh>();
 
@@ -46,7 +47,6 @@ namespace BH.Adapter.Robot
 
             RobotResultQueryParams queryParams = m_RobotApplication.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
 
-            RobotSelection fe_sel = m_RobotApplication.Project.Structure.Selections.CreateFull(IRobotObjectType.I_OT_FINITE_ELEMENT);
 
             //Setting case selection to only pull the mesh faces once
             RobotSelection caseSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_CASE);
@@ -59,6 +59,28 @@ namespace BH.Adapter.Robot
                 m_RobotApplication.Project.Structure.Cases.CreateSimple(1, "Dead Load", IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
                 caseSelection.FromText(m_RobotApplication.Project.Structure.Cases.Get(1).Number.ToString());
             }
+
+
+            RobotSelection fe_sel;
+            if (ids == null || ids.Count == 0)
+            {
+                fe_sel = m_RobotApplication.Project.Structure.Selections.CreateFull(IRobotObjectType.I_OT_FINITE_ELEMENT);
+            }
+            else
+            {
+                fe_sel = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_FINITE_ELEMENT);
+                List<int> panelIds = CheckAndGetIds<Panel>(ids); //Using Panel as type as this enables to ask for the FEMesh while providing the corresponding Panel obejcts
+                RobotSelection panelSelection = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_PANEL);
+                panelSelection.FromText(Convert.ToRobotSelectionString(panelIds));
+                IRobotCollection robotPanels = m_RobotApplication.Project.Structure.Objects.GetMany(panelSelection);
+
+                for (int i = 1; i <= robotPanels.Count; i++)
+                {
+                    RobotObjObject robotPanel = (RobotObjObject)robotPanels.Get(i);
+                    fe_sel.AddText(robotPanel.FiniteElems);
+                }
+            }
+
 
             queryParams.ResultIds.SetSize(5);
             queryParams.ResultIds.Set(1, 564);    //Corresponds to first node number of the mesh face topology          

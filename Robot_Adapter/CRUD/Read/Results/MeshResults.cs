@@ -85,8 +85,7 @@ namespace BH.Adapter.Robot
                 }
                 if (meshIds.Count > 0)
                 {
-                    List<string> idList = CheckAndGetIds<oM.Structure.Elements.FEMesh>(meshIds).Select(x => x.ToString()).ToList();
-                    feMeshList.AddRange(ReadMeshes(idList));
+                    feMeshList.AddRange(ReadMeshes(meshIds));
                 }
             }
 

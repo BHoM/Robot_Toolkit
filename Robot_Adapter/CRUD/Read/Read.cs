@@ -70,7 +70,7 @@ namespace BH.Adapter.Robot
             else if (type == typeof(Panel))
                 return ReadPanels(indices);
             else if (type == typeof(FEMesh))
-                return ReadMeshes();
+                return ReadMeshes(indices);
             else if (typeof(ISurfaceProperty).IsAssignableFrom(type))
                 return ReadSurfaceProperties();
             else if (type == typeof(RigidLink))

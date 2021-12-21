@@ -234,6 +234,7 @@ namespace BH.Adapter.Robot
                     break;
 
                 case IRobotBarSectionShapeType.I_BSST_USER_CIRC_FILLED:
+                case IRobotBarSectionShapeType.I_BSST_CIRC_FILLED:
                     d = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D);
                     sectionProfile = BH.Engine.Spatial.Create.CircleProfile(d);
                     break;

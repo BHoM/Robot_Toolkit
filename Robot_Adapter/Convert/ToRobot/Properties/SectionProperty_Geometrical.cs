@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2022, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2021, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -24,6 +24,7 @@ using System;
 using RobotOM;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Spatial.ShapeProfiles;
+using System.Linq;
 
 namespace BH.Adapter.Robot
 {
@@ -37,7 +38,7 @@ namespace BH.Adapter.Robot
         {
             Type type = section.GetType();
 
-            if (!RobotAdapter.CheckNotNull(section.SectionProfile, oM.Base.Debugging.EventType.Warning, type) ||
+            if (!RobotAdapter.CheckNotNull(section.SectionProfile, oM.Reflection.Debugging.EventType.Warning, type) ||
                 !ToRobotGeometricalSection(section.SectionProfile as dynamic, secData))
             {
                 //If method returns false, no profile based data has been set. Fallback to explicitly setting properties.
@@ -59,30 +60,166 @@ namespace BH.Adapter.Robot
         /****           Private Methods                  ****/
         /***************************************************/
 
-        private static bool ToRobotGeometricalSection(this BoxProfile section, IRobotBarSectionData sectionData)
+        private static bool ToRobotGeometricalSection(this IProfile section, IRobotBarSectionData sectionData)
         {
-            sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
-            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_RECT;
-
-            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
-
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H, section.Height);
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B, section.Width);
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_T, section.Thickness);
-
-            sectionData.CalcNonstdGeometry();
+            if (SetRobotTypeAndShapeType(section as dynamic, sectionData))
+            {
+                SetNonStandardSectionData(section as dynamic, sectionData, 0);
+                sectionData.CalcNonstdGeometry();
+            }
             return true;
         }
 
         /***************************************************/
 
-        private static bool ToRobotGeometricalSection(this FabricatedBoxProfile section, IRobotBarSectionData sectionData)
+        private static bool ToRobotGeometricalSection(this TaperedProfile section, IRobotBarSectionData sectionData)
+        {
+            if (section.Profiles.Count == 1)
+                return ToRobotGeometricalSection(section.Profiles.First().Value as dynamic, sectionData);
+
+            IProfile startProfile, endProfile;
+
+            if (section.Profiles.Count == 2 && section.Profiles.TryGetValue(0, out startProfile) && section.Profiles.TryGetValue(1, out endProfile))
+            {
+                if (startProfile.GetType() == endProfile.GetType())
+                {
+                    if (SetRobotTypeAndShapeType(startProfile as dynamic, sectionData))
+                    {
+                        SetNonStandardSectionData(startProfile as dynamic, sectionData, 0);
+                        SetNonStandardSectionData(endProfile as dynamic, sectionData, 1);
+                        sectionData.CalcNonstdGeometry();
+                        return true;
+                    }
+                }
+            }
+
+            Engine.Reflection.Compute.RecordWarning("The robot adapter currently only support tapered sections with two profiles of the same type. Section set as explicit with 0-properties.");
+            return false;
+        }
+
+        /***************************************************/
+
+        private static bool SetRobotTypeAndShapeType(this BoxProfile section, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_RECT;
+            return true;
+        }
+
+        /***************************************************/
+
+        private static bool SetRobotTypeAndShapeType(this FabricatedBoxProfile section, IRobotBarSectionData sectionData)
         {
             sectionData.Type = IRobotBarSectionType.I_BST_NS_BOX_3;
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_BOX_3;
+            return true;
+        }
 
-            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+        /***************************************************/
 
+        private static bool SetRobotTypeAndShapeType(this FabricatedISectionProfile section, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_II;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_I_MONOSYM;
+            return true;
+        }
+
+        /***************************************************/
+
+        private static bool SetRobotTypeAndShapeType(this ISectionProfile section, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_I;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_I_BISYM;
+            return true;
+        }
+
+        /***************************************************/
+
+        private static bool SetRobotTypeAndShapeType(this TSectionProfile section, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_T;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_T_SHAPE;
+            return true;
+        }
+
+        /***************************************************/
+
+        private static bool SetRobotTypeAndShapeType(this TubeProfile section, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_TUBE;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_TUBE;
+            return true;
+        }
+
+        /***************************************************/
+
+        private static bool SetRobotTypeAndShapeType(this RectangleProfile section, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_RECT_FILLED;
+            return true;
+        }
+
+        /***************************************************/
+
+        private static bool SetRobotTypeAndShapeType(this CircleProfile section, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_TUBE;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CIRC_FILLED;
+            return true;
+        }
+
+        /***************************************************/
+
+        //private static bool ToRobotGeometricalSection(this AngleProfile section, IMaterialFragment material, IRobotBarSectionData sectionData)
+        //{
+        //    sectionData.Type = IRobotBarSectionType.I_BST_NS_L;
+        //    sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_UUAP;
+        //}
+
+        /***************************************************/
+
+        private static bool SetRobotTypeAndShapeType(this ChannelProfile section, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_C;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_C_SHAPE;
+            return true;
+        }
+
+        /***************************************************/
+
+        private static bool SetRobotTypeAndShapeType(this GeneralisedFabricatedBoxProfile section, IRobotBarSectionData sectionData)
+        {
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_BOX_3;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_BOX_3;
+            return true;
+        }
+
+        /***************************************************/
+
+        private static bool SetRobotTypeAndShapeType(this IProfile section, IRobotBarSectionData sectionData)
+        {
+            BH.Engine.Reflection.Compute.RecordWarning("Profile of type " + section.GetType().Name + " is not yet fully supported for Steel sections. Section with name " + sectionData.Name + " set as explicit section");
+            return false;
+        }
+
+        /***************************************************/
+
+        private static bool SetNonStandardSectionData(this BoxProfile section, IRobotBarSectionData sectionData, int position = 0)
+        {
+            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(position);
+
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H, section.Height);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B, section.Width);
+            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_T, section.Thickness);
+            return true;
+        }
+
+        /***************************************************/
+
+        private static bool SetNonStandardSectionData(this FabricatedBoxProfile section, IRobotBarSectionData sectionData, int position = 0)
+        {
+            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(position);
 
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B, section.Width);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B1, section.Width - (2 * section.WebThickness));
@@ -91,19 +228,14 @@ namespace BH.Adapter.Robot
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TW, section.WebThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF, section.TopFlangeThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF2, section.BotFlangeThickness);
-
-            sectionData.CalcNonstdGeometry();
             return true;
         }
 
         /***************************************************/
 
-        private static bool ToRobotGeometricalSection(this FabricatedISectionProfile section, IRobotBarSectionData sectionData)
+        private static bool SetNonStandardSectionData(this FabricatedISectionProfile section, IRobotBarSectionData sectionData, int position = 0)
         {
-            sectionData.Type = IRobotBarSectionType.I_BST_NS_II;
-            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_I_MONOSYM;
-
-            RobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+            RobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(position);
 
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_B1, section.TopFlangeWidth);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_B2, section.BotFlangeWidth);
@@ -111,90 +243,64 @@ namespace BH.Adapter.Robot
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TW, section.WebThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TF1, section.TopFlangeThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TF2, section.BotFlangeThickness);
-
-            sectionData.CalcNonstdGeometry();
             return true;
         }
 
         /***************************************************/
 
-        private static bool ToRobotGeometricalSection(this ISectionProfile section, IRobotBarSectionData sectionData)
+        private static bool SetNonStandardSectionData(this ISectionProfile section, IRobotBarSectionData sectionData, int position = 0)
         {
-            sectionData.Type = IRobotBarSectionType.I_BST_NS_I;
-            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_I_BISYM;
-
-            RobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+            RobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(position);
 
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B, section.Width);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H, section.Height - (2 * section.FlangeThickness));
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW, section.WebThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF, section.FlangeThickness);
-
-            sectionData.CalcNonstdGeometry();
             return true;
         }
 
         /***************************************************/
 
-        private static bool ToRobotGeometricalSection(this TSectionProfile section, IRobotBarSectionData sectionData)
+        private static bool SetNonStandardSectionData(this TSectionProfile section, IRobotBarSectionData sectionData, int position = 0)
         {
-            sectionData.Type = IRobotBarSectionType.I_BST_NS_T;
-            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_T_SHAPE;
-
-            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(position);
 
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_B, section.Width);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_H, section.Height - section.FlangeThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_TF, section.FlangeThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_TW, section.WebThickness);
-
-            sectionData.CalcNonstdGeometry();
             return true;
         }
 
         /***************************************************/
 
-        private static bool ToRobotGeometricalSection(this TubeProfile section, IRobotBarSectionData sectionData)
+        private static bool SetNonStandardSectionData(this TubeProfile section, IRobotBarSectionData sectionData, int position = 0)
         {
-            sectionData.Type = IRobotBarSectionType.I_BST_NS_TUBE;
-            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_TUBE;
-
-            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(position);
 
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D, section.Diameter);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_T, section.Thickness);
-
-            sectionData.CalcNonstdGeometry();
             return true;
         }
 
         /***************************************************/
 
-        private static bool ToRobotGeometricalSection(this RectangleProfile section, IRobotBarSectionData sectionData)
+        private static bool SetNonStandardSectionData(this RectangleProfile section, IRobotBarSectionData sectionData, int position = 0)
         {
-            sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
-            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_RECT_FILLED;
-
-            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(position);
 
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H, section.Height);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B, section.Width);
-
-            sectionData.CalcNonstdGeometry();
             return true;
         }
 
         /***************************************************/
 
-        private static bool ToRobotGeometricalSection(this CircleProfile section, IRobotBarSectionData sectionData)
+        private static bool SetNonStandardSectionData(this CircleProfile section, IRobotBarSectionData sectionData, int position = 0)
         {
-            sectionData.Type = IRobotBarSectionType.I_BST_NS_TUBE;
-            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CIRC_FILLED;
-
-            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(position);
 
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D, section.Diameter);
-            sectionData.CalcNonstdGeometry();
             return true;
         }
 
@@ -219,31 +325,23 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private static bool ToRobotGeometricalSection(this ChannelProfile section, IRobotBarSectionData sectionData)
+        private static bool SetNonStandardSectionData(this ChannelProfile section, IRobotBarSectionData sectionData, int position = 0)
         {
-            sectionData.Type = IRobotBarSectionType.I_BST_NS_C;
-            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_C_SHAPE;
-
-            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(position);
 
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_B, section.FlangeWidth);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_H, section.Height - (2 * section.FlangeThickness));
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_TW, section.WebThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_C_TF, section.FlangeThickness);
 
-            sectionData.CalcNonstdGeometry();
             return true;
         }
 
         /***************************************************/
 
-        private static bool ToRobotGeometricalSection(this GeneralisedFabricatedBoxProfile section, IRobotBarSectionData sectionData)
+        private static bool SetNonStandardSectionData(this GeneralisedFabricatedBoxProfile section, IRobotBarSectionData sectionData, int position = 0)
         {
-            sectionData.Type = IRobotBarSectionType.I_BST_NS_BOX_3;
-            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_BOX_3;
-
-            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
-
+            IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(position);
 
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B, section.Width + section.BotLeftCorbelWidth + section.BotRightCorbelWidth);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B1, section.Width - (2 * section.WebThickness));
@@ -252,22 +350,11 @@ namespace BH.Adapter.Robot
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TW, section.WebThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF, section.TopFlangeThickness);
             nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF2, section.BotFlangeThickness);
-
-            sectionData.CalcNonstdGeometry();
             return true;
 
         }
 
         /***************************************************/
-
-        private static bool ToRobotGeometricalSection(this IProfile section, IRobotBarSectionData sectionData)
-        {
-            BH.Engine.Base.Compute.RecordWarning("Profile of type " + section.GetType().Name + " is not yet fully supported for Steel sections. Section with name " + sectionData.Name + " set as explicit section");
-            return false;
-        }
-
-        /***************************************************/
     }
 }
-
 

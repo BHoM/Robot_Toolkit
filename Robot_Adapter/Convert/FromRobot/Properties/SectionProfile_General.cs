@@ -106,128 +106,142 @@ namespace BH.Adapter.Robot
             }
             else
             {
+                //Get profile at start. FOr non tapered section this will be the general definition
                 IRobotBarSectionNonstdData nonStdData = secData.GetNonstd(1);
                 if (nonStdData == null)
                     return null;
 
-                double D = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D);
-                double T = 0;
-                double B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B);
-                double B1 = 0;
-                double B2 = 0;
-                double H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H);
-                double TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW);
-                double TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF);
-                double TF2 = 0;
+                IProfile startProfile = NonStandardProfile(secData.ShapeType, nonStdData);
 
-
-                switch (secData.ShapeType)
+                //Check if a profile exists at the next position. 
+                nonStdData = secData.GetNonstd(2);
+                if (nonStdData == null)
+                    sectionProfile = startProfile;  //If no profile at second position, the section is not tapered, and start profile can be used
+                else
                 {
-                    case IRobotBarSectionShapeType.I_BSST_USER_TUBE:
-                        T = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_T);
-                        D = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D);
-                        sectionProfile = BH.Engine.Spatial.Create.TubeProfile(D, T);
-                        break;
-
-                    case IRobotBarSectionShapeType.I_BSST_RECT_FILLED:
-                        B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B);
-                        H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H);
-                        sectionProfile = BH.Engine.Spatial.Create.RectangleProfile(H, B, 0);
-                        break;
-
-                    case IRobotBarSectionShapeType.I_BSST_USER_RECT:
-                        B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B);
-                        H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H);
-                        T = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_T);
-
-                        if(T == 0)
-                            sectionProfile = BH.Engine.Spatial.Create.RectangleProfile(H, B, 0);
-                        else
-                            sectionProfile = BH.Engine.Spatial.Create.BoxProfile(H, B, T, 0, 0);
-                        break;
-
-                    case IRobotBarSectionShapeType.I_BSST_USER_I_BISYM:
-                        B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B);
-                        H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H);
-                        TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW);
-                        TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF);
-                        sectionProfile = BH.Engine.Spatial.Create.ISectionProfile(H + (2 * TF), B, TW, TF, 0, 0);
-                        break;
-
-                    case IRobotBarSectionShapeType.I_BSST_USER_BOX_2:
-                        B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_B);
-                        B1 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_B1);
-                        H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_H);
-                        TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_TW);
-                        TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_TF);
-                        double outstand = (B - B1 - (2 * TW)) / 2;
-                        //Check if subtraction leads to negative "0", if so, set to zero to avoid profile method braking
-                        if (outstand < 0 && Math.Abs(outstand) < Tolerance.MicroDistance)
-                            outstand = 0;
-
-                        sectionProfile = BH.Engine.Spatial.Create.GeneralisedFabricatedBoxProfile(H + (2 * TF), B1 + (2 * TW), TW, TF, TF, outstand, outstand);
-                        break;
-
-                    case IRobotBarSectionShapeType.I_BSST_USER_BOX_3:
-                        B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B);
-                        B1 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B1);
-                        B2 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B2);
-                        H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_H);
-                        TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TW);
-                        TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF);
-                        TF2 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF2);
-
-                        double topOutstand = (B2 - B1 - (2 * TW)) / 2;
-                        double botOutstand = (B - B1 - (2 * TW)) / 2;
-
-                        //Check if subtraction leads to negative "0", if so, set to zero to avoid profile method braking
-                        if (topOutstand < 0 && Math.Abs(topOutstand) < Tolerance.MicroDistance)
-                            topOutstand = 0;
-
-                        if (botOutstand < 0 && Math.Abs(botOutstand) < Tolerance.MicroDistance)
-                            botOutstand = 0;
-
-                        //If outstands are 0 (less than microdistance fraction of the width) return a standard fabricated box section.
-                        if (B1 > Tolerance.Distance && topOutstand / B1 < Tolerance.MicroDistance && botOutstand / B1 < Tolerance.MicroDistance)
-                        {
-                            sectionProfile = BH.Engine.Spatial.Create.FabricatedBoxProfile(H + TF + TF2, B1 + 2 * TW, TW, TF, TF2, 0);
-                        }
-                        else
-                        {
-                            sectionProfile = BH.Engine.Spatial.Create.GeneralisedFabricatedBoxProfile(H + TF + TF2, B1 + (2 * TW), TW, TF, TF2, topOutstand, botOutstand);
-                        }
-                        break;
-
-                    case IRobotBarSectionShapeType.I_BSST_BOX:
-                        B = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_B);
-                        H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_H);
-                        TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_TW);
-                        TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_TF);
-
-                        sectionProfile = BH.Engine.Spatial.Create.FabricatedBoxProfile(H + (2 * TF), B, TW, TF, TF, 0);
-                        break;
-
-                    case IRobotBarSectionShapeType.I_BSST_USER_I_MONOSYM:
-                        B1 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_B1);
-                        B2 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_B2);
-                        H = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_H);
-                        TW = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TW);
-                        TF = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TF1);
-                        TF2 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TF2);
-                        sectionProfile = BH.Engine.Spatial.Create.FabricatedISectionProfile(H + TF + TF2, B1, B2, TW, TF, TF2, 0);
-                        break;
-
-                    case IRobotBarSectionShapeType.I_BSST_USER_CIRC_FILLED:
-                        sectionProfile = BH.Engine.Spatial.Create.CircleProfile(D);
-                        break;
-
-                    default:
-                        return null;
+                    //If profile exists, extract end position section and return section profile as tapered section
+                    IProfile endProfile = NonStandardProfile(secData.ShapeType, nonStdData);
+                    sectionProfile = Engine.Spatial.Create.TaperedProfile(startProfile, endProfile, 1);
                 }
+
+
             }
 
             return sectionProfile;
 
+        }
+
+        /***************************************************/
+
+        private static IProfile NonStandardProfile(IRobotBarSectionShapeType shapeType, IRobotBarSectionNonstdData nonStdData)
+        {
+            double d, t, b, b1, b2, h, tw, tf, tf2;
+            IProfile sectionProfile;
+            switch (shapeType)
+            {
+                case IRobotBarSectionShapeType.I_BSST_USER_TUBE:
+                    t = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_T);
+                    d = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D);
+                    sectionProfile = BH.Engine.Spatial.Create.TubeProfile(d, t);
+                    break;
+
+                case IRobotBarSectionShapeType.I_BSST_RECT_FILLED:
+                    b = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B);
+                    h = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H);
+                    sectionProfile = BH.Engine.Spatial.Create.RectangleProfile(h, b, 0);
+                    break;
+
+                case IRobotBarSectionShapeType.I_BSST_USER_RECT:
+                    b = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_B);
+                    h = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_H);
+                    t = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_RECT_T);
+
+                    if (t == 0)
+                        sectionProfile = BH.Engine.Spatial.Create.RectangleProfile(h, b, 0);
+                    else
+                        sectionProfile = BH.Engine.Spatial.Create.BoxProfile(h, b, t, 0, 0);
+                    break;
+
+                case IRobotBarSectionShapeType.I_BSST_USER_I_BISYM:
+                    b = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B);
+                    h = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H);
+                    tw = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW);
+                    tf = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF);
+                    sectionProfile = BH.Engine.Spatial.Create.ISectionProfile(h + (2 * tf), b, tw, tf, 0, 0);
+                    break;
+
+                case IRobotBarSectionShapeType.I_BSST_USER_BOX_2:
+                    b = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_B);
+                    b1 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_B1);
+                    h = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_H);
+                    tw = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_TW);
+                    tf = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_TF);
+                    double outstand = (b - b1 - (2 * tw)) / 2;
+                    //Check if subtraction leads to negative "0", if so, set to zero to avoid profile method braking
+                    if (outstand < 0 && Math.Abs(outstand) < Tolerance.MicroDistance)
+                        outstand = 0;
+
+                    sectionProfile = BH.Engine.Spatial.Create.GeneralisedFabricatedBoxProfile(h + (2 * tf), b1 + (2 * tw), tw, tf, tf, outstand, outstand);
+                    break;
+
+                case IRobotBarSectionShapeType.I_BSST_USER_BOX_3:
+                    b = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B);
+                    b1 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B1);
+                    b2 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B2);
+                    h = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_H);
+                    tw = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TW);
+                    tf = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF);
+                    tf2 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF2);
+
+                    double topOutstand = (b2 - b1 - (2 * tw)) / 2;
+                    double botOutstand = (b - b1 - (2 * tw)) / 2;
+
+                    //Check if subtraction leads to negative "0", if so, set to zero to avoid profile method braking
+                    if (topOutstand < 0 && Math.Abs(topOutstand) < Tolerance.MicroDistance)
+                        topOutstand = 0;
+
+                    if (botOutstand < 0 && Math.Abs(botOutstand) < Tolerance.MicroDistance)
+                        botOutstand = 0;
+
+                    //If outstands are 0 (less than microdistance fraction of the width) return a standard fabricated box section.
+                    if (b1 > Tolerance.Distance && topOutstand / b1 < Tolerance.MicroDistance && botOutstand / b1 < Tolerance.MicroDistance)
+                    {
+                        sectionProfile = BH.Engine.Spatial.Create.FabricatedBoxProfile(h + tf + tf2, b1 + 2 * tw, tw, tf, tf2, 0);
+                    }
+                    else
+                    {
+                        sectionProfile = BH.Engine.Spatial.Create.GeneralisedFabricatedBoxProfile(h + tf + tf2, b1 + (2 * tw), tw, tf, tf2, topOutstand, botOutstand);
+                    }
+                    break;
+
+                case IRobotBarSectionShapeType.I_BSST_BOX:
+                    b = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_B);
+                    h = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_H);
+                    tw = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_TW);
+                    tf = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_TF);
+
+                    sectionProfile = BH.Engine.Spatial.Create.FabricatedBoxProfile(h + (2 * tf), b, tw, tf, tf, 0);
+                    break;
+
+                case IRobotBarSectionShapeType.I_BSST_USER_I_MONOSYM:
+                    b1 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_B1);
+                    b2 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_B2);
+                    h = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_H);
+                    tw = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TW);
+                    tf = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TF1);
+                    tf2 = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_II_TF2);
+                    sectionProfile = BH.Engine.Spatial.Create.FabricatedISectionProfile(h + tf + tf2, b1, b2, tw, tf, tf2, 0);
+                    break;
+
+                case IRobotBarSectionShapeType.I_BSST_USER_CIRC_FILLED:
+                    d = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_TUBE_D);
+                    sectionProfile = BH.Engine.Spatial.Create.CircleProfile(d);
+                    break;
+
+                default:
+                    return null;
+            }
+            return sectionProfile;
         }
 
         /***************************************************/

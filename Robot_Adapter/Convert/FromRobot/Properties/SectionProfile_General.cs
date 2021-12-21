@@ -239,6 +239,14 @@ namespace BH.Adapter.Robot
                     sectionProfile = BH.Engine.Spatial.Create.CircleProfile(d);
                     break;
 
+                case IRobotBarSectionShapeType.I_BSST_USER_T_SHAPE:
+                    b = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_B);
+                    h = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_H);
+                    tf = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_TF);
+                    tw = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_TW);
+                    sectionProfile = BH.Engine.Spatial.Create.TSectionProfile(h, b, tw, tf);
+                    break;
+
                 default:
                     return null;
             }

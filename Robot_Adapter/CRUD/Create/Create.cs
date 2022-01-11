@@ -30,7 +30,7 @@ using BH.oM.Structure.Loads;
 using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.Offsets;
 using BH.oM.Adapters.Robot;
-using BH.oM.Reflection.Attributes;
+using BH.oM.Base.Attributes;
 using BH.Engine.Adapters.Robot;
 using BH.oM.Adapter;
 using BH.oM.Base;

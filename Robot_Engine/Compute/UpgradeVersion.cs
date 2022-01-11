@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BH.oM.Reflection.Attributes;
+using BH.oM.Base.Attributes;
 
 namespace BH.Engine.Adapters.Robot
 {
@@ -36,7 +36,7 @@ namespace BH.Engine.Adapters.Robot
         /**** Public Methods                            ****/
         /***************************************************/
 
-        [Deprecated("3.1", "Upgrade version methods deprecated. To be moved over to Versioning.")]
+        [ToBeRemoved("3.1", "Upgrade version methods deprecated. To be moved over to Versioning.")]
         public static List<oM.Structure.Loads.ContourLoad> UpgradeVersion(this List<oM.Adapters.Robot.ContourLoad> loads)
         {
             List<oM.Structure.Loads.ContourLoad> upgradedLoads = new List<oM.Structure.Loads.ContourLoad>();
@@ -49,7 +49,7 @@ namespace BH.Engine.Adapters.Robot
 
         /***************************************************/
 
-        [Deprecated("3.1", "Upgrade version methods deprecated. To be moved over to Versioning.")]
+        [ToBeRemoved("3.1", "Upgrade version methods deprecated. To be moved over to Versioning.")]
         public static oM.Structure.Loads.ContourLoad UpgradeVersion(this oM.Adapters.Robot.ContourLoad load)
         {
             return new oM.Structure.Loads.ContourLoad
@@ -65,7 +65,7 @@ namespace BH.Engine.Adapters.Robot
 
         /***************************************************/
 
-        [Deprecated("3.1", "Upgrade version methods deprecated. To be moved over to Versioning.")]
+        [ToBeRemoved("3.1", "Upgrade version methods deprecated. To be moved over to Versioning.")]
         public static List<oM.Structure.Loads.GeometricalLineLoad> UpgradeVersion(this List<oM.Adapters.Robot.GeometricalLineLoad> loads)
         {
             List<oM.Structure.Loads.GeometricalLineLoad> upgradedLoads = new List<oM.Structure.Loads.GeometricalLineLoad>();
@@ -78,7 +78,7 @@ namespace BH.Engine.Adapters.Robot
 
         /***************************************************/
 
-        [Deprecated("3.1", "Upgrade version methods deprecated. To be moved over to Versioning.")]
+        [ToBeRemoved("3.1", "Upgrade version methods deprecated. To be moved over to Versioning.")]
         public static oM.Structure.Loads.GeometricalLineLoad UpgradeVersion(this oM.Adapters.Robot.GeometricalLineLoad load)
         {
             return new oM.Structure.Loads.GeometricalLineLoad

@@ -25,7 +25,7 @@ using System.Linq;
 using System;
 using BH.oM.Structure.Elements;
 using RobotOM;
-using BH.oM.Reflection.Debugging;
+using BH.oM.Base.Debugging;
 using BH.oM.Adapters.Robot;
 using BH.Engine.Structure;
 using BH.oM.Geometry;
@@ -110,7 +110,7 @@ namespace BH.Adapter.Robot
                     if (bhomBar.Release != null)
                         rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_RELEASE, bhomBar.Release.DescriptionOrName());
                     else
-                        Engine.Reflection.Compute.RecordNote("Bars with no assigned releases will use defaults in Robot.");
+                        Engine.Base.Compute.RecordNote("Bars with no assigned releases will use defaults in Robot.");
 
                     if (bhomBar.Offset != null && bhomBar.Offset.Start != null && bhomBar.Offset.End != null && (bhomBar.Offset.Start.SquareLength() > 0 || bhomBar.Offset.End.SquareLength() > 0))
                         rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_BAR_OFFSET, bhomBar.Offset.DescriptionOrName());
@@ -170,7 +170,7 @@ namespace BH.Adapter.Robot
                     }
                     catch
                     {
-                        Engine.Reflection.Compute.RecordWarning("Failed to set FEA type for at least one bar.");
+                        Engine.Base.Compute.RecordWarning("Failed to set FEA type for at least one bar.");
                     }
                 }
                 m_tags[typeof(Bar)] = barTags;

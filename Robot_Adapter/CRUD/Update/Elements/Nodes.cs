@@ -41,7 +41,7 @@ namespace BH.Adapter.Robot
             {
 
                 int nodeId;
-                if (!CheckInputObjectAndExtractAdapterIdInt(node, out nodeId, oM.Reflection.Debugging.EventType.Warning))
+                if (!CheckInputObjectAndExtractAdapterIdInt(node, out nodeId, oM.Base.Debugging.EventType.Warning))
                     continue;
 
                 RobotNode robotNode = m_RobotApplication.Project.Structure.Nodes.Get(nodeId) as RobotNode;
@@ -54,7 +54,7 @@ namespace BH.Adapter.Robot
                 oM.Geometry.Point position = node.Position;
 
                 //Check point is not null
-                if (!CheckNotNull(position, oM.Reflection.Debugging.EventType.Error, typeof(Node)))
+                if (!CheckNotNull(position, oM.Base.Debugging.EventType.Error, typeof(Node)))
                     continue;
 
                 robotNode.X = position.X;

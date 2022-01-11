@@ -52,7 +52,7 @@ namespace BH.Adapter.Robot
         {
             if (barEndReleaseData == null)
             {
-                Engine.Reflection.Compute.RecordWarning("At least one constraint on at least on BarRelease could not be accessed from Robot and is returned as null.");
+                Engine.Base.Compute.RecordWarning("At least one constraint on at least on BarRelease could not be accessed from Robot and is returned as null.");
                 return null;
             }
 

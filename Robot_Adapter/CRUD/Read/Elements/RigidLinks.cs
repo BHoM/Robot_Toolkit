@@ -63,7 +63,7 @@ namespace BH.Adapter.Robot
                         bhomRigidLinks.Add(bhomRigidLink);
                     }
                     else
-                        Engine.Reflection.Compute.RecordError("Failed to extract at least one RigidLink from the Robot API.");
+                        Engine.Base.Compute.RecordError("Failed to extract at least one RigidLink from the Robot API.");
                 }
             }
             else
@@ -79,7 +79,7 @@ namespace BH.Adapter.Robot
                         bhomRigidLinks.Add(bhomRigidLink);
                     }
                     else
-                        Engine.Reflection.Compute.RecordError("Failed to extract at least one RigidLink from the Robot API.");
+                        Engine.Base.Compute.RecordError("Failed to extract at least one RigidLink from the Robot API.");
                 }
             }
 

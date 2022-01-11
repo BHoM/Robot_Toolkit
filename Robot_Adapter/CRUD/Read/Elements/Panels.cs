@@ -76,7 +76,7 @@ namespace BH.Adapter.Robot
 
                 if (robotPanel == null)
                 {
-                    Engine.Reflection.Compute.RecordError("At least one Panel failed to get extracted from the Robot API.");
+                    Engine.Base.Compute.RecordError("At least one Panel failed to get extracted from the Robot API.");
                     continue;
                 }
 
@@ -110,7 +110,7 @@ namespace BH.Adapter.Robot
                     }
                     else
                     {
-                        Engine.Reflection.Compute.RecordError($"Failed to extract Panel with id {robotPanel.Number}.");
+                        Engine.Base.Compute.RecordError($"Failed to extract Panel with id {robotPanel.Number}.");
                     }
                 }
             }
@@ -122,7 +122,7 @@ namespace BH.Adapter.Robot
 
                 if (robotCladdingPanel == null)
                 {
-                    Engine.Reflection.Compute.RecordError("At least one cladding Panel failed to get extracted from the Robot API.");
+                    Engine.Base.Compute.RecordError("At least one cladding Panel failed to get extracted from the Robot API.");
                     continue;
                 }
 
@@ -146,7 +146,7 @@ namespace BH.Adapter.Robot
                     }
                     else
                     {
-                        Engine.Reflection.Compute.RecordError($"Failed to extract cladding Panel with id {robotCladdingPanel.Number}.");
+                        Engine.Base.Compute.RecordError($"Failed to extract cladding Panel with id {robotCladdingPanel.Number}.");
                     }
                 }
             }
@@ -175,12 +175,12 @@ namespace BH.Adapter.Robot
 
                 if (openingOutline == null)
                 {
-                    Engine.Reflection.Compute.RecordError($"Failed to extract the outline geometry for Opening with id {robotOpening.Number} on Panel with id {robotPanel.Number}.");
+                    Engine.Base.Compute.RecordError($"Failed to extract the outline geometry for Opening with id {robotOpening.Number} on Panel with id {robotPanel.Number}.");
                     opening = new Opening();
                 }
                 else if (openingOutline is PolyCurve && (openingOutline as PolyCurve).Curves.Count == 0)
                 {
-                    Engine.Reflection.Compute.RecordWarning($"Opening with id {robotOpening.Number} on Panel with id {robotPanel.Number} does not contain any geometry.");
+                    Engine.Base.Compute.RecordWarning($"Opening with id {robotOpening.Number} on Panel with id {robotPanel.Number} does not contain any geometry.");
                     opening = new Opening();
                 }
                 else
@@ -199,14 +199,14 @@ namespace BH.Adapter.Robot
 
                 if (panel == null)
                 {
-                    BH.Engine.Reflection.Compute.RecordError($"Failed to extract the outline geometry for Panel with id {robotPanel.Number}.");
+                    BH.Engine.Base.Compute.RecordError($"Failed to extract the outline geometry for Panel with id {robotPanel.Number}.");
                     panel = new Panel { Openings = openings };
                     geometrySet = false;
                 }
             }
             catch
             {
-                BH.Engine.Reflection.Compute.RecordWarning($"Geometry for Panel with id {robotPanel.Number} not supported.");
+                BH.Engine.Base.Compute.RecordWarning($"Geometry for Panel with id {robotPanel.Number} not supported.");
                 panel = new Panel { Openings = openings };
                 geometrySet = false;
             }
@@ -246,7 +246,7 @@ namespace BH.Adapter.Robot
                     }
                     else
                     {
-                        Engine.Reflection.Compute.RecordWarning("Failed to extract local Orientations for at least one Panel.");
+                        Engine.Base.Compute.RecordWarning("Failed to extract local Orientations for at least one Panel.");
                     }
                 }
                 catch (Exception e)
@@ -258,7 +258,7 @@ namespace BH.Adapter.Robot
                         message += "\nInnerException: " + e.InnerException.Message;
                     }
 
-                    Engine.Reflection.Compute.RecordWarning(message);
+                    Engine.Base.Compute.RecordWarning(message);
                 }
             }
 
@@ -344,7 +344,7 @@ namespace BH.Adapter.Robot
                         }
                         else
                         {
-                            Engine.Reflection.Compute.RecordWarning("Failed to extract local Orientations for at least one Panel.");
+                            Engine.Base.Compute.RecordWarning("Failed to extract local Orientations for at least one Panel.");
                         }
                     }
                     catch (Exception e)
@@ -356,7 +356,7 @@ namespace BH.Adapter.Robot
                             message += "\nInnerException: " + e.InnerException.Message;
                         }
 
-                        Engine.Reflection.Compute.RecordWarning(message);
+                        Engine.Base.Compute.RecordWarning(message);
                     }
 
                 }

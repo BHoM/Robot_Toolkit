@@ -49,7 +49,7 @@ namespace BH.Adapter.Robot
 
             if (smoothing == MeshResultSmoothingType.None)
             {
-                Engine.Reflection.Compute.RecordWarning("Result extraction with no smoothing is currently not possible in the Robot adapter. To extract results please choose another smoothening type");
+                Engine.Base.Compute.RecordWarning("Result extraction with no smoothing is currently not possible in the Robot adapter. To extract results please choose another smoothening type");
                 return new List<IResult>();
             }
 
@@ -122,7 +122,7 @@ namespace BH.Adapter.Robot
                     same &= orientation.Z.Angle(globalXY.Z) < Tolerance.Angle;
 
                     if (!same)
-                        Engine.Reflection.Compute.RecordWarning("Mesh Displacements are always extracted in Global coordinates");
+                        Engine.Base.Compute.RecordWarning("Mesh Displacements are always extracted in Global coordinates");
                 }
             }
 
@@ -153,7 +153,7 @@ namespace BH.Adapter.Robot
                     }
                     catch (System.Exception)
                     {
-                        Engine.Reflection.Compute.RecordWarning($"Could not extract local orientation for FEMesh with id {GetAdapterId<int>(feMesh)}. Default orientation will be used for this FEMesh.");
+                        Engine.Base.Compute.RecordWarning($"Could not extract local orientation for FEMesh with id {GetAdapterId<int>(feMesh)}. Default orientation will be used for this FEMesh.");
                     }
                 }
 
@@ -170,7 +170,7 @@ namespace BH.Adapter.Robot
 
                 if (nodeIds == "" || faceIds == "")
                 {
-                    Engine.Reflection.Compute.RecordWarning($"Could not access finite element ids for FEMesh with id : { GetAdapterId<int>(feMesh) }. No results will be extracted for this element.");
+                    Engine.Base.Compute.RecordWarning($"Could not access finite element ids for FEMesh with id : { GetAdapterId<int>(feMesh) }. No results will be extracted for this element.");
                     continue;
                 }
 

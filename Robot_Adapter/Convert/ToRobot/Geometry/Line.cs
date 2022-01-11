@@ -37,8 +37,8 @@ namespace BH.Adapter.Robot
 
         public static RobotGeoSegmentLine ToRobot(Line line, RobotApplication robotApplication)
         {
-            if (!RobotAdapter.CheckNotNull(line.Start, oM.Reflection.Debugging.EventType.Error, typeof(Line)) ||
-                !RobotAdapter.CheckNotNull(line.End, oM.Reflection.Debugging.EventType.Error, typeof(Line)))
+            if (!RobotAdapter.CheckNotNull(line.Start, oM.Base.Debugging.EventType.Error, typeof(Line)) ||
+                !RobotAdapter.CheckNotNull(line.End, oM.Base.Debugging.EventType.Error, typeof(Line)))
                 return null;
 
             RobotGeoSegmentLine robotLine = robotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_SEGMENT_LINE);

@@ -48,13 +48,13 @@ namespace BH.Adapter.Robot
                 Type groupType = group.GetType();
 
 
-                if (!CheckNotNull(group.Elements, oM.Reflection.Debugging.EventType.Error, groupType) ||
-                   group.Elements.Any(x => !CheckNotNull(x, oM.Reflection.Debugging.EventType.Error, groupType)))
+                if (!CheckNotNull(group.Elements, oM.Base.Debugging.EventType.Error, groupType) ||
+                   group.Elements.Any(x => !CheckNotNull(x, oM.Base.Debugging.EventType.Error, groupType)))
                     continue;
 
                 if (group.Elements.Any(x => !x.HasAdapterIdFragment(AdapterIdFragmentType)))
                 {
-                    Engine.Reflection.Compute.RecordError("The Elements of the Group needs to be pre pushed/pulled to assign their Adapter Ids. The Group containing the element(s) with missing Ids have not been created.");
+                    Engine.Base.Compute.RecordError("The Elements of the Group needs to be pre pushed/pulled to assign their Adapter Ids. The Group containing the element(s) with missing Ids have not been created.");
                     continue;
                 }
 
@@ -63,7 +63,7 @@ namespace BH.Adapter.Robot
 
                 if (string.IsNullOrWhiteSpace(group.Name))
                 {
-                    Engine.Reflection.Compute.RecordError("BHoMGroup must have a name to be pushed to Robot");
+                    Engine.Base.Compute.RecordError("BHoMGroup must have a name to be pushed to Robot");
                     continue;
                 }
 

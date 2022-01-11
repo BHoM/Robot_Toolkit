@@ -46,13 +46,13 @@ namespace BH.Adapter.Robot
                 foreach (Node node in nodes)
                 {
                     //Check obejct itself is not null and id information can be extracted
-                    if (!CheckInputObjectAndExtractAdapterIdInt(node, out nodeNum, oM.Reflection.Debugging.EventType.Error))
+                    if (!CheckInputObjectAndExtractAdapterIdInt(node, out nodeNum, oM.Base.Debugging.EventType.Error))
                         continue;
 
                     oM.Geometry.Point position = node.Position;
 
                     //Check point is not null
-                    if (!CheckNotNull(position, oM.Reflection.Debugging.EventType.Error, typeof(Node)))
+                    if (!CheckNotNull(position, oM.Base.Debugging.EventType.Error, typeof(Node)))
                         continue;
 
                     rcache.AddNode(nodeNum, position.X, position.Y, position.Z);
@@ -64,7 +64,7 @@ namespace BH.Adapter.Robot
 
                 foreach (Node node in nodes)
                 {
-                    if (!CheckInputObjectAndExtractAdapterIdInt(node, out nodeNum, oM.Reflection.Debugging.EventType.Error))
+                    if (!CheckInputObjectAndExtractAdapterIdInt(node, out nodeNum, oM.Base.Debugging.EventType.Error))
                         continue;
 
                     nodeTags[nodeNum] = node.Tags;

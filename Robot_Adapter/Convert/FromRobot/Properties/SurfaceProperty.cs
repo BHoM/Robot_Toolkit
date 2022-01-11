@@ -40,7 +40,7 @@ namespace BH.Adapter.Robot
         {
             if (robotLabel?.Data == null)
             {
-                Engine.Reflection.Compute.RecordWarning("Failed to extract at least one ISurfaceProperty from Robot.");
+                Engine.Base.Compute.RecordWarning("Failed to extract at least one ISurfaceProperty from Robot.");
                 return null;
             }
 
@@ -58,7 +58,7 @@ namespace BH.Adapter.Robot
 
                     if (data == null)
                     {
-                        Engine.Reflection.Compute.RecordWarning("Failed to extract at least one ISurfaceProperty from Robot.");
+                        Engine.Base.Compute.RecordWarning("Failed to extract at least one ISurfaceProperty from Robot.");
                         return null;
                     }
 
@@ -66,7 +66,7 @@ namespace BH.Adapter.Robot
                     if (material.ContainsKey(data.MaterialName))
                         mat = material[data.MaterialName];
                     else
-                        BH.Engine.Reflection.Compute.RecordEvent("SurfaceProperty " + robotLabelName + " has no material assigned", oM.Reflection.Debugging.EventType.Warning);
+                        BH.Engine.Base.Compute.RecordEvent("SurfaceProperty " + robotLabelName + " has no material assigned", oM.Base.Debugging.EventType.Warning);
 
                     bhomProperty = null;
 
@@ -109,7 +109,7 @@ namespace BH.Adapter.Robot
                                 case IRobotThicknessOrthoType.I_TOT_HOLLOW_CORE_SLAB:
                                 case IRobotThicknessOrthoType.I_TOT_USER:
                                     bhomProperty = new ConstantThickness { Name = robotLabelName, Thickness = double.NaN, Material = mat };
-                                    BH.Engine.Reflection.Compute.RecordWarning("Thickness property '" + robotLabelName + "' of type " + orthoData.Type + " Not yet supported. A constant thickness property with NaN thickness has been created in its place");
+                                    BH.Engine.Base.Compute.RecordWarning("Thickness property '" + robotLabelName + "' of type " + orthoData.Type + " Not yet supported. A constant thickness property with NaN thickness has been created in its place");
                                     break;
                                 default:
                                     bhomProperty = new ConstantThickness { Name = robotLabelName, Thickness = orthoData.H, Material = mat };
@@ -138,7 +138,7 @@ namespace BH.Adapter.Robot
 
                     if (claddData == null)
                     {
-                        Engine.Reflection.Compute.RecordWarning("Failed to extract at least one ISurfaceProperty from Robot.");
+                        Engine.Base.Compute.RecordWarning("Failed to extract at least one ISurfaceProperty from Robot.");
                         return null;
                     }
 
@@ -179,7 +179,7 @@ namespace BH.Adapter.Robot
             }
             catch (Exception)
             {
-                Engine.Reflection.Compute.RecordWarning("Failed to extract at least one ISurfaceProperty from Robot.");
+                Engine.Base.Compute.RecordWarning("Failed to extract at least one ISurfaceProperty from Robot.");
                 return null;
             }
         }

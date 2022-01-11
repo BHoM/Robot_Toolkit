@@ -41,7 +41,7 @@ namespace BH.Adapter.Robot
             IRobotMaterialData matData = label.Data;
             foreach (IMaterialFragment material in materials)
             {
-                if (!CheckNotNull(material, oM.Reflection.Debugging.EventType.Warning))
+                if (!CheckNotNull(material, oM.Base.Debugging.EventType.Warning))
                     continue;
 
                 string match = Convert.Match(m_dbMaterialNames, material);
@@ -76,7 +76,7 @@ namespace BH.Adapter.Robot
 
         private void MaterialExistsWarning(string materialName)
         {
-            BH.Engine.Reflection.Compute.RecordWarning("Material '" + materialName + "' already exists in the model, the properties have been overwritten");
+            BH.Engine.Base.Compute.RecordWarning("Material '" + materialName + "' already exists in the model, the properties have been overwritten");
         }
 
         /***************************************************/

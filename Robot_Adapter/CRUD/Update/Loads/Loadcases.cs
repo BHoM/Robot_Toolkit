@@ -48,7 +48,7 @@ namespace BH.Adapter.Robot
 
                 if (robotSimpCase == null)
                 {
-                    Engine.Reflection.Compute.RecordError("Loadcase with number " + lCase.Number + " does not exist in the model and could not be updated.");
+                    Engine.Base.Compute.RecordError("Loadcase with number " + lCase.Number + " does not exist in the model and could not be updated.");
                     continue;
                 }
 

@@ -40,7 +40,7 @@ namespace BH.Adapter.Robot
 
             if (load.Force.Length() == 0 && load.Moment.Length() == 0)
             {
-                Engine.Reflection.Compute.RecordWarning("Zero forces and moments are not pushed to Robot");
+                Engine.Base.Compute.RecordWarning("Zero forces and moments are not pushed to Robot");
                 return;
             }
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_FORCE);

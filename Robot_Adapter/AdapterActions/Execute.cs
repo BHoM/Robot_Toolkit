@@ -27,7 +27,7 @@ using System;
 using BH.oM.Structure.Loads;
 using RobotOM;
 using BH.oM.Adapter;
-using BH.oM.Reflection;
+using BH.oM.Base;
 using BH.oM.Adapter.Commands;
 
 namespace BH.Adapter.Robot
@@ -107,7 +107,7 @@ namespace BH.Adapter.Robot
             {
                 if (string.IsNullOrEmpty(m_RobotApplication.Project.FileName))
                 {
-                    Engine.Reflection.Compute.RecordError($"Application not exited. File does not have a name. Please manually save the file or use the {nameof(SaveAs)} command before trying to Exit the application. If you want to close the application anyway, please toggle {nameof(Exit.SaveBeforeClose)} to false.");
+                    Engine.Base.Compute.RecordError($"Application not exited. File does not have a name. Please manually save the file or use the {nameof(SaveAs)} command before trying to Exit the application. If you want to close the application anyway, please toggle {nameof(Exit.SaveBeforeClose)} to false.");
                     return false;
                 }
                 m_RobotApplication.Project.Save();
@@ -124,7 +124,7 @@ namespace BH.Adapter.Robot
 
         public bool RunCommand(IExecuteCommand command)
         {
-            Engine.Reflection.Compute.RecordWarning($"The command {command.GetType().Name} is not supported by this Adapter.");
+            Engine.Base.Compute.RecordWarning($"The command {command.GetType().Name} is not supported by this Adapter.");
             return false;
         }
 
@@ -208,7 +208,7 @@ namespace BH.Adapter.Robot
                 }
                 else
                 {
-                    Engine.Reflection.Compute.RecordWarning("Could not extract case information from object " + o.ToString() + ". Case information need to be provided as Loadcases, Loadcombinations or as case numbers (string or int)");
+                    Engine.Base.Compute.RecordWarning("Could not extract case information from object " + o.ToString() + ". Case information need to be provided as Loadcases, Loadcombinations or as case numbers (string or int)");
                 }
             }
             return caseNums;

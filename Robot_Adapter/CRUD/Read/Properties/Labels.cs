@@ -59,7 +59,7 @@ namespace BH.Adapter.Robot
                 else
                     robotLabel = robotLabelServer.CreateLike(robotLabelType, "", robotLabelName) as dynamic;
                 if (robotLabel == null || robotLabel.Data == null)
-                    BH.Engine.Reflection.Compute.RecordWarning("Failed to read label '" + robotLabelName);
+                    BH.Engine.Base.Compute.RecordWarning("Failed to read label '" + robotLabelName);
                 else
                 {
                     IBHoMObject obj = null;
@@ -73,7 +73,7 @@ namespace BH.Adapter.Robot
 
                             if (secData == null)
                             {
-                                BH.Engine.Reflection.Compute.RecordWarning($"Failed to read section with name {robotLabelName}");
+                                BH.Engine.Base.Compute.RecordWarning($"Failed to read section with name {robotLabelName}");
                                 continue;
                             }
 

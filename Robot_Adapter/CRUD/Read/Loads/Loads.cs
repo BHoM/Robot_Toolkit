@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel;
-using BH.oM.Reflection.Attributes;
+using BH.oM.Base.Attributes;
 using BH.oM.Structure.Elements;
 using RobotOM;
 using BH.oM.Geometry;
@@ -122,7 +122,7 @@ namespace BH.Adapter.Robot
 
                 if (lCase == null)
                 {
-                    Engine.Reflection.Compute.RecordError($"Failed to extract a loadcase trying to read a {typeof(T).Name}. Load for the failed case is not extracted.");
+                    Engine.Base.Compute.RecordError($"Failed to extract a loadcase trying to read a {typeof(T).Name}. Load for the failed case is not extracted.");
                     continue;
                 }
 
@@ -132,7 +132,7 @@ namespace BH.Adapter.Robot
 
                     if (sCase == null)
                     {
-                        Engine.Reflection.Compute.RecordError($"Failed to extract a loadcase trying to read a {typeof(T).Name}. Load for the failed case is not extracted.");
+                        Engine.Base.Compute.RecordError($"Failed to extract a loadcase trying to read a {typeof(T).Name}. Load for the failed case is not extracted.");
                         continue;
                     }
 
@@ -157,14 +157,14 @@ namespace BH.Adapter.Robot
                                 }
                                 else
                                 {
-                                    Engine.Reflection.Compute.RecordError($"Failed to convert a {typeof(T).Name} for for the loadcase {sCase.Name}.");
+                                    Engine.Base.Compute.RecordError($"Failed to convert a {typeof(T).Name} for for the loadcase {sCase.Name}.");
                                 }
                             }
                         }
                     }
                     else
                     {
-                        Engine.Reflection.Compute.RecordError($"Failed to extract a loadcase named {sCase.Name} trying to read a {typeof(T).Name}. Load for the failed case is not extracted.");
+                        Engine.Base.Compute.RecordError($"Failed to extract a loadcase named {sCase.Name} trying to read a {typeof(T).Name}. Load for the failed case is not extracted.");
                     }
                 }
             }
@@ -190,13 +190,13 @@ namespace BH.Adapter.Robot
                     if (objects.ContainsKey(elementIds[k]))
                         loadObjects.Add(objects[elementIds[k]]);
                     else
-                        Engine.Reflection.Compute.RecordWarning($"Failed to find a {typeof(T).Name} to apply to a Load being read.");
+                        Engine.Base.Compute.RecordWarning($"Failed to find a {typeof(T).Name} to apply to a Load being read.");
                 }
                 return loadObjects;
             }
             catch (Exception)
             {
-                Engine.Reflection.Compute.RecordWarning($"Failed extract obejcts of type {typeof(T).Name} to apply to a Load being read.");
+                Engine.Base.Compute.RecordWarning($"Failed extract obejcts of type {typeof(T).Name} to apply to a Load being read.");
                 return new List<T>();
             }
         }

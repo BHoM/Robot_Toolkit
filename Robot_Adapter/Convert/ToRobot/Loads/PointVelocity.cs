@@ -40,13 +40,13 @@ namespace BH.Adapter.Robot
 
             if (load.TranslationalVelocity.Length() == 0)
             {
-                Engine.Reflection.Compute.RecordWarning("Zero point velocities are not pushed to Robot");
+                Engine.Base.Compute.RecordWarning("Zero point velocities are not pushed to Robot");
                 return;
             }
 
             if (load.RotationalVelocity.Length() != 0)
             {
-                Engine.Reflection.Compute.RecordError("Rotational velocities are not yet supported in the Robot Adapter.");
+                Engine.Base.Compute.RecordError("Rotational velocities are not yet supported in the Robot Adapter.");
                 return;
             }
 

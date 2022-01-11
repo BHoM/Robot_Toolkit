@@ -66,7 +66,7 @@ namespace BH.Adapter.Robot
                             contour.Add(arcSegment);
                     }
                     else
-                        BH.Engine.Reflection.Compute.RecordError("Only line, arc and circle curve geometry is supported for contours in Robot");
+                        BH.Engine.Base.Compute.RecordError("Only line, arc and circle curve geometry is supported for contours in Robot");
                 }
                 try
                 {
@@ -82,7 +82,7 @@ namespace BH.Adapter.Robot
                         message += "\nInnerException: " + e.InnerException.Message;
                     }
 
-                    Engine.Reflection.Compute.RecordError(message);
+                    Engine.Base.Compute.RecordError(message);
                     return null;
                 }
 

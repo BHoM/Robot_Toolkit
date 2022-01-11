@@ -37,7 +37,7 @@ namespace BH.Adapter.Robot
         {
             Type type = section.GetType();
             //Check the material is not null
-            if(RobotAdapter.CheckNotNull(section.Material, oM.Reflection.Debugging.EventType.Warning, type))
+            if(RobotAdapter.CheckNotNull(section.Material, oM.Base.Debugging.EventType.Warning, type))
                 secData.MaterialName = section.Material.DescriptionOrName(); //Set the material to the section
 
             ToRobot(section as dynamic, secData);
@@ -65,7 +65,7 @@ namespace BH.Adapter.Robot
 
         public static void ToRobot(this ISectionProperty section, IRobotBarSectionData secData)
         {
-            Engine.Reflection.Compute.RecordWarning("Section of type " + section.GetType().Name + " is not yet supported in the Robot adapter. Section with name " + secData.Name + " will not have any properties set");
+            Engine.Base.Compute.RecordWarning("Section of type " + section.GetType().Name + " is not yet supported in the Robot adapter. Section with name " + secData.Name + " will not have any properties set");
         }
         
         /***************************************************/

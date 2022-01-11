@@ -79,7 +79,7 @@ namespace BH.Adapter.Robot
                 {
                     message += " Section has been returned as an empty explicit section";
                 }
-                Engine.Reflection.Compute.RecordWarning(message);
+                Engine.Base.Compute.RecordWarning(message);
 
                 prop = exp;
             }

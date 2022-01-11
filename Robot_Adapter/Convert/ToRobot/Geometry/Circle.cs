@@ -36,8 +36,8 @@ namespace BH.Adapter.Robot
 
         public static RobotGeoCircle ToRobot(Circle circle, RobotApplication robotApplication)
         {
-            if (!RobotAdapter.CheckNotNull(circle.Centre, oM.Reflection.Debugging.EventType.Error, typeof(Circle)) ||
-                !RobotAdapter.CheckNotNull(circle.Normal, oM.Reflection.Debugging.EventType.Error, typeof(Circle)))
+            if (!RobotAdapter.CheckNotNull(circle.Centre, oM.Base.Debugging.EventType.Error, typeof(Circle)) ||
+                !RobotAdapter.CheckNotNull(circle.Normal, oM.Base.Debugging.EventType.Error, typeof(Circle)))
                 return null;
 
             RobotGeoCircle robotCircle = robotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_CIRCLE);

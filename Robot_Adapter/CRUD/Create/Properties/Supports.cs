@@ -45,7 +45,7 @@ namespace BH.Adapter.Robot
             List<Constraint6DOF> constraintsToUpdate = new List<Constraint6DOF>();
             foreach (Constraint6DOF constraint in constraints)
             {
-                if (CheckNotNull(constraint, oM.Reflection.Debugging.EventType.Warning))
+                if (CheckNotNull(constraint, oM.Base.Debugging.EventType.Warning))
                 {
                     Convert.ToRobot(robotLabel.Data, constraint);
                     robotLabelServer.StoreWithName(robotLabel, constraint.DescriptionOrName());

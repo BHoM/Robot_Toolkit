@@ -49,7 +49,7 @@ namespace BH.Adapter.Robot
 
                 if (t2 != 0 || t2 != 0 || t3 != 0 || g1 != 0 || g2 != 0 || g3 != 0)
                 {
-                    Engine.Reflection.Compute.RecordWarning("The robot adapter currently only supports uniform temprature loads with no gradients. Area temprature load not pulled!");
+                    Engine.Base.Compute.RecordWarning("The robot adapter currently only supports uniform temprature loads with no gradients. Area temprature load not pulled!");
                     return null;
                 }
 

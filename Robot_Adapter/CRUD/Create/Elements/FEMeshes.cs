@@ -45,12 +45,12 @@ namespace BH.Adapter.Robot
             int fMeshFaceIdx = m_RobotApplication.Project.Structure.FiniteElems.FreeNumber;
             foreach (FEMesh fEMesh in fEMeshes)
             {
-                if (!CheckNotNull(fEMesh) || !CheckNotNull(fEMesh.Faces, oM.Reflection.Debugging.EventType.Error, typeof(FEMesh)))
+                if (!CheckNotNull(fEMesh) || !CheckNotNull(fEMesh.Faces, oM.Base.Debugging.EventType.Error, typeof(FEMesh)))
                     continue;
 
                 if (fEMesh.Faces.Count == 0)
                 {
-                    Engine.Reflection.Compute.RecordWarning("Meshes with no faces are not pushed to Robot!");
+                    Engine.Base.Compute.RecordWarning("Meshes with no faces are not pushed to Robot!");
                     continue;
                 }
                 string faceList = "";
@@ -63,13 +63,13 @@ namespace BH.Adapter.Robot
                 {
                     FEMeshFace fMeshFace = fEMesh.Faces[i];
 
-                    if (!CheckNotNull(fMeshFace, oM.Reflection.Debugging.EventType.Error, typeof(FEMesh)))
+                    if (!CheckNotNull(fMeshFace, oM.Base.Debugging.EventType.Error, typeof(FEMesh)))
                         continue;
 
 
                     if (fMeshFace.NodeListIndices.Count < 3 || fMeshFace.NodeListIndices.Count > 4)
                     {
-                        Engine.Reflection.Compute.RecordError("The Robot adapter can only handle mesh faces with three or four nodes. Face with more indecies not pushed to Robot.");
+                        Engine.Base.Compute.RecordError("The Robot adapter can only handle mesh faces with three or four nodes. Face with more indecies not pushed to Robot.");
                         continue;
                     }
 
@@ -83,14 +83,14 @@ namespace BH.Adapter.Robot
                         if (fMeshFace.NodeListIndices[j] >= fEMesh.Nodes.Count)
                         {
                             //Index is out of bounds
-                            Engine.Reflection.Compute.RecordError("The node indecies on one of the FEMeshFaces of an FEMesh does not exist in the Node list of the parent FEMesh.");
+                            Engine.Base.Compute.RecordError("The node indecies on one of the FEMeshFaces of an FEMesh does not exist in the Node list of the parent FEMesh.");
                             createNodesSuccess = false;
                             break;
                         }
                         Node node = fEMesh.Nodes[fMeshFace.NodeListIndices[j]];
                         int nodeId;
                         //Checks that the node is not null and has AdapterId assigned
-                        if (CheckInputObjectAndExtractAdapterIdInt(node, out nodeId, oM.Reflection.Debugging.EventType.Error, typeof(FEMesh)))
+                        if (CheckInputObjectAndExtractAdapterIdInt(node, out nodeId, oM.Base.Debugging.EventType.Error, typeof(FEMesh)))
                         {
                             ptarray.Set(j + 1, nodeId);
                         }
@@ -157,12 +157,12 @@ namespace BH.Adapter.Robot
                         }
                         else
                         {
-                            Engine.Reflection.Compute.RecordWarning("Local orientions of the pushed FEMesh varies across the faces. Could not set local orientations to Robot.");
+                            Engine.Base.Compute.RecordWarning("Local orientions of the pushed FEMesh varies across the faces. Could not set local orientations to Robot.");
                         }
                     }
                     else
                     {
-                        Engine.Reflection.Compute.RecordWarning("Could not extract local orientations of a FEMesh. Could not set local orientations to Robot.");
+                        Engine.Base.Compute.RecordWarning("Could not extract local orientations of a FEMesh. Could not set local orientations to Robot.");
                     }
                 }
                 catch (Exception e)
@@ -174,11 +174,11 @@ namespace BH.Adapter.Robot
                         message += "\nInnerException: " + e.InnerException.Message;
                     }
 
-                    Engine.Reflection.Compute.RecordWarning(message);
+                    Engine.Base.Compute.RecordWarning(message);
                 }
 
 
-                if (CheckNotNull(fEMesh.Property, oM.Reflection.Debugging.EventType.Warning, typeof(FEMesh)))
+                if (CheckNotNull(fEMesh.Property, oM.Base.Debugging.EventType.Warning, typeof(FEMesh)))
                 {
                     if (fEMesh.Property is LoadingPanelProperty)
                         mesh.SetLabel(IRobotLabelType.I_LT_CLADDING, fEMesh.Property.DescriptionOrName());

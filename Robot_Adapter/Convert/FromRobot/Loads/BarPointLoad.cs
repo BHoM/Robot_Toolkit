@@ -51,7 +51,7 @@ namespace BH.Adapter.Robot
 
                 if (rel != 0)
                 {
-                    Engine.Reflection.Compute.RecordWarning("Currently no support for BarPointLoads with relative distance from ends");
+                    Engine.Base.Compute.RecordWarning("Currently no support for BarPointLoads with relative distance from ends");
                     return null;
                 }
 

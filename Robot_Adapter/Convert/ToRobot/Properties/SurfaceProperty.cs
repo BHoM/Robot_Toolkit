@@ -53,7 +53,7 @@ namespace BH.Adapter.Robot
                 RobotThicknessOrthoData orthoData = null;
                 RobotThicknessData thicknessData = rLabel.Data;
 
-                if (RobotAdapter.CheckNotNull(property.Material, oM.Reflection.Debugging.EventType.Warning, propType))
+                if (RobotAdapter.CheckNotNull(property.Material, oM.Base.Debugging.EventType.Warning, propType))
                     thicknessData.MaterialName = property.Material.Name;
 
                 if (property is ConstantThickness)
@@ -77,7 +77,7 @@ namespace BH.Adapter.Robot
                         orthoData.B1 = modifier.Weight;
 
                         if (modifier.Mass != 1)
-                            Engine.Reflection.Compute.RecordNote("Can't apply modifier for mass for SurfaceProperties via the Robot API.");
+                            Engine.Base.Compute.RecordNote("Can't apply modifier for mass for SurfaceProperties via the Robot API.");
                     }
                     else
                     {
@@ -138,7 +138,7 @@ namespace BH.Adapter.Robot
             else
             {
                 name = "Two-way";
-                Engine.Reflection.Compute.RecordWarning("Panel support condintion not supported in Robot for property named '" + property.Name + "'. The cladding will be assumed Two-way.");
+                Engine.Base.Compute.RecordWarning("Panel support condintion not supported in Robot for property named '" + property.Name + "'. The cladding will be assumed Two-way.");
             }
             return name;
         }

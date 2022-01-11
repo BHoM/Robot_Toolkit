@@ -25,11 +25,11 @@ using BH.oM.Base;
 using BH.oM.Structure.Loads;
 using BH.oM.Structure.Elements;
 using BH.oM.Geometry;
-using BH.oM.Reflection.Attributes;
+using BH.oM.Base.Attributes;
 
 namespace BH.oM.Adapters.Robot
 {
-    [Deprecated("3.0", "Superseded by BH.oM.Structure.Loads.GeometricalLineLoad")]
+    [Replaced("3.0", "Superseded by BH.oM.Structure.Loads.GeometricalLineLoad")]
     public class GeometricalLineLoad : BHoMObject, ILoad
     {
         /***************************************************/

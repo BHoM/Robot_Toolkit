@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BH.oM.Reflection.Attributes;
+using BH.oM.Base.Attributes;
 
 namespace BH.Engine.Adapters.Robot
 {
@@ -41,7 +41,7 @@ namespace BH.Engine.Adapters.Robot
 
             foreach (var item in group.Where(x => x.Count() > 1))
             {
-                Engine.Reflection.Compute.RecordWarning("Duplicate label name found for the " + typeof(T).ToString() + " with the label name " + item.Key + ". First of the extracted values will be used");
+                Engine.Base.Compute.RecordWarning("Duplicate label name found for the " + typeof(T).ToString() + " with the label name " + item.Key + ". First of the extracted values will be used");
             }
 
             return group.ToDictionary(x => x.Key, y => y.First());

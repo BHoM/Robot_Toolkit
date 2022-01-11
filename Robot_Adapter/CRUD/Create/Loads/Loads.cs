@@ -46,7 +46,7 @@ namespace BH.Adapter.Robot
 
             foreach (ILoad load in loads)
             {
-                if (!CheckNotNull(load.Loadcase, oM.Reflection.Debugging.EventType.Error, load.GetType()))
+                if (!CheckNotNull(load.Loadcase, oM.Base.Debugging.EventType.Error, load.GetType()))
                     continue;
 
                 IRobotCase rCase = caseServer.Get(load.Loadcase.Number);
@@ -72,7 +72,7 @@ namespace BH.Adapter.Robot
                 return false;
 
             Type type = load.GetType();
-            if (load.Objects.Elements.Any(x => !CheckNotNull(x, oM.Reflection.Debugging.EventType.Error, type)))
+            if (load.Objects.Elements.Any(x => !CheckNotNull(x, oM.Base.Debugging.EventType.Error, type)))
                 return false;
 
             if (load.HasAssignedObjectIds(AdapterIdFragmentType))

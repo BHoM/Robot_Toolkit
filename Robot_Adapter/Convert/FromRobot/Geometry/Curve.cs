@@ -57,7 +57,7 @@ namespace BH.Adapter.Robot
                     catch (System.Exception)
                     {
                         segment = new Polyline { ControlPoints = new List<Point> { arcSeg.P1.FromRobot(), arcSeg.P2.FromRobot(), segment2.P1.FromRobot() } };
-                        Engine.Reflection.Compute.RecordWarning("Failed to extract arc segment of polycurve as arc. Polyline segment returned in its place.");
+                        Engine.Base.Compute.RecordWarning("Failed to extract arc segment of polycurve as arc. Polyline segment returned in its place.");
                     }
                     polycurve.Curves.Add(segment);
                 }
@@ -116,7 +116,7 @@ namespace BH.Adapter.Robot
             if (geoObject == null)
                 return null;
 
-            Engine.Reflection.Compute.RecordError($"Can not convert object of typ {geoObject.GetType().Name} to a Curve.");
+            Engine.Base.Compute.RecordError($"Can not convert object of typ {geoObject.GetType().Name} to a Curve.");
             return null;
         }
 

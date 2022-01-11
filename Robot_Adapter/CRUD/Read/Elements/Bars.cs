@@ -81,7 +81,7 @@ namespace BH.Adapter.Robot
 
                 if (robotBar == null)
                 {
-                    Engine.Reflection.Compute.RecordError("At least one Bar failed to get extracted from the Robot API.");
+                    Engine.Base.Compute.RecordError("At least one Bar failed to get extracted from the Robot API.");
                     continue;
                 }
 
@@ -98,7 +98,7 @@ namespace BH.Adapter.Robot
 
                     if (bhomBar == null)
                     {
-                        Engine.Reflection.Compute.RecordError($"Failed convert Bar with number {robotBar.Number}. This bar in not extracted from the model.");
+                        Engine.Base.Compute.RecordError($"Failed convert Bar with number {robotBar.Number}. This bar in not extracted from the model.");
                         continue;
                     }
 
@@ -126,7 +126,7 @@ namespace BH.Adapter.Robot
 
         private void SuperBarWarning()
         {
-            Engine.Reflection.Compute.RecordWarning("Model contains 'Super Bars' which are not extracted. Reading Bars only extracts the individual bar segments.");
+            Engine.Base.Compute.RecordWarning("Model contains 'Super Bars' which are not extracted. Reading Bars only extracts the individual bar segments.");
         }
 
         /***************************************************/
@@ -227,11 +227,11 @@ namespace BH.Adapter.Robot
 
                     Node startNode = null;
                     if (!bhomNodes.TryGetValue(nod1, out startNode))
-                        Engine.Reflection.Compute.RecordError($"Failed to extract the start node of the Bar with number {bar_num}.");
+                        Engine.Base.Compute.RecordError($"Failed to extract the start node of the Bar with number {bar_num}.");
 
                     Node endNode = null;
                     if (!bhomNodes.TryGetValue(nod2, out endNode))
-                        Engine.Reflection.Compute.RecordError($"Failed to extract the end node of the Bar with number {bar_num}.");
+                        Engine.Base.Compute.RecordError($"Failed to extract the end node of the Bar with number {bar_num}.");
 
                     Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode };
 

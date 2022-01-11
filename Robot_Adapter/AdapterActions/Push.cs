@@ -43,7 +43,7 @@ namespace BH.Adapter.Robot
         {
             if (m_RobotApplication == null)
             {
-                Engine.Reflection.Compute.RecordWarning("The link to the Robot application is not established. Please make sure the RobotAdapter is activated!");
+                Engine.Base.Compute.RecordWarning("The link to the Robot application is not established. Please make sure the RobotAdapter is activated!");
                 return new List<object>();
             }
 

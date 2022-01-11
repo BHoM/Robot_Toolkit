@@ -42,7 +42,7 @@ namespace BH.Adapter.Robot
 
                 //Check primary node and try to extract Id
                 int primaryId;
-                if (!CheckInputObjectAndExtractAdapterIdInt(rLink.PrimaryNode, out primaryId, oM.Reflection.Debugging.EventType.Error, typeof(RigidLink)))
+                if (!CheckInputObjectAndExtractAdapterIdInt(rLink.PrimaryNode, out primaryId, oM.Base.Debugging.EventType.Error, typeof(RigidLink)))
                     continue;
 
                 List<int> secondaryIds = new List<int>();
@@ -52,7 +52,7 @@ namespace BH.Adapter.Robot
                 {
                     //Loop through and check that secondary ids can be extracted from rigid links
                     int nodeId;
-                    if (CheckInputObjectAndExtractAdapterIdInt(node, out nodeId, oM.Reflection.Debugging.EventType.Error, typeof(RigidLink)))
+                    if (CheckInputObjectAndExtractAdapterIdInt(node, out nodeId, oM.Base.Debugging.EventType.Error, typeof(RigidLink)))
                     {
                         secondaryIds.Add(nodeId);
                     }
@@ -71,7 +71,7 @@ namespace BH.Adapter.Robot
 
                 string contraintName = "";
 
-                if (CheckNotNull(rLink.Constraint, oM.Reflection.Debugging.EventType.Warning, typeof(RigidLink)))
+                if (CheckNotNull(rLink.Constraint, oM.Base.Debugging.EventType.Warning, typeof(RigidLink)))
                     contraintName = rLink.Constraint.Name;
 
                 m_RobotApplication.Project.Structure.Nodes.RigidLinks.Set(primaryId, secondaryNodes, contraintName);

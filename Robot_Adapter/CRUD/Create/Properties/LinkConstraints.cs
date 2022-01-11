@@ -42,7 +42,7 @@ namespace BH.Adapter.Robot
 
             foreach (LinkConstraint lConst in linkConstraints)
             {
-                if (CheckNotNull(lConst, oM.Reflection.Debugging.EventType.Warning))
+                if (CheckNotNull(lConst, oM.Base.Debugging.EventType.Warning))
                 {
                     rLinkData.UX = lConst.XtoX;
                     rLinkData.UY = lConst.YtoY;

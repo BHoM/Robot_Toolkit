@@ -38,7 +38,7 @@ namespace BH.Adapter.Robot
             foreach (ISectionProperty p in secProp)
             {
                 //Check property is not null
-                if (!CheckNotNull(p, oM.Reflection.Debugging.EventType.Warning))
+                if (!CheckNotNull(p, oM.Base.Debugging.EventType.Warning))
                     continue;
 
                 IRobotLabel label;

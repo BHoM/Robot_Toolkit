@@ -24,9 +24,8 @@ using System;
 using BH.oM.Adapters.Robot;
 using BH.oM.Structure.Loads;
 using BH.oM.Geometry;
-using BH.oM.Reflection.Attributes;
+using BH.oM.Base.Attributes;
 using BH.Engine.Geometry;
-using BH.Engine.Reflection;
 
 namespace BH.Engine.Adapters.Robot
 {
@@ -36,7 +35,7 @@ namespace BH.Engine.Adapters.Robot
         /****           Public Constructors             ****/
         /***************************************************/
 
-        [Deprecated("3.0", "Superseded by BH.Engine.Structure.Loads.Create.GeometricalLineLoad()")]
+        [Replaced("3.0", "Superseded by BH.Engine.Structure.Loads.Create.GeometricalLineLoad()")]
         public static oM.Adapters.Robot.GeometricalLineLoad GeometricalLineLoad(Line location, Loadcase loadcase, Vector forceAtStart, Vector forceAtEnd, Vector momentAtStart, Vector momentAtEnd, string name = "")
         {
             return new oM.Adapters.Robot.GeometricalLineLoad
@@ -53,7 +52,7 @@ namespace BH.Engine.Adapters.Robot
 
         /***************************************************/
 
-        [Deprecated("3.0", "Superseded by BH.Engine.Structure.Loads.Create.GeometricalLineLoad()")]
+        [Replaced("3.0", "Superseded by BH.Engine.Structure.Loads.Create.GeometricalLineLoad()")]
         public static oM.Adapters.Robot.GeometricalLineLoad GeometricalLineLoad(Line location, Loadcase loadcase, Vector force, string name = "")
         {
             return new oM.Adapters.Robot.GeometricalLineLoad

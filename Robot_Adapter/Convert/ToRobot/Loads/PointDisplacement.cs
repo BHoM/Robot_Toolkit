@@ -40,7 +40,7 @@ namespace BH.Adapter.Robot
 
             if (load.Translation.Length() == 0 && load.Rotation.Length() == 0)
             {
-                Engine.Reflection.Compute.RecordWarning("Zero point displacements are not pushed to Robot");
+                Engine.Base.Compute.RecordWarning("Zero point displacements are not pushed to Robot");
                 return;
             }
             IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_NODE_DISPLACEMENT);

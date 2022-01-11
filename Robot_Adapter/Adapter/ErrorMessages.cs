@@ -21,12 +21,11 @@
  */
 
 using System;
-using BH.oM.Reflection.Debugging;
+using BH.oM.Base.Debugging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BH.Engine.Reflection;
 
 namespace BH.Adapter.Robot
 {
@@ -45,7 +44,7 @@ namespace BH.Adapter.Robot
             else
                 message = $"An input object of type {type.Name} is null and could not be pushed.";
 
-            Compute.RecordEvent(message, errorLevel);
+            Engine.Base.Compute.RecordEvent(message, errorLevel);
         }
 
         /***************************************************/
@@ -65,7 +64,7 @@ namespace BH.Adapter.Robot
             else
                 message += $" has no ID assigned and could not be updated. For this operation to work, try using a {objectType} that has first been pulled from Robot";
 
-            Compute.RecordEvent(message, errorLevel);
+            Engine.Base.Compute.RecordEvent(message, errorLevel);
         }
 
         /***************************************************/
@@ -82,8 +81,8 @@ namespace BH.Adapter.Robot
                 message += "of type " + owningType.Name;
 
             message += " is null and could not be pushed. Please check the input data to ensure everything has been correctly assigned.";
-    
-            Compute.RecordEvent(message, errorLevel);
+
+            Engine.Base.Compute.RecordEvent(message, errorLevel);
         }
 
         /***************************************************/
@@ -108,7 +107,7 @@ namespace BH.Adapter.Robot
                 message += " has no ID assigned and could not be pushed.";
             else
                 message += $" has no ID assigned and could not be updated. For this operation to work, try using a {objectType} that has first been pulled from Robot";
-            Compute.RecordEvent(message, errorLevel);
+            Engine.Base.Compute.RecordEvent(message, errorLevel);
         }
 
         /***************************************************/
@@ -128,7 +127,7 @@ namespace BH.Adapter.Robot
             if (isUpdate)
                 message += $" For this operation to work, try using a {objectType} that has first been pulled from Robot";
 
-            Compute.RecordEvent(message, errorLevel);
+            Engine.Base.Compute.RecordEvent(message, errorLevel);
         }
 
         /***************************************************/
@@ -153,7 +152,7 @@ namespace BH.Adapter.Robot
                 message += " does not have a ID of the correct type assigned and could not be pushed.";
             else
                 message += $" does not have a ID of the correct type assigned and could not be updated. For this operation to work, try using a {objectType} that has first been pulled from Robot";
-            Compute.RecordEvent(message, errorLevel);
+            Engine.Base.Compute.RecordEvent(message, errorLevel);
         }
 
         /***************************************************/

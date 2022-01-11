@@ -37,7 +37,7 @@ namespace BH.Adapter.Robot
         {
             Type type = section.GetType();
 
-            if (!RobotAdapter.CheckNotNull(section.SectionProfile, oM.Reflection.Debugging.EventType.Warning, type) ||
+            if (!RobotAdapter.CheckNotNull(section.SectionProfile, oM.Base.Debugging.EventType.Warning, type) ||
                 !ToRobotGeometricalSection(section.SectionProfile as dynamic, secData))
             {
                 //If method returns false, no profile based data has been set. Fallback to explicitly setting properties.
@@ -262,7 +262,7 @@ namespace BH.Adapter.Robot
 
         private static bool ToRobotGeometricalSection(this IProfile section, IRobotBarSectionData sectionData)
         {
-            BH.Engine.Reflection.Compute.RecordWarning("Profile of type " + section.GetType().Name + " is not yet fully supported for Steel sections. Section with name " + sectionData.Name + " set as explicit section");
+            BH.Engine.Base.Compute.RecordWarning("Profile of type " + section.GetType().Name + " is not yet fully supported for Steel sections. Section with name " + sectionData.Name + " set as explicit section");
             return false;
         }
 

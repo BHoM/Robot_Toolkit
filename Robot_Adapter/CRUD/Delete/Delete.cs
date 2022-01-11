@@ -26,7 +26,6 @@ using System.Linq;
 using BH.oM.Structure.Elements;
 using RobotOM;
 using BH.oM.Structure.Design;
-using BH.Engine.Reflection;
 using BH.oM.Adapter;
 
 namespace BH.Adapter.Robot
@@ -164,7 +163,7 @@ namespace BH.Adapter.Robot
             }            
             m_RobotApplication.Project.Structure.Cases.DeleteMany(caseSel);
             m_tags[typeof(BH.oM.Structure.Loads.Loadcase)] = caseTags;
-            if(ids == null || ids.Count() != 0) BH.Engine.Reflection.Compute.RecordWarning("Note that when all cases are deleted in Robot, combinations are deleted also");
+            if(ids == null || ids.Count() != 0) BH.Engine.Base.Compute.RecordWarning("Note that when all cases are deleted in Robot, combinations are deleted also");
             return sucess;
         }
 

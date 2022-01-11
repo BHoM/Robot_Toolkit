@@ -71,7 +71,7 @@ namespace BH.Adapter.Robot
                 }
                 if (thicknessProperty == null)
                 {
-                    BH.Engine.Reflection.Compute.RecordEvent("Failed to convert/create ConstantThickness property for panel " + robotPanel.Number.ToString(), oM.Reflection.Debugging.EventType.Warning);
+                    BH.Engine.Base.Compute.RecordEvent("Failed to convert/create ConstantThickness property for panel " + robotPanel.Number.ToString(), oM.Base.Debugging.EventType.Warning);
                     return null;
                 }
                 else
@@ -82,7 +82,7 @@ namespace BH.Adapter.Robot
             }
             catch (System.Exception)
             {
-                Engine.Reflection.Compute.RecordWarning("Failed to extract a SurfaceProperty from a Panel");
+                Engine.Base.Compute.RecordWarning("Failed to extract a SurfaceProperty from a Panel");
                 return null;
             }
         }

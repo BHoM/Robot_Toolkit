@@ -67,7 +67,7 @@ namespace BH.Adapter.Robot
                         tempOpening = BH.Engine.Structure.Create.Opening(openingOutline);
                     else
                     {
-                        Engine.Reflection.Compute.RecordError($"Failed to extract the outline geometry for Opening with id {rOpening.Number}.");
+                        Engine.Base.Compute.RecordError($"Failed to extract the outline geometry for Opening with id {rOpening.Number}.");
                         tempOpening = new Opening();
                     }
                 }

@@ -37,7 +37,7 @@ namespace BH.Adapter.Robot
         public static void ToRobot(this ConcreteSection section, IRobotBarSectionData secData)
         {
             
-            if (!RobotAdapter.CheckNotNull(section.SectionProfile, oM.Reflection.Debugging.EventType.Warning, typeof(ConcreteSection)) ||
+            if (!RobotAdapter.CheckNotNull(section.SectionProfile, oM.Base.Debugging.EventType.Warning, typeof(ConcreteSection)) ||
                 !ToRobotConcreteSection(section.SectionProfile as dynamic, secData))
             {
                 //If method returns false, no profile based data has been set. Fallback to explicitly setting properties.
@@ -142,7 +142,7 @@ namespace BH.Adapter.Robot
 
         private static bool ToRobotConcreteSection(this IProfile section, IRobotBarSectionData sectionData)
         {
-            BH.Engine.Reflection.Compute.RecordWarning("Profile of type " + section.GetType().Name + " is not yet fully supported for Concrete sections. Section with name " + sectionData.Name + " set as explicit section");
+            BH.Engine.Base.Compute.RecordWarning("Profile of type " + section.GetType().Name + " is not yet fully supported for Concrete sections. Section with name " + sectionData.Name + " set as explicit section");
             return false;
         }
 

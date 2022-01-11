@@ -38,11 +38,11 @@ namespace BH.Adapter.Robot
         {
             Type arcType = typeof(Arc);
             //Check inner properties are not null
-            if (!RobotAdapter.CheckNotNull(arc.CoordinateSystem, oM.Reflection.Debugging.EventType.Error, arcType) ||
-                !RobotAdapter.CheckNotNull(arc.CoordinateSystem.Origin, oM.Reflection.Debugging.EventType.Error, arcType) ||
-                !RobotAdapter.CheckNotNull(arc.CoordinateSystem.X, oM.Reflection.Debugging.EventType.Error, arcType) ||
-                !RobotAdapter.CheckNotNull(arc.CoordinateSystem.Y, oM.Reflection.Debugging.EventType.Error, arcType) ||
-                !RobotAdapter.CheckNotNull(arc.CoordinateSystem.Z, oM.Reflection.Debugging.EventType.Error, arcType))
+            if (!RobotAdapter.CheckNotNull(arc.CoordinateSystem, oM.Base.Debugging.EventType.Error, arcType) ||
+                !RobotAdapter.CheckNotNull(arc.CoordinateSystem.Origin, oM.Base.Debugging.EventType.Error, arcType) ||
+                !RobotAdapter.CheckNotNull(arc.CoordinateSystem.X, oM.Base.Debugging.EventType.Error, arcType) ||
+                !RobotAdapter.CheckNotNull(arc.CoordinateSystem.Y, oM.Base.Debugging.EventType.Error, arcType) ||
+                !RobotAdapter.CheckNotNull(arc.CoordinateSystem.Z, oM.Base.Debugging.EventType.Error, arcType))
                 return null;
 
             RobotGeoSegmentArc robotArc = robotApplication.CmpntFactory.Create(IRobotComponentType.I_CT_GEO_SEGMENT_ARC);

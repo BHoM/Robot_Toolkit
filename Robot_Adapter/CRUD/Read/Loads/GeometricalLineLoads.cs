@@ -112,7 +112,7 @@ namespace BH.Adapter.Robot
                         message += "\nInnerException: " + e.InnerException.Message;
                     }
 
-                    Engine.Reflection.Compute.RecordError(message);
+                    Engine.Base.Compute.RecordError(message);
                 }
             }
             return bhomLoads;

@@ -34,7 +34,7 @@ namespace BH.Adapter.Robot
         public static void ToRobot(ILoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
         {
             if(load != null)
-                BH.Engine.Reflection.Compute.RecordError("Load of type '" + load.GetType() + "' not supported");
+                BH.Engine.Base.Compute.RecordError("Load of type '" + load.GetType() + "' not supported");
         }
 
         /***************************************************/

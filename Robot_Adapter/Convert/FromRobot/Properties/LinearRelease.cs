@@ -35,7 +35,7 @@ namespace BH.Adapter.Robot
         {
             if (robotLabel == null || robotLinearReleaseData == null)
             {
-                Engine.Reflection.Compute.RecordWarning("Failed to extract at least one Constraint4DOF from Robot.");
+                Engine.Base.Compute.RecordWarning("Failed to extract at least one Constraint4DOF from Robot.");
                 return null;
             }
 

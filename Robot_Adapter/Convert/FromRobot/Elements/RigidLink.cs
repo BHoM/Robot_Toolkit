@@ -46,7 +46,7 @@ namespace BH.Adapter.Robot
             if (bhomNodes.TryGetValue(robotRigidLink.Master, out primaryNode))
                 bhomRigidLink.PrimaryNode = primaryNode;
             else
-                Engine.Reflection.Compute.RecordError("Failed to extract the PrimaryNode for at least one RigidLink.");
+                Engine.Base.Compute.RecordError("Failed to extract the PrimaryNode for at least one RigidLink.");
 
             List<int> secondaryIds = FromRobotSelectionString(robotRigidLink.Slaves);
 
@@ -57,7 +57,7 @@ namespace BH.Adapter.Robot
                 if (bhomNodes.TryGetValue(secondaryId, out secondaryNode))
                     bhomRigidLink.SecondaryNodes.Add(secondaryNode);
                 else
-                    Engine.Reflection.Compute.RecordError("Failed to extract at least one SecondaryNode for at least one RigidLink.");
+                    Engine.Base.Compute.RecordError("Failed to extract at least one SecondaryNode for at least one RigidLink.");
             }
 
             LinkConstraint constraint;

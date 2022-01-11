@@ -49,7 +49,7 @@ namespace BH.Adapter.Robot
 
                 if (memberDef == null)
                 {
-                    Engine.Reflection.Compute.RecordWarning("Failed to extract design properties with label name " + name);
+                    Engine.Base.Compute.RecordWarning("Failed to extract design properties with label name " + name);
                     continue;
                 }
 

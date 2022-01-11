@@ -114,7 +114,7 @@ namespace BH.Adapter.Robot
                         panelNumber = System.Convert.ToInt32(row.GetValue(1252));
                     else
                     {
-                        Engine.Reflection.Compute.RecordError("At least one FEMeshFace could not be extracted from Robot");
+                        Engine.Base.Compute.RecordError("At least one FEMeshFace could not be extracted from Robot");
                         isOk = rowSet.MoveNext();
                         continue;
                     }
@@ -143,7 +143,7 @@ namespace BH.Adapter.Robot
                     }
                     else
                     {
-                        Engine.Reflection.Compute.RecordError($"Failed to extract topological information for at least one FEMeshFace for FEMesh with index {panelNumber}. This face will not be pulled.");
+                        Engine.Base.Compute.RecordError($"Failed to extract topological information for at least one FEMeshFace for FEMesh with index {panelNumber}. This face will not be pulled.");
                         isOk = rowSet.MoveNext();
                         continue;
                     }
@@ -193,11 +193,11 @@ namespace BH.Adapter.Robot
                             mesh.Nodes.Add(node);
                         }
                         else
-                            Engine.Reflection.Compute.RecordError($"Failed to find node with id {nodeId}. FEMesh with id {kvp.Key} might be invalid.");
+                            Engine.Base.Compute.RecordError($"Failed to find node with id {nodeId}. FEMesh with id {kvp.Key} might be invalid.");
                     }
                 }
                 else
-                    Engine.Reflection.Compute.RecordError($"Failed to assign nodes to FEMesh with id {kvp.Key}.");
+                    Engine.Base.Compute.RecordError($"Failed to assign nodes to FEMesh with id {kvp.Key}.");
             }
 
 
@@ -247,7 +247,7 @@ namespace BH.Adapter.Robot
                     }
                     else
                     {
-                        Engine.Reflection.Compute.RecordWarning("Local orientations of FEMeshes with varying orientations can not be extracted.");
+                        Engine.Base.Compute.RecordWarning("Local orientations of FEMeshes with varying orientations can not be extracted.");
                     }
                 }
                 catch (System.Exception e)
@@ -259,7 +259,7 @@ namespace BH.Adapter.Robot
                         message += "\nInnerException: " + e.InnerException.Message;
                     }
 
-                    Engine.Reflection.Compute.RecordWarning(message);
+                    Engine.Base.Compute.RecordWarning(message);
                 }
                 
             }

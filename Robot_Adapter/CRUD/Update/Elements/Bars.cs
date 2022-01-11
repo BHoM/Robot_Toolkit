@@ -46,13 +46,13 @@ namespace BH.Adapter.Robot
             {
                 int barId;
 
-                if (!CheckInputObjectAndExtractAdapterIdInt(bar, out barId, oM.Reflection.Debugging.EventType.Error, null, true))
+                if (!CheckInputObjectAndExtractAdapterIdInt(bar, out barId, oM.Base.Debugging.EventType.Error, null, true))
                     continue;
 
                 RobotBar robotBar = robotBarServer.Get(barId) as RobotBar;
                 if (robotBar == null)
                 {
-                    Engine.Reflection.Compute.RecordWarning("Could not find a bar with the Id " + barId.ToString() + " in Robot. Bar could not be updated!");
+                    Engine.Base.Compute.RecordWarning("Could not find a bar with the Id " + barId.ToString() + " in Robot. Bar could not be updated!");
                     continue;
                 }
 
@@ -60,8 +60,8 @@ namespace BH.Adapter.Robot
                 int stNodeId, endNodeId;
 
                 //Check nodes are not null and correctly set up and extract id information
-                if (!CheckInputObjectAndExtractAdapterIdInt(bar.StartNode, out stNodeId, oM.Reflection.Debugging.EventType.Error, typeof(Bar)) ||
-                    !CheckInputObjectAndExtractAdapterIdInt(bar.EndNode, out endNodeId, oM.Reflection.Debugging.EventType.Error, typeof(Bar)))
+                if (!CheckInputObjectAndExtractAdapterIdInt(bar.StartNode, out stNodeId, oM.Base.Debugging.EventType.Error, typeof(Bar)) ||
+                    !CheckInputObjectAndExtractAdapterIdInt(bar.EndNode, out endNodeId, oM.Base.Debugging.EventType.Error, typeof(Bar)))
                     continue;
 
                 robotBar.StartNode = stNodeId;
@@ -71,7 +71,7 @@ namespace BH.Adapter.Robot
                 if (!string.IsNullOrWhiteSpace(bar.Name))
                     robotBar.NameTemplate = bar.Name;
                 
-                if (CheckNotNull(bar.SectionProperty, oM.Reflection.Debugging.EventType.Warning, typeof(Bar)))
+                if (CheckNotNull(bar.SectionProperty, oM.Base.Debugging.EventType.Warning, typeof(Bar)))
                     robotBar.SetSection(bar.SectionProperty.DescriptionOrName(), false);
 
                 robotBar.Gamma = bar.ToRobotOrientationAngle();

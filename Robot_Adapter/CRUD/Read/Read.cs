@@ -51,7 +51,7 @@ namespace BH.Adapter.Robot
         {
             if (type == null)
             {
-                Engine.Reflection.Compute.RecordWarning("No Type was provided. No objects where read.");
+                Engine.Base.Compute.RecordWarning("No Type was provided. No objects where read.");
                 return new List<IBHoMObject>();
             }
 
@@ -116,7 +116,7 @@ namespace BH.Adapter.Robot
             }
             else
             {
-                Engine.Reflection.Compute.RecordWarning($"The provided Type {type.Name} is not supported to pull from RobotToolkit.");
+                Engine.Base.Compute.RecordWarning($"The provided Type {type.Name} is not supported to pull from RobotToolkit.");
             }
 
             return new List<IBHoMObject>();         

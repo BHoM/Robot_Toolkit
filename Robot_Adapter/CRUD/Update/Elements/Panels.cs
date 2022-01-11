@@ -43,13 +43,13 @@ namespace BH.Adapter.Robot
             {
                 int panelId;
 
-                if (!CheckInputObjectAndExtractAdapterIdInt(panel, out panelId, oM.Reflection.Debugging.EventType.Error, null, true))
+                if (!CheckInputObjectAndExtractAdapterIdInt(panel, out panelId, oM.Base.Debugging.EventType.Error, null, true))
                     continue;
 
                 RobotObjObject robotPanel = robotObjectServer.Get(panelId) as RobotObjObject;
                 if (robotPanel == null)
                 {
-                    Engine.Reflection.Compute.RecordWarning("Could not find a panel with the Id " + panelId + " in Robot. Panel could not be updated!");
+                    Engine.Base.Compute.RecordWarning("Could not find a panel with the Id " + panelId + " in Robot. Panel could not be updated!");
                     continue;
                 }
                 robotObjectServer.DeleteMany(robotPanel.GetHostedObjects());
@@ -65,7 +65,7 @@ namespace BH.Adapter.Robot
                 robotPanel.Update();
                 SetRobotPanelEdgeConstraints(robotPanel, panelSubEdges);
 
-                if (CheckNotNull(panel.Property, oM.Reflection.Debugging.EventType.Warning, typeof(Panel)))
+                if (CheckNotNull(panel.Property, oM.Base.Debugging.EventType.Warning, typeof(Panel)))
                 {
                     if (panel.Property is LoadingPanelProperty)
                         robotPanel.SetLabel(IRobotLabelType.I_LT_CLADDING, panel.Property.Name);
@@ -78,7 +78,7 @@ namespace BH.Adapter.Robot
                 robotObjectServer.BeginMultiOperation();
                 foreach (Opening opening in panel.Openings)
                 {
-                    if (!CheckNotNull(opening, oM.Reflection.Debugging.EventType.Warning))
+                    if (!CheckNotNull(opening, oM.Base.Debugging.EventType.Warning))
                         continue;
 
                     List<Edge> openingSubEdges = new List<Edge>();

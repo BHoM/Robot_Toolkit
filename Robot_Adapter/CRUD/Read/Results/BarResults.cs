@@ -48,7 +48,7 @@ namespace BH.Adapter.Robot
         {
             if (request.DivisionType == DivisionType.ExtremeValues)
             {
-                Engine.Reflection.Compute.RecordError("Robot API method extreme values gives unreliable results and runs very slow.\nTo get extreme values out of Robot, change to EvenlyDistributed for division type, increase the division points and use the method AbsoluteMaxForce from the BHoM_Engine");
+                Engine.Base.Compute.RecordError("Robot API method extreme values gives unreliable results and runs very slow.\nTo get extreme values out of Robot, change to EvenlyDistributed for division type, increase the division points and use the method AbsoluteMaxForce from the BHoM_Engine");
                 return new List<BarResult>();
             }
 
@@ -59,7 +59,7 @@ namespace BH.Adapter.Robot
 
             if (results.Count == 0)
             {
-                Engine.Reflection.Compute.RecordError("Unable to extract results of type " + request.ResultType + " from Robot");
+                Engine.Base.Compute.RecordError("Unable to extract results of type " + request.ResultType + " from Robot");
             }
 
             queryParams.ResultIds.SetSize(results.Count);

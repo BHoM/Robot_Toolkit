@@ -22,7 +22,7 @@
 
 using RobotOM;
 using BH.oM.Structure.Elements;
-using BH.oM.Reflection.Attributes;
+using BH.oM.Base.Attributes;
 using System.ComponentModel;
 using BH.oM.Geometry;
 using BH.Engine.Geometry;
@@ -61,7 +61,7 @@ namespace BH.Adapter.Robot
 
             if (bhomBar.StartNode == null || bhomBar.StartNode.Position == null || bhomBar.EndNode == null || bhomBar.EndNode.Position == null)
             {
-                Engine.Reflection.Compute.RecordWarning("At least one of a bars end nodes or end nodes positions are null. Could not check orientation angle convention between Robot and BHoM. BHoM value will be used as is.");
+                Engine.Base.Compute.RecordWarning("At least one of a bars end nodes or end nodes positions are null. Could not check orientation angle convention between Robot and BHoM. BHoM value will be used as is.");
                 return bhomBar.OrientationAngle * 180 / Math.PI;
             }
 
@@ -108,7 +108,7 @@ namespace BH.Adapter.Robot
         {
             if (bar.StartNode == null || bar.StartNode.Position == null || bar.EndNode == null || bar.EndNode.Position == null)
             {
-                Engine.Reflection.Compute.RecordError("At least one of a bars end nodes or end nodes positions are null. Could not calculate verticality.");
+                Engine.Base.Compute.RecordError("At least one of a bars end nodes or end nodes positions are null. Could not calculate verticality.");
                 return false;
             }
 

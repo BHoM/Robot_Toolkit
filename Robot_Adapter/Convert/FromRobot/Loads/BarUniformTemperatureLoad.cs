@@ -44,7 +44,7 @@ namespace BH.Adapter.Robot
 
                 if (ty != 0 || tz != 0)
                 {
-                    Engine.Reflection.Compute.RecordWarning("Temparature loads in Robot with non axial components found. BHoM Temprature loads only support uniform temprature change, only this value will be extracted.");
+                    Engine.Base.Compute.RecordWarning("Temparature loads in Robot with non axial components found. BHoM Temprature loads only support uniform temprature change, only this value will be extracted.");
                 }
 
                 return new BarUniformTemperatureLoad

@@ -38,7 +38,7 @@ namespace BH.Adapter.Robot
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
             foreach (ISurfaceProperty property in properties)
             {
-                if (CheckNotNull(property, oM.Reflection.Debugging.EventType.Warning))
+                if (CheckNotNull(property, oM.Base.Debugging.EventType.Warning))
                 {
                     if (property is LoadingPanelProperty)
                     {

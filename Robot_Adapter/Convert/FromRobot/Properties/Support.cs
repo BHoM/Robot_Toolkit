@@ -37,7 +37,7 @@ namespace BH.Adapter.Robot
         {
             if (robotSupport?.Data == null)
             {
-                Engine.Reflection.Compute.RecordWarning("Failed to extract at least one Constraint6DOF from Robot.");
+                Engine.Base.Compute.RecordWarning("Failed to extract at least one Constraint6DOF from Robot.");
                 return null;
             }
 

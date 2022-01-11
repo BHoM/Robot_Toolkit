@@ -47,7 +47,7 @@ namespace BH.Adapter.Robot
         {
             IBHoMObject first = bhomObjects.FirstOrDefault();
             if(first != null)
-                BH.Engine.Reflection.Compute.RecordWarning("Objects of type '" + first.GetType().Name + "' can currently not be updated");
+                BH.Engine.Base.Compute.RecordWarning("Objects of type '" + first.GetType().Name + "' can currently not be updated");
             return true;
         }
        

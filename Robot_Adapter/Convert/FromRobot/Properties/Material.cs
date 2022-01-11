@@ -37,7 +37,7 @@ namespace BH.Adapter.Robot
         {
             if (robotLabel == null || robotLabelData == null)
             {
-                Engine.Reflection.Compute.RecordWarning("Failed to extract at least one Material from Robot.");
+                Engine.Base.Compute.RecordWarning("Failed to extract at least one Material from Robot.");
                 return null;
             }
 
@@ -71,7 +71,7 @@ namespace BH.Adapter.Robot
             }
             catch (System.Exception)
             {
-                Engine.Reflection.Compute.RecordWarning("Failed to extract at least one Material from Robot.");
+                Engine.Base.Compute.RecordWarning("Failed to extract at least one Material from Robot.");
                 return null;
             }
 

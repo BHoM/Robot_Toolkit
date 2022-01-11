@@ -58,7 +58,7 @@ namespace BH.Adapter.Robot
 
                 if (robotNode == null)
                 {
-                    Engine.Reflection.Compute.RecordError("At least one Node failed to get extracted from the Robot API.");
+                    Engine.Base.Compute.RecordError("At least one Node failed to get extracted from the Robot API.");
                     continue;
                 }
 
@@ -66,7 +66,7 @@ namespace BH.Adapter.Robot
 
                 if (bhomNode == null)
                 {
-                    Engine.Reflection.Compute.RecordError($"Failed convert Node with number {robotNode.Number}. This Node in not extracted from the model.");
+                    Engine.Base.Compute.RecordError($"Failed convert Node with number {robotNode.Number}. This Node in not extracted from the model.");
                     continue;
                 }
 
@@ -144,7 +144,7 @@ namespace BH.Adapter.Robot
                     }
                     else
                     {
-                        Engine.Reflection.Compute.RecordError($"Failed to extract Node with id {nod_num}.");
+                        Engine.Base.Compute.RecordError($"Failed to extract Node with id {nod_num}.");
                     }
                     ok = row_set.MoveNext();
                 }

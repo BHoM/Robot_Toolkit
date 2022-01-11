@@ -69,7 +69,7 @@ namespace BH.Adapter.Robot
                 robotPanel.Update();
                 SetRobotPanelEdgeConstraints(robotPanel, panelSubEdges);
 
-                if (CheckNotNull(panel.Property, oM.Reflection.Debugging.EventType.Warning, typeof(Panel)))
+                if (CheckNotNull(panel.Property, oM.Base.Debugging.EventType.Warning, typeof(Panel)))
                 {
                     if (panel.Property is LoadingPanelProperty)
                         robotPanel.SetLabel(IRobotLabelType.I_LT_CLADDING, (panel.Property as LoadingPanelProperty).ToRobot());
@@ -91,7 +91,7 @@ namespace BH.Adapter.Robot
                     }
                     else
                     {
-                        Engine.Reflection.Compute.RecordWarning("Could not extract local orientation of a Panel. Could not set local orientations to Robot.");
+                        Engine.Base.Compute.RecordWarning("Could not extract local orientation of a Panel. Could not set local orientations to Robot.");
                     }
                 }
                 catch (Exception e)
@@ -103,7 +103,7 @@ namespace BH.Adapter.Robot
                         message += "\nInnerException: " + e.InnerException.Message;
                     }
 
-                    Engine.Reflection.Compute.RecordWarning(message);
+                    Engine.Base.Compute.RecordWarning(message);
                 }
 
 
@@ -112,7 +112,7 @@ namespace BH.Adapter.Robot
                 foreach (Opening opening in panel.Openings)
                 {
                     int openingId;
-                    if(CheckInputObjectAndExtractAdapterIdInt(opening, out openingId, oM.Reflection.Debugging.EventType.Error, typeof(Panel)))
+                    if(CheckInputObjectAndExtractAdapterIdInt(opening, out openingId, oM.Base.Debugging.EventType.Error, typeof(Panel)))
                         rPanelOpenings.AddOne(openingId);
                 }
                 robotPanel.SetHostedObjects(rPanelOpenings);
@@ -135,7 +135,7 @@ namespace BH.Adapter.Robot
             foreach (Opening opening in openings)
             {
                 int openingId;
-                if (!CheckInputObjectAndExtractAdapterIdInt(opening, out openingId, oM.Reflection.Debugging.EventType.Error))
+                if (!CheckInputObjectAndExtractAdapterIdInt(opening, out openingId, oM.Base.Debugging.EventType.Error))
                     continue;
 
                 List<Edge> openingSubEdges = new List<Edge>();
@@ -162,18 +162,18 @@ namespace BH.Adapter.Robot
         {
             subEdges = new List<Edge>();
             List<ICurve> subCurves = new List<ICurve>();
-            if (CheckNotNull(edges, oM.Reflection.Debugging.EventType.Error, typeof(Panel)))
+            if (CheckNotNull(edges, oM.Base.Debugging.EventType.Error, typeof(Panel)))
             {
                 foreach (Edge edge in edges) //Explode Edges into sub edges (as BHoM edges can contain polycurves, polylines etc.)
                 {
                     //Check edge not null
-                    if (CheckNotNull(edge, oM.Reflection.Debugging.EventType.Error, typeof(Panel)) &&
-                        CheckNotNull(edge.Curve, oM.Reflection.Debugging.EventType.Error, typeof(Edge)))
+                    if (CheckNotNull(edge, oM.Base.Debugging.EventType.Error, typeof(Panel)) &&
+                        CheckNotNull(edge.Curve, oM.Base.Debugging.EventType.Error, typeof(Edge)))
                     {
                         foreach (ICurve curve in BHEG.Query.ISubParts(edge.Curve).ToList())
                         {
                             //Check curves not null
-                            if (CheckNotNull(curve, oM.Reflection.Debugging.EventType.Error, typeof(Edge)))
+                            if (CheckNotNull(curve, oM.Base.Debugging.EventType.Error, typeof(Edge)))
                             {
                                 subEdges.Add(BH.Engine.Structure.Create.Edge(curve, edge.Support, edge.Release, edge.Name));
                                 subCurves.Add(curve);
@@ -201,7 +201,7 @@ namespace BH.Adapter.Robot
 
             if (panelEdges.Count != edges.Count)
             {
-                Engine.Reflection.Compute.RecordWarning("Could not set supports and releases to panel edges.");
+                Engine.Base.Compute.RecordWarning("Could not set supports and releases to panel edges.");
                 return;
             }
 

@@ -57,7 +57,7 @@ namespace BH.Adapter.Robot
                         bCaseFactors.Add(new System.Tuple<double, ICase>(rCaseCombination.CaseFactors.Get(j).Factor, lCase));
                     }
 
-                    LoadCombination lCombination = BH.Engine.Structure.Create.LoadCombination(rCaseCombination.Name, rCaseCombination.Number, bCaseFactors);
+                    LoadCombination lCombination = new LoadCombination { Name = rCaseCombination.Name, Number = rCaseCombination.Number, LoadCases = bCaseFactors };
 
                     SetAdapterId(lCombination, rCaseCombination.Number);
                     bhomLoadCombinations.Add(lCombination);
@@ -72,7 +72,7 @@ namespace BH.Adapter.Robot
                         message += "\nInnerException: " + e.InnerException.Message;
                     }
 
-                    Engine.Reflection.Compute.RecordError(message);
+                    Engine.Base.Compute.RecordError(message);
                 }
             }
             m_RobotApplication.Project.Structure.Cases.EndMultiOperation();

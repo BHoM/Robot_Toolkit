@@ -42,9 +42,9 @@ namespace BH.Adapter.Robot
             foreach (BarRelease release in releases)
             {
                 //Check release as well as start and end are not null
-                if (CheckNotNull(release, oM.Reflection.Debugging.EventType.Warning)
-                    && CheckNotNull(release.StartRelease, oM.Reflection.Debugging.EventType.Warning, typeof(BarRelease))
-                    && CheckNotNull(release.EndRelease, oM.Reflection.Debugging.EventType.Warning, typeof(BarRelease)))
+                if (CheckNotNull(release, oM.Base.Debugging.EventType.Warning)
+                    && CheckNotNull(release.StartRelease, oM.Base.Debugging.EventType.Warning, typeof(BarRelease))
+                    && CheckNotNull(release.EndRelease, oM.Base.Debugging.EventType.Warning, typeof(BarRelease)))
                 {
                     Convert.ToRobot(robotLabelData.StartNode, release.StartRelease);
                     Convert.ToRobot(robotLabelData.EndNode, release.EndRelease);

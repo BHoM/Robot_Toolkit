@@ -50,7 +50,7 @@ namespace BH.Adapter.Robot
 
             if (results.Count == 0)
             {
-                Engine.Reflection.Compute.RecordError("Unable to extract results of type " + request.ResultType + " from Robot");
+                Engine.Base.Compute.RecordError("Unable to extract results of type " + request.ResultType + " from Robot");
             }
 
             queryParams.ResultIds.SetSize(results.Count);

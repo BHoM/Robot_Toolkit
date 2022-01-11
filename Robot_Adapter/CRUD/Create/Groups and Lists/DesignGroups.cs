@@ -36,7 +36,7 @@ namespace BH.Adapter.Robot
         {
             foreach (DesignGroup bhomdesignGroup in bhomdesignGroups)
             {
-                if (!CheckNotNull(bhomdesignGroup, oM.Reflection.Debugging.EventType.Warning))
+                if (!CheckNotNull(bhomdesignGroup, oM.Base.Debugging.EventType.Warning))
                     continue;
 
                 RDimServer RDServer = m_RobotApplication.Kernel.GetExtension("RDimServer");

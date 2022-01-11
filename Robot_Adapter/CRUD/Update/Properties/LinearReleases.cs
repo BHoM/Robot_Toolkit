@@ -51,7 +51,7 @@ namespace BH.Adapter.Robot
                 {
                     Convert.ToRobot(robotLabel.Data, constraint);
                     robotLabelServer.StoreWithName(robotLabel, constraint.Name);
-                    BH.Engine.Reflection.Compute.RecordWarning("Linear Release '" + constraint.Name + "' already exists in the model, the properties have been overwritten");
+                    BH.Engine.Base.Compute.RecordWarning("Linear Release '" + constraint.Name + "' already exists in the model, the properties have been overwritten");
                 }
 
             }

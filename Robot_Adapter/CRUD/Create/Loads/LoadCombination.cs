@@ -47,8 +47,8 @@ namespace BH.Adapter.Robot
                     for (int i = 0; i < lComb.LoadCases.Count; i++)
                     {
                         //Check tuple as well as case not null
-                        if (CheckNotNull(lComb.LoadCases[i], oM.Reflection.Debugging.EventType.Error, typeof(LoadCombination)) &&
-                            CheckNotNull(lComb.LoadCases[i].Item2, oM.Reflection.Debugging.EventType.Error, typeof(LoadCombination)))
+                        if (CheckNotNull(lComb.LoadCases[i], oM.Base.Debugging.EventType.Error, typeof(LoadCombination)) &&
+                            CheckNotNull(lComb.LoadCases[i].Item2, oM.Base.Debugging.EventType.Error, typeof(LoadCombination)))
                         {
                             System.Tuple<double, ICase> loadcase = lComb.LoadCases[i];
                             rCaseCombination.CaseFactors.New(lComb.LoadCases[i].Item2.Number, lComb.LoadCases[i].Item1);
@@ -59,7 +59,7 @@ namespace BH.Adapter.Robot
                 }
                 else
                 {
-                    BH.Engine.Reflection.Compute.RecordWarning("Note if a combination in the model with the same number exists, combination will not be pushed. Use 'delete'" +
+                    BH.Engine.Base.Compute.RecordWarning("Note if a combination in the model with the same number exists, combination will not be pushed. Use 'delete'" +
                         "to clear combinations before re-pushing");
                 }
             }

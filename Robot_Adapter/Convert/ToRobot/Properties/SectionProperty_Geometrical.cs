@@ -38,7 +38,7 @@ namespace BH.Adapter.Robot
         {
             Type type = section.GetType();
 
-            if (!RobotAdapter.CheckNotNull(section.SectionProfile, oM.Reflection.Debugging.EventType.Warning, type) ||
+            if (!RobotAdapter.CheckNotNull(section.SectionProfile, oM.Base.Debugging.EventType.Warning, type) ||
                 !ToRobotGeometricalSection(section.SectionProfile as dynamic, secData))
             {
                 //If method returns false, no profile based data has been set. Fallback to explicitly setting properties.
@@ -66,8 +66,9 @@ namespace BH.Adapter.Robot
             {
                 SetNonStandardSectionData(section as dynamic, sectionData, 0);
                 sectionData.CalcNonstdGeometry();
+                return true;
             }
-            return true;
+            return false;
         }
 
         /***************************************************/
@@ -93,7 +94,7 @@ namespace BH.Adapter.Robot
                 }
             }
 
-            Engine.Reflection.Compute.RecordWarning("The robot adapter currently only support tapered sections with two profiles of the same type. Section set as explicit with 0-properties.");
+            Engine.Base.Compute.RecordWarning("The robot adapter currently only support tapered sections with two profiles of the same type. Section set as explicit with 0-properties.");
             return false;
         }
 
@@ -199,7 +200,7 @@ namespace BH.Adapter.Robot
 
         private static bool SetRobotTypeAndShapeType(this IProfile section, IRobotBarSectionData sectionData)
         {
-            BH.Engine.Reflection.Compute.RecordWarning("Profile of type " + section.GetType().Name + " is not yet fully supported for Steel sections. Section with name " + sectionData.Name + " set as explicit section");
+            Engine.Base.Compute.RecordWarning("Profile of type " + section.GetType().Name + " is not yet fully supported for Steel sections. Section with name " + sectionData.Name + " set as explicit section");
             return false;
         }
 

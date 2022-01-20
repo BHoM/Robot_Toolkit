@@ -154,7 +154,7 @@ namespace BH.Adapter.Robot
                             Y = (double)row_set.CurrentRow.GetValue(1),
                             Z = (double)row_set.CurrentRow.GetValue(2)
                         };
-                        Node bhomNode = Engine.Structure.Create.Node(point);
+                        Node bhomNode = new Node { Position = point };
                         SetAdapterId(bhomNode, nod_num);
                         bhomNodes.Add(bhomNode);
                     }

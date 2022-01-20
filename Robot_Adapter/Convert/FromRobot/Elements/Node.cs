@@ -35,7 +35,7 @@ namespace BH.Adapter.Robot
 
         public static Node FromRobot(this RobotNode robotNode)
         {
-            Node bhomNode = Engine.Structure.Create.Node(new Point { X = robotNode.X, Y = robotNode.Y, Z = robotNode.Z } );
+            Node bhomNode = new Node { Position = new Point { X = robotNode.X, Y = robotNode.Y, Z = robotNode.Z } };
             if (robotNode.HasLabel(IRobotLabelType.I_LT_SUPPORT) == 1)
             {
                 bhomNode.Support = Convert.FromRobot((RobotNodeSupport)robotNode.GetLabel(IRobotLabelType.I_LT_SUPPORT));

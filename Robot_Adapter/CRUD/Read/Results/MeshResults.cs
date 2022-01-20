@@ -89,7 +89,7 @@ namespace BH.Adapter.Robot
                 }
             }
 
-            List<Point> nodePointList = nodes.Select(x => Engine.Structure.Query.Position(x)).ToList();
+            List<Point> nodePointList = nodes.Select(x => x.Position).ToList();
 
             RobotResultQueryParams queryParams = (RobotResultQueryParams)m_RobotApplication.Kernel.CmpntFactory.Create(IRobotComponentType.I_CT_RESULT_QUERY_PARAMS);
 

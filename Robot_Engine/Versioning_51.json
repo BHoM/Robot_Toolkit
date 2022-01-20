@@ -1,0 +1,28 @@
+﻿{
+  "Namespace": {
+    "ToNew": {
+    },
+    "ToOld": {
+    }
+  },
+  "Type": {
+    "ToNew": {
+    },
+    "ToOld": {
+    }
+  },
+  "Property": {
+    "ToNew": {
+    },
+    "ToOld": {
+    }
+  },
+  "MessageForDeleted": {
+    "BH.Engine.Adapters.Robot.Compute.UpgradeVersion(BH.oM.Adapters.Robot.GeometricalLineLoad)": "Method no longer required as upgrading of class is now handled by central versioning system. If this method was used in a script, it can be bypassed as the upgrade already will have happened.",
+    "BH.Engine.Adapters.Robot.Compute.UpgradeVersion(System.Collections.Generic.List<BH.oM.Adapters.Robot.GeometricalLineLoad>)": "Method no longer required as upgrading of class is now handled by central versioning system. If this method was used in a script, it can be bypassed as the upgrade already will have happened.",
+    "BH.Engine.Adapters.Robot.Compute.UpgradeVersion(BH.oM.Adapters.Robot.ContourLoad)": "Method no longer required as upgrading of class is now handled by central versioning system. If this method was used in a script, it can be bypassed as the upgrade already will have happened.",
+    "BH.Engine.Adapters.Robot.Compute.UpgradeVersion(System.Collections.Generic.List<BH.oM.Adapters.Robot.ContourLoad>)": "Method no longer required as upgrading of class is now handled by central versioning system. If this method was used in a script, it can be bypassed as the upgrade already will have happened."
+  },
+  "MessageForNoUpgrade": {
+  }
+}

@@ -49,7 +49,7 @@ namespace BH.Adapter.Robot
                     IRobotCase rCase = rLoadCollection.Get(i) as IRobotCase;
                     if (rCase.Type == IRobotCaseType.I_CT_SIMPLE)   //Pull simple cases to temporary dictionary to be used for assigning to combinations
                     {
-                        Loadcase lCase = BH.Engine.Structure.Create.Loadcase(rCase.Name, rCase.Number, Convert.FromRobot(rCase.Nature));
+                        Loadcase lCase = new Loadcase { Name = rCaseIn.Name, Number = rCaseIn.Number, Nature = Convert.FromRobot(rCaseIn.Nature) };
                         SetAdapterId(lCase, rCase.Number);
                         pulledCases[lCase.Number] = lCase;
                     }

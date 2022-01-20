@@ -76,6 +76,9 @@
     <Folder Include="Structural\Loads\" />
     <Folder Include="Structural\Results\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Versioning_51.json" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetDir)$(TargetFileName)"  "C:\\ProgramData\\BHoM\\Assemblies" /Y</PostBuildEvent>

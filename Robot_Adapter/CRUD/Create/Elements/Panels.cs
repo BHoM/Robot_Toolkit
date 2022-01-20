@@ -175,7 +175,7 @@ namespace BH.Adapter.Robot
                             //Check curves not null
                             if (CheckNotNull(curve, oM.Base.Debugging.EventType.Error, typeof(Edge)))
                             {
-                                subEdges.Add(BH.Engine.Structure.Create.Edge(curve, edge.Support, edge.Release, edge.Name));
+                                subEdges.Add(new Edge { Curve = curve, Support = edge.Support, Release = edge.Release, Name = edge.Name });
                                 subCurves.Add(curve);
                             }
                             else

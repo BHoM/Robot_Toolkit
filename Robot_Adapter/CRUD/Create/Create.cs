@@ -106,24 +106,11 @@ namespace BH.Adapter.Robot
                 if (objects.First() is Bar)
                 {
                     success = CreateCollection(objects as IEnumerable<Bar>);
-                }              
+                }
 
                 if (typeof(ILoad).IsAssignableFrom(objects.First().GetType()))
                 {
-                    if (objects.First() is oM.Adapters.Robot.ContourLoad)
-                    {
-                        List<oM.Structure.Loads.ContourLoad> contourLoads = objects.Select(x => (x as oM.Adapters.Robot.ContourLoad).UpgradeVersion()).ToList();
-                        success = CreateCollection(contourLoads as IEnumerable<oM.Structure.Loads.ContourLoad>);
-                    }
-                    else if (objects.First() is oM.Adapters.Robot.GeometricalLineLoad)
-                    {
-                        List<oM.Structure.Loads.GeometricalLineLoad> geoLineLoads = objects.Select(x => (x as oM.Adapters.Robot.GeometricalLineLoad).UpgradeVersion()).ToList();
-                        success = CreateCollection(geoLineLoads as IEnumerable<oM.Structure.Loads.GeometricalLineLoad>);
-                    }
-                    else
-                    {
-                        success = CreateCollection(objects as IEnumerable<ILoad>);
-                    }
+                    success = CreateCollection(objects as IEnumerable<ILoad>);
                 }
 
                 if (objects.First() is Panel)

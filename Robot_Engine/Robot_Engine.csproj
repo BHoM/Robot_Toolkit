@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -100,12 +100,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Objects\Comparers\LoadingPanelProperty.cs" />
-    <Compile Include="Create\ContourLoad.cs" />
     <Compile Include="Create\DesignGroup.cs" />
-    <Compile Include="Create\GeometricLineLoad.cs" />
     <Compile Include="Create\DatabaseSettings.cs" />
     <Compile Include="Create\FramingElementDesignProperties.cs" />
-    <Compile Include="Compute\UpgradeVersion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query\GetStringFromEnum.cs" />
     <Compile Include="Query\RobotGravityConstant.cs" />
@@ -113,8 +110,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Versioning_51.json" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Compute\" />
     <Folder Include="Modify\" />
   </ItemGroup>
   <ItemGroup>

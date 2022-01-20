@@ -89,10 +89,10 @@ namespace BH.Adapter.Robot
                 loads.AddRange(ReadObjectLoads(record => record.FromRobotPtVel(), IRobotLoadRecordType.I_LRT_NODE_VELOCITY, ids));
 
             //Geometrical loads
-            if (type.IsAssignableFrom(typeof(oM.Structure.Loads.ContourLoad)) || type == typeof(oM.Adapters.Robot.ContourLoad))
+            if (type.IsAssignableFrom(typeof(oM.Structure.Loads.ContourLoad)))
                 loads.AddRange(ReadContourLoads(ids));
 
-            if (type.IsAssignableFrom(typeof(oM.Structure.Loads.GeometricalLineLoad)) || type == typeof(oM.Adapters.Robot.GeometricalLineLoad))
+            if (type.IsAssignableFrom(typeof(oM.Structure.Loads.GeometricalLineLoad)))
                 loads.AddRange(ReadGeometricalLineLoads(ids));
 
             //Clean up the object cache

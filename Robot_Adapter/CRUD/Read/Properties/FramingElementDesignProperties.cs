@@ -109,48 +109,48 @@ namespace BH.Adapter.Robot
                         IRDimYieldStrengthTypeE32 yieldStrengthType = memberDesignParams_EC3.YieldStrengthType;
                         double yieldStrengthValue = memberDesignParams_EC3.YieldStrengthValue;
                     }
+
+
+                    if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.BS5950))
+                    {
+                        IRDimMembParamsBS59 memberDesignParams_BS5950 = memberDef.CodeParams;
+                        bhomDesignProps.EulerBucklingLengthCoefficientY = memberDesignParams_BS5950.BuckLengthCoeffY;
+                        bhomDesignProps.EulerBucklingLengthCoefficientZ = memberDesignParams_BS5950.BuckLengthCoeffZ;
+                    }
+
+
+                    if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.BS5950_2000))
+                    {
+                        IRDimMembParamsBS59_2000 memberDesignParams_BS5950_2000 = memberDef.CodeParams;
+                        bhomDesignProps.EulerBucklingLengthCoefficientY = memberDesignParams_BS5950_2000.BuckLengthCoeffY;
+                        bhomDesignProps.EulerBucklingLengthCoefficientZ = memberDesignParams_BS5950_2000.BuckLengthCoeffZ;
+                    }
+
+
+
+                    if (memberDef.LengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Y) < 0)
+                    {
+                        bhomDesignProps.MemberLengthY = -memberDef.LengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Y);
+                        bhomDesignProps.MemberLengthYIsRelative = true;
+                    }
+                    else
+                    {
+                        bhomDesignProps.MemberLengthY = memberDef.LengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Y);
+                        bhomDesignProps.MemberLengthYIsRelative = false;
+                    }
+
+                    if (memberDef.LengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Z) < 0)
+                    {
+                        bhomDesignProps.MemberLengthZ = -memberDef.LengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Z);
+                        bhomDesignProps.MemberLengthZIsRelative = true;
+                    }
+                    else
+                    {
+                        bhomDesignProps.MemberLengthZ = memberDef.LengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Z);
+                        bhomDesignProps.MemberLengthZIsRelative = false;
+                    }
                 }
                 catch { Engine.Base.Compute.RecordWarning("Failed to extract FramingElementDesignProperties"); }
-
-                if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.BS5950))
-                {
-                    IRDimMembParamsBS59 memberDesignParams_BS5950 = memberDef.CodeParams;
-                    bhomDesignProps.EulerBucklingLengthCoefficientY = memberDesignParams_BS5950.BuckLengthCoeffY;
-                    bhomDesignProps.EulerBucklingLengthCoefficientZ = memberDesignParams_BS5950.BuckLengthCoeffZ;
-                }
-
-
-                if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.BS5950_2000))
-                {
-                    IRDimMembParamsBS59_2000 memberDesignParams_BS5950_2000 = memberDef.CodeParams;
-                    bhomDesignProps.EulerBucklingLengthCoefficientY = memberDesignParams_BS5950_2000.BuckLengthCoeffY;
-                    bhomDesignProps.EulerBucklingLengthCoefficientZ = memberDesignParams_BS5950_2000.BuckLengthCoeffZ;
-                }
-
-
-
-                if (memberDef.LengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Y) < 0)
-                {
-                    bhomDesignProps.MemberLengthY = -memberDef.LengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Y);
-                    bhomDesignProps.MemberLengthYIsRelative = true;
-                }
-                else
-                {
-                    bhomDesignProps.MemberLengthY = memberDef.LengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Y);
-                    bhomDesignProps.MemberLengthYIsRelative = false;
-                }
-
-                if (memberDef.LengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Z) < 0)
-                {
-                    bhomDesignProps.MemberLengthZ = -memberDef.LengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Z);
-                    bhomDesignProps.MemberLengthZIsRelative = true;
-                }
-                else
-                {
-                    bhomDesignProps.MemberLengthZ = memberDef.LengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Z);
-                    bhomDesignProps.MemberLengthZIsRelative = false;
-                }
-
 
                 bhomDesignPropsList.Add(bhomDesignProps);
             }

@@ -32,6 +32,8 @@ using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Structure.Offsets;
 using System;
 using System.Collections.Generic;
+using BH.oM.Adapters.Robot;
+using BH.Engine.Base;
 
 namespace BH.Adapter.Robot
 {
@@ -55,7 +57,8 @@ namespace BH.Adapter.Robot
                 {typeof(LinkConstraint), new NameOrDescriptionComparer() },
                 {typeof(ISurfaceProperty), new NameOrDescriptionComparer() },
                 {typeof(BarRelease), new NameOrDescriptionComparer() },
-                {typeof(Offset), new NameOrDescriptionComparer() }
+                {typeof(Offset), new NameOrDescriptionComparer() },
+                {typeof(FramingElementDesignProperties), new BHoMObjectNameComparer() }
             };
         }
 

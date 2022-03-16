@@ -54,6 +54,7 @@ namespace BH.Adapter.Robot
                 }
 
                 FramingElementDesignProperties bhomDesignProps = BHE.Create.FramingElementDesignProperties(name);
+                SetAdapterId(bhomDesignProps, name);
 
                 double length = memberDef.Length;
 

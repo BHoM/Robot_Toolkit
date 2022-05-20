@@ -43,10 +43,12 @@ namespace BH.Adapter.Robot
                 try
                 {
                     IRobotCase rLoadCase = rLoadCases.Get(i) as IRobotCase;
-                    Loadcase lCase = BH.Engine.Structure.Create.Loadcase(rLoadCase.Name, rLoadCase.Number, Convert.FromRobot(rLoadCase.Nature));
-                    SetAdapterId(lCase, rLoadCase.Number);
-                    bhomLoadCases.Add(lCase);
-
+                    if (rLoadCase.Type == IRobotCaseType.I_CT_SIMPLE)
+                    {
+                        Loadcase lCase = BH.Engine.Structure.Create.Loadcase(rLoadCase.Name, rLoadCase.Number, Convert.FromRobot(rLoadCase.Nature));
+                        SetAdapterId(lCase, rLoadCase.Number);
+                        bhomLoadCases.Add(lCase);
+                    }
                 }
                 catch (Exception e)
                 {

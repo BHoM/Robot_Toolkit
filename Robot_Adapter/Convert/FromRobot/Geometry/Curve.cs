@@ -40,30 +40,45 @@ namespace BH.Adapter.Robot
                 return null;
                         
             PolyCurve polycurve = new PolyCurve();
-            RobotGeoSegment segment1, segment2;
-            
+
+            //Get out segment points. This is done first to ensure calls to get out contour as well as converting points is only done once.
+            //Any call to the contour class is incredibly expensive, hence pre-processing to get out the points in order first saves a lot of computation power.
+            List<List<Point>> segmentPoints = new List<List<Point>>();
             for (int j = 1; j <= contour.Segments.Count; j++)
             {
-                segment1 = contour.Segments.Get(j) as RobotGeoSegment;
-                segment2 = contour.Segments.Get(j % contour.Segments.Count + 1) as RobotGeoSegment;
-                if (segment1.Type == IRobotGeoSegmentType.I_GST_ARC)
+                RobotGeoSegment segment = contour.Segments.Get(j) as RobotGeoSegment;
+                if (segment.Type == IRobotGeoSegmentType.I_GST_ARC)
                 {
-                    RobotGeoSegmentArc arcSeg = segment1 as RobotGeoSegmentArc;
+                    RobotGeoSegmentArc arcSeg = segment as RobotGeoSegmentArc;
+                    segmentPoints.Add(new List<Point> { arcSeg.P1.FromRobot(), arcSeg.P2.FromRobot() });
+                }
+                else
+                {
+                    segmentPoints.Add(new List<Point> { segment.P1.FromRobot() });
+                }
+            }
+
+            for (int j = 0; j < segmentPoints.Count; j++)
+            {
+                List<Point> currPts = segmentPoints[j];
+                List<Point> nextPts = segmentPoints[(j + 1) % segmentPoints.Count];
+                if (currPts.Count == 2) //Count of 2 for arcs, count of 1 for Lines
+                {
                     ICurve segment;
                     try
                     {
-                        segment = GeometryEngine.Create.Arc(arcSeg.P1.FromRobot(), arcSeg.P2.FromRobot(), segment2.P1.FromRobot());
+                        segment = GeometryEngine.Create.Arc(currPts[0], currPts[1], nextPts[0]);    //Create arc from 2 point of current segment, and first point of next
                     }
                     catch (System.Exception)
                     {
-                        segment = new Polyline { ControlPoints = new List<Point> { arcSeg.P1.FromRobot(), arcSeg.P2.FromRobot(), segment2.P1.FromRobot() } };
+                        segment = new Polyline { ControlPoints = new List<Point> { currPts[0], currPts[1], nextPts[0] } };
                         Engine.Base.Compute.RecordWarning("Failed to extract arc segment of polycurve as arc. Polyline segment returned in its place.");
                     }
                     polycurve.Curves.Add(segment);
                 }
                 else
                 {
-                    polycurve.Curves.Add(new Line { Start = FromRobot(segment1.P1), End = FromRobot(segment2.P1) });
+                    polycurve.Curves.Add(new Line { Start = currPts[0], End = nextPts[0] });    //Line from first of current points and last of next points
                 }
             }
             return polycurve;

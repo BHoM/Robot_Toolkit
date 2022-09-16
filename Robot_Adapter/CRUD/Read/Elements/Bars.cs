@@ -37,6 +37,7 @@ using BH.oM.Adapters.Robot;
 using BHE = BH.Engine.Adapters.Robot;
 using BH.Engine.Base.Objects;
 using BH.Engine.Adapters.Robot;
+using BH.Engine.Base;
 
 namespace BH.Adapter.Robot
 {
@@ -49,17 +50,8 @@ namespace BH.Adapter.Robot
         private List<Bar> ReadBars(IList ids = null)
         {
             List<int> barIds = CheckAndGetIds<Bar>(ids);
-
-            List<Bar> bhomBars = new List<Bar>();
-            IEnumerable<Node> bhomNodesList = ReadNodes();
-            Dictionary<string, Node> bhomNodes = bhomNodesList.ToDictionaryDistinctCheck(x => GetAdapterId<int>(x).ToString());
-            Dictionary<string, BarRelease> bhombarReleases = ReadBarRelease().ToDictionaryDistinctCheck(x => x.Name.ToString());
-            Dictionary<string, ISectionProperty> bhomSections = ReadSectionProperties().ToDictionaryDistinctCheck(x => x.Name.ToString());
-            Dictionary<string, IMaterialFragment> bhomMaterial = ReadMaterials().ToDictionaryDistinctCheck(x => x.Name.ToString());
-            Dictionary<string, Offset> offsets = ReadOffsets().ToDictionaryDistinctCheck(x => x.Name.ToString());
-            Dictionary<string, FramingElementDesignProperties> bhomFramEleDesProps = ReadFramingElementDesignProperties().ToDictionaryDistinctCheck(x => x.Name.ToString());
             Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
-            Dictionary<string, Dictionary<string, ISectionProperty>> sectionWithMaterial = new Dictionary<string, Dictionary<string, ISectionProperty>>();  //Used to store sections where the material differs from the default
+            List<Bar> bhomBars = new List<Bar>();
             HashSet<string> tags = new HashSet<string>();
 
             m_RobotApplication.Project.Structure.Bars.BeginMultiOperation();
@@ -87,14 +79,7 @@ namespace BH.Adapter.Robot
 
                 if (!robotBar.IsSuperBar)
                 {
-                    Bar bhomBar = Convert.FromRobot(robotBar,
-                                                     bhomNodes,
-                                                     bhomSections,
-                                                     bhomMaterial,
-                                                     bhombarReleases,
-                                                     offsets,
-                                                     bhomFramEleDesProps,
-                                                     ref sectionWithMaterial);
+                    Bar bhomBar = Convert.FromRobot(robotBar);
 
                     if (bhomBar == null)
                     {
@@ -115,6 +100,144 @@ namespace BH.Adapter.Robot
 
             m_RobotApplication.Project.Structure.Bars.EndMultiOperation();
 
+            List<string> nodeIds = bhomBars.SelectMany(x => new string[] { x.StartNode.Name, x.EndNode.Name }).Distinct().ToList();
+            Dictionary<string, Node> bhomNodes = ReadNodes(nodeIds, true).ToDictionaryDistinctCheck(x => GetAdapterId<int>(x).ToString());
+            List<string> releaseIds = bhomBars.Select(x => x.Release?.Name).Where(x => x != null).Distinct().ToList();
+            Dictionary<string, BarRelease> bhombarReleases = releaseIds.Count == 0 ? new Dictionary<string, BarRelease>() : ReadBarRelease(releaseIds).ToDictionaryDistinctCheck(x => x.Name.ToString());
+            List<string> sectionIds = bhomBars.Select(x => x.SectionProperty?.Name).Where(x => x != null).Distinct().ToList();
+            Dictionary<string, ISectionProperty> bhomSections = sectionIds.Count == 0 ? new Dictionary<string, ISectionProperty>() : ReadSectionProperties(sectionIds).ToDictionaryDistinctCheck(x => x.Name.ToString());
+            List<string> materialIds = bhomBars.Select(x => x.SectionProperty?.Material?.Name).Where(x => x != null).Distinct().ToList();
+            Dictionary<string, IMaterialFragment> bhomMaterials = materialIds.Count == 0 ? new Dictionary<string, IMaterialFragment>() : ReadMaterials(materialIds).ToDictionaryDistinctCheck(x => x.Name.ToString());
+            List<string> offsetIds = bhomBars.Select(x => x.Offset?.Name).Where(x => x != null).Distinct().ToList();
+            Dictionary<string, Offset> offsets = offsetIds.Count == 0 ? new Dictionary<string, Offset>() : ReadOffsets(offsetIds).ToDictionaryDistinctCheck(x => x.Name.ToString());
+            List<string> framingElemIds = bhomBars.Select(x => x.FindFragment<FramingElementDesignProperties>()?.Name).Where(x => x != null).Distinct().ToList();
+            Dictionary<string, FramingElementDesignProperties> bhomFramEleDesProps = framingElemIds.Count == 0 ? new Dictionary<string, FramingElementDesignProperties>() : ReadFramingElementDesignProperties(framingElemIds).ToDictionaryDistinctCheck(x => x.Name.ToString());
+            Dictionary<string, Dictionary<string, ISectionProperty>> sectionWithMaterial = new Dictionary<string, Dictionary<string, ISectionProperty>>();  //Used to store sections where the material differs from the default
+
+            foreach (Bar bar in bhomBars)
+            {
+                bool nodesExtracted = true;
+                Node startNode;
+                if (bhomNodes.TryGetValue(bar.StartNode.Name, out startNode))
+                    bar.StartNode = startNode;
+                else
+                {
+                    nodesExtracted = false;
+                    Engine.Base.Compute.RecordError($"Failed to extract the {nameof(Bar.StartNode)} for Bar {this.GetAdapterId(bar)}");
+                }
+
+                Node endNode;
+                if (bhomNodes.TryGetValue(bar.EndNode.Name, out endNode))
+                    bar.EndNode = endNode;
+                else
+                {
+                    nodesExtracted = false;
+                    Engine.Base.Compute.RecordError($"Failed to extract the {nameof(Bar.EndNode)} for Bar {this.GetAdapterId(bar)}");
+                }
+
+                if(nodesExtracted)
+                    bar.OrientationAngle = bar.FromRobotOrientationAngle(bar.OrientationAngle); //Checks for verticality of element
+
+                if (bar.SectionProperty != null)
+                {
+                    string secName = bar.SectionProperty.Name;
+                    ISectionProperty secProp;
+
+                    if (bar.SectionProperty.Material != null)
+                    {
+                        //Get material name and material
+                        string matName = bar.SectionProperty.Material.Name;
+
+                        IMaterialFragment barMaterial = null;
+                        if (!bhomMaterials.TryGetValue(matName, out barMaterial))
+                        {
+                            BH.Engine.Base.Compute.RecordWarning($"Could not extract material with name {matName}. null material will be provided for the crossection for bars with this material.");
+                        }
+                        Dictionary<string, ISectionProperty> innerDict;
+                        //Check if a section of the specified type has allready been pulled
+                        if (!sectionWithMaterial.TryGetValue(secName, out innerDict))
+                        {
+                            innerDict = new Dictionary<string, ISectionProperty>();
+                        }
+
+                        //Check if a section of the specified type with the material has allready been added
+                        if (!innerDict.TryGetValue(matName, out secProp))
+                        {
+                            //If not, get out the section from the basic dictionary
+                            if (bhomSections.TryGetValue(secName, out secProp))
+                            {
+                                //Construct and store a copy of the section, with new material
+                                secProp = secProp.ShallowClone(true);
+                                secProp.Material = barMaterial;
+                                innerDict[matName] = secProp;
+                                sectionWithMaterial[secName] = innerDict;
+                            }
+                            else
+                            {
+                                BH.Engine.Base.Compute.RecordEvent("Section property type " + secName + " is not supported", oM.Base.Debugging.EventType.Warning);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //No material label appended to the bar. The default section is used, if found
+                        if (bhomSections.TryGetValue(secName, out secProp))
+                        {
+                            Dictionary<string, ISectionProperty> innerDict;
+                            if (!sectionWithMaterial.TryGetValue(secName, out innerDict))
+                            {
+                                innerDict = new Dictionary<string, ISectionProperty>();
+                            }
+                            if (!innerDict.ContainsKey(secProp.Material.Name))
+                            {
+                                innerDict[secProp.Material.Name] = secProp;
+                                sectionWithMaterial[secName] = innerDict;
+                            }
+                        }
+                        else
+                        {
+                            BH.Engine.Base.Compute.RecordEvent("Section property type " + secName + " is not supported", oM.Base.Debugging.EventType.Warning);
+                        }
+                    }
+
+                    bar.SectionProperty = secProp;
+                }
+
+
+                if (bar.Offset != null)
+                {
+                    Offset offset;
+                    if (offsets.TryGetValue(bar.Offset.Name, out offset))
+                        bar.Offset = offset;
+                    else
+                        Engine.Base.Compute.RecordWarning($"Failed to extract the {nameof(Bar.Offset)} for Bar {this.GetAdapterId(bar)}");
+
+                }
+
+                if (bar.Release != null)
+                {
+                    BarRelease release;
+                    if (bhombarReleases.TryGetValue(bar.Release.Name, out release))
+                        bar.Release = release;
+                    else
+                        Engine.Base.Compute.RecordNote("Bars with auto-generated releases in Robot will be pulled with null releases in BHoM.");
+
+                }
+
+                FramingElementDesignProperties dummyFrameProp = bar.FindFragment<FramingElementDesignProperties>();
+                if (dummyFrameProp != null)
+                {
+                    FramingElementDesignProperties frameProp;
+                    if (bhomFramEleDesProps.TryGetValue(dummyFrameProp.Name, out frameProp))
+                        bar.Fragments.AddOrReplace(frameProp);
+                    else
+                        Engine.Base.Compute.RecordWarning($"Failed to extract the {nameof(FramingElementDesignProperties)} for Bar {this.GetAdapterId(bar)}");
+
+                }
+
+
+            }
+            
             //Postprocess the used sections
             PostProcessBarSections(sectionWithMaterial);
 

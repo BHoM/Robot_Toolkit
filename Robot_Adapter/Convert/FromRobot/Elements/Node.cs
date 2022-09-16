@@ -23,7 +23,7 @@
 using BH.oM.Geometry;
 using RobotOM;
 using BH.oM.Structure.Elements;
-
+using BH.oM.Structure.Constraints;
 
 namespace BH.Adapter.Robot
 {
@@ -39,6 +39,18 @@ namespace BH.Adapter.Robot
             if (robotNode.HasLabel(IRobotLabelType.I_LT_SUPPORT) == 1)
             {
                 bhomNode.Support = Convert.FromRobot((RobotNodeSupport)robotNode.GetLabel(IRobotLabelType.I_LT_SUPPORT));
+            }
+            return bhomNode;
+        }
+
+        /***************************************************/
+
+        public static Node FromRobotConstraintName(this RobotNode robotNode)
+        {
+            Node bhomNode = Engine.Structure.Create.Node(new Point { X = robotNode.X, Y = robotNode.Y, Z = robotNode.Z });
+            if (robotNode.HasLabel(IRobotLabelType.I_LT_SUPPORT) == 1)
+            {
+                bhomNode.Support = new Constraint6DOF { Name = robotNode.GetLabelName(IRobotLabelType.I_LT_SUPPORT) }; 
             }
             return bhomNode;
         }

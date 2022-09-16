@@ -35,7 +35,7 @@ namespace BH.Adapter.Robot
 
         private List<BarRelease> ReadBarRelease(List<string> ids = null)
         {
-            return ReadLabels(IRobotLabelType.I_LT_BAR_RELEASE).OfType<BarRelease>().ToList();
+            return ReadLabels(IRobotLabelType.I_LT_BAR_RELEASE, ids).OfType<BarRelease>().ToList();
         }
 
         /***************************************************/        

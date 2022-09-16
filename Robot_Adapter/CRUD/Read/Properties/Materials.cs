@@ -35,7 +35,7 @@ namespace BH.Adapter.Robot
 
         private List<IMaterialFragment> ReadMaterials(List<string> ids = null)
         {
-            return ReadLabels(IRobotLabelType.I_LT_MATERIAL).Select(x => x as IMaterialFragment).Where(x => x != null).ToList();
+            return ReadLabels(IRobotLabelType.I_LT_MATERIAL, ids).Select(x => x as IMaterialFragment).Where(x => x != null).ToList();
         }
 
         /***************************************************/

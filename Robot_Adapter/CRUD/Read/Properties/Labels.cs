@@ -39,7 +39,7 @@ namespace BH.Adapter.Robot
 
         //dependantObjects to be used for labels that require additional inner obejcts, such as Materials for SectionProeprties and SurfaceProeprties
         //The method will assume this to be of a specific type
-        public List<IBHoMObject> ReadLabels(IRobotLabelType robotLabelType, object dependantObjects = null)
+        public List<IBHoMObject> ReadLabels(IRobotLabelType robotLabelType, List<string> ids, object dependantObjects = null)
         {
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotNamesArray robotLabelNames = robotLabelServer.GetAvailableNames(robotLabelType);            
@@ -48,6 +48,12 @@ namespace BH.Adapter.Robot
             for (int i = 1; i <= robotLabelNames.Count; i++)
             {
                 string robotLabelName = robotLabelNames.Get(i);
+
+                if (ids != null && ids.Count != 0)  //Ids provided
+                {
+                    if (!ids.Contains(robotLabelName))  //Name not in the provided list => skip
+                        continue;
+                }
 
                 if (string.IsNullOrEmpty(robotLabelName))
                     continue;

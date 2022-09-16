@@ -39,7 +39,7 @@ namespace BH.Adapter.Robot
 
         //dependantObjects to be used for labels that require additional inner obejcts, such as Materials for SectionProeprties and SurfaceProeprties
         //The method will assume this to be of a specific type
-        public List<IBHoMObject> ReadLabels(IRobotLabelType robotLabelType, List<string> ids, object dependantObjects = null)
+        public List<IBHoMObject> ReadLabels(IRobotLabelType robotLabelType, List<string> ids, Dictionary<string, IMaterialFragment> bhomMaterials = null)
         {
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotNamesArray robotLabelNames = robotLabelServer.GetAvailableNames(robotLabelType);            
@@ -59,9 +59,9 @@ namespace BH.Adapter.Robot
                     continue;
 
                 IRobotLabel robotLabel = null;
-
+                
                 if (robotLabelServer.IsUsed(robotLabelType, robotLabelName))
-                    robotLabel = robotLabelServer.Get(robotLabelType, robotLabelNames.Get(i)) as dynamic;
+                    robotLabel = robotLabelServer.Get(robotLabelType, robotLabelName) as dynamic;
                 else
                     robotLabel = robotLabelServer.CreateLike(robotLabelType, "", robotLabelName) as dynamic;
                 if (robotLabel == null || robotLabel.Data == null)
@@ -74,7 +74,6 @@ namespace BH.Adapter.Robot
                         case IRobotLabelType.I_LT_NODE_COMPATIBILITY:
                             break;
                         case IRobotLabelType.I_LT_BAR_SECTION:
-                            Dictionary<string, IMaterialFragment> bhomMaterials = dependantObjects as Dictionary<string, IMaterialFragment>;
                             IRobotBarSectionData secData = robotLabel.Data as IRobotBarSectionData;
 
                             if (secData == null)
@@ -106,7 +105,6 @@ namespace BH.Adapter.Robot
                         case IRobotLabelType.I_LT_EDGE_SUPPORT:
                             break;
                         case IRobotLabelType.I_LT_PANEL_THICKNESS:
-                            bhomMaterials = dependantObjects as Dictionary<string, IMaterialFragment>;
                             bhomMaterials = bhomMaterials ?? new Dictionary<string, IMaterialFragment>();
                             ISurfaceProperty prop = Convert.FromRobot(robotLabel, bhomMaterials);
                             obj = prop;
@@ -142,7 +140,6 @@ namespace BH.Adapter.Robot
                         case IRobotLabelType.I_LT_BAR_NONLINEAR_HINGE:
                             break;
                         case IRobotLabelType.I_LT_CLADDING:
-                            bhomMaterials = dependantObjects as Dictionary<string, IMaterialFragment>;
                             bhomMaterials = bhomMaterials ?? new Dictionary<string, IMaterialFragment>();
                             ISurfaceProperty cladding = Convert.FromRobot(robotLabel, bhomMaterials);
                             obj = cladding;

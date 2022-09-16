@@ -34,6 +34,7 @@ using BH.oM.Geometry;
 using BH.Engine.Geometry;
 using BH.Engine.Adapter;
 using BH.Engine.Base;
+using System.ComponentModel;
 
 
 namespace BH.Adapter.Robot
@@ -44,10 +45,82 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static Bar FromRobot( this RobotBar robotBar, 
-                                        Dictionary<string,Node> bhomNodes, 
-                                        Dictionary<string, ISectionProperty> bhomSections, 
-                                        Dictionary<string, IMaterialFragment> bhomMaterials, 
+        [Description("Converts the RobotBar to a BHoMBar with all dummy properties, to be populated at later part of the read procedure.")]
+        public static Bar FromRobot(this RobotBar robotBar)
+        {
+            if (robotBar == null)
+                return null;
+
+            Node startNode = new Node { Name = robotBar.StartNode.ToString() };
+            Node endNode = new Node { Name = robotBar.EndNode.ToString() }; ;
+
+
+            Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode, Name = robotBar.Name };
+
+
+            if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_SECTION) == -1)
+            {
+                //Get section name
+                string secName = robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_SECTION);
+
+                IMaterialFragment material = null;
+
+                if (robotBar.HasLabel(IRobotLabelType.I_LT_MATERIAL) == -1)
+                {
+                    //Get material name and material
+                    string matName = robotBar.GetLabelName(IRobotLabelType.I_LT_MATERIAL);
+
+                    material = new GenericIsotropicMaterial { Name = matName };
+                }
+
+                bhomBar.SectionProperty = new ExplicitSection { Name = secName, Material = material };
+            }
+
+
+            if (robotBar.HasLabel(IRobotLabelType.I_LT_MEMBER_TYPE) == -1)
+            {
+                string framEleDesPropsName = robotBar.GetLabelName(IRobotLabelType.I_LT_MEMBER_TYPE);
+                bhomBar.Fragments.AddOrReplace(new FramingElementDesignProperties() { Name = framEleDesPropsName });
+            }
+
+            if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_RELEASE) == -1)
+            {
+                string releaseName = robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_RELEASE);
+                bhomBar.Release = new BarRelease { Name = releaseName };
+            }
+
+            if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_OFFSET) == -1)
+            {
+                string offsetName = robotBar.GetLabelName(IRobotLabelType.I_LT_BAR_OFFSET);
+                bhomBar.Offset = new Offset { Name = offsetName };
+            }
+
+            if (!string.IsNullOrWhiteSpace(robotBar.Name))
+                bhomBar.Name = robotBar.Name;
+
+            bhomBar.OrientationAngle = robotBar.Gamma * Math.PI / 180;
+
+            if (robotBar.TensionCompression == IRobotBarTensionCompression.I_BTC_COMPRESSION_ONLY)
+            {
+                bhomBar.FEAType = BarFEAType.CompressionOnly;
+            }
+            if (robotBar.TensionCompression == IRobotBarTensionCompression.I_BTC_TENSION_ONLY)
+            {
+                bhomBar.FEAType = BarFEAType.TensionOnly;
+            }
+            if (robotBar.TrussBar == true)
+            {
+                bhomBar.FEAType = BarFEAType.Axial;
+            }
+            return bhomBar;
+        }
+
+        /***************************************************/
+
+        public static Bar FromRobot(this RobotBar robotBar,
+                                        Dictionary<string, Node> bhomNodes,
+                                        Dictionary<string, ISectionProperty> bhomSections,
+                                        Dictionary<string, IMaterialFragment> bhomMaterials,
                                         Dictionary<string, BarRelease> barReleases,
                                         Dictionary<string, Offset> offsets,
                                         Dictionary<string, FramingElementDesignProperties> bhomFramEleDesPropList,
@@ -133,7 +206,7 @@ namespace BH.Adapter.Robot
                         BH.Engine.Base.Compute.RecordEvent("Section property type " + secName + " is not supported", oM.Base.Debugging.EventType.Warning);
                     }
                 }
-            }            
+            }
 
 
             if (robotBar.HasLabel(IRobotLabelType.I_LT_MEMBER_TYPE) == -1)
@@ -144,10 +217,10 @@ namespace BH.Adapter.Robot
                     bhomBar.Fragments.AddOrReplace(bhomFramEleDesignProps);
                 }
                 else
-                { 
+                {
                     BH.Engine.Base.Compute.RecordEvent("Framing element design property" + framEleDesPropsName + "is not supported", oM.Base.Debugging.EventType.Warning);
                 }
-                    
+
             }
 
             if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_RELEASE) == -1)
@@ -186,7 +259,7 @@ namespace BH.Adapter.Robot
             {
                 bhomBar.FEAType = BarFEAType.Axial;
             }
-            return bhomBar;       
+            return bhomBar;
         }
 
         /***************************************************/

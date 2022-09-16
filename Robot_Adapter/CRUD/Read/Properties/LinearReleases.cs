@@ -35,7 +35,7 @@ namespace BH.Adapter.Robot
 
         private List<Constraint4DOF> ReadConstraints4DOF(List<string> ids = null)
         {
-            return ReadLabels(IRobotLabelType.I_LT_LINEAR_RELEASE).OfType<Constraint4DOF>().ToList();
+            return ReadLabels(IRobotLabelType.I_LT_LINEAR_RELEASE, ids).OfType<Constraint4DOF>().ToList();
         }
 
         /***************************************************/

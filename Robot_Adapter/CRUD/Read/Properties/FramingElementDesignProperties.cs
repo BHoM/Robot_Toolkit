@@ -45,6 +45,13 @@ namespace BH.Adapter.Robot
                 IRobotLabel r_MemberType = r_memberTypes.Get(i);
 
                 string name = r_MemberType.Name;
+
+                if (ids != null && ids.Count != 0)  //Ids provided
+                {
+                    if (!ids.Contains(name))  //Name not in the provided list => skip
+                        continue;
+                }
+
                 IRDimMembDef memberDef = r_MemberType.Data as IRDimMembDef;
 
                 if (memberDef == null)

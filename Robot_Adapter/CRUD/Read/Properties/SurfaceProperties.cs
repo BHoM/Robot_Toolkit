@@ -34,12 +34,12 @@ namespace BH.Adapter.Robot
         /****           Private Methods                 ****/
         /***************************************************/
 
-        private List<ISurfaceProperty> ReadSurfaceProperties(List<string> names = null)
+        private List<ISurfaceProperty> ReadSurfaceProperties(List<string> ids = null)
         {
             Dictionary<string, IMaterialFragment> bhomMaterials = ReadMaterials().ToDictionary(x => x.Name);
 
-            List<ISurfaceProperty> bhomProps = ReadLabels(IRobotLabelType.I_LT_PANEL_THICKNESS, bhomMaterials).Select(x => x as ISurfaceProperty).Where(x => x != null).ToList();
-            bhomProps.AddRange(ReadLabels(IRobotLabelType.I_LT_CLADDING, bhomMaterials).Select(x => x as ISurfaceProperty).Where(x => x != null).ToList());
+            List<ISurfaceProperty> bhomProps = ReadLabels(IRobotLabelType.I_LT_PANEL_THICKNESS, ids, bhomMaterials).Select(x => x as ISurfaceProperty).Where(x => x != null).ToList();
+            bhomProps.AddRange(ReadLabels(IRobotLabelType.I_LT_CLADDING, ids, bhomMaterials).Select(x => x as ISurfaceProperty).Where(x => x != null).ToList());
             return bhomProps;
         }
 

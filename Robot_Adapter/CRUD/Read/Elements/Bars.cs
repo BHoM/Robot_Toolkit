@@ -101,7 +101,7 @@ namespace BH.Adapter.Robot
             m_RobotApplication.Project.Structure.Bars.EndMultiOperation();
 
             List<string> nodeIds = bhomBars.SelectMany(x => new string[] { x.StartNode.Name, x.EndNode.Name }).Distinct().ToList();
-            Dictionary<string, Node> bhomNodes = ReadNodes(nodeIds, true).ToDictionaryDistinctCheck(x => GetAdapterId<int>(x).ToString());
+            Dictionary<string, Node> bhomNodes = ReadNodes(nodeIds).ToDictionaryDistinctCheck(x => GetAdapterId<int>(x).ToString());
             List<string> releaseIds = bhomBars.Select(x => x.Release?.Name).Where(x => x != null).Distinct().ToList();
             Dictionary<string, BarRelease> bhombarReleases = releaseIds.Count == 0 ? new Dictionary<string, BarRelease>() : ReadBarRelease(releaseIds).ToDictionaryDistinctCheck(x => x.Name.ToString());
             List<string> sectionIds = bhomBars.Select(x => x.SectionProperty?.Name).Where(x => x != null).Distinct().ToList();

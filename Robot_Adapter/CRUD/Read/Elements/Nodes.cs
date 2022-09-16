@@ -21,10 +21,12 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using BH.oM.Structure.Elements;
 using RobotOM;
 using BH.oM.Structure.Constraints;
 using System.Collections;
+using BH.Engine.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {
@@ -38,7 +40,7 @@ namespace BH.Adapter.Robot
         {
             List<int> nodeIds = CheckAndGetIds<Node>(ids);
             List<Node> bhomNodes = new List<Node>();
-            List<Constraint6DOF> constraints = ReadConstraints6DOF();
+
             Dictionary<int, HashSet<string>> nodeTags = GetTypeTags(typeof(Node));
             HashSet<string> tags = new HashSet<string>();
 
@@ -62,7 +64,7 @@ namespace BH.Adapter.Robot
                     continue;
                 }
 
-                Node bhomNode = Convert.FromRobot(robotNode);
+                Node bhomNode = Convert.FromRobotConstraintName(robotNode);
 
                 if (bhomNode == null)
                 {
@@ -76,7 +78,21 @@ namespace BH.Adapter.Robot
 
                 bhomNodes.Add(bhomNode);
             }
+            List<string> contraintIds = bhomNodes.Select(x => x.Support?.Name).Where(x => x != null).Distinct().ToList();
+            Dictionary<string, Constraint6DOF> supports = contraintIds.Count == 0 ? new Dictionary<string, Constraint6DOF>() : ReadConstraints6DOF(contraintIds).ToDictionaryDistinctCheck(x => x.Name.ToString());
 
+            foreach (Node node in bhomNodes)
+            {
+                if (node.Support != null)
+                {
+                    Constraint6DOF constraint;
+                    if (supports.TryGetValue(node.Support.Name, out constraint))
+                        node.Support = constraint;
+                    else
+                        Engine.Base.Compute.RecordWarning($"Failed to extract the {nameof(Node.Support)} for Node {this.GetAdapterId(node)}");
+
+                }
+            }
 
             return bhomNodes;
         }

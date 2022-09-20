@@ -104,10 +104,10 @@ namespace BH.Adapter.Robot
             Dictionary<string, Node> bhomNodes = ReadNodes(nodeIds).ToDictionaryDistinctCheck(x => GetAdapterId<int>(x).ToString());
             List<string> releaseIds = bhomBars.Select(x => x.Release?.Name).Where(x => x != null).Distinct().ToList();
             Dictionary<string, BarRelease> bhombarReleases = releaseIds.Count == 0 ? new Dictionary<string, BarRelease>() : ReadBarRelease(releaseIds).ToDictionaryDistinctCheck(x => x.Name.ToString());
-            List<string> sectionIds = bhomBars.Select(x => x.SectionProperty?.Name).Where(x => x != null).Distinct().ToList();
-            Dictionary<string, ISectionProperty> bhomSections = sectionIds.Count == 0 ? new Dictionary<string, ISectionProperty>() : ReadSectionProperties(sectionIds).ToDictionaryDistinctCheck(x => x.Name.ToString());
             List<string> materialIds = bhomBars.Select(x => x.SectionProperty?.Material?.Name).Where(x => x != null).Distinct().ToList();
             Dictionary<string, IMaterialFragment> bhomMaterials = materialIds.Count == 0 ? new Dictionary<string, IMaterialFragment>() : ReadMaterials(materialIds).ToDictionaryDistinctCheck(x => x.Name.ToString());
+            List<string> sectionIds = bhomBars.Select(x => x.SectionProperty?.Name).Where(x => x != null).Distinct().ToList();
+            Dictionary<string, ISectionProperty> bhomSections = sectionIds.Count == 0 ? new Dictionary<string, ISectionProperty>() : ReadSectionProperties(sectionIds, bhomMaterials).ToDictionaryDistinctCheck(x => x.Name.ToString());
             List<string> offsetIds = bhomBars.Select(x => x.Offset?.Name).Where(x => x != null).Distinct().ToList();
             Dictionary<string, Offset> offsets = offsetIds.Count == 0 ? new Dictionary<string, Offset>() : ReadOffsets(offsetIds).ToDictionaryDistinctCheck(x => x.Name.ToString());
             List<string> framingElemIds = bhomBars.Select(x => x.FindFragment<FramingElementDesignProperties>()?.Name).Where(x => x != null).Distinct().ToList();

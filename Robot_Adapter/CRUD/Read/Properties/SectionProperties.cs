@@ -42,7 +42,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private List<ISectionProperty> ReadSectionProperties(List<string> ids = null, Dictionary<string, IMaterialFragment> materials = null)
+        private List<ISectionProperty> ReadSectionProperties(List<string> ids, Dictionary<string, IMaterialFragment> materials)
         {
             materials = materials ?? new Dictionary<string, IMaterialFragment>();
             return ReadLabels(IRobotLabelType.I_LT_BAR_SECTION, ids, materials).Select(x => x as ISectionProperty).Where(x => x != null).ToList();

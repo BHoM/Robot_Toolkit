@@ -42,25 +42,37 @@ namespace BH.Adapter.Robot
         public List<IBHoMObject> ReadLabels(IRobotLabelType robotLabelType, List<string> ids, Dictionary<string, IMaterialFragment> bhomMaterials = null)
         {
             IRobotLabelServer robotLabelServer = m_RobotApplication.Project.Structure.Labels;
-            IRobotNamesArray robotLabelNames = robotLabelServer.GetAvailableNames(robotLabelType);
             List<IBHoMObject> objects = new List<IBHoMObject>();
 
-            for (int i = 1; i <= robotLabelNames.Count; i++)
+            if (ids != null && ids.Count != 0)
             {
-                string robotLabelName = robotLabelNames.Get(i);
-
-                if (ids != null && ids.Count != 0)  //Ids provided
+                for (int i = 0; i < ids.Count; i++)
                 {
-                    if (!ids.Contains(robotLabelName))  //Name not in the provided list => skip
-                        continue;
+                    if (robotLabelServer.Exist(robotLabelType, ids[i]) == -1)
+                    {
+                        IBHoMObject obj = ReadLabel(robotLabelType, ids[i], robotLabelServer, bhomMaterials);
+                        if (obj != null)
+                            objects.Add(obj);
+                    }
+
                 }
+            }
+            else
+            {
+                IRobotNamesArray robotLabelNames = robotLabelServer.GetAvailableNames(robotLabelType);
 
-                if (string.IsNullOrEmpty(robotLabelName))
-                    continue;
+                for (int i = 1; i <= robotLabelNames.Count; i++)
+                {
+                    string robotLabelName = robotLabelNames.Get(i);
 
-                IBHoMObject obj = ReadLabel(robotLabelType, robotLabelName, robotLabelServer, bhomMaterials);
-                if (obj != null)
-                    objects.Add(obj);
+                    if (string.IsNullOrEmpty(robotLabelName))
+                        continue;
+
+                    IBHoMObject obj = ReadLabel(robotLabelType, robotLabelName, robotLabelServer, bhomMaterials);
+                    if (obj != null)
+                        objects.Add(obj);
+
+                }
             }
             return objects;
         }

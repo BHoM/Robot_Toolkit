@@ -53,7 +53,7 @@ namespace BH.Adapter.Robot
                         material = Engine.Structure.Create.Steel(name, robotLabelData.E, robotLabelData.NU, robotLabelData.LX, robotLabelData.RO / Engine.Adapters.Robot.Query.RobotGravityConstant, robotLabelData.DumpCoef, robotLabelData.RE, robotLabelData.RT);
                         break;
                     case IRobotMaterialType.I_MT_CONCRETE:
-                        material = Engine.Structure.Create.Concrete(name, robotLabelData.E, robotLabelData.NU, robotLabelData.LX, robotLabelData.RO / Engine.Adapters.Robot.Query.RobotGravityConstant, robotLabelData.DumpCoef, 0, 0);
+                        material = Engine.Structure.Create.Concrete(name, robotLabelData.E, robotLabelData.NU, robotLabelData.LX, robotLabelData.RO / Engine.Adapters.Robot.Query.RobotGravityConstant, robotLabelData.DumpCoef, 0, robotLabelData.RE);
                         break;
                     case IRobotMaterialType.I_MT_ALUMINIUM:
                         material = Engine.Structure.Create.Aluminium(name, robotLabelData.E, robotLabelData.NU, robotLabelData.LX, robotLabelData.RO / Engine.Adapters.Robot.Query.RobotGravityConstant, robotLabelData.DumpCoef);

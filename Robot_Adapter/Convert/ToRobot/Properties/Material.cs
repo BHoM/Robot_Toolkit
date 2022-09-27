@@ -49,6 +49,18 @@ namespace BH.Adapter.Robot
                 materialData.LX = isotropic.ThermalExpansionCoeff;
                 materialData.Kirchoff = isotropic.ShearModulus();
                 materialData.DumpCoef = isotropic.DampingRatio;
+
+                if (material is Steel)
+                {
+                    Steel steel = material as Steel;
+                    materialData.RE = steel.YieldStress;
+                    materialData.RT = steel.UltimateStress;
+                }
+                else if (material is Concrete)
+                {
+                    Concrete concrete = material as Concrete;
+                    materialData.RE = concrete.CylinderStrength;
+                }
             }
             else if (material is Timber)
             {

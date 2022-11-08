@@ -181,7 +181,11 @@ namespace BH.Adapter.Robot
                     if (outstand < 0 && Math.Abs(outstand) < Tolerance.MicroDistance)
                         outstand = 0;
 
-                    sectionProfile = BH.Engine.Spatial.Create.GeneralisedFabricatedBoxProfile(h + (2 * tf), b1 + (2 * tw), tw, tf, tf, outstand, outstand);
+                    //If outstands are 0 (less than microdistance fraction of the width) return a standard fabricated box section.
+                    if (b1 > Tolerance.Distance && outstand / b1 < Tolerance.MicroDistance)
+                        sectionProfile = BH.Engine.Spatial.Create.FabricatedBoxProfile(h + (2 * tf), b1 + 2 * tw, tw, tf, tf, 0);
+                    else
+                        sectionProfile = BH.Engine.Spatial.Create.GeneralisedFabricatedBoxProfile(h + (2 * tf), b1 + (2 * tw), tw, tf, tf, outstand, outstand);
                     break;
 
                 case IRobotBarSectionShapeType.I_BSST_USER_BOX_3:

@@ -25,6 +25,7 @@ using RobotOM;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Spatial.ShapeProfiles;
 using System.Linq;
+using BH.oM.Geometry;
 
 namespace BH.Adapter.Robot
 {
@@ -86,15 +87,16 @@ namespace BH.Adapter.Robot
                 {
                     if (SetRobotTypeAndShapeType(startProfile as dynamic, sectionData))
                     {
-                        SetNonStandardSectionData(startProfile as dynamic, sectionData, 0);
-                        SetNonStandardSectionData(endProfile as dynamic, sectionData, 1);
-                        sectionData.CalcNonstdGeometry();
-                        return true;
+                        bool success = SetNonStandardSectionData(startProfile as dynamic, sectionData, 0);
+                        success &= SetNonStandardSectionData(endProfile as dynamic, sectionData, 1);
+                        if(success)
+                            sectionData.CalcNonstdGeometry();
+                        return success;
                     }
                 }
             }
 
-            Engine.Base.Compute.RecordWarning("The robot adapter currently only support tapered sections with two profiles of the same type. Section set as explicit with 0-properties.");
+            Engine.Base.Compute.RecordWarning($"The robot adapter currently only support tapered sections with two profiles of the same type. Section with name {sectionData.Name} set as explicit section with 0-properties.");
             return false;
         }
 
@@ -111,8 +113,17 @@ namespace BH.Adapter.Robot
 
         private static bool SetRobotTypeAndShapeType(this FabricatedBoxProfile section, IRobotBarSectionData sectionData)
         {
-            sectionData.Type = IRobotBarSectionType.I_BST_NS_BOX_3;
-            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_BOX_3;
+            if (section.BotFlangeThickness > Tolerance.MicroDistance && (section.BotFlangeThickness - section.TopFlangeThickness) / (section.BotFlangeThickness + section.TopFlangeThickness) / 2 < 1e-6)   //If same flange thickness on both top and bot flange
+            {
+                sectionData.Type = IRobotBarSectionType.I_BST_NS_BOX_2;
+                sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_BOX_2;
+            }
+            else
+            {
+                sectionData.Type = IRobotBarSectionType.I_BST_NS_BOX_3;
+                sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_BOX_3;
+            }
+
             return true;
         }
 
@@ -200,7 +211,7 @@ namespace BH.Adapter.Robot
 
         private static bool SetRobotTypeAndShapeType(this IProfile section, IRobotBarSectionData sectionData)
         {
-            Engine.Base.Compute.RecordWarning("Profile of type " + section.GetType().Name + " is not yet fully supported for Steel sections. Section with name " + sectionData.Name + " set as explicit section");
+            Engine.Base.Compute.RecordWarning("Profile of type " + section.GetType().Name + " is not yet fully supported for Steel sections. Section with name " + sectionData.Name + " set as explicit section.");
             return false;
         }
 
@@ -222,13 +233,32 @@ namespace BH.Adapter.Robot
         {
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(position);
 
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B, section.Width);
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B1, section.Width - (2 * section.WebThickness));
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B2, section.Width);
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_H, section.Height - (section.TopFlangeThickness + section.BotFlangeThickness));
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TW, section.WebThickness);
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF, section.TopFlangeThickness);
-            nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF2, section.BotFlangeThickness);
+            if (sectionData.ShapeType == IRobotBarSectionShapeType.I_BSST_USER_BOX_3) //Check assigned shapetype. Box3 for varying flange thickness, box 2 will be set if flange thickness the same
+            {
+                if (position != 0)  //Tapered sections only support box 2
+                {
+                    BH.Engine.Base.Compute.RecordWarning($"Robot only supports boxes with equal flanges for tapered sections. Section with name {sectionData.Name} set as explicit section with 0 properties.");
+                    return false;
+                }
+
+                nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B, section.Width);
+                nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B1, section.Width - (2 * section.WebThickness));
+                nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_B2, section.Width);
+                nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_H, section.Height - (section.TopFlangeThickness + section.BotFlangeThickness));
+                nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TW, section.WebThickness);
+                nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF, section.TopFlangeThickness);
+                nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_3_TF2, section.BotFlangeThickness);
+
+            }
+            else
+            {
+                nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_B, section.Width);
+                nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_B1, section.Width - (2 * section.WebThickness));
+                nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_H, section.Height - (section.TopFlangeThickness + section.BotFlangeThickness));
+                nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_TW, section.WebThickness);
+                nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_BOX_2_TF, section.TopFlangeThickness);
+            }
+
             return true;
         }
 

@@ -110,7 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Versioning_51.json" />
+    <None Include="Versioning_61.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Compute\" />

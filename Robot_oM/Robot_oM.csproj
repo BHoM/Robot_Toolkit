@@ -77,7 +77,7 @@
     <Folder Include="Structural\Results\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Versioning_51.json" />
+    <None Include="Versioning_61.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

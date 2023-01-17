@@ -197,6 +197,9 @@ namespace BH.Adapter.Robot
 
         private void SetRobotPanelEdgeConstraints(RobotObjObject panel, List<Edge> edges)
         {
+            if (edges.All(x => x.Support == null && x.Release == null)) //All supports and releases are null can just return without making any com calls
+                return;
+
             IRobotCollection panelEdges = panel.Main.Edges;
 
             if (panelEdges.Count != edges.Count)
@@ -207,14 +210,18 @@ namespace BH.Adapter.Robot
 
             for (int i = 1; i <= panelEdges.Count; i++)
             {
-                IRobotObjEdge panelEdge = panelEdges.Get(i);
-                if (panelEdge == null)
-                    continue;
-
                 Constraint6DOF support = edges[i - 1].Support;
-                if (support != null)
-                    panelEdge.SetLabel(IRobotLabelType.I_LT_SUPPORT, support.DescriptionOrName());
                 Constraint4DOF release = edges[i - 1].Release;
+
+                if (support != null)
+                {
+                    IRobotObjEdge panelEdge = panelEdges.Get(i);
+                    if (panelEdge == null)
+                        continue;
+
+                    panelEdge.SetLabel(IRobotLabelType.I_LT_SUPPORT, support.DescriptionOrName());
+                }
+
                 if (release != null)
                     m_RobotApplication.Project.Structure.Objects.LinearReleases.Set(panel.Number, i, panel.Number, 1, release.DescriptionOrName());
             }

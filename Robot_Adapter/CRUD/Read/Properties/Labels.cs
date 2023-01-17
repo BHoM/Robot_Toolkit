@@ -28,6 +28,7 @@ using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.SurfaceProperties;
 using BH.oM.Structure.SectionProperties;
 using BH.oM.Structure.Offsets;
+using System.Linq;
 
 namespace BH.Adapter.Robot
 {
@@ -114,7 +115,11 @@ namespace BH.Adapter.Robot
                         string materialName = secData.MaterialName;
                         if (!bhomMaterials.TryGetValue(materialName, out sectionMaterial))
                         {
-                            sectionMaterial = ReadMaterialByLabelName(materialName);
+                            sectionMaterial = ReadCashed<IMaterialFragment>(new List<string> { materialName }).FirstOrDefault();
+                            if (sectionMaterial == null)
+                            {
+                                sectionMaterial = ReadMaterialByLabelName(materialName);
+                            }
                             bhomMaterials[materialName] = sectionMaterial;
                         }
                         ISectionProperty section = secData.FromRobot(sectionMaterial, robotLabelName);

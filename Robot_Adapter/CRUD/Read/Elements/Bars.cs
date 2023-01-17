@@ -101,17 +101,17 @@ namespace BH.Adapter.Robot
             m_RobotApplication.Project.Structure.Bars.EndMultiOperation();
 
             List<int> nodeIds = bhomBars.SelectMany(x => new int[] { int.Parse(x.StartNode.Name), int.Parse(x.EndNode.Name) }).Distinct().ToList();
-            Dictionary<int, Node> bhomNodes = ReadCashedDictionary<Node, int>(nodeIds);
+            Dictionary<int, Node> bhomNodes = GetCachedOrReadAsDictionary<int, Node>(nodeIds);
             List<string> releaseIds = bhomBars.Select(x => x.Release?.Name).Where(x => x != null).Distinct().ToList();
-            Dictionary<string, BarRelease> bhombarReleases = releaseIds.Count == 0 ? new Dictionary<string, BarRelease>() : ReadCashedDictionary<BarRelease, string>(releaseIds);
+            Dictionary<string, BarRelease> bhombarReleases = releaseIds.Count == 0 ? new Dictionary<string, BarRelease>() : GetCachedOrReadAsDictionary<string, BarRelease>(releaseIds);
             List<string> materialIds = bhomBars.Select(x => x.SectionProperty?.Material?.Name).Where(x => x != null).Distinct().ToList();
-            Dictionary<string, IMaterialFragment> bhomMaterials = materialIds.Count == 0 ? new Dictionary<string, IMaterialFragment>() : ReadCashedDictionary<IMaterialFragment, string>(materialIds);
+            Dictionary<string, IMaterialFragment> bhomMaterials = materialIds.Count == 0 ? new Dictionary<string, IMaterialFragment>() : GetCachedOrReadAsDictionary<string, IMaterialFragment>(materialIds);
             List<string> sectionIds = bhomBars.Select(x => x.SectionProperty?.Name).Where(x => x != null).Distinct().ToList();
-            Dictionary<string, ISectionProperty> bhomSections = sectionIds.Count == 0 ? new Dictionary<string, ISectionProperty>() : ReadCashedDictionary<ISectionProperty, string>(sectionIds);
+            Dictionary<string, ISectionProperty> bhomSections = sectionIds.Count == 0 ? new Dictionary<string, ISectionProperty>() : GetCachedOrReadAsDictionary<string, ISectionProperty>(sectionIds);
             List<string> offsetIds = bhomBars.Select(x => x.Offset?.Name).Where(x => x != null).Distinct().ToList();
-            Dictionary<string, Offset> offsets = offsetIds.Count == 0 ? new Dictionary<string, Offset>() : ReadCashedDictionary<Offset, string>(offsetIds);
+            Dictionary<string, Offset> offsets = offsetIds.Count == 0 ? new Dictionary<string, Offset>() : GetCachedOrReadAsDictionary<string, Offset>(offsetIds);
             List<string> framingElemIds = bhomBars.Select(x => x.FindFragment<FramingElementDesignProperties>()?.Name).Where(x => x != null).Distinct().ToList();
-            Dictionary<string, FramingElementDesignProperties> bhomFramEleDesProps = framingElemIds.Count == 0 ? new Dictionary<string, FramingElementDesignProperties>() : ReadCashedDictionary<FramingElementDesignProperties, string>(framingElemIds);
+            Dictionary<string, FramingElementDesignProperties> bhomFramEleDesProps = framingElemIds.Count == 0 ? new Dictionary<string, FramingElementDesignProperties>() : GetCachedOrReadAsDictionary<string, FramingElementDesignProperties>(framingElemIds);
             Dictionary<string, Dictionary<string, ISectionProperty>> sectionWithMaterial = new Dictionary<string, Dictionary<string, ISectionProperty>>();  //Used to store sections where the material differs from the default
 
             foreach (Bar bar in bhomBars)

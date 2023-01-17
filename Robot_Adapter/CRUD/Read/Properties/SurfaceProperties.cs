@@ -36,7 +36,7 @@ namespace BH.Adapter.Robot
 
         private List<ISurfaceProperty> ReadSurfaceProperties(List<string> ids = null)
         {
-            Dictionary<string, IMaterialFragment> bhomMaterials = ReadCashedDictionary<IMaterialFragment, string>(null);
+            Dictionary<string, IMaterialFragment> bhomMaterials = GetCachedOrReadAsDictionary<string, IMaterialFragment>();
 
             List<ISurfaceProperty> bhomProps = ReadLabels(IRobotLabelType.I_LT_PANEL_THICKNESS, ids, bhomMaterials).Select(x => x as ISurfaceProperty).Where(x => x != null).ToList();
             bhomProps.AddRange(ReadLabels(IRobotLabelType.I_LT_CLADDING, ids, bhomMaterials).Select(x => x as ISurfaceProperty).Where(x => x != null).ToList());

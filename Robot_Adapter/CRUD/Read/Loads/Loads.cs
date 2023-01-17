@@ -109,8 +109,8 @@ namespace BH.Adapter.Robot
         {
             //Main method looping through all loadcases and extracting the picked up load type
             List<ILoad> bhomLoads = new List<ILoad>();
-            Dictionary<int, T> loadObjects = ReadLoadCacheObjects<T>();
-            Dictionary<int, Loadcase> bhomLoadCases = ReadCashedDictionary<Loadcase, int>(null);
+            Dictionary<int, T> loadObjects = GetCachedOrReadLoadObjects<T>();
+            Dictionary<int, Loadcase> bhomLoadCases = GetCachedOrReadAsDictionary<int, Loadcase>();
 
             IRobotCaseCollection loadCollection = m_RobotApplication.Project.Structure.Cases.GetAll();
 
@@ -215,7 +215,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private Dictionary<int, T> ReadLoadCacheObjects<T>() where T : class, IBHoMObject
+        private Dictionary<int, T> GetCachedOrReadLoadObjects<T>() where T : class, IBHoMObject
         {
             //Reads elements of a particular type.
 
@@ -223,8 +223,8 @@ namespace BH.Adapter.Robot
 
             if (type == typeof(BHoMObject))
             {
-                var bars = ReadCashedDictionary<Bar, int>();
-                var panels = ReadCashedDictionary<Panel, int>();
+                var bars = GetCachedOrReadAsDictionary<int, Bar>();
+                var panels = GetCachedOrReadAsDictionary<int, Panel>();
                 Dictionary<int, T> dict = new Dictionary<int, T>();
 
                 foreach (var kvp in bars)
@@ -241,9 +241,9 @@ namespace BH.Adapter.Robot
 
             Type readType = type;
             if (type == typeof(IAreaElement))
-                return ReadCashedDictionary<Panel, int>(null).ToDictionary(x => x.Key, x => x.Value as T);
+                return GetCachedOrReadAsDictionary<int, Panel>().ToDictionary(x => x.Key, x => x.Value as T);
 
-            return ReadCashedDictionary<T, int>(null);
+            return GetCachedOrReadAsDictionary<int, T>();
         }
 
         /***************************************************/

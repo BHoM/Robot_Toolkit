@@ -79,7 +79,7 @@ namespace BH.Adapter.Robot
                 bhomNodes.Add(bhomNode);
             }
             List<string> contraintIds = bhomNodes.Select(x => x.Support?.Name).Where(x => x != null).Distinct().ToList();
-            Dictionary<string, Constraint6DOF> supports = contraintIds.Count == 0 ? new Dictionary<string, Constraint6DOF>() : ReadCashedDictionary<Constraint6DOF, string>(contraintIds);
+            Dictionary<string, Constraint6DOF> supports = contraintIds.Count == 0 ? new Dictionary<string, Constraint6DOF>() : GetCachedOrReadAsDictionary<string, Constraint6DOF>(contraintIds);
 
             foreach (Node node in bhomNodes)
             {

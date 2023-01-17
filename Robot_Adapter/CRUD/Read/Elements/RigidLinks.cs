@@ -45,9 +45,8 @@ namespace BH.Adapter.Robot
             List<int> linksIds = CheckAndGetIds<RigidLink>(ids);
             List<RigidLink> bhomRigidLinks = new List<RigidLink>();
 
-            IEnumerable<Node> bhomNodesList = ReadNodes();
-            Dictionary<int, Node> bhomNodes = bhomNodesList.ToDictionary(x => GetAdapterId<int>(x));
-            Dictionary<string, LinkConstraint> bhomLinkConstraints = ReadLinkConstraint().ToDictionary(x => x.Name.ToString());
+            Dictionary<int, Node> bhomNodes = ReadCashedDictionary<Node, int>(null);
+            Dictionary<string, LinkConstraint> bhomLinkConstraints = ReadCashedDictionary<LinkConstraint, string>(null);
 
             if (linksIds == null || linksIds.Count == 0)
             {

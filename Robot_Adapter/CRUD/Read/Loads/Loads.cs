@@ -45,7 +45,6 @@ namespace BH.Adapter.Robot
         private List<ILoad> ReadLoads(Type type, List<string> ids = null)
         {
             //Ensure previous object caches have been cleared
-            ClearLoadObjectCache();
 
             List<ILoad> loads = new List<ILoad>();
 
@@ -96,7 +95,6 @@ namespace BH.Adapter.Robot
                 loads.AddRange(ReadGeometricalLineLoads(ids));
 
             //Clean up the object cache
-            ClearLoadObjectCache();
 
             return loads;
         }
@@ -107,12 +105,12 @@ namespace BH.Adapter.Robot
         [Input("convertMethod", "Method used for turning a load record into a BHoM load, setting all properties except for objects and case. For example `record => record.FromRobotAreaUDL()` for Areaload.")]
         [Input("loadType","Robot loadtype enum corresponding to the type of load being pulled.")]
         [Input("ids", "Not yet in use.")]
-        private List<ILoad> ReadObjectLoads<T>(Func<IRobotLoadRecord, IElementLoad<T>> convertMethod, IRobotLoadRecordType loadType, List<string> ids = null) where T : IBHoMObject
+        private List<ILoad> ReadObjectLoads<T>(Func<IRobotLoadRecord, IElementLoad<T>> convertMethod, IRobotLoadRecordType loadType, List<string> ids = null) where T : class, IBHoMObject
         {
             //Main method looping through all loadcases and extracting the picked up load type
             List<ILoad> bhomLoads = new List<ILoad>();
-            Dictionary<int, T> loadObjects = ReadLoadCacheObjects<T>().ToDictionary(x => GetAdapterId<int>(x));
-            Dictionary<string, Loadcase> bhomLoadCases = ReadLoadCase().ToDictionaryDistinctCheck(x => x.Name);
+            Dictionary<int, T> loadObjects = ReadLoadCacheObjects<T>();
+            Dictionary<int, Loadcase> bhomLoadCases = ReadCashedDictionary<Loadcase, int>(null);
 
             IRobotCaseCollection loadCollection = m_RobotApplication.Project.Structure.Cases.GetAll();
 
@@ -136,7 +134,7 @@ namespace BH.Adapter.Robot
                         continue;
                     }
 
-                    if (bhomLoadCases.ContainsKey(sCase.Name))
+                    if (bhomLoadCases.ContainsKey(sCase.Number))
                     {
                         for (int j = 1; j <= sCase.Records.Count; j++)
                         {
@@ -152,7 +150,7 @@ namespace BH.Adapter.Robot
                                 if (load != null)
                                 {
                                     SetLoadGroup(load, objects.Cast<IBHoMObject>());
-                                    load.Loadcase = bhomLoadCases[sCase.Name];
+                                    load.Loadcase = bhomLoadCases[sCase.Number];
                                     bhomLoads.Add(load);
                                 }
                                 else
@@ -217,48 +215,39 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private IEnumerable<T> ReadLoadCacheObjects<T>()
+        private Dictionary<int, T> ReadLoadCacheObjects<T>() where T : class, IBHoMObject
         {
             //Reads elements of a particular type.
-
-            if (m_LoadObjectCache == null)
-                m_LoadObjectCache = new Dictionary<Type, IEnumerable<IBHoMObject>>();
 
             Type type = typeof(T);
 
             if (type == typeof(BHoMObject))
             {
-                var bars = ReadLoadCacheObjects<Bar>();
-                var panels = ReadLoadCacheObjects<Panel>();
-                return bars.Cast<T>().Concat(panels.Cast<T>());
-            }
+                var bars = ReadCashedDictionary<Bar, int>();
+                var panels = ReadCashedDictionary<Panel, int>();
+                Dictionary<int, T> dict = new Dictionary<int, T>();
 
-            if (m_LoadObjectCache.ContainsKey(type))
-                return m_LoadObjectCache[type].Cast<T>();
+                foreach (var kvp in bars)
+                {
+                    dict[kvp.Key] = kvp.Value as T;
+                }
+                foreach (var kvp in panels)
+                {
+                    dict[kvp.Key] = kvp.Value as T;
+                }
+
+                return dict;
+            }
 
             Type readType = type;
             if (type == typeof(IAreaElement))
-                readType = typeof(Panel);
+                return ReadCashedDictionary<Panel, int>(null).ToDictionary(x => x.Key, x => x.Value as T);
 
-            IEnumerable<IBHoMObject> readObjs = IRead(readType, null).Where(x => x != null).ToList();
-            m_LoadObjectCache[type] = readObjs;
-            return readObjs.Cast<T>();
+            return ReadCashedDictionary<T, int>(null);
         }
 
         /***************************************************/
 
-        private void ClearLoadObjectCache()
-        {
-            m_LoadObjectCache = new Dictionary<Type, IEnumerable<IBHoMObject>>();
-        }
-
-        /***************************************************/
-        /**** Private Fields                            ****/
-        /***************************************************/
-
-        private Dictionary<Type, IEnumerable<IBHoMObject>> m_LoadObjectCache = new Dictionary<Type, IEnumerable<IBHoMObject>>();
-
-        /***************************************************/
     }
 
 }

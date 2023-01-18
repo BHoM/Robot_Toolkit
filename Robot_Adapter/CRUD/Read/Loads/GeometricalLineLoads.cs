@@ -44,7 +44,7 @@ namespace BH.Adapter.Robot
         {
 
             List<ILoad> bhomLoads = new List<ILoad>();
-            Dictionary<string, Loadcase> bhomLoadCases = ReadLoadCase().ToDictionaryDistinctCheck(x => x.Name);
+            Dictionary<int, Loadcase> bhomLoadCases = GetCachedOrReadAsDictionary<int, Loadcase>();
             IRobotCaseCollection loadCollection = m_RobotApplication.Project.Structure.Cases.GetAll();
 
             for (int i = 1; i <= loadCollection.Count; i++)
@@ -55,7 +55,7 @@ namespace BH.Adapter.Robot
                     if (lCase.Type == IRobotCaseType.I_CT_SIMPLE)
                     {
                         IRobotSimpleCase sCase = lCase as IRobotSimpleCase;
-                        if (bhomLoadCases.ContainsKey(sCase.Name))
+                        if (bhomLoadCases.ContainsKey(sCase.Number))
                         {
                             for (int j = 1; j <= sCase.Records.Count; j++)
                             {
@@ -94,7 +94,7 @@ namespace BH.Adapter.Robot
                                             MomentB = new Vector { X = mxb, Y = myb, Z = mzb },
                                             Location = new Line { Start = new Point { X = xa, Y = ya, Z = za }, End = new Point { X = xb, Y = yb, Z = zb } },
                                             Axis = local.FromRobotLoadAxis(),
-                                            Loadcase = bhomLoadCases[sCase.Name]
+                                            Loadcase = bhomLoadCases[sCase.Number]
                                         };
                                         bhomLoads.Add(contourLoad);
                                         break;

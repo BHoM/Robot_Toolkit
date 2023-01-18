@@ -115,7 +115,7 @@ namespace BH.Adapter.Robot
                         string materialName = secData.MaterialName;
                         if (!bhomMaterials.TryGetValue(materialName, out sectionMaterial))
                         {
-                            sectionMaterial = GetCachedOrRead<IMaterialFragment>(new List<string> { materialName }).FirstOrDefault();
+                            sectionMaterial = GetCachedOrRead<IMaterialFragment, string>(materialName);
                             if (sectionMaterial == null)
                             {
                                 sectionMaterial = ReadMaterialByLabelName(materialName);

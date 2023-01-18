@@ -62,17 +62,17 @@ namespace BH.Adapter.Robot
             else if (type == typeof(Opening))
                 return ReadOpenings();
             else if (type == typeof(Constraint4DOF))
-                return ReadConstraints4DOF();
+                return ReadConstraints4DOF(indices?.Cast<object>().Select(x => x.ToString()).ToList());
             else if (type == typeof(Constraint6DOF))
-                return ReadConstraints6DOF();
+                return ReadConstraints6DOF(indices?.Cast<object>().Select(x => x.ToString()).ToList());
             else if (typeof(IMaterialFragment).IsAssignableFrom(type))
-                return ReadMaterials();
+                return ReadMaterials(indices?.Cast<object>().Select(x => x.ToString()).ToList());
             else if (type == typeof(Panel))
                 return ReadPanels(indices);
             else if (type == typeof(FEMesh))
                 return ReadMeshes(indices);
             else if (typeof(ISurfaceProperty).IsAssignableFrom(type))
-                return ReadSurfaceProperties();
+                return ReadSurfaceProperties(indices?.Cast<object>().Select(x => x.ToString()).ToList());
             else if (type == typeof(RigidLink))
                 return ReadRigidLinks();
             else if (type == typeof(LoadCombination))
@@ -80,13 +80,13 @@ namespace BH.Adapter.Robot
             else if (type == typeof(LinkConstraint))
                 return new List<LinkConstraint>();
             else if (type == typeof(BarRelease))
-                return ReadBarRelease();
+                return ReadBarRelease(indices?.Cast<object>().Select(x => x.ToString()).ToList());
             else if (type == typeof(Offset))
                 return ReadOffsets();
             else if (type == typeof(Loadcase))
                 return ReadLoadCase();
             else if (typeof(ISectionProperty).IsAssignableFrom(type))
-                return ReadSectionProperties();
+                return ReadSectionProperties(indices?.Cast<object>().Select(x => x.ToString()).ToList());
             else if (typeof(ILoad).IsAssignableFrom(type))
                 return ReadLoads(type); //TODO: Implement load extraction
             else if (type.IsGenericType && type.Name == typeof(BHoMGroup<IBHoMObject>).Name)

@@ -74,7 +74,7 @@ namespace BH.Adapter.Robot
             else if (typeof(ISurfaceProperty).IsAssignableFrom(type))
                 return ReadSurfaceProperties(indices?.Cast<object>().Select(x => x.ToString()).ToList());
             else if (type == typeof(RigidLink))
-                return ReadRigidLinks();
+                return ReadRigidLinks(indices);
             else if (type == typeof(LoadCombination))
                 return ReadLoadCombinations();
             else if (type == typeof(LinkConstraint))
@@ -82,7 +82,7 @@ namespace BH.Adapter.Robot
             else if (type == typeof(BarRelease))
                 return ReadBarRelease(indices?.Cast<object>().Select(x => x.ToString()).ToList());
             else if (type == typeof(Offset))
-                return ReadOffsets();
+                return ReadOffsets(indices?.Cast<object>().Select(x => x.ToString()).ToList());
             else if (type == typeof(Loadcase))
                 return ReadLoadCase();
             else if (typeof(ISectionProperty).IsAssignableFrom(type))

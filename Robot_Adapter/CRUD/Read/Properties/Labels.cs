@@ -55,7 +55,6 @@ namespace BH.Adapter.Robot
                         if (obj != null)
                             objects.Add(obj);
                     }
-
                 }
             }
             else

@@ -27,6 +27,7 @@ using BH.oM.Base;
 using BH.Engine.Structure;
 using System.Linq;
 using RobotOM;
+using BH.oM.Structure.Elements;
 
 namespace BH.Adapter.Robot
 {
@@ -61,7 +62,29 @@ namespace BH.Adapter.Robot
 
         private bool ICheckLoad(ILoad load)
         {
-            return CheckLoad(load as dynamic);
+            //Dynamic dispatching should be working, and was working up to a point where it all of a sudden stopped.
+            //SHould try commenting out this line of code, and/or make a bigger investigation as to why dynamic dispatching is causing an issue in Robot toolkit
+            //Code further down as a fix for now
+
+            //return CheckLoad(load as dynamic);
+
+            //This _should_ not be needed. as dynamic call above _should_ work and _was_ working.
+            if(load is IElementLoad<Bar>)
+                return CheckLoad(load as IElementLoad<Bar>);
+            if(load is IElementLoad<Node>)
+                return CheckLoad(load as IElementLoad<Node>);
+            if(load is IElementLoad<IAreaElement>)
+                return CheckLoad(load as IElementLoad<IAreaElement>);
+            if(load is IElementLoad<BHoMObject>)
+                return CheckLoad(load as IElementLoad<BHoMObject>);
+            if (load is IElementLoad<IBHoMObject>)
+                return CheckLoad(load as IElementLoad<IBHoMObject>);
+            if (load is IElementLoad<Panel>)
+                return CheckLoad(load as IElementLoad<Panel>);
+            if(load is IElementLoad<FEMesh>)
+                return CheckLoad(load as IElementLoad<FEMesh>);
+
+            return CheckLoad(load);
         }
 
         /***************************************************/

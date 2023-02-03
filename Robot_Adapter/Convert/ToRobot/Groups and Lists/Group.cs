@@ -53,7 +53,7 @@ namespace BH.Adapter.Robot
                 return IRobotObjectType.I_OT_CASE;
 
             else
-                return IRobotObjectType.I_OT_OBJECT;
+                return IRobotObjectType.I_OT_UNDEFINED;
         }
 
         /***************************************************/

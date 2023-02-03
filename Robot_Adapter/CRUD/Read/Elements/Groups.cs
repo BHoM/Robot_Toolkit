@@ -70,10 +70,12 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private Dictionary<int, HashSet<string>> GetGroupTags(Type type)
+        private Dictionary<int, HashSet<string>> GetGroupTags(Type type, out HashSet<string> groupNames)
         {
             RobotGroupServer m_groupServ = m_RobotApplication.Project.Structure.Groups;
             IRobotObjectType robotType = Convert.RobotObjectType(type);
+
+            groupNames = new HashSet<string>();
 
             if (robotType == IRobotObjectType.I_OT_UNDEFINED)
                 return new Dictionary<int, HashSet<string>>();
@@ -87,6 +89,8 @@ namespace BH.Adapter.Robot
                 {
                     string name = rgroup.Name;
                     List<int> indecies = Convert.FromRobotSelectionString(rgroup.SelList);
+
+                    groupNames.Add(name);
 
                     foreach (int id in indecies)
                     {

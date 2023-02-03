@@ -38,15 +38,16 @@ using BH.oM.Structure.MaterialFragments;
 using BH.oM.Data.Requests;
 using System.Linq;
 using BH.oM.Adapter;
+using RobotOM;
 
 namespace BH.Adapter.Robot
 {
     public partial class RobotAdapter
-    {                 
+    {
         /***************************************************/
         /**** Adapter Methods                           ****/
         /***************************************************/
-        
+
         protected override IEnumerable<IBHoMObject> IRead(Type type, IList indices, ActionConfig actionConfig = null)
         {
             if (type == null)
@@ -119,7 +120,7 @@ namespace BH.Adapter.Robot
                 Engine.Base.Compute.RecordWarning($"The provided Type {type.Name} is not supported to pull from RobotToolkit.");
             }
 
-            return new List<IBHoMObject>();         
+            return new List<IBHoMObject>();
         }
 
         /***************************************************/
@@ -131,6 +132,45 @@ namespace BH.Adapter.Robot
             objects.AddRange(ReadSelected(typeof(Panel)));
             objects.AddRange(ReadSelected(typeof(Node)));
             return objects;
+        }
+
+        /***************************************************/
+
+        protected override IEnumerable<IBHoMObject> Read(FilterRequest filterRequest, ActionConfig actionConfig = null)
+        {
+            // Extract the Ids from the FilterRequest
+            IList objectIds = null;
+            object idObject;
+            if (filterRequest.Equalities.TryGetValue("ObjectIds", out idObject) && idObject is IList)
+                objectIds = idObject as IList;
+
+            if (objectIds != null)
+                return IRead(filterRequest.Type, objectIds, actionConfig);
+
+            //Check for tag
+            if (!string.IsNullOrWhiteSpace(filterRequest.Tag))
+            {
+                RobotOM.IRobotObjectType robotType = Convert.RobotObjectType(filterRequest.Type);
+                RobotOM.IRobotGroupServer groupServer = m_RobotApplication.Project.Structure.Groups;
+
+                List<int> ids = null;
+
+                for (int i = 1; i <= groupServer.GetCount(robotType); i++)
+                {
+                    RobotGroup robotGroup = groupServer.Get(IRobotObjectType.I_OT_NODE, i);
+
+                    if (robotGroup.Name == filterRequest.Tag)
+                    {
+                        ids = Convert.ToSelectionList(robotGroup.SelList);
+                    }
+                }
+                if (ids != null)
+                    return IRead(filterRequest.Type, ids, actionConfig);
+                else
+                    return new List<IBHoMObject>();
+            }
+
+            return IRead(filterRequest.Type, objectIds, actionConfig);
         }
 
         /***************************************************/
@@ -188,8 +228,3 @@ namespace BH.Adapter.Robot
     }
 
 }
-
-
-
-
-

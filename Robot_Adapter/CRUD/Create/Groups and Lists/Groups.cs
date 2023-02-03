@@ -87,12 +87,23 @@ namespace BH.Adapter.Robot
                 if (robotType == IRobotObjectType.I_OT_UNDEFINED)
                     continue;
 
-                foreach (var group in GroupsFromTags(typeTags.Value))
+                foreach (var group in GroupsFromTags(type))
                 {
                     string name = group.Key;
-                    string selection = group.Value.ToRobotSelectionString();
+                    List<int> indecies = group.Value;
 
-                    groupServ.Create(robotType, name, selection);
+                    if (indecies.Count == 0)
+                    {
+                        //If the group no longer has any elements, delete it
+                        int index = groupServ.Find(robotType, name);
+                        groupServ.Delete(robotType, index);
+                    }
+                    else
+                    {
+                        //Otherwise, create it. Creatign a new will overwrite any pre-existing group
+                        string selection = indecies.ToRobotSelectionString();
+                        groupServ.Create(robotType, name, selection);
+                    }
                 }
             }
 
@@ -101,11 +112,24 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private Dictionary<string, List<int>> GroupsFromTags(Dictionary<int, HashSet<string>> elementTags)
+        private Dictionary<string, List<int>> GroupsFromTags(Type type)
         {
+            Dictionary<int, HashSet<string>> elementTags;
+            if (!m_tags.TryGetValue(type, out elementTags))
+                elementTags = new Dictionary<int, HashSet<string>>();
+
+            HashSet<string> existingGroups;
+            if (m_exisitingGroups.TryGetValue(type, out existingGroups))
+                existingGroups = new HashSet<string>();
+
             Dictionary<string, List<int>> groups = new Dictionary<string, List<int>>();
 
-            foreach (var elemTag in elementTags)
+            foreach (string name in existingGroups)
+            {
+                groups[name] = new List<int>(); //Initialise all pre-existing groups (groups in the model when the action started)
+            }
+
+            foreach (var elemTag in elementTags)    //Populate groups with all elements with the tag corresponding to the group name
             {
                 int id = elemTag.Key;
 

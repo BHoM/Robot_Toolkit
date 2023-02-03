@@ -84,9 +84,6 @@ namespace BH.Adapter.Robot
                 {
                     m_RobotApplication.Project.Open(filePath);
                 }
-
-
-                
             }
         }
 
@@ -105,13 +102,10 @@ namespace BH.Adapter.Robot
 
         private RobotApplication m_RobotApplication;
         private Dictionary<Type, Dictionary<int, HashSet<string>>> m_tags = new Dictionary<Type, Dictionary<int, HashSet<string>>>();
+        private Dictionary<Type, HashSet<string>> m_exisitingGroups = new Dictionary<Type, HashSet<string>>();
         private List<string> m_dbMaterialNames = new List<string>();
         private Dictionary<string, oM.Physical.Materials.Material> m_dbMaterials = new Dictionary<string, oM.Physical.Materials.Material>();
         private List<string> m_dbSecPropNames = new List<string>();
-        //private Dictionary<int, string> m_NodeTaggs = new Dictionary<int, string>();
-        //private Dictionary<string, string> m_MaterialTaggs = new Dictionary<string, string>();
-        //private Dictionary<string, string> m_SectionPropertyTaggs = new Dictionary<string, string>();
-        //private Dictionary<string, string> m_SupportTaggs = new Dictionary<string, string>();
 
         /***************************************************/
         /**** Private Helper Methods                    ****/
@@ -129,10 +123,12 @@ namespace BH.Adapter.Robot
             Dictionary<int, HashSet<string>> typeTags;
 
             if (!m_tags.TryGetValue(t, out typeTags))
-                typeTags = GetGroupTags(t);
-
-            m_tags[t] = typeTags;
-
+            {
+                HashSet<string> existingGroups;
+                typeTags = GetGroupTags(t, out existingGroups);
+                m_exisitingGroups[t] = existingGroups;
+                m_tags[t] = typeTags;
+            }
             return typeTags;
         }
 
@@ -141,6 +137,7 @@ namespace BH.Adapter.Robot
         private void ClearCashedTags()
         {
             m_tags = new Dictionary<Type, Dictionary<int, HashSet<string>>>();
+            m_exisitingGroups = new Dictionary<Type, HashSet<string>>();
         }
 
         private void SetProjectPreferences(RobotConfig robotConfig)

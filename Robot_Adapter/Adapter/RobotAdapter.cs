@@ -129,7 +129,7 @@ namespace BH.Adapter.Robot
             Dictionary<int, HashSet<string>> typeTags;
 
             if (!m_tags.TryGetValue(t, out typeTags))
-                typeTags = new Dictionary<int, HashSet<string>>();
+                typeTags = GetGroupTags(t);
 
             m_tags[t] = typeTags;
 
@@ -137,6 +137,11 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
+
+        private void ClearCashedTags()
+        {
+            m_tags = new Dictionary<Type, Dictionary<int, HashSet<string>>>();
+        }
 
         private void SetProjectPreferences(RobotConfig robotConfig)
         {

@@ -48,112 +48,114 @@ namespace BH.Adapter.Robot
             bool success = true;
             if (objects.Count() > 0)
             {
-                if (objects.First() is Constraint6DOF)
+                T first = objects.First();
+                if (first is Constraint6DOF)
                 {
                     success = CreateCollection(objects as IEnumerable<Constraint6DOF>);
                 }
 
-                if (objects.First() is Constraint4DOF)
+                if (first is Constraint4DOF)
                 {
                     success = CreateCollection(objects as IEnumerable<Constraint4DOF>);
                 }
 
-                if (objects.First() is RigidLink)
+                if (first is RigidLink)
                 {
                     success = CreateCollection(objects as IEnumerable<RigidLink>);
                 }
 
-                if (objects.First() is BarRelease)
+                if (first is BarRelease)
                 {
                     success = CreateCollection(objects as IEnumerable<BarRelease>);
                 }
 
-                if (objects.First() is Offset)
+                if (first is Offset)
                 {
                     success = CreateCollection(objects as IEnumerable<Offset>);
                 }
 
-                if (objects.First() is LinkConstraint)
+                if (first is LinkConstraint)
                 {
                     success = CreateCollection(objects as IEnumerable<LinkConstraint>);
                 }
 
-                if (typeof(ISectionProperty).IsAssignableFrom(objects.First().GetType()))
+                if (typeof(ISectionProperty).IsAssignableFrom(first.GetType()))
                 {
                     success = CreateCollection(objects as IEnumerable<ISectionProperty>);
                 }
 
-                if (objects.First() is IMaterialFragment)
+                if (first is IMaterialFragment)
                 {
                     success = CreateCollection(objects as IEnumerable<IMaterialFragment>);
                 }
 
-                if (objects.First() is Loadcase)
+                if (first is Loadcase)
                 {
                     success = CreateCollection(objects as IEnumerable<Loadcase>);
                 }
 
-                if (objects.First() is FEMesh)
+                if (first is FEMesh)
                 {
                     success = CreateCollection(objects as IEnumerable<FEMesh>);
                 }
 
-                if (objects.First() is Node)
+                if (first is Node)
                 {
                     success = CreateCollection(objects as IEnumerable<Node>);
                 }
 
-                if (objects.First() is Bar)
+                if (first is Bar)
                 {
                     success = CreateCollection(objects as IEnumerable<Bar>);
                 }
 
-                if (typeof(ILoad).IsAssignableFrom(objects.First().GetType()))
+                if (typeof(ILoad).IsAssignableFrom(first.GetType()))
                 {
                     success = CreateCollection(objects as IEnumerable<ILoad>);
                 }
 
-                if (objects.First() is Panel)
+                if (first is Panel)
                 {
                     success = CreateCollection(objects as IEnumerable<Panel>);
                 }
 
-                if (objects.First() is Opening)
+                if (first is Opening)
                 {
                     success = CreateCollection(objects as IEnumerable<Opening>);
                 }
 
-                if (typeof(ISurfaceProperty).IsAssignableFrom(objects.First().GetType()))
+                if (typeof(ISurfaceProperty).IsAssignableFrom(first.GetType()))
                 {
                     success = CreateCollection(objects as IEnumerable<ISurfaceProperty>);
                 }
 
-                if (objects.First() is LoadCombination)
+                if (first is LoadCombination)
                 {
                     success = CreateCollection(objects as IEnumerable<LoadCombination>);
                 }
 
-                if (objects.First() is FramingElementDesignProperties)
+                if (first is FramingElementDesignProperties)
                 {
                     success = CreateCollection(objects as IEnumerable<FramingElementDesignProperties>);
                 }
 
-                if (objects.First() is DesignGroup)
+                if (first is DesignGroup)
                 {
                     success = CreateCollection(objects as IEnumerable<BH.oM.Adapters.Robot.DesignGroup>);
                 }
 
-                if (objects.First() is IBHoMGroup)
+                if (first is IBHoMGroup)
                 {
                     success = CreateCollection(objects as dynamic);
                 }
             }
-            
+
             UpdateView();
             return success;
-        }          
-      
+        }
+
         /***************************************************/
+
 
     }
 

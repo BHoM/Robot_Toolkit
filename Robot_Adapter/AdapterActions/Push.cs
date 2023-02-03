@@ -47,6 +47,8 @@ namespace BH.Adapter.Robot
                 return new List<object>();
             }
 
+            ClearCashedTags();
+
             //Get out the interactive settings, and make nullchecks
             InteractiveSettings interactiveSettings = RobotConfig?.InteractiveSettings ?? new InteractiveSettings();
 
@@ -70,6 +72,8 @@ namespace BH.Adapter.Robot
                     m_RobotApplication.Interactive = 1;
                     m_RobotApplication.Visible = 1;
                 }
+                ApplyTagsAsGroups();
+                ClearCashedTags();
             }
         }
 

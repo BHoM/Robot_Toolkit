@@ -74,6 +74,53 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
+        private bool ApplyTagsAsGroups()
+        {
+
+            RobotGroupServer groupServ = m_RobotApplication.Project.Structure.Groups;
+
+            foreach (var typeTags in m_tags)
+            {
+                Type type = typeTags.Key;
+                IRobotObjectType robotType = Convert.RobotObjectType(type);
+
+                if (robotType == IRobotObjectType.I_OT_UNDEFINED)
+                    continue;
+
+                foreach (var group in GroupsFromTags(typeTags.Value))
+                {
+                    string name = group.Key;
+                    string selection = group.Value.ToRobotSelectionString();
+
+                    groupServ.Create(robotType, name, selection);
+                }
+            }
+
+            return true;
+        }
+
+        /***************************************************/
+
+        private Dictionary<string, List<int>> GroupsFromTags(Dictionary<int, HashSet<string>> elementTags)
+        {
+            Dictionary<string, List<int>> groups = new Dictionary<string, List<int>>();
+
+            foreach (var elemTag in elementTags)
+            {
+                int id = elemTag.Key;
+
+                foreach (string tag in elemTag.Value)
+                {
+                    if (groups.ContainsKey(tag))
+                        groups[tag].Add(id);
+                    else
+                        groups[tag] = new List<int> { id };
+                }
+            }
+            return groups;
+        }
+
+        /***************************************************/
     }
 
 }

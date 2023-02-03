@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using RobotOM;
 using BH.oM.Structure.Elements;
 using BH.oM.Structure.Loads;
+using System;
 
 namespace BH.Adapter.Robot
 {
@@ -65,6 +66,39 @@ namespace BH.Adapter.Robot
                 }
             }
             return groups;
+        }
+
+        /***************************************************/
+
+        private Dictionary<int, HashSet<string>> GetGroupTags(Type type)
+        {
+            RobotGroupServer m_groupServ = m_RobotApplication.Project.Structure.Groups;
+            IRobotObjectType robotType = Convert.RobotObjectType(type);
+
+            if (robotType == IRobotObjectType.I_OT_UNDEFINED)
+                return new Dictionary<int, HashSet<string>>();
+
+            Dictionary<int, HashSet<string>> typeTags = new Dictionary<int, HashSet<string>>();
+
+            for (int i = 1; i <= m_groupServ.GetCount(robotType); i++)
+            {
+                RobotGroup rgroup = m_RobotApplication.Project.Structure.Groups.Get(robotType, i);
+                if (rgroup != null)
+                {
+                    string name = rgroup.Name;
+                    List<int> indecies = Convert.FromRobotSelectionString(rgroup.SelList);
+
+                    foreach (int id in indecies)
+                    {
+                        if (typeTags.ContainsKey(id))
+                            typeTags[id].Add(name);
+                        else
+                            typeTags[id] = new HashSet<string>() { name };
+                    }                
+                }
+            }
+
+            return typeTags;
         }
 
         /***************************************************/

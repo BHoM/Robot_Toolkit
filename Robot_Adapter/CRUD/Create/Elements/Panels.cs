@@ -32,6 +32,7 @@ using BH.oM.Structure.Constraints;
 using BH.Engine.Spatial;
 using BH.Engine.Geometry;
 using System;
+using System.Runtime.InteropServices;
 
 namespace BH.Adapter.Robot
 {
@@ -45,7 +46,7 @@ namespace BH.Adapter.Robot
         {
             m_RobotApplication.Project.Structure.Objects.BeginMultiOperation();
             RobotObjObjectServer objServer = m_RobotApplication.Project.Structure.Objects;
-            Dictionary<string, string> edgeConstraints = new Dictionary<string, string>();
+            Dictionary<int, HashSet<string>> panelTags = GetTypeTags(typeof(Panel));
 
             foreach (Panel panel in panels)
             {
@@ -112,7 +113,7 @@ namespace BH.Adapter.Robot
                 foreach (Opening opening in panel.Openings)
                 {
                     int openingId;
-                    if(CheckInputObjectAndExtractAdapterIdInt(opening, out openingId, oM.Base.Debugging.EventType.Error, typeof(Panel)))
+                    if (CheckInputObjectAndExtractAdapterIdInt(opening, out openingId, oM.Base.Debugging.EventType.Error, typeof(Panel)))
                         rPanelOpenings.AddOne(openingId);
                 }
                 robotPanel.SetHostedObjects(rPanelOpenings);
@@ -120,8 +121,11 @@ namespace BH.Adapter.Robot
                 robotPanel.Initialize();
                 robotPanel.Update();
 
+                panelTags[panelId] = panel.Tags;
             }
+
             m_RobotApplication.Project.Structure.Objects.EndMultiOperation();
+            m_tags[typeof(Panel)] = panelTags;
             return true;
         }
 

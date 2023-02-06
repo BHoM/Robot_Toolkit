@@ -157,7 +157,7 @@ namespace BH.Adapter.Robot
 
                 for (int i = 1; i <= groupServer.GetCount(robotType); i++)
                 {
-                    RobotGroup robotGroup = groupServer.Get(IRobotObjectType.I_OT_NODE, i);
+                    RobotGroup robotGroup = groupServer.Get(robotType, i);
 
                     if (robotGroup.Name == filterRequest.Tag)
                     {

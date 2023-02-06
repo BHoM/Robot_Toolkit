@@ -150,6 +150,17 @@ namespace BH.Adapter.Robot
                     }
                 }
             }
+
+            Dictionary<int, HashSet<string>> panelTags = GetTypeTags(typeof(Panel));
+
+            foreach (Panel panel in panels)
+            {
+                int id = GetAdapterId<int>(panel);
+                HashSet<string> tags;
+                if (panelTags != null && panelTags.TryGetValue(id, out tags))
+                    panel.Tags = tags;
+            }
+
             return panels;
         }
 

@@ -101,6 +101,8 @@ namespace BH.Adapter.Robot
                 robotPanel.SetHostedObjects(robotOpenings);
                 robotPanel.Initialize();
                 robotPanel.Update();
+
+                panelTags[panelId] = panel.Tags;
             }
             m_tags[typeof(Panel)] = panelTags;
             return true;

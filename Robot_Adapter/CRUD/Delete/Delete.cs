@@ -46,6 +46,8 @@ namespace BH.Adapter.Robot
                 success = DeleteNodes(ids);
             else if (type == typeof(Bar))
                 success = DeleteBars(ids);
+            else if (type == typeof(Panel))
+                success = DeletePanels(ids);
             else if (type == typeof(BH.oM.Structure.Loads.Loadcase))
                 success = DeleteLoadcases(ids);
             else if (type == typeof(BH.oM.Structure.Loads.LoadCombination))
@@ -135,6 +137,45 @@ namespace BH.Adapter.Robot
             }
             m_RobotApplication.Project.Structure.Bars.DeleteMany(barSel);
             m_tags[typeof(Bar)] = barTags;
+            return sucess;
+        }
+
+        /***************************************************/
+
+        public int DeletePanels(IEnumerable<object> ids)
+        {
+            int sucess = 1;
+            string barIds = "";
+            RobotSelection panelSections = m_RobotApplication.Project.Structure.Selections.Create(IRobotObjectType.I_OT_PANEL);
+            Dictionary<int, HashSet<string>> panelTags = GetTypeTags(typeof(Panel));
+            if (ids != null)
+            {
+                List<int> indicies = ids.Cast<int>().ToList();
+                foreach (int ind in indicies)
+                {
+                    barIds += ind.ToString() + ",";
+                    panelTags.Remove(ind);
+                }
+                barIds.TrimEnd(',');
+                panelSections.FromText(barIds);
+                //if (barSel.Count != indicies.Count())
+                //{
+                //    return 0;
+                //}
+            }
+            else
+            {
+                int maxNodeIndex = m_RobotApplication.Project.Structure.Objects.FreeNumber;
+                for (int i = 1; i < maxNodeIndex; i++)
+                {
+                    barIds += i.ToString() + ",";
+                    panelTags.Remove(i);
+                }
+                barIds.TrimEnd(',');
+                panelSections.FromText(barIds);
+            }
+            m_RobotApplication.Project.Structure.Objects.DeleteMany(panelSections);
+            m_tags[typeof(Panel)] = panelTags;
             return sucess;
         }
 

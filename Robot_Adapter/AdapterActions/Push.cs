@@ -62,7 +62,10 @@ namespace BH.Adapter.Robot
 
             try
             {
-                return base.Push(objects, tag, pushType, actionConfig);
+                List<object> pushedObjects = base.Push(objects, tag, pushType, actionConfig);
+                //After push is done, ensure that all groups are correctly updated to match the tags
+                ApplyTagsAsGroups();
+                return pushedObjects;
             }
             finally
             {
@@ -72,7 +75,6 @@ namespace BH.Adapter.Robot
                     m_RobotApplication.Interactive = 1;
                     m_RobotApplication.Visible = 1;
                 }
-                ApplyTagsAsGroups();
                 ClearCashedTags();
             }
         }

@@ -34,6 +34,7 @@ using BH.oM.Data.Requests;
 using BH.oM.Adapters.Robot;
 using BH.oM.Analytical.Results;
 using System;
+using Shouldly;
 
 namespace BH.Tests.Adapter.Robot
 {
@@ -59,8 +60,7 @@ namespace BH.Tests.Adapter.Robot
 
             List<Bar> readBars = m_Adapter.Pull(request).Cast<Bar>().ToList();
 
-            Assert.AreEqual(7, readBars.Count, "Wrong number of bars pulled compared to expected count.");
-
+            readBars.Count.ShouldBe(7, "Wrong number of Bars pulled compared to expected count.");
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace BH.Tests.Adapter.Robot
 
             List<Panel> readPanels = m_Adapter.Pull(request).Cast<Panel>().ToList();
 
-            Assert.AreEqual(2, readPanels.Count, "Wrong number of Panels pulled compared to expected count.");
+            readPanels.Count.ShouldBe(2, "Wrong number of Panels pulled compared to expected count.");
 
         }
 
@@ -83,8 +83,7 @@ namespace BH.Tests.Adapter.Robot
 
             List<Node> readNodes = m_Adapter.Pull(request).Cast<Node>().ToList();
 
-            Assert.AreEqual(50, readNodes.Count, "Wrong number of Nodes pulled compared to expected count.");
-
+            readNodes.Count.ShouldBe(50, "Wrong number of Nodes pulled compared to expected count.");
         }
     }
 }

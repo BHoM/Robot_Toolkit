@@ -37,6 +37,7 @@ using System.Reflection;
 using System.Collections;
 using BH.oM.Geometry;
 using BH.Engine.Geometry;
+using Shouldly;
 
 namespace BH.Tests.Adapter.Robot
 {
@@ -72,7 +73,7 @@ namespace BH.Tests.Adapter.Robot
             {
                 bars.Add(Engine.Base.Create.RandomObject(typeof(Bar), i) as Bar);
             }
-
+            
             List<string> tags = new List<string> { "Tag1", "SomeRandomTag", "Tag2" };
             //Add some random tags
             foreach (Bar bar in bars)
@@ -91,22 +92,22 @@ namespace BH.Tests.Adapter.Robot
 
             IDictionary cachedTags = tagField.GetValue(m_Adapter) as IDictionary;
 
-            Assert.IsNotNull(cachedTags, "Unable to verify cached tags have correctly been cleared.");
+            cachedTags.ShouldNotBeNull("Unable to verify cached tags have correctly been cleared.");
 
             //Ensure that the cache has been cleared to make sure that the test below correcly relies on the groups
-            Assert.IsTrue(cachedTags.Count == 0, "Cached tags are not correctly cleared after push.");
+            cachedTags.Count.ShouldBe(0, "Cached tags are not correctly cleared after push.");
 
             //Pull out the bars
             List<Bar> pulledBars = m_Adapter.Pull(new FilterRequest { Type = typeof(Bar) }).Cast<Bar>().ToList();
 
-            Assert.AreEqual(bars.Count, pulledBars.Count, "Wrong number of Bars returned.");
+            pulledBars.Count.ShouldBe(bars.Count, "Wrong number of Bars returned.");
 
             foreach (string tag in tags)
             {
                 foreach (Bar bar in pulledBars)
                 {
                     //Ensure all bars correctly stores all tags
-                    Assert.Contains(tag, bar.Tags.ToList());
+                    bar.Tags.ShouldContain(tag);
                 }
             }
 
@@ -135,11 +136,11 @@ namespace BH.Tests.Adapter.Robot
 
             List<Bar> pulledBars = m_Adapter.Pull(new FilterRequest { Type = typeof(Bar) }).Cast<Bar>().ToList();
 
-            Assert.AreEqual(bars.Count, pulledBars.Count, "Bars storing the tag has not been correctly replaced.");
+            pulledBars.Count.ShouldBe(bars.Count, "Bars storing the tag has not been correctly replaced.");
 
             List<Node> pulledNodes = m_Adapter.Pull(new FilterRequest { Type = typeof(Node) }).Cast<Node>().ToList();
 
-            Assert.AreEqual(bars.Count * 2, pulledNodes.Count, "Node storing the tag has not been correctly replaced.");
+            pulledNodes.Count.ShouldBe(bars.Count * 2, "Node storing the tag has not been correctly replaced.");
         }
 
         [Test]
@@ -167,18 +168,18 @@ namespace BH.Tests.Adapter.Robot
 
             List<Bar> pulledBars = m_Adapter.Pull(new FilterRequest { Type = typeof(Bar) }).Cast<Bar>().ToList();
 
-            Assert.AreEqual(count * 2, pulledBars.Count, "Wrong number of Bars in the model.");
+            pulledBars.Count.ShouldBe(count * 2, "Wrong number of Bars in the model.");
 
             List<Node> pulledNodes = m_Adapter.Pull(new FilterRequest { Type = typeof(Node) }).Cast<Node>().ToList();
 
             //Expecting unique nodes for endnodes of the bars, but overlapping start nodes -> should be 3 times the number of bars
-            Assert.AreEqual(count * 3, pulledNodes.Count, "Wrong number of nodes in the model.");
+            pulledNodes.Count.ShouldBe(count * 3, "Wrong number of nodes in the model.");
 
             foreach (Bar bar in pulledBars)
             {
-                Assert.IsTrue(bar.Tags.Count == 1, "Bar should contain 1 tag.");
-                Assert.IsTrue(bar.StartNode.Tags.Count == 2, "StartNode of bars should contain 2 tags.");
-                Assert.IsTrue(bar.EndNode.Tags.Count == 1, "EndNode of bars should contain 1 tag.");
+                bar.Tags.Count.ShouldBe(1, "Bar should contain 1 tag.");
+                bar.StartNode.Tags.Count.ShouldBe(2, "StartNode of bars should contain 2 tags.");
+                bar.EndNode.Tags.Count.ShouldBe(1, "EndNode of bars should contain 1 tag.");
             }
 
             //Create a new set to replace the first set of bars
@@ -195,16 +196,16 @@ namespace BH.Tests.Adapter.Robot
             pulledBars = m_Adapter.Pull(new FilterRequest { Type = typeof(Bar) }).Cast<Bar>().ToList();
 
             //Excepting the same number of Bars as before. 2*count, given the two sets pushed
-            Assert.AreEqual(count * 2, pulledBars.Count, "Wrong number of Bars in the model.");
+            pulledBars.Count.ShouldBe(count * 2, "Wrong number of Bars in the model.");
 
             pulledNodes = m_Adapter.Pull(new FilterRequest { Type = typeof(Node) }).Cast<Node>().ToList();
 
             //Expecting unique nodes for endnodes of the bars. Expecting that the number of nodes now should be 4 times the count, two unique for each bar
-            Assert.AreEqual(count * 4, pulledNodes.Count, "Wrong number of nodes in the model.");
+            pulledNodes.Count.ShouldBe(count * 4, "Wrong number of nodes in the model.");
 
             foreach (Node node in pulledNodes)
             {
-                Assert.IsTrue(node.Tags.Count == 1, "Wrong number of tags for node.");
+                node.Tags.Count.ShouldBe(1, "Wrong number of tags for node.");
             }
         }
 
@@ -249,22 +250,22 @@ namespace BH.Tests.Adapter.Robot
 
             IDictionary cachedTags = tagField.GetValue(m_Adapter) as IDictionary;
 
-            Assert.IsNotNull(cachedTags, "Unable to verify cached tags have correctly been cleared.");
+            cachedTags.ShouldNotBeNull("Unable to verify cached tags have correctly been cleared.");
 
             //Ensure that the cache has been cleared to make sure that the test below correcly relies on the groups
-            Assert.IsTrue(cachedTags.Count == 0, "Cached tags are not correctly cleared after push.");
+            cachedTags.Count.ShouldBe(0, "Cached tags are not correctly cleared after push.");
 
             //Pull out the bars
             List<Panel> pulledPanels = m_Adapter.Pull(new FilterRequest { Type = typeof(Panel) }).Cast<Panel>().ToList();
 
-            Assert.AreEqual(panels.Count, pulledPanels.Count, "Wrong number of Bars returned.");
+            pulledPanels.Count.ShouldBe(panels.Count, "Wrong number of Bars returned.");
 
             foreach (string tag in tags)
             {
                 foreach (Panel panel in pulledPanels)
                 {
                     //Ensure all bars correctly stores all tags
-                    Assert.Contains(tag, panel.Tags.ToList());
+                    panel.Tags.ShouldContain(tag);
                 }
             }
 
@@ -309,7 +310,7 @@ namespace BH.Tests.Adapter.Robot
 
             List<Panel> pulledPanels = m_Adapter.Pull(new FilterRequest { Type = typeof(Panel) }).Cast<Panel>().ToList();
 
-            Assert.AreEqual(panels.Count, pulledPanels.Count, "Panels storing the tag has not been correctly replaced.");
+            pulledPanels.Count.ShouldBe(panels.Count, "Panels storing the tag has not been correctly replaced.");
         }
 
     }

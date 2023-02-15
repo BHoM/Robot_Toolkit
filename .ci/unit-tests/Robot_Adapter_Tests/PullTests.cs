@@ -35,6 +35,7 @@ using BH.oM.Adapters.Robot;
 using BH.oM.Analytical.Results;
 using System;
 using Shouldly;
+using BH.oM.Adapter.Commands;
 
 namespace BH.Tests.Adapter.Robot
 {
@@ -50,6 +51,26 @@ namespace BH.Tests.Adapter.Robot
             splitPath = splitPath.Take(splitPath.IndexOf(".ci") + 2).ToList();
             string modelPath = Path.Join(string.Join("\\", splitPath), "Models", "Simple 2-story structure with results.rtd");
             m_Adapter = new RobotAdapter(modelPath, null, true);
+        }
+
+        [SetUp]
+        public void Setup()
+        {
+            BH.Engine.Base.Compute.ClearCurrentEvents();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            var events = BH.Engine.Base.Query.CurrentEvents();
+            if (events.Any())
+            {
+                Console.WriteLine("BHoM events raised during execution:");
+                foreach (var ev in events)
+                {
+                    Console.WriteLine($"{ev.Type}: {ev.Message}");
+                }
+            }
         }
 
         [Test]

@@ -55,12 +55,22 @@ namespace BH.Tests.Adapter.Robot
         public void Setup()
         {
             m_Adapter.Execute(new NewModel());
+            BH.Engine.Base.Compute.ClearCurrentEvents();
         }
 
         [TearDown]
         public void TearDown() 
         {
             m_Adapter.Execute(new Close { SaveBeforeClose = false });
+            var events = BH.Engine.Base.Query.CurrentEvents();
+            if (events.Any())
+            {
+                Console.WriteLine("BHoM events raised during execution:");
+                foreach (var ev in events)
+                {
+                    Console.WriteLine($"{ev.Type}: {ev.Message}");
+                }
+            }
         }
 
         [Test]
@@ -110,7 +120,6 @@ namespace BH.Tests.Adapter.Robot
                     bar.Tags.ShouldContain(tag);
                 }
             }
-
         }
 
         [Test]

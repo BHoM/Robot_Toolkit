@@ -49,6 +49,8 @@ namespace BH.Tests.Adapter.Robot
         public void OntimeSetup()
         {
             m_Adapter = new RobotAdapter("", null, true);
+            //Forces Analytical_Engine to be loaded up. This is due to some parts of the call-chain not hard wired. THis ensures that methods from Analytical_Engine are loaded and usable from RunExtensionMethod
+            Assembly.Load("Analytical_Engine");
         }
 
         [SetUp]
@@ -237,7 +239,7 @@ namespace BH.Tests.Adapter.Robot
             {
                 Panel panel = Engine.Base.Create.RandomObject(typeof(Panel), i) as Panel;
                 panel.Openings = new List<Opening>();
-                panel.ExternalEdges = Create.Polyline(cornerPts.Select(x => x.Translate(Vector.ZAxis * i))).SubParts().Select(x => new Edge { Curve = x }).ToList();
+                panel.ExternalEdges = Engine.Geometry.Create.Polyline(cornerPts.Select(x => x.Translate(Vector.ZAxis * i))).SubParts().Select(x => new Edge { Curve = x }).ToList();
                 panels.Add(panel);
             }
 
@@ -299,7 +301,7 @@ namespace BH.Tests.Adapter.Robot
             {
                 Panel panel = Engine.Base.Create.RandomObject(typeof(Panel), i) as Panel;
                 panel.Openings = new List<Opening>();
-                panel.ExternalEdges = Create.Polyline(cornerPts.Select(x => x.Translate(Vector.ZAxis * i))).SubParts().Select(x => new Edge { Curve = x }).ToList();
+                panel.ExternalEdges = Engine.Geometry.Create.Polyline(cornerPts.Select(x => x.Translate(Vector.ZAxis * i))).SubParts().Select(x => new Edge { Curve = x }).ToList();
                 panels.Add(panel);
             }
 
@@ -311,7 +313,7 @@ namespace BH.Tests.Adapter.Robot
             {
                 Panel panel = Engine.Base.Create.RandomObject(typeof(Panel), (i + 1) * 7) as Panel;
                 panel.Openings = new List<Opening>();
-                panel.ExternalEdges = Create.Polyline(cornerPts.Select(x => x.Translate(Vector.ZAxis * i))).SubParts().Select(x => new Edge { Curve = x }).ToList();
+                panel.ExternalEdges = Engine.Geometry.Create.Polyline(cornerPts.Select(x => x.Translate(Vector.ZAxis * i))).SubParts().Select(x => new Edge { Curve = x }).ToList();
                 panels.Add(panel);
             }
 

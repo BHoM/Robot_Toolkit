@@ -36,6 +36,7 @@ using BH.oM.Analytical.Results;
 using System;
 using Shouldly;
 using BH.oM.Adapter.Commands;
+using System.Reflection;
 
 namespace BH.Tests.Adapter.Robot
 {
@@ -51,6 +52,8 @@ namespace BH.Tests.Adapter.Robot
             splitPath = splitPath.Take(splitPath.IndexOf(".ci") + 2).ToList();
             string modelPath = Path.Join(string.Join("\\", splitPath), "Models", "Simple 2-story structure with results.rtd");
             m_Adapter = new RobotAdapter(modelPath, null, true);
+            //Forces Analytical_Engine to be loaded up. This is due to some parts of the call-chain not hard wired. This ensures that methods from Analytical_Engine are loaded and usable from RunExtensionMethod
+            Assembly.Load("Analytical_Engine");
         }
 
         [SetUp]

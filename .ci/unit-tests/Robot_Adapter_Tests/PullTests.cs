@@ -37,6 +37,8 @@ using System;
 using Shouldly;
 using BH.oM.Adapter.Commands;
 using System.Reflection;
+using BH.oM.Structure.Requests;
+using BH.oM.Structure.Results.Nodal_Results;
 
 namespace BH.Tests.Adapter.Robot
 {
@@ -106,6 +108,17 @@ namespace BH.Tests.Adapter.Robot
             FilterRequest request = new FilterRequest { Type = typeof(Node), Tag = "Node group 1" };
 
             List<Node> readNodes = m_Adapter.Pull(request).Cast<Node>().ToList();
+
+            readNodes.Count.ShouldBe(50, "Wrong number of Nodes pulled compared to expected count.");
+        }
+
+        [Test]
+        public void PullModalResults()
+        {
+            //Checks correctly extracting all Nodes in the Robot group corresponding to the tag
+            NodeResultRequest request = new NodeResultRequest { ResultType = NodeResultType.NodeModalResult };
+
+            List<NodeModalResults> readNodes = m_Adapter.Pull(request).Cast<NodeModalResults>().ToList();
 
             readNodes.Count.ShouldBe(50, "Wrong number of Nodes pulled compared to expected count.");
         }

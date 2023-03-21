@@ -31,6 +31,7 @@ using BH.oM.Adapter;
 using BH.oM.Structure.Elements;
 using System;
 using System.Collections;
+using BH.oM.Structure.Results.Nodal_Results;
 
 namespace BH.Adapter.Robot
 {
@@ -81,10 +82,8 @@ namespace BH.Adapter.Robot
             switch (request.ResultType)
             {
                 case NodeResultType.NodeModalMass:
-                    queryParams.SetParam(IRobotResultParamType.I_RPT_MODE, 1);
-                    queryParams.SetParam(IRobotResultParamType.I_RPT_MODE_CMB, IRobotModeCombinationType.I_MCT_NONE);
-                    break;
                 case NodeResultType.NodeModeShape:
+                case NodeResultType.NodeModalResult:
                     queryParams.SetParam(IRobotResultParamType.I_RPT_MODE, 1);
                     queryParams.SetParam(IRobotResultParamType.I_RPT_MODE_CMB, IRobotModeCombinationType.I_MCT_NONE);
                     break;
@@ -126,6 +125,9 @@ namespace BH.Adapter.Robot
                                 break;
                             case NodeResultType.NodeModalMass:
                                 nodeResults.Add(GetNodeModalMass(row, idCase, idNode, mode));
+                                break;
+                            case NodeResultType.NodeModalResult:
+                                nodeResults.Add(GetNodeModalResult(row, idCase, idNode, mode));
                                 break;
                         }
                     }
@@ -201,10 +203,32 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
+
+        private NodeModalResults GetNodeModalResult(RobotResultRow row, int idCase, int idNode, int mode)
+        {
+            int i = 234;
+            double ux = TryGetValue(row, i); // T_EIGEN_UX_1
+            double uy = TryGetValue(row, i + 1); // T_EIGEN_UY_1
+            double uz = TryGetValue(row, i + 2); // T_EIGEN_UZ_1
+
+            double rx = TryGetValue(row, i + 3); // T_EIGEN_RX_1
+            double ry = TryGetValue(row, i + 4); // T_EIGEN_RY_1
+            double rz = TryGetValue(row, i + 5); // T_EIGEN_RZ_1
+
+            int j = 1770;
+            double mx = TryGetValue(row, j); // Nodal modal mass X
+            double my = TryGetValue(row, j + 1); // Nodal modal mass Y
+            double mz = TryGetValue(row, j + 2); // Nodal modal mass Z
+
+            return new NodeModalResults(idNode, idCase, mode, 0, oM.Geometry.Basis.XY, ux, uy, uz, rx, ry, rz, mx, my, mz, double.NaN, double.NaN, double.NaN);
+        }
+
+        /***************************************************/
+
         private List<int> NodeResultParameters(NodeResultRequest request)
         {
             List<int> results = new List<int>();
-
+            
             switch (request.ResultType)
             {
                 case NodeResultType.NodeReaction:
@@ -239,6 +263,19 @@ namespace BH.Adapter.Robot
                     break;
                 case NodeResultType.NodeModalMass:
                     int j = 1770;
+                    results.Add(j); // Nodal modal mass X
+                    results.Add(j + 1); // Nodal modal mass Y
+                    results.Add(j + 2); // Nodal modal mass Z
+                    break;
+                case NodeResultType.NodeModalResult:
+                    i = 234; // 
+                    results.Add(i); // T_EIGEN_UX_1
+                    results.Add(i + 1); // T_EIGEN_UY_1
+                    results.Add(i + 2); // T_EIGEN_UZ_1
+                    results.Add(i + 3); // T_EIGEN_RX_1
+                    results.Add(i + 4); // T_EIGEN_RY_1
+                    results.Add(i + 5); // T_EIGEN_RZ_1
+                    j = 1770;
                     results.Add(j); // Nodal modal mass X
                     results.Add(j + 1); // Nodal modal mass Y
                     results.Add(j + 2); // Nodal modal mass Z

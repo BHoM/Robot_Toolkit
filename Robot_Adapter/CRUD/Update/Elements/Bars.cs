@@ -70,9 +70,15 @@ namespace BH.Adapter.Robot
 
                 if (!string.IsNullOrWhiteSpace(bar.Name))
                     robotBar.NameTemplate = bar.Name;
-                
+
                 if (CheckNotNull(bar.SectionProperty, oM.Base.Debugging.EventType.Warning, typeof(Bar)))
+                {
                     robotBar.SetSection(bar.SectionProperty.DescriptionOrName(), false);
+
+                    if (CheckNotNull(bar.SectionProperty.Material, oM.Base.Debugging.EventType.Warning, typeof(Bar)))
+                        robotBar.SetLabel(IRobotLabelType.I_LT_MATERIAL, bar.SectionProperty.Material.DescriptionOrName());
+                }
+
 
                 robotBar.Gamma = bar.ToRobotOrientationAngle();
                 Convert.SetFEAType(robotBar, bar);

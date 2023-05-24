@@ -220,7 +220,7 @@ namespace BH.Adapter.Robot
             double my = TryGetValue(row, j + 1); // Nodal modal mass Y
             double mz = TryGetValue(row, j + 2); // Nodal modal mass Z
 
-            return new NodeModalResults(idNode, idCase, mode, 0, oM.Geometry.Basis.XY, ux, uy, uz, rx, ry, rz, mx, my, mz, double.NaN, double.NaN, double.NaN);
+            return new NodeModalResults(idNode, idCase, mode, 0, oM.Geometry.Basis.XY, ux, uy, uz, rx, ry, rz, mx, my, mz, double.NaN, double.NaN, double.NaN, ModalResultNormalisation.EigenvectorComponent);
         }
 
         /***************************************************/

@@ -39,11 +39,17 @@ using BH.oM.Adapter.Commands;
 using System.Reflection;
 using BH.oM.Structure.Requests;
 using BH.oM.Structure.Results.Nodal_Results;
+using System.Security.Cryptography.X509Certificates;
+using BH.oM.Structure.Results;
 
 namespace BH.Tests.Adapter.Robot
 {
     public class PullTests
     {
+        /***************************************************/
+        /**** Public methods - setup                    ****/
+        /***************************************************/
+
         RobotAdapter m_Adapter;
         [OneTimeSetUp]
         public void OneTimeSetup()
@@ -78,6 +84,10 @@ namespace BH.Tests.Adapter.Robot
             }
         }
 
+        /***************************************************/
+        /**** Public methods - tests                    ****/
+        /***************************************************/
+
         [Test]
         public void PullBarsWithTag()
         {
@@ -88,6 +98,8 @@ namespace BH.Tests.Adapter.Robot
 
             readBars.Count.ShouldBe(7, "Wrong number of Bars pulled compared to expected count.");
         }
+
+        /***************************************************/
 
         [Test]
         public void PullPanelsWithTag()
@@ -101,6 +113,8 @@ namespace BH.Tests.Adapter.Robot
 
         }
 
+        /***************************************************/
+
         [Test]
         public void PullNodesWithTag()
         {
@@ -112,15 +126,174 @@ namespace BH.Tests.Adapter.Robot
             readNodes.Count.ShouldBe(50, "Wrong number of Nodes pulled compared to expected count.");
         }
 
+        /***************************************************/
+
+        [Test]
+        public void PullGlobalReactions()
+        {
+            //Pull global results
+            GlobalResultRequest globalRequest = new GlobalResultRequest { ResultType = GlobalResultType.Reactions };
+            List<GlobalReactions> globRes = m_Adapter.Pull(globalRequest).Cast<GlobalReactions>().ToList();
+
+            globRes.Count.ShouldBe(4);
+
+            double tolerance = 1e-6;
+            ValidateCase(globRes, 1, 6.04850356467068E-08, -1.61599018611013E-08, 6930724.87216325, 93157700.9778047, -72529973.9008961, -42.6532396448892, tolerance);
+            ValidateCase(globRes, 2, -1.94105496120755E-08, 6.73935574013739E-10, 1440000.00000009, 23040000.239115, -12799997.8446157, -43.4173608493729, tolerance);
+            ValidateCase(globRes, 3, 2.11014992146374E-07, -149999.999999873, 2.241768015665E-08, 314999.428178589, 0.00382923203142127, -1680013.62184307, tolerance);
+            ValidateCase(globRes, 5, 2.52089478181005E-07, -149999.999999888, 8370724.87216337, 116512700.645098, -85329971.7416826, -1680099.69244356, tolerance);
+        }
+
+        /***************************************************/
+
         [Test]
         public void PullModalResults()
         {
-            //Checks correctly extracting all Nodes in the Robot group corresponding to the tag
+            //Pull nodal modal results
             NodeResultRequest request = new NodeResultRequest { ResultType = NodeResultType.NodeModalResult };
 
-            List<NodeModalResults> readNodes = m_Adapter.Pull(request).Cast<NodeModalResults>().ToList();
+            List<NodeModalResults> nodeModalRes = m_Adapter.Pull(request).Cast<NodeModalResults>().ToList();
 
-            readNodes.Count.ShouldBe(50, "Wrong number of Nodes pulled compared to expected count.");
+            //Ensure all results are normalised the same way
+            nodeModalRes.ShouldAllBe(x => x.NormalisationProcedure == nodeModalRes.First().NormalisationProcedure, "All results should have the same normalisation procedure.");
+
+            double tol = 1e9;
+
+            foreach (var caseGroup in nodeModalRes.GroupBy(x => new { x.ResultCase, x.ModeNumber }))
+            {
+                //Disp values for debugging purposes
+                Console.WriteLine($"Case {caseGroup.Key.ResultCase}. Mode nb: {caseGroup.Key.ModeNumber}");
+                Console.WriteLine($"Max mode disp tot: {OrderByAndDispNodeAndValue(caseGroup, x => TotalModalDisp(x))}");
+                Console.WriteLine($"Max mode disp component: {OrderByAndDispNodeAndValue(caseGroup, x => MaxDispComponent(x))}");
+                Console.WriteLine($"Max mode disp tot: {OrderByAndDispNodeAndValue(caseGroup, x => TotalModalRot(x))}");
+                Console.WriteLine($"Max mode disp component: {OrderByAndDispNodeAndValue(caseGroup, x => MaxRotComponent(x))}");
+                Console.WriteLine($"Max mode mass tot: {OrderByAndDispNodeAndValue(caseGroup, x => TotalModalMass(x))}");
+                Console.WriteLine($"Max mode mass component: {OrderByAndDispNodeAndValue(caseGroup, x => MaxMassComponent(x))}");
+
+                //Check results for each node are pulled
+                caseGroup.Count().ShouldBe(980, "Wrong number of Nodes pulled compared to expected count.");
+
+                ModalResultNormalisation normalisation = caseGroup.First().NormalisationProcedure;
+                //Check that the results ahve been normalised as stated by the procedure
+                switch (normalisation)
+                {
+                    case ModalResultNormalisation.EigenvectorComponent:
+                        caseGroup.Max(x => MaxDispComponent(x)).ShouldBe(1, tol, $"Case {caseGroup.Key.ResultCase}. Mode nb: {caseGroup.Key.ModeNumber}");
+                        break;
+                    case ModalResultNormalisation.EigenvectorTotal:
+                        caseGroup.Max(x => TotalModalDisp(x)).ShouldBe(1, tol, $"Case {caseGroup.Key.ResultCase}. Mode nb: {caseGroup.Key.ModeNumber}");
+                        break;
+                    case ModalResultNormalisation.MassComponent:
+                        caseGroup.Max(x => MaxMassComponent(x)).ShouldBe(1, tol, $"Case {caseGroup.Key.ResultCase}. Mode nb: {caseGroup.Key.ModeNumber}");
+                        break;
+                    case ModalResultNormalisation.MassTotal:
+                        caseGroup.Max(x => TotalModalMass(x)).ShouldBe(1, tol, $"Case {caseGroup.Key.ResultCase}. Mode nb: {caseGroup.Key.ModeNumber}");
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            //Pull global results
+            GlobalResultRequest globalRequest = new GlobalResultRequest { ResultType = GlobalResultType.ModalMassAndFrequency };
+            List<ModalMassAndFrequency> globRes = m_Adapter.Pull(globalRequest).Cast<ModalMassAndFrequency>().ToList();
+
+
+            foreach (ModalMassAndFrequency res in globRes)
+            {
+                //Display value for debugging purposes
+                Console.WriteLine($"Case: {res.ResultCase}");
+                Console.WriteLine($"Mode: {res.ModeNumber}");
+                Console.WriteLine($"Frequency: {res.Frequency}");
+                Console.WriteLine($"Mass x: {res.MassX}");
+                Console.WriteLine($"Mass y: {res.MassY}");
+                Console.WriteLine($"Mass z: {res.MassZ}");
+                Console.WriteLine("");
+            }
+
+            //Loop through and check that there is matching correspondence between nodal and global results
+            foreach (var caseGroup in nodeModalRes.GroupBy(x => new { x.ResultCase, x.ModeNumber }))
+            {
+                //Find matching result by matching case and mode number
+                ModalMassAndFrequency match = globRes.FirstOrDefault(x => x.ResultCase.Equals(caseGroup.Key.ResultCase) && x.ModeNumber == caseGroup.Key.ModeNumber);
+                match.ShouldNotBeNull($"Cannot find a global result matching node result for case {caseGroup.Key.ResultCase} and mode {caseGroup.Key.ModeNumber}.");
+
+                //Ensure masses add up to the same for nodal and global results
+                match.MassX.ShouldBe(caseGroup.Sum(x => x.NodalMassX), tol);
+                match.MassY.ShouldBe(caseGroup.Sum(x => x.NodalMassY), tol);
+                match.MassZ.ShouldBe(caseGroup.Sum(x => x.NodalMassZ), tol);
+            }
         }
+
+        /***************************************************/
+        /**** Private methods                           ****/
+        /***************************************************/
+
+        private static void ValidateCase(List<GlobalReactions> globRes, int caseNb, double fx, double fy, double fz, double mx, double my, double mz, double tolerance)
+        {
+            globRes.ShouldContain(x => x.ResultCase.Equals(caseNb));
+            GlobalReactions res = globRes.FirstOrDefault(x => x.ResultCase.Equals(caseNb));
+            res.FX.ShouldBe(fx, tolerance, $"Case: {res.ResultCase}");
+            res.FY.ShouldBe(fy, tolerance, $"Case: {res.ResultCase}");
+            res.FZ.ShouldBe(fz, tolerance, $"Case: {res.ResultCase}");
+
+            res.MX.ShouldBe(mx, tolerance, $"Case: {res.ResultCase}");
+            res.MY.ShouldBe(my, tolerance, $"Case: {res.ResultCase}");
+            res.MZ.ShouldBe(mz, tolerance, $"Case: {res.ResultCase}");
+        }
+
+        /***************************************************/
+
+        private static string OrderByAndDispNodeAndValue(IEnumerable<NodeModalResults> results, Func<NodeModalResults, double> func)
+        {
+            NodeModalResults maxRes = results.OrderByDescending(func).FirstOrDefault();
+            if (maxRes == null)
+                return "";
+            return $"val: {func(maxRes)}, Id: {maxRes.ObjectId}";
+        }
+
+        /***************************************************/
+
+        private static double TotalModalDisp(NodeModalResults res)
+        {
+            return Math.Sqrt(res.UX * res.UX + res.UY * res.UY + res.UZ * res.UZ);
+        }
+
+        /***************************************************/
+
+        private static double MaxDispComponent(NodeModalResults res)
+        {
+            return Math.Max(Math.Max(Math.Abs(res.UX), Math.Abs(res.UY)), Math.Abs(res.UZ));
+        }
+
+        /***************************************************/
+
+        private static double TotalModalRot(NodeModalResults res)
+        {
+            return Math.Sqrt(res.RX * res.RX + res.RY * res.RY + res.RZ * res.RZ);
+        }
+
+        /***************************************************/
+
+        private static double MaxRotComponent(NodeModalResults res)
+        {
+            return Math.Max(Math.Max(Math.Abs(res.RX), Math.Abs(res.RY)), Math.Abs(res.RZ));
+        }
+
+        /***************************************************/
+
+        private static double TotalModalMass(NodeModalResults res)
+        {
+            return Math.Sqrt(res.NodalMassX * res.NodalMassX + res.NodalMassY * res.NodalMassY + res.NodalMassZ * res.NodalMassZ);
+        }
+
+        /***************************************************/
+
+        private static double MaxMassComponent(NodeModalResults res)
+        {
+            return Math.Max(Math.Max(res.NodalMassX, res.NodalMassY), res.NodalMassZ);
+        }
+
+        /***************************************************/
     }
 }

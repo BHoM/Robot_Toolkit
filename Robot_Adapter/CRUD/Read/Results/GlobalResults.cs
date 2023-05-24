@@ -67,11 +67,19 @@ namespace BH.Adapter.Robot
 
             queryParams.Selection.Set(IRobotObjectType.I_OT_CASE, caseSelection);
             queryParams.Selection.Set(IRobotObjectType.I_OT_NODE, nodeSelection);
-            queryParams.SetParam(IRobotResultParamType.I_RPT_MODE, 0);
-            queryParams.SetParam(IRobotResultParamType.I_RPT_MODE_CMB, IRobotModeCombinationType.I_MCT_CQC);
+            switch (request.ResultType)
+            {
 
-
-
+                case GlobalResultType.ModalMassAndFrequency:
+                    queryParams.SetParam(IRobotResultParamType.I_RPT_MODE, 1);
+                    queryParams.SetParam(IRobotResultParamType.I_RPT_MODE_CMB, IRobotModeCombinationType.I_MCT_NONE);
+                    break;
+                case GlobalResultType.Reactions:
+                default:
+                    queryParams.SetParam(IRobotResultParamType.I_RPT_MODE, 0);
+                    queryParams.SetParam(IRobotResultParamType.I_RPT_MODE_CMB, IRobotModeCombinationType.I_MCT_CQC);
+                    break;
+            }
 
             RobotResultRowSet rowSet = new RobotResultRowSet();
 
@@ -86,13 +94,23 @@ namespace BH.Adapter.Robot
                 {
                     RobotResultRow row = rowSet.CurrentRow;
                     int idCase = (int)row.GetParam(IRobotResultParamType.I_RPT_LOAD_CASE);
-                    int idNode = (int)row.GetParam(IRobotResultParamType.I_RPT_NODE);
-                    int mode = -1; //TODO: extract mode number
+                    int mode;
+                    try
+                    {
+                        mode = (int)row.GetParam(IRobotResultParamType.I_RPT_MODE);
+                    }
+                    catch (Exception)
+                    {
+                        mode = -1;
+                    }
 
                     switch (request.ResultType)
                     {
                         case GlobalResultType.Reactions:
                             globalResults.Add(GetGlobalReaction(row, idCase, mode));
+                            break;
+                        case GlobalResultType.ModalMassAndFrequency:
+                            globalResults.Add(GetModalDynamics(row, idCase, mode));
                             break;
                     }
 
@@ -121,6 +139,18 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
+        private ModalMassAndFrequency GetModalDynamics(RobotResultRow row, int idCase, int mode)
+        {
+            double fr = 1 / TryGetValue(row, 405);
+            double mx = TryGetValue(row, 1767);
+            double my = TryGetValue(row, 1768);
+            double mz = TryGetValue(row, 1769);
+
+            return new ModalMassAndFrequency(0, idCase, mode, 0, fr, mx, my, mz, double.NaN, double.NaN, double.NaN);
+        }
+
+        /***************************************************/
+
         private List<int> GlobalResultParameters(GlobalResultRequest request)
         {
             List<int> results = new List<int>();
@@ -135,7 +165,12 @@ namespace BH.Adapter.Robot
                     results.Add(125);   //Total reaction MY
                     results.Add(126);   //Total reaction MZ
                     break;
-                case GlobalResultType.ModalDynamics:
+                case GlobalResultType.ModalMassAndFrequency:
+                    results.Add(405);   //Frequency
+                    results.Add(1767);   //Total modal mass X
+                    results.Add(1768);   //Total modal mass Y
+                    results.Add(1769);   //Total modal mass Z
+                    break;
                 default:
                     break;
             }

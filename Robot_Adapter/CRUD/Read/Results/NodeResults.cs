@@ -31,7 +31,6 @@ using BH.oM.Adapter;
 using BH.oM.Structure.Elements;
 using System;
 using System.Collections;
-using BH.oM.Structure.Results.Nodal_Results;
 
 namespace BH.Adapter.Robot
 {

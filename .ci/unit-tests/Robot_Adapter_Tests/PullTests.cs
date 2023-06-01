@@ -38,9 +38,8 @@ using Shouldly;
 using BH.oM.Adapter.Commands;
 using System.Reflection;
 using BH.oM.Structure.Requests;
-using BH.oM.Structure.Results.Nodal_Results;
-using System.Security.Cryptography.X509Certificates;
 using BH.oM.Structure.Results;
+using System.Security.Cryptography.X509Certificates;
 
 namespace BH.Tests.Adapter.Robot
 {

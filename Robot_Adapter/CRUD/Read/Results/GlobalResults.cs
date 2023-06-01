@@ -141,7 +141,7 @@ namespace BH.Adapter.Robot
 
         private ModalMassAndFrequency GetModalDynamics(RobotResultRow row, int idCase, int mode)
         {
-            double fr = 1 / TryGetValue(row, 405);
+            double fr = TryGetValue(row, 404);
             double mx = TryGetValue(row, 1767);
             double my = TryGetValue(row, 1768);
             double mz = TryGetValue(row, 1769);
@@ -166,7 +166,7 @@ namespace BH.Adapter.Robot
                     results.Add(126);   //Total reaction MZ
                     break;
                 case GlobalResultType.ModalMassAndFrequency:
-                    results.Add(405);   //Frequency
+                    results.Add(404);   //Frequency
                     results.Add(1767);   //Total modal mass X
                     results.Add(1768);   //Total modal mass Y
                     results.Add(1769);   //Total modal mass Z

@@ -48,6 +48,14 @@ namespace BH.Adapter.Robot
                                 
                 int subNature;
                 IRobotCaseNature rNature = Convert.ToRobotLoadcaseNature(caseList[i], out subNature);
+
+                // Check if any loadcases havea zero
+                if(caseList.Any(lc => lc.Number == 0 || lc.Number < 1))
+                {
+                    Compute.RecordError("One or more Loadcases have a number zero (or negative number) assigned and cannot be pushed.");
+                    return false;
+                }
+
                 m_RobotApplication.Project.Structure.Cases.CreateSimple(caseList[i].Number, caseList[i].Name, rNature, IRobotCaseAnalizeType.I_CAT_STATIC_LINEAR);
                 IRobotSimpleCase sCase = caseServer.Get(caseList[i].Number) as IRobotSimpleCase;
 

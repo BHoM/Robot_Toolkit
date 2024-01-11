@@ -67,13 +67,13 @@ namespace BH.Adapter.Robot
                     int stNodeId, endNodeId;
 
                     //Check nodes are not null and correctly set up and extract id information
-                    if (!CheckInputObjectAndExtractAdapterIdInt(bhomBar.StartNode, out stNodeId, EventType.Error, typeof(Bar)) ||
-                        !CheckInputObjectAndExtractAdapterIdInt(bhomBar.EndNode, out endNodeId, EventType.Error, typeof(Bar)))
+                    if (!CheckInputObjectAndExtractAdapterIdInt(bhomBar.Start, out stNodeId, EventType.Error, typeof(Bar)) ||
+                        !CheckInputObjectAndExtractAdapterIdInt(bhomBar.End, out endNodeId, EventType.Error, typeof(Bar)))
                         continue;
 
                     //Check positions of input nodes are not null
-                    if (!CheckNotNull(bhomBar.StartNode.Position, EventType.Error, typeof(Node)) ||
-                        !CheckNotNull(bhomBar.EndNode.Position, EventType.Error, typeof(Node)))
+                    if (!CheckNotNull(bhomBar.Start.Position, EventType.Error, typeof(Node)) ||
+                        !CheckNotNull(bhomBar.End.Position, EventType.Error, typeof(Node)))
                         continue;
 
                     string sectionName = "";

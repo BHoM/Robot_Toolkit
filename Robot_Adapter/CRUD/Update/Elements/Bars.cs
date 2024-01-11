@@ -60,8 +60,8 @@ namespace BH.Adapter.Robot
                 int stNodeId, endNodeId;
 
                 //Check nodes are not null and correctly set up and extract id information
-                if (!CheckInputObjectAndExtractAdapterIdInt(bar.StartNode, out stNodeId, oM.Base.Debugging.EventType.Error, typeof(Bar)) ||
-                    !CheckInputObjectAndExtractAdapterIdInt(bar.EndNode, out endNodeId, oM.Base.Debugging.EventType.Error, typeof(Bar)))
+                if (!CheckInputObjectAndExtractAdapterIdInt(bar.Start, out stNodeId, oM.Base.Debugging.EventType.Error, typeof(Bar)) ||
+                    !CheckInputObjectAndExtractAdapterIdInt(bar.End, out endNodeId, oM.Base.Debugging.EventType.Error, typeof(Bar)))
                     continue;
 
                 robotBar.StartNode = stNodeId;

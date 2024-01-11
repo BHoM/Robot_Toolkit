@@ -100,7 +100,7 @@ namespace BH.Adapter.Robot
 
             m_RobotApplication.Project.Structure.Bars.EndMultiOperation();
 
-            List<int> nodeIds = bhomBars.SelectMany(x => new int[] { int.Parse(x.StartNode.Name), int.Parse(x.EndNode.Name) }).Distinct().ToList();
+            List<int> nodeIds = bhomBars.SelectMany(x => new int[] { int.Parse(x.Start.Name), int.Parse(x.End.Name) }).Distinct().ToList();
             Dictionary<int, Node> bhomNodes = GetCachedOrReadAsDictionary<int, Node>(nodeIds);
             List<string> releaseIds = bhomBars.Select(x => x.Release?.Name).Where(x => x != null).Distinct().ToList();
             Dictionary<string, BarRelease> bhombarReleases = releaseIds.Count == 0 ? new Dictionary<string, BarRelease>() : GetCachedOrReadAsDictionary<string, BarRelease>(releaseIds);
@@ -118,21 +118,21 @@ namespace BH.Adapter.Robot
             {
                 bool nodesExtracted = true;
                 Node startNode;
-                if (bhomNodes.TryGetValue(int.Parse(bar.StartNode.Name), out startNode))
-                    bar.StartNode = startNode;
+                if (bhomNodes.TryGetValue(int.Parse(bar.Start.Name), out startNode))
+                    bar.Start = startNode;
                 else
                 {
                     nodesExtracted = false;
-                    Engine.Base.Compute.RecordError($"Failed to extract the {nameof(Bar.StartNode)} for Bar {this.GetAdapterId(bar)}");
+                    Engine.Base.Compute.RecordError($"Failed to extract the {nameof(Bar.Start)} for Bar {this.GetAdapterId(bar)}");
                 }
 
                 Node endNode;
-                if (bhomNodes.TryGetValue(int.Parse(bar.EndNode.Name), out endNode))
-                    bar.EndNode = endNode;
+                if (bhomNodes.TryGetValue(int.Parse(bar.End.Name), out endNode))
+                    bar.End = endNode;
                 else
                 {
                     nodesExtracted = false;
-                    Engine.Base.Compute.RecordError($"Failed to extract the {nameof(Bar.EndNode)} for Bar {this.GetAdapterId(bar)}");
+                    Engine.Base.Compute.RecordError($"Failed to extract the {nameof(Bar.End)} for Bar {this.GetAdapterId(bar)}");
                 }
 
                 if(nodesExtracted)
@@ -356,7 +356,7 @@ namespace BH.Adapter.Robot
                     if (!bhomNodes.TryGetValue(nod2, out endNode))
                         Engine.Base.Compute.RecordError($"Failed to extract the end node of the Bar with number {bar_num}.");
 
-                    Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode };
+                    Bar bhomBar = new Bar { Start = startNode, End = endNode };
 
                     double gamma = TryGetValue(result_row, elemGamma_id);
 

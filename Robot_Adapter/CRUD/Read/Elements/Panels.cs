@@ -34,6 +34,7 @@ using BH.Engine.Spatial;
 using BH.Engine.Geometry;
 using BH.Engine.Structure;
 using BH.oM.Adapters.Robot;
+using BH.Engine.Base;
 
 namespace BH.Adapter.Robot
 {
@@ -206,7 +207,10 @@ namespace BH.Adapter.Robot
             try
             {
                 if (outline != null)
-                    panel = BH.Engine.Structure.Create.Panel(outline, openings);
+                {
+                    panel = BH.Engine.Structure.Create.Panel(outline);
+                    panel.Openings.AddRange(openings);
+                }
 
                 if (panel == null)
                 {

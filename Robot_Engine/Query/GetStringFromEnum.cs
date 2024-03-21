@@ -31,7 +31,7 @@ namespace BH.Engine.Adapters.Robot
 {
     public static partial class Query
     {
-        public static string GetStringFromEnum(DesignCode_Steel designCode)
+        public static string GetStringFromEnum(this DesignCode_Steel designCode)
         {
             switch (designCode)
             {
@@ -48,7 +48,7 @@ namespace BH.Engine.Adapters.Robot
             }
         }
 
-        public static string GetStringFromEnum(MaterialDB materialDB)
+        public static string GetStringFromEnum(this MaterialDB materialDB)
         {
             switch (materialDB)
             {
@@ -63,7 +63,7 @@ namespace BH.Engine.Adapters.Robot
             }
         }
 
-        public static string GetStringFromEnum(SectionDB sectionDB)
+        public static string GetStringFromEnum(this SectionDB sectionDB)
         {
             switch (sectionDB)
             {

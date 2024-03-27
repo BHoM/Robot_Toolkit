@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2023, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -60,8 +60,8 @@ namespace BH.Adapter.Robot
                 int stNodeId, endNodeId;
 
                 //Check nodes are not null and correctly set up and extract id information
-                if (!CheckInputObjectAndExtractAdapterIdInt(bar.StartNode, out stNodeId, oM.Base.Debugging.EventType.Error, typeof(Bar)) ||
-                    !CheckInputObjectAndExtractAdapterIdInt(bar.EndNode, out endNodeId, oM.Base.Debugging.EventType.Error, typeof(Bar)))
+                if (!CheckInputObjectAndExtractAdapterIdInt(bar.Start, out stNodeId, oM.Base.Debugging.EventType.Error, typeof(Bar)) ||
+                    !CheckInputObjectAndExtractAdapterIdInt(bar.End, out endNodeId, oM.Base.Debugging.EventType.Error, typeof(Bar)))
                     continue;
 
                 robotBar.StartNode = stNodeId;
@@ -110,6 +110,7 @@ namespace BH.Adapter.Robot
 
     }
 }
+
 
 
 

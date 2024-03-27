@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2023, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -59,7 +59,7 @@ namespace BH.Adapter.Robot
         public static double ToRobotOrientationAngle(this Bar bhomBar)
         {
 
-            if (bhomBar.StartNode == null || bhomBar.StartNode.Position == null || bhomBar.EndNode == null || bhomBar.EndNode.Position == null)
+            if (bhomBar.Start == null || bhomBar.Start.Position == null || bhomBar.End == null || bhomBar.End.Position == null)
             {
                 Engine.Base.Compute.RecordWarning("At least one of a bars end nodes or end nodes positions are null. Could not check orientation angle convention between Robot and BHoM. BHoM value will be used as is.");
                 return bhomBar.OrientationAngle * 180 / Math.PI;
@@ -106,7 +106,7 @@ namespace BH.Adapter.Robot
         [Output("isVertical", "Returns true if the bar is deemed vertical in Robot.")]
         public static bool IsVerticalRobot(this Bar bar)
         {
-            if (bar.StartNode == null || bar.StartNode.Position == null || bar.EndNode == null || bar.EndNode.Position == null)
+            if (bar.Start == null || bar.Start.Position == null || bar.End == null || bar.End.Position == null)
             {
                 Engine.Base.Compute.RecordError("At least one of a bars end nodes or end nodes positions are null. Could not calculate verticality.");
                 return false;
@@ -114,8 +114,8 @@ namespace BH.Adapter.Robot
 
             double length = bar.Length();
 
-            double dx = bar.StartNode.Position.X - bar.EndNode.Position.X;
-            double dy = bar.StartNode.Position.Y - bar.EndNode.Position.Y;
+            double dx = bar.Start.Position.X - bar.End.Position.X;
+            double dy = bar.Start.Position.Y - bar.End.Position.Y;
 
             double projLength = Math.Sqrt(dx * dx + dy * dy);
 
@@ -126,6 +126,7 @@ namespace BH.Adapter.Robot
 
     }
 }
+
 
 
 

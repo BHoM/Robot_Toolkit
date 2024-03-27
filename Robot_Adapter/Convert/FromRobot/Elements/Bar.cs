@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2023, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -55,7 +55,7 @@ namespace BH.Adapter.Robot
             Node endNode = new Node { Name = robotBar.EndNode.ToString() }; ;
 
 
-            Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode, Name = robotBar.Name };
+            Bar bhomBar = new Bar { Start = startNode, End = endNode, Name = robotBar.Name };
 
 
             if (robotBar.HasLabel(IRobotLabelType.I_LT_BAR_SECTION) == -1)
@@ -137,7 +137,7 @@ namespace BH.Adapter.Robot
             if (!bhomNodes.TryGetValue(robotBar.EndNode.ToString(), out endNode))
                 Engine.Base.Compute.RecordError($"Failed to extract the end node of the Bar with number {robotBar.Number}.");
 
-            Bar bhomBar = new Bar { StartNode = startNode, EndNode = endNode, Name = robotBar.Name };
+            Bar bhomBar = new Bar { Start = startNode, End = endNode, Name = robotBar.Name };
             ISectionProperty secProp = null;
             IMaterialFragment barMaterial = null;
             BarRelease bhomBarRel = null;
@@ -267,7 +267,7 @@ namespace BH.Adapter.Robot
         public static double FromRobotOrientationAngle(this Bar bhomBar, double robotOrientation)
         {
             //Check that bar nodes have been set
-            if (bhomBar.StartNode == null || bhomBar.EndNode == null || bhomBar.StartNode.Position == null || bhomBar.EndNode.Position == null)
+            if (bhomBar.Start == null || bhomBar.End == null || bhomBar.Start.Position == null || bhomBar.End.Position == null)
                 return robotOrientation;
 
             //Check vertical status
@@ -316,6 +316,7 @@ namespace BH.Adapter.Robot
     }
 
 }
+
 
 
 

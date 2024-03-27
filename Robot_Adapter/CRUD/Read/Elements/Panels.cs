@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2023, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -34,6 +34,7 @@ using BH.Engine.Spatial;
 using BH.Engine.Geometry;
 using BH.Engine.Structure;
 using BH.oM.Adapters.Robot;
+using BH.Engine.Base;
 
 namespace BH.Adapter.Robot
 {
@@ -206,7 +207,10 @@ namespace BH.Adapter.Robot
             try
             {
                 if (outline != null)
-                    panel = BH.Engine.Structure.Create.Panel(outline, openings);
+                {
+                    panel = BH.Engine.Structure.Create.Panel(outline);
+                    panel.Openings.AddRange(openings);
+                }
 
                 if (panel == null)
                 {
@@ -379,6 +383,7 @@ namespace BH.Adapter.Robot
         /***************************************************/
     }
 }
+
 
 
 

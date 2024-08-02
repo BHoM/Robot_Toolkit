@@ -33,18 +33,78 @@ namespace BH.Adapter.Robot
 
         public static void ToRobot(IRobotNodeSupportData suppData, Constraint6DOF constraint)
         {
-            suppData.UX = constraint.TranslationX == DOFType.Fixed ? 1 : 0;
-            suppData.UY = constraint.TranslationY == DOFType.Fixed ? 1 : 0;
-            suppData.UZ = constraint.TranslationZ == DOFType.Fixed ? 1 : 0;
-            suppData.RX = constraint.RotationX == DOFType.Fixed ? 1 : 0;
-            suppData.RY = constraint.RotationY == DOFType.Fixed ? 1 : 0;
-            suppData.RZ = constraint.RotationZ == DOFType.Fixed ? 1 : 0;
-            suppData.KX = constraint.TranslationalStiffnessX;
-            suppData.KY = constraint.TranslationalStiffnessY;
-            suppData.KZ = constraint.TranslationalStiffnessZ;
-            suppData.HX = constraint.RotationalStiffnessX;
-            suppData.HY = constraint.RotationalStiffnessY;
-            suppData.HZ = constraint.RotationalStiffnessZ;
+            //if (constraint.TranslationZ == DOFType.Fixed)
+            //    suppData.UZ = 1;
+            //else if (constraint.TranslationZ == DOFType.FixedPositive)
+            //    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_UZ, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_PLUS);
+            //else if (constraint.TranslationZ == DOFType.FixedNegative)
+            //    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_UZ, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_MINUS);
+            //else
+            //    suppData.UZ = 0;
+
+
+            switch (constraint.TranslationZ)
+            {
+                case DOFType.Fixed:
+                    suppData.UZ = 1;
+                    break;
+                case DOFType.FixedPositive:
+                    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_UZ, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_PLUS);
+                    break;
+                case DOFType.FixedNegative:
+                    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_UZ, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_MINUS);
+                    break;
+                default:
+                    suppData.UZ = 0;
+                    break;
+            }
+
+            switch (constraint.TranslationY)
+            {
+                case DOFType.Fixed:
+                    suppData.UY = 1;
+                    break;
+                case DOFType.FixedPositive:
+                    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_UY, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_PLUS);
+                    break;
+                case DOFType.FixedNegative:
+                    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_UY, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_MINUS);
+                    break;
+                default:
+                    suppData.UY = 0;
+                    break;
+            }
+
+            switch (constraint.TranslationX)
+            {
+                case DOFType.Fixed:
+                    suppData.UX = 1;
+                    break;
+                case DOFType.FixedPositive:
+                    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_UX, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_PLUS);
+                    break;
+                case DOFType.FixedNegative:
+                    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_UX, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_MINUS);
+                    break;
+                default:
+                    suppData.UX = 0;
+                    break;
+            }
+
+            //suppData.UX = constraint.TranslationX == DOFType.Fixed ? 1 : 0;
+            //suppData.UY = constraint.TranslationY == DOFType.Fixed ? 1 : 0;
+            //suppData.UZ = constraint.TranslationZ == DOFType.Fixed ? 1 : 0;
+            //suppData.RX = constraint.RotationX == DOFType.Fixed ? 1 : 0;
+            //suppData.RY = constraint.RotationY == DOFType.Fixed ? 1 : 0;
+            //suppData.RZ = constraint.RotationZ == DOFType.Fixed ? 1 : 0;
+
+
+            //suppData.KX = constraint.TranslationalStiffnessX;
+            //suppData.KY = constraint.TranslationalStiffnessY;
+            //suppData.KZ = constraint.TranslationalStiffnessZ;
+            //suppData.HX = constraint.RotationalStiffnessX;
+            //suppData.HY = constraint.RotationalStiffnessY;
+            //suppData.HZ = constraint.RotationalStiffnessZ;
         }
 
         /***************************************************/

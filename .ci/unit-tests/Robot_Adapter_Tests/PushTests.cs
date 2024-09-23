@@ -170,7 +170,7 @@ namespace BH.Tests.Adapter.Robot
             for (int i = 0; i < count; i++)
             {
                 Bar bar = Engine.Base.Create.RandomObject(typeof(Bar), i + count) as Bar;
-                bar.StartNode = bars1[i].StartNode; //Same start node for bars from both sets
+                bar.Start = bars1[i].Start; //Same start node for bars from both sets
                 bars2.Add(bar);
             }
 
@@ -189,8 +189,8 @@ namespace BH.Tests.Adapter.Robot
             foreach (Bar bar in pulledBars)
             {
                 bar.Tags.Count.ShouldBe(1, "Bar should contain 1 tag.");
-                bar.StartNode.Tags.Count.ShouldBe(2, "StartNode of bars should contain 2 tags.");
-                bar.EndNode.Tags.Count.ShouldBe(1, "EndNode of bars should contain 1 tag.");
+                bar.Start.Tags.Count.ShouldBe(2, "StartNode of bars should contain 2 tags.");
+                bar.End.Tags.Count.ShouldBe(1, "EndNode of bars should contain 1 tag.");
             }
 
             //Create a new set to replace the first set of bars

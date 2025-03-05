@@ -39,6 +39,7 @@ using BH.oM.Data.Requests;
 using System.Linq;
 using BH.oM.Adapter;
 using RobotOM;
+using BH.oM.Spatial.SettingOut;
 
 namespace BH.Adapter.Robot
 {
@@ -96,6 +97,8 @@ namespace BH.Adapter.Robot
                 return ReadFramingElementDesignProperties();
             else if (type == typeof(BH.oM.Adapters.Robot.DesignGroup))
                 return ReadDesignGroups();
+            else if (type == typeof(Level))
+                return ReadLevels(indices);
             else if (typeof(IResult).IsAssignableFrom(type))
             {
                 Modules.Structure.ErrorMessages.ReadResultsError(type);

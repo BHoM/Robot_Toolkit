@@ -147,6 +147,7 @@
     <Compile Include="Adapter\ErrorMessages.cs" />
     <Compile Include="Adapter\InputChecks.cs" />
     <Compile Include="Convert\FromRobot\Elements\Bar.cs" />
+    <Compile Include="Convert\FromRobot\Elements\Storeys.cs" />
     <Compile Include="Convert\FromRobot\Elements\Node.cs" />
     <Compile Include="Convert\FromRobot\Elements\Panel.cs" />
     <Compile Include="Convert\FromRobot\Elements\RigidLink.cs" />
@@ -234,6 +235,7 @@
     <Compile Include="CRUD\Delete\Delete.cs" />
     <Compile Include="CRUD\Create\Create.cs" />
     <Compile Include="AdapterActions\Execute.cs" />
+    <Compile Include="CRUD\Read\Elements\Storeys.cs" />
     <Compile Include="CRUD\Read\Loads\ControurLoads.cs" />
     <Compile Include="CRUD\Read\Loads\GeometricalLineLoads.cs" />
     <Compile Include="CRUD\Read\Loads\LoadCombinations.cs" />

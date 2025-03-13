@@ -23,6 +23,8 @@
 using RobotOM;
 using BH.oM.Structure.Constraints;
 using System.Collections.Generic;
+using System;
+using System.Windows.Forms.VisualStyles;
 
 namespace BH.Adapter.Robot
 {
@@ -34,107 +36,51 @@ namespace BH.Adapter.Robot
 
         public static void ToRobot(IRobotNodeSupportData suppData, Constraint6DOF constraint)
         {
+            // Springs first, because if someone tries to assign fixed + spring, Robot overrides the spring
+            suppData.KX = constraint.TranslationalStiffnessX;
+            suppData.KY = constraint.TranslationalStiffnessY;
+            suppData.KZ = constraint.TranslationalStiffnessZ;
+            suppData.HX = constraint.RotationalStiffnessX;
+            suppData.HY = constraint.RotationalStiffnessY;
+            suppData.HZ = constraint.RotationalStiffnessZ;
 
-            switch (constraint.TranslationX)
-            {
-                case DOFType.Fixed:
-                    suppData.UX = 1;
-                    break;
-                case DOFType.FixedPositive:
-                    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_UX, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_PLUS);
-                    break;
-                case DOFType.FixedNegative:
-                    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_UX, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_MINUS);
-                    break;
-                default:
-                    suppData.UX = 0;
-                    break;
-            }
-
-            switch (constraint.TranslationY)
-            {
-                case DOFType.Fixed:
-                    suppData.UY = 1;
-                    break;
-                case DOFType.FixedPositive:
-                    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_UY, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_PLUS);
-                    break;
-                case DOFType.FixedNegative:
-                    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_UY, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_MINUS);
-                    break;
-                default:
-                    suppData.UY = 0;
-                    break;
-            }
-
-            switch (constraint.TranslationZ)
-            {
-                case DOFType.Fixed:
-                    suppData.UZ = 1;
-                    break;
-                case DOFType.FixedPositive:
-                    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_UZ, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_PLUS);
-                    break;
-                case DOFType.FixedNegative:
-                    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_UZ, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_MINUS);
-                    break;
-                default:
-                    suppData.UZ = 0;
-                    break;
-            }
-
-
-            switch (constraint.RotationX)
-            {
-                case DOFType.Fixed:
-                    suppData.RX = 1;
-                    break;
-                case DOFType.FixedPositive:
-                    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_RX, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_PLUS);
-                    break;
-                case DOFType.FixedNegative:
-                    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_RX, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_MINUS);
-                    break;
-                default:
-                    suppData.RX = 0;
-                    break;
-            }
-
-            switch (constraint.RotationY)
-            {
-                case DOFType.Fixed:
-                    suppData.RY = 1;
-                    break;
-                case DOFType.FixedPositive:
-                    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_RY, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_PLUS);
-                    break;
-                case DOFType.FixedNegative:
-                    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_RY, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_MINUS);
-                    break;
-                default:
-                    suppData.RY = 0;
-                    break;
-            }
-
-            switch (constraint.RotationZ)
-            {
-                case DOFType.Fixed:
-                    suppData.UZ = 1;
-                    break;
-                case DOFType.FixedPositive:
-                    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_RZ, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_PLUS);
-                    break;
-                case DOFType.FixedNegative:
-                    suppData.SetOneDir(IRobotNodeSupportFixingDirection.I_NSFD_RZ, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_MINUS);
-                    break;
-                default:
-                    suppData.RZ = 0;
-                    break;
-            }
-          
+            // Translations and rotations
+            SetDOF(suppData, constraint.TranslationX, IRobotNodeSupportFixingDirection.I_NSFD_UX);
+            SetDOF(suppData, constraint.TranslationY, IRobotNodeSupportFixingDirection.I_NSFD_UY);
+            SetDOF(suppData, constraint.TranslationZ, IRobotNodeSupportFixingDirection.I_NSFD_UZ);
+            SetDOF(suppData, constraint.RotationX, IRobotNodeSupportFixingDirection.I_NSFD_RX);
+            SetDOF(suppData, constraint.RotationY, IRobotNodeSupportFixingDirection.I_NSFD_RY);
+            SetDOF(suppData, constraint.RotationZ, IRobotNodeSupportFixingDirection.I_NSFD_RZ);
         }
-       
 
+        private static void SetDOF(IRobotNodeSupportData suppData, DOFType dofType, IRobotNodeSupportFixingDirection dir)
+        {
+            switch (dofType)
+            {
+                case DOFType.Fixed:
+                    suppData.SetFixed(dir,1); // Fixed
+                    break;
+                case DOFType.Free:
+                case DOFType.Spring:
+                    suppData.SetFixed(dir, 0);
+                    suppData.SetOneDir(dir, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_NONE);
+                    break;
+                case DOFType.SpringPositive:
+                case DOFType.FixedPositive:
+                    suppData.SetOneDir(dir, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_PLUS);
+                    break;
+                case DOFType.SpringNegative:
+                case DOFType.FixedNegative:
+                    suppData.SetOneDir(dir, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_MINUS);
+                    break;
+                default:
+                    suppData.SetFixed(dir, 0);
+                    suppData.SetOneDir(dir, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_NONE);
+                    Engine.Base.Compute.RecordError($"The support {dofType} is not supported and has been set to Free.");
+                    break;
+            }
+
+        }
     }
     /***************************************************/
 }

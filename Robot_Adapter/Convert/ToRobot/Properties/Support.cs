@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2024, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2025, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -22,6 +22,9 @@
 
 using RobotOM;
 using BH.oM.Structure.Constraints;
+using System.Collections.Generic;
+using System;
+using System.Windows.Forms.VisualStyles;
 
 namespace BH.Adapter.Robot
 {
@@ -33,23 +36,55 @@ namespace BH.Adapter.Robot
 
         public static void ToRobot(IRobotNodeSupportData suppData, Constraint6DOF constraint)
         {
-            suppData.UX = constraint.TranslationX == DOFType.Fixed ? 1 : 0;
-            suppData.UY = constraint.TranslationY == DOFType.Fixed ? 1 : 0;
-            suppData.UZ = constraint.TranslationZ == DOFType.Fixed ? 1 : 0;
-            suppData.RX = constraint.RotationX == DOFType.Fixed ? 1 : 0;
-            suppData.RY = constraint.RotationY == DOFType.Fixed ? 1 : 0;
-            suppData.RZ = constraint.RotationZ == DOFType.Fixed ? 1 : 0;
+            // Springs first, because if someone tries to assign fixed + spring, Robot overrides the spring
             suppData.KX = constraint.TranslationalStiffnessX;
             suppData.KY = constraint.TranslationalStiffnessY;
             suppData.KZ = constraint.TranslationalStiffnessZ;
             suppData.HX = constraint.RotationalStiffnessX;
             suppData.HY = constraint.RotationalStiffnessY;
             suppData.HZ = constraint.RotationalStiffnessZ;
+
+            // Translations and rotations
+            SetDOF(suppData, constraint.TranslationX, IRobotNodeSupportFixingDirection.I_NSFD_UX);
+            SetDOF(suppData, constraint.TranslationY, IRobotNodeSupportFixingDirection.I_NSFD_UY);
+            SetDOF(suppData, constraint.TranslationZ, IRobotNodeSupportFixingDirection.I_NSFD_UZ);
+            SetDOF(suppData, constraint.RotationX, IRobotNodeSupportFixingDirection.I_NSFD_RX);
+            SetDOF(suppData, constraint.RotationY, IRobotNodeSupportFixingDirection.I_NSFD_RY);
+            SetDOF(suppData, constraint.RotationZ, IRobotNodeSupportFixingDirection.I_NSFD_RZ);
         }
 
-        /***************************************************/
+        private static void SetDOF(IRobotNodeSupportData suppData, DOFType dofType, IRobotNodeSupportFixingDirection dir)
+        {
+            switch (dofType)
+            {
+                case DOFType.Fixed:
+                    suppData.SetFixed(dir,1); // Fixed
+                    break;
+                case DOFType.Free:
+                case DOFType.Spring:
+                    suppData.SetFixed(dir, 0);
+                    suppData.SetOneDir(dir, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_NONE);
+                    break;
+                case DOFType.SpringPositive:
+                case DOFType.FixedPositive:
+                    suppData.SetOneDir(dir, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_PLUS);
+                    break;
+                case DOFType.SpringNegative:
+                case DOFType.FixedNegative:
+                    suppData.SetOneDir(dir, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_MINUS);
+                    break;
+                default:
+                    suppData.SetFixed(dir, 0);
+                    suppData.SetOneDir(dir, IRobotNodeSupportOneDirectionFixingType.I_NSODFT_NONE);
+                    Engine.Base.Compute.RecordError($"The support {dofType} is not supported and has been set to Free.");
+                    break;
+            }
+
+        }
     }
+    /***************************************************/
 }
+
 
 
 

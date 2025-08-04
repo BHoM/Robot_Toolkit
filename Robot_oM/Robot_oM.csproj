@@ -69,6 +69,7 @@
     <Compile Include="Enums\DesignCode_Steel.cs" />
     <Compile Include="Enums\MaterialDB.cs" />
     <Compile Include="Enums\SectionDB.cs" />
+    <Compile Include="Fragments\ContourLoadPanelNumbers.cs" />
     <Compile Include="Fragments\LoadCombinationType.cs" />
     <Compile Include="Fragments\LoadCaseLabel.cs" />
     <Compile Include="Fragments\PanelFiniteElementIds.cs" />

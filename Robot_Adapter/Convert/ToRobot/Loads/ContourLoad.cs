@@ -20,7 +20,9 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using BH.Engine.Base;
 using BH.Engine.Geometry;
+using BH.oM.Adapters.Robot;
 using BH.oM.Geometry;
 using BH.oM.Structure.Loads;
 using RobotOM;
@@ -54,7 +56,9 @@ namespace BH.Adapter.Robot
             if (points.First().SquareDistance(points.Last()) < Tolerance.Distance * Tolerance.Distance)
                 points.RemoveAt(points.Count - 1);
 
-            if (load.PanelNumbers == null)
+            List<int> contPanelNumbers = load.FindFragment<ContourLoadPanelNumbers>().PanelNumbers;
+
+            if (contPanelNumbers == null)
             {
                 // If no panel numbers are provided, Robot will auto-detect objects
                 loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_AUTO_DETECT_OBJECTS, 1);
@@ -62,7 +66,7 @@ namespace BH.Adapter.Robot
             else
             {
                 // If panel numbers are provided, convert them to a string and set the objects
-                loadRecord.Objects.FromText(ToRobotSelectionString(load.PanelNumbers));
+                loadRecord.Objects.FromText(ToRobotSelectionString(contPanelNumbers));
             }
 
             loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PX1, load.Force.X);

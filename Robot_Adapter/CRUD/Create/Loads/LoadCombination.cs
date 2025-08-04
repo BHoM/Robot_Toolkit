@@ -21,6 +21,8 @@
  */
 
 using System.Collections.Generic;
+using BH.Engine.Base;
+using BH.oM.Adapters.Robot;
 using BH.oM.Structure.Loads;
 using RobotOM;
 
@@ -41,9 +43,26 @@ namespace BH.Adapter.Robot
                 if (!CheckNotNull(lComb))
                     continue;
 
-                if (m_RobotApplication.Project.Structure.Cases.Exist(lComb.Number)!=-1)
+                IRobotCombinationType robotCombinationType = IRobotCombinationType.I_CBT_ULS;
+
+                //Assign IRobotCombinationType based on the LoadCombinationType fragment
+                var combTypeFragment = lComb.FindFragment<LoadCombinationType>();
+                if (combTypeFragment == null)
                 {
-                    RobotCaseCombination rCaseCombination = m_RobotApplication.Project.Structure.Cases.CreateCombination(lComb.Number, lComb.Name, IRobotCombinationType.I_CBT_ULS, IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_COMB);
+                    BH.Engine.Base.Compute.RecordWarning($"LoadCombination with Number {lComb.Number} does not have a LoadCombinationType fragment. Defaulting to ULS.");
+                }
+                else if (combTypeFragment.CombinationType == CombinationType_EC.ULS)
+                {
+                    robotCombinationType = IRobotCombinationType.I_CBT_ULS;
+                }
+                else if (combTypeFragment.CombinationType == CombinationType_EC.SLS)
+                {
+                    robotCombinationType = IRobotCombinationType.I_CBT_SLS;
+                }
+
+                if (m_RobotApplication.Project.Structure.Cases.Exist(lComb.Number) != -1)
+                {
+                    RobotCaseCombination rCaseCombination = m_RobotApplication.Project.Structure.Cases.CreateCombination(lComb.Number, lComb.Name, robotCombinationType, IRobotCaseNature.I_CN_PERMANENT, IRobotCaseAnalizeType.I_CAT_COMB);
                     for (int i = 0; i < lComb.LoadCases.Count; i++)
                     {
                         //Check tuple as well as case not null

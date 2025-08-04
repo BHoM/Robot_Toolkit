@@ -56,7 +56,7 @@ namespace BH.Adapter.Robot
             if (points.First().SquareDistance(points.Last()) < Tolerance.Distance * Tolerance.Distance)
                 points.RemoveAt(points.Count - 1);
 
-            List<int> contPanelNumbers = load.FindFragment<ContourLoadPanelNumbers>().PanelNumbers;
+            List<int> contPanelNumbers = load.FindFragment<ContourLoadPanelNumbers>()?.PanelNumbers;
 
             if (contPanelNumbers == null)
             {

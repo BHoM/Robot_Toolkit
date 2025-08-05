@@ -45,17 +45,17 @@ namespace BH.Adapter.Robot
 
                 IRobotCombinationType robotCombinationType = IRobotCombinationType.I_CBT_ULS;
 
-                //Assign IRobotCombinationType based on the LoadCombinationType fragment
-                var combTypeFragment = lComb.FindFragment<LoadCombinationType>();
+                //Assign IRobotCombinationType based on the CombinationType fragment
+                LoadCombinationType combTypeFragment = lComb.FindFragment<LoadCombinationType>();
                 if (combTypeFragment == null)
                 {
-                    BH.Engine.Base.Compute.RecordWarning($"LoadCombination with Number {lComb.Number} does not have a LoadCombinationType fragment. Defaulting to ULS.");
+                    BH.Engine.Base.Compute.RecordWarning($"LoadCombination {lComb.Number} does not have a LoadCombinationType fragment. Defaulting to Eurocode ULS.");
                 }
-                else if (combTypeFragment.CombinationType == CombinationType_EC.ULS)
+                else if (combTypeFragment.CombinationType == CombinationType.EC_ULS)
                 {
                     robotCombinationType = IRobotCombinationType.I_CBT_ULS;
                 }
-                else if (combTypeFragment.CombinationType == CombinationType_EC.SLS)
+                else if (combTypeFragment.CombinationType == CombinationType.EC_SLS)
                 {
                     robotCombinationType = IRobotCombinationType.I_CBT_SLS;
                 }

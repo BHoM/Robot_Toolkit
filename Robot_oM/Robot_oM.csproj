@@ -65,7 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums\CombinationType_EC.cs" />
+    <Compile Include="Enums\CombinationType.cs" />
     <Compile Include="Enums\DesignCode_Steel.cs" />
     <Compile Include="Enums\MaterialDB.cs" />
     <Compile Include="Enums\SectionDB.cs" />

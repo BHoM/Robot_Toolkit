@@ -20,17 +20,26 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using BH.oM.Base.Attributes;
+using System.ComponentModel;
+
 namespace BH.oM.Adapters.Robot
 {
     /***************************************************/
     /****               Public Enums                ****/
     /***************************************************/
 
-    public enum CombinationType_EC
+    public enum CombinationType
     {
-        Default = 0,
-        ULS, // Ultimate Limit State
-        SLS, // Serviceability Limit State
+        Undefined,
+
+        [Description("Eurocode - Ultimate Limit State")]
+        [DisplayText("Ultimate Limit State")]
+        EC_ULS, // Ultimate Limit State
+
+        [Description("Eurocode - Serviceability Limit State")]
+        [DisplayText("Serviceability Limit State")]
+        EC_SLS, // Serviceability Limit State
     }
 
     /***************************************************/

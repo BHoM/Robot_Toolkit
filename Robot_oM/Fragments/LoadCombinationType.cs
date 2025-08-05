@@ -31,7 +31,7 @@ namespace BH.oM.Adapters.Robot
 {
     public class LoadCombinationType : IFragment
     {
-        public virtual CombinationType_EC CombinationType { get; set; } = 0;
+        public virtual CombinationType CombinationType { get; set; } = 0;
     }
 }
 

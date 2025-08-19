@@ -68,6 +68,14 @@ namespace BH.Adapter.Robot
                     memberDesignParams_BS5950_2000.BuckLengthCoeffZ = framEleDesProps.EulerBucklingLengthCoefficientZ;
                     memberDef.CodeParams = memberDesignParams_BS5950_2000;
                 }
+
+                if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.ANSI_AISC_360_10))
+                {
+                    IRDimMembParamsANS memberDesignParams_AISC_360_10 = memberDef.CodeParams;
+                    memberDesignParams_AISC_360_10.BuckLengthCoeffY = framEleDesProps.EulerBucklingLengthCoefficientY;
+                    memberDesignParams_AISC_360_10.BuckLengthCoeffZ = framEleDesProps.EulerBucklingLengthCoefficientZ;
+                    memberDef.CodeParams = memberDesignParams_AISC_360_10;
+                }
                 
                 m_RobotApplication.Project.Structure.Labels.Store(memberType);
             }            

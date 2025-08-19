@@ -95,7 +95,7 @@ namespace BH.Adapter.Robot
                     FramingElementDesignProperties framEleDesProps = designFragment as FramingElementDesignProperties;
                     if (framEleDesProps != null)
                     {
-                        if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name) != -1)
+                        if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name) == -1)
                             Create(framEleDesProps);
                         robotBar.SetLabel(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name);
                     }

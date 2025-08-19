@@ -134,6 +134,13 @@ namespace BH.Adapter.Robot
                         bhomDesignProps.EulerBucklingLengthCoefficientZ = memberDesignParams_BS5950_2000.BuckLengthCoeffZ;
                     }
 
+                    if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.ANSI_AISC_360_10))
+                    {
+                        IRDimMembParamsANS memberDesignParams_AISC_360_10 = memberDef.CodeParams;
+                        bhomDesignProps.EulerBucklingLengthCoefficientY = memberDesignParams_AISC_360_10.BuckLengthCoeffY;
+                        bhomDesignProps.EulerBucklingLengthCoefficientZ = memberDesignParams_AISC_360_10.BuckLengthCoeffZ;
+                    }
+
 
 
                     if (memberDef.LengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Y) < 0)

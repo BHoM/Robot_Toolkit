@@ -84,8 +84,8 @@ namespace BH.Adapter.Robot
             if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.ANSI_AISC_360_10))
             {
                 IRDimMembParamsANS memberDesignParams_AISC_360_10 = memberDef.CodeParams;
-                memberDesignParams_AISC_360_10.BuckLenghtCoeffY = framEleDesProps.EulerBucklingLengthCoefficientY;
-                memberDesignParams_AISC_360_10.BuckLenghtCoeffZ = framEleDesProps.EulerBucklingLengthCoefficientZ;
+                memberDesignParams_AISC_360_10.BuckLengthCoeffY = framEleDesProps.EulerBucklingLengthCoefficientY;
+                memberDesignParams_AISC_360_10.BuckLengthCoeffZ = framEleDesProps.EulerBucklingLengthCoefficientZ;
                 memberDef.CodeParams = memberDesignParams_AISC_360_10;
             }
 

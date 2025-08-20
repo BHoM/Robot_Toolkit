@@ -65,6 +65,9 @@ namespace BH.Adapter.Robot
 
                 IRobotLabel label = labelServer.CreateLike(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name, labelServer.GetDefault(IRobotLabelType.I_LT_MEMBER_TYPE));
 
+                // Use the ToRobot method with the configured design code
+                Convert.ToRobot(label, framEleDesProps, RobotConfig.DatabaseSettings.SteelDesignCode);
+
                 labelServer.Store(label);
             }
             return true;

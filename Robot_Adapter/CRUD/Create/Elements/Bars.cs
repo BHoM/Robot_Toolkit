@@ -126,12 +126,8 @@ namespace BH.Adapter.Robot
                             {
                                 Create(framEleDesProps);
                             }
-                            else
-                            {
-                                List<FramingElementDesignProperties> framEleDesPropsList = new List<FramingElementDesignProperties>();
-                                framEleDesPropsList.Add(framEleDesProps);
-                                Update(framEleDesPropsList);
-                            }
+                            // If the FramingElementDesignProperties already exists, just assign it to the bar
+                            // No need to update the properties themselves when they're attached as fragments
                             rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name);
                         }
                     }                  

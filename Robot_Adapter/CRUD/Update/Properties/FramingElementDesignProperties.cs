@@ -38,8 +38,23 @@ namespace BH.Adapter.Robot
 
             foreach (FramingElementDesignProperties framEleDesProps in framingElementDesignPropertiesList)
             {
-               
+                if (!CheckNotNull(framEleDesProps, oM.Base.Debugging.EventType.Warning))
+                    continue;
+
+                // Check if the label exists before trying to update it
+                if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name) == -1)
+                {
+                    Engine.Base.Compute.RecordWarning($"FramingElementDesignProperties '{framEleDesProps.Name}' does not exist in Robot and cannot be updated. Use Create instead.");
+                    continue;
+                }
+
                 IRobotLabel memberType = m_RobotApplication.Project.Structure.Labels.Get(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name);
+                
+                if (memberType == null)
+                {
+                    Engine.Base.Compute.RecordWarning($"Failed to retrieve FramingElementDesignProperties '{framEleDesProps.Name}' from Robot.");
+                    continue;
+                }
 
                 // Use the ToRobot method with the configured design code
                 Convert.ToRobot(memberType, framEleDesProps, RobotConfig.DatabaseSettings.SteelDesignCode);

@@ -64,6 +64,33 @@ namespace BH.Adapter.Robot
                     if (!CheckInputObjectAndExtractAdapterIdInt(bhomBar, out barNum, EventType.Error))
                         continue;
 
+                    // Check if bar already exists in Robot
+                    bool barExists = barServer.Exist(barNum);
+                    
+                    if (barExists)
+                    {
+                        // For existing bars, handle FramingElementDesignProperties assignment directly
+                        // without going through the cache system to avoid conflicts
+                        RobotBar existingBar = barServer.Get(barNum) as RobotBar;
+                        if (existingBar != null)
+                        {
+                            IFragment designFragment;
+                            if (bhomBar.Fragments.TryGetValue(typeof(FramingElementDesignProperties), out designFragment))
+                            {
+                                FramingElementDesignProperties framEleDesProps = designFragment as FramingElementDesignProperties;
+                                if (framEleDesProps != null)
+                                {
+                                    if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name) == -1)
+                                    {
+                                        Create(framEleDesProps);
+                                    }
+                                    existingBar.SetLabel(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name);
+                                }
+                            }
+                        }
+                        continue; // Skip cache processing for existing bars
+                    }
+
                     int stNodeId, endNodeId;
 
                     //Check nodes are not null and correctly set up and extract id information

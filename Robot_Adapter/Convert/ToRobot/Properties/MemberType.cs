@@ -77,8 +77,8 @@ namespace BH.Adapter.Robot
             else if (designCode == DesignCode_Steel.ANSI_AISC_360_10)
             {
                 IRDimMembParamsANS memberDesignParams_AISC_360_10 = memberDef.CodeParams;
-                memberDesignParams_AISC_360_10.BuckLengthCoeffY = framingElementDesignProperties.EulerBucklingLengthCoefficientY;
-                memberDesignParams_AISC_360_10.BuckLengthCoeffZ = framingElementDesignProperties.EulerBucklingLengthCoefficientZ;
+                memberDesignParams_AISC_360_10.BuckLenghtCoeffY = framingElementDesignProperties.EulerBucklingLengthCoefficientY;
+                memberDesignParams_AISC_360_10.BuckLenghtCoeffZ = framingElementDesignProperties.EulerBucklingLengthCoefficientZ;
                 memberDef.CodeParams = memberDesignParams_AISC_360_10;
             }
         }

@@ -97,6 +97,23 @@ namespace BH.Adapter.Robot
                         
                         bhomDesignProps.LateralTorsionalBuckling = ltbParams;
                         
+                        // Read service limit state parameters
+                        ServiceLimitStateParameters slsParams = new ServiceLimitStateParameters();
+                        double deflectionLimit_relativeY = memberDesignParams_EC3.RelLimitDeflUy;
+                        double deflectionLimit_relativeZ = memberDesignParams_EC3.RelLimitdeflUz;
+                        
+                        // Check if deflection limits are set (non-zero values indicate they are configured)
+                        if (deflectionLimit_relativeY > 0 || deflectionLimit_relativeZ > 0)
+                        {
+                            slsParams.DeflectionLimitEnabled = true;
+                            slsParams.RelativeDeflectionLimitY = deflectionLimit_relativeY;
+                            slsParams.RelativeDeflectionLimitZ = deflectionLimit_relativeZ;
+                            slsParams.UseRelativeLimitY = true;
+                            slsParams.UseRelativeLimitZ = true;
+                        }
+                        
+                        bhomDesignProps.ServiceLimitState = slsParams;
+                        
                         //RobotEurocodeSteelDesignFactors mEuroCodeDesignFactors = rMemberType.Data;                    
                         bool angle_conn = memberDesignParams_EC3.AngleConn;
                         double beta = memberDesignParams_EC3.Beta;
@@ -151,6 +168,11 @@ namespace BH.Adapter.Robot
                         LateralTorsionalBucklingParameters ltbParams = new LateralTorsionalBucklingParameters();
                         ltbParams.LateralBucklingEnabled = memberDesignParams_BS5950.LateralBuckling;
                         bhomDesignProps.LateralTorsionalBuckling = ltbParams;
+                        
+                        // Read service limit state parameters
+                        ServiceLimitStateParameters slsParams = new ServiceLimitStateParameters();
+                        // Note: BS5950 deflection parameters would be added here if available in Robot API
+                        bhomDesignProps.ServiceLimitState = slsParams;
                     }
 
 
@@ -164,6 +186,11 @@ namespace BH.Adapter.Robot
                         LateralTorsionalBucklingParameters ltbParams = new LateralTorsionalBucklingParameters();
                         ltbParams.LateralBucklingEnabled = memberDesignParams_BS5950_2000.LateralBuckling;
                         bhomDesignProps.LateralTorsionalBuckling = ltbParams;
+                        
+                        // Read service limit state parameters
+                        ServiceLimitStateParameters slsParams = new ServiceLimitStateParameters();
+                        // Note: BS5950_2000 deflection parameters would be added here if available in Robot API
+                        bhomDesignProps.ServiceLimitState = slsParams;
                     }
 
                     if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.ANSI_AISC_360_10))
@@ -176,6 +203,11 @@ namespace BH.Adapter.Robot
                         LateralTorsionalBucklingParameters ltbParams = new LateralTorsionalBucklingParameters();
                         ltbParams.LateralBucklingEnabled = memberDesignParams_AISC_360_10.LateralBuckling;
                         bhomDesignProps.LateralTorsionalBuckling = ltbParams;
+                        
+                        // Read service limit state parameters
+                        ServiceLimitStateParameters slsParams = new ServiceLimitStateParameters();
+                        // Note: ANSI_AISC_360_10 deflection parameters would be added here if available in Robot API
+                        bhomDesignProps.ServiceLimitState = slsParams;
                     }
 
 

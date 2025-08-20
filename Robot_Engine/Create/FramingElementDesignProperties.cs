@@ -57,13 +57,15 @@ namespace BH.Engine.Adapters.Robot
         public static FramingElementDesignProperties FramingElementDesignProperties(string name,
                                                                                     double eulerBucklingLengthCoeffY = 1,
                                                                                     double eulerBucklingLengthCoeffZ = 1,
-                                                                                    LateralTorsionalBucklingParameters lateralTorsionalBuckling = null)
+                                                                                    LateralTorsionalBucklingParameters lateralTorsionalBuckling = null,
+                                                                                    ServiceLimitStateParameters serviceLimitState = null)
         {
             FramingElementDesignProperties framEleDesignProps = new FramingElementDesignProperties();
             framEleDesignProps.Name = name;
             framEleDesignProps.EulerBucklingLengthCoefficientY = eulerBucklingLengthCoeffY;
             framEleDesignProps.EulerBucklingLengthCoefficientZ = eulerBucklingLengthCoeffZ;
             framEleDesignProps.LateralTorsionalBuckling = lateralTorsionalBuckling;
+            framEleDesignProps.ServiceLimitState = serviceLimitState;
 
             return framEleDesignProps;
         }

@@ -75,6 +75,19 @@ namespace BH.Adapter.Robot
                     }
                 }
                 
+                // Set service limit state parameters if provided
+                if (framingElementDesignProperties.ServiceLimitState != null)
+                {
+                    var sls = framingElementDesignProperties.ServiceLimitState;
+                    if (sls.DeflectionLimitEnabled)
+                    {
+                        if (sls.UseRelativeLimitY)
+                            memberDesignParams_EC3.RelLimitDeflUy = sls.RelativeDeflectionLimitY;
+                        if (sls.UseRelativeLimitZ)
+                            memberDesignParams_EC3.RelLimitdeflUz = sls.RelativeDeflectionLimitZ;
+                    }
+                }
+                
                 memberDef.CodeParams = memberDesignParams_EC3;
             }
             else if (designCode == DesignCode_Steel.BS5950)
@@ -88,6 +101,14 @@ namespace BH.Adapter.Robot
                 {
                     var ltb = framingElementDesignProperties.LateralTorsionalBuckling;
                     memberDesignParams_BS5950.LateralBuckling = ltb.LateralBucklingEnabled;
+                }
+                
+                // Set service limit state parameters if provided
+                if (framingElementDesignProperties.ServiceLimitState != null)
+                {
+                    var sls = framingElementDesignProperties.ServiceLimitState;
+                    // Note: BS5950 may have different deflection limit properties
+                    // Implementation would depend on available Robot API properties
                 }
                 
                 memberDef.CodeParams = memberDesignParams_BS5950;
@@ -105,6 +126,14 @@ namespace BH.Adapter.Robot
                     memberDesignParams_BS5950_2000.LateralBuckling = ltb.LateralBucklingEnabled;
                 }
                 
+                // Set service limit state parameters if provided
+                if (framingElementDesignProperties.ServiceLimitState != null)
+                {
+                    var sls = framingElementDesignProperties.ServiceLimitState;
+                    // Note: BS5950_2000 may have different deflection limit properties
+                    // Implementation would depend on available Robot API properties
+                }
+                
                 memberDef.CodeParams = memberDesignParams_BS5950_2000;
             }
             else if (designCode == DesignCode_Steel.ANSI_AISC_360_10)
@@ -118,6 +147,14 @@ namespace BH.Adapter.Robot
                 {
                     var ltb = framingElementDesignProperties.LateralTorsionalBuckling;
                     memberDesignParams_AISC_360_10.LateralBuckling = ltb.LateralBucklingEnabled;
+                }
+                
+                // Set service limit state parameters if provided
+                if (framingElementDesignProperties.ServiceLimitState != null)
+                {
+                    var sls = framingElementDesignProperties.ServiceLimitState;
+                    // Note: ANSI_AISC_360_10 may have different deflection limit properties
+                    // Implementation would depend on available Robot API properties
                 }
                 
                 memberDef.CodeParams = memberDesignParams_AISC_360_10;

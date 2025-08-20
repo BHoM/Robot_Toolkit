@@ -31,7 +31,7 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static void ToRobot(IRobotLabel robotMemberType, FramingElementDesignProperties framingElementDesignProperties)
+        public static void ToRobot(IRobotLabel robotMemberType, FramingElementDesignProperties framingElementDesignProperties, DesignCode_Steel designCode)
         {
             if (robotMemberType == null || framingElementDesignProperties == null)
                 return;
@@ -52,79 +52,34 @@ namespace BH.Adapter.Robot
             else
                 memberDef.SetLengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Z, framingElementDesignProperties.MemberLengthZ);
 
-            // Get the active steel design code from Robot application
-            // Note: This requires access to Robot application, which may not be available in static context
-            // In a real implementation, this would need to be passed as a parameter or obtained differently
-            
-            // Set buckling length coefficients based on design code
-            // Since we don't have access to Robot application here, we'll set for the most common case (EC3)
-            // A more complete implementation would require the design code as a parameter
-            
-            try
+            // Set buckling length coefficients based on the specified design code
+            if (designCode == DesignCode_Steel.BS_EN_1993_1_2005_NA_2008_A1_2014)
             {
-                // Try EC3 first (most common)
                 IRDimMembParamsE32 memberDesignParams_EC3 = memberDef.CodeParams;
-                if (memberDesignParams_EC3 != null)
-                {
-                    memberDesignParams_EC3.BuckLengthCoeffY = framingElementDesignProperties.EulerBucklingLengthCoefficientY;
-                    memberDesignParams_EC3.BuckLengthCoeffZ = framingElementDesignProperties.EulerBucklingLengthCoefficientZ;
-                    memberDef.CodeParams = memberDesignParams_EC3;
-                    return;
-                }
+                memberDesignParams_EC3.BuckLengthCoeffY = framingElementDesignProperties.EulerBucklingLengthCoefficientY;
+                memberDesignParams_EC3.BuckLengthCoeffZ = framingElementDesignProperties.EulerBucklingLengthCoefficientZ;
+                memberDef.CodeParams = memberDesignParams_EC3;
             }
-            catch
+            else if (designCode == DesignCode_Steel.BS5950)
             {
-                // EC3 not available, try other codes
-            }
-
-            try
-            {
-                // Try AISC
-                IRDimMembParamsANS memberDesignParams_AISC = memberDef.CodeParams;
-                if (memberDesignParams_AISC != null)
-                {
-                    memberDesignParams_AISC.BuckLengthCoeffY = framingElementDesignProperties.EulerBucklingLengthCoefficientY;
-                    memberDesignParams_AISC.BuckLengthCoeffZ = framingElementDesignProperties.EulerBucklingLengthCoefficientZ;
-                    memberDef.CodeParams = memberDesignParams_AISC;
-                    return;
-                }
-            }
-            catch
-            {
-                // AISC not available, try BS5950
-            }
-
-            try
-            {
-                // Try BS5950
                 IRDimMembParamsBS59 memberDesignParams_BS5950 = memberDef.CodeParams;
-                if (memberDesignParams_BS5950 != null)
-                {
-                    memberDesignParams_BS5950.BuckLengthCoeffY = framingElementDesignProperties.EulerBucklingLengthCoefficientY;
-                    memberDesignParams_BS5950.BuckLengthCoeffZ = framingElementDesignProperties.EulerBucklingLengthCoefficientZ;
-                    memberDef.CodeParams = memberDesignParams_BS5950;
-                    return;
-                }
+                memberDesignParams_BS5950.BuckLengthCoeffY = framingElementDesignProperties.EulerBucklingLengthCoefficientY;
+                memberDesignParams_BS5950.BuckLengthCoeffZ = framingElementDesignProperties.EulerBucklingLengthCoefficientZ;
+                memberDef.CodeParams = memberDesignParams_BS5950;
             }
-            catch
+            else if (designCode == DesignCode_Steel.BS5950_2000)
             {
-                // BS5950 not available, try BS5950_2000
-            }
-
-            try
-            {
-                // Try BS5950_2000
                 IRDimMembParamsBS59_2000 memberDesignParams_BS5950_2000 = memberDef.CodeParams;
-                if (memberDesignParams_BS5950_2000 != null)
-                {
-                    memberDesignParams_BS5950_2000.BuckLengthCoeffY = framingElementDesignProperties.EulerBucklingLengthCoefficientY;
-                    memberDesignParams_BS5950_2000.BuckLengthCoeffZ = framingElementDesignProperties.EulerBucklingLengthCoefficientZ;
-                    memberDef.CodeParams = memberDesignParams_BS5950_2000;
-                }
+                memberDesignParams_BS5950_2000.BuckLengthCoeffY = framingElementDesignProperties.EulerBucklingLengthCoefficientY;
+                memberDesignParams_BS5950_2000.BuckLengthCoeffZ = framingElementDesignProperties.EulerBucklingLengthCoefficientZ;
+                memberDef.CodeParams = memberDesignParams_BS5950_2000;
             }
-            catch
+            else if (designCode == DesignCode_Steel.ANSI_AISC_360_10)
             {
-                // All design codes failed - cannot set parameters
+                IRDimMembParamsANS memberDesignParams_AISC_360_10 = memberDef.CodeParams;
+                memberDesignParams_AISC_360_10.BuckLengthCoeffY = framingElementDesignProperties.EulerBucklingLengthCoefficientY;
+                memberDesignParams_AISC_360_10.BuckLengthCoeffZ = framingElementDesignProperties.EulerBucklingLengthCoefficientZ;
+                memberDef.CodeParams = memberDesignParams_AISC_360_10;
             }
         }
 

@@ -41,41 +41,8 @@ namespace BH.Adapter.Robot
                
                 IRobotLabel memberType = m_RobotApplication.Project.Structure.Labels.Get(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name);
 
-                string steelMembersCodeType = m_RobotApplication.Project.Preferences.GetActiveCode(IRobotCodeType.I_CT_STEEL_STRUCTURES);
-
-                IRDimMembDef memberDef = memberType.Data;
-                
-                if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.BS_EN_1993_1_2005_NA_2008_A1_2014))
-                {
-                    IRDimMembParamsE32 memberDesignParams_EC3 = memberDef.CodeParams;
-                    memberDesignParams_EC3.BuckLengthCoeffY = framEleDesProps.EulerBucklingLengthCoefficientY;
-                    memberDesignParams_EC3.BuckLengthCoeffZ = framEleDesProps.EulerBucklingLengthCoefficientZ;
-                    memberDef.CodeParams = memberDesignParams_EC3;
-                }
-
-                if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.BS5950))
-                {
-                    IRDimMembParamsBS59 memberDesignParams_BS5950 = memberDef.CodeParams;
-                    memberDesignParams_BS5950.BuckLengthCoeffY = framEleDesProps.EulerBucklingLengthCoefficientY;
-                    memberDesignParams_BS5950.BuckLengthCoeffZ = framEleDesProps.EulerBucklingLengthCoefficientZ;
-                    memberDef.CodeParams = memberDesignParams_BS5950;
-                }
-
-                if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.BS5950_2000))
-                {
-                    IRDimMembParamsBS59_2000 memberDesignParams_BS5950_2000 = memberDef.CodeParams;
-                    memberDesignParams_BS5950_2000.BuckLengthCoeffY = framEleDesProps.EulerBucklingLengthCoefficientY;
-                    memberDesignParams_BS5950_2000.BuckLengthCoeffZ = framEleDesProps.EulerBucklingLengthCoefficientZ;
-                    memberDef.CodeParams = memberDesignParams_BS5950_2000;
-                }
-
-                if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.ANSI_AISC_360_10))
-                {
-                    IRDimMembParamsANS memberDesignParams_AISC_360_10 = memberDef.CodeParams;
-                    memberDesignParams_AISC_360_10.BuckLengthCoeffY = framEleDesProps.EulerBucklingLengthCoefficientY;
-                    memberDesignParams_AISC_360_10.BuckLengthCoeffZ = framEleDesProps.EulerBucklingLengthCoefficientZ;
-                    memberDef.CodeParams = memberDesignParams_AISC_360_10;
-                }
+                // Use the ToRobot method with the configured design code
+                Convert.ToRobot(memberType, framEleDesProps, RobotConfig.DatabaseSettings.SteelDesignCode);
                 
                 m_RobotApplication.Project.Structure.Labels.Store(memberType);
             }            

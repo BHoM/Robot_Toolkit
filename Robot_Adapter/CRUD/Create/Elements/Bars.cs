@@ -64,7 +64,7 @@ namespace BH.Adapter.Robot
                     if (!CheckInputObjectAndExtractAdapterIdInt(bhomBar, out barNum, EventType.Error))
                         continue;
 
-                    if (barServer.Exist(barNum))
+                    if (barServer.Exist(barNum) != -1)
                     {
                         IFragment designFragment;
                         if (bhomBar.Fragments.TryGetValue(typeof(FramingElementDesignProperties), out designFragment))
@@ -114,7 +114,7 @@ namespace BH.Adapter.Robot
                         continue;
 
                     // Skip bars that already exist (already processed above)
-                    if (barServer.Exist(barNum))
+                    if (barServer.Exist(barNum) != -1)
                         continue;
 
                     int stNodeId, endNodeId;

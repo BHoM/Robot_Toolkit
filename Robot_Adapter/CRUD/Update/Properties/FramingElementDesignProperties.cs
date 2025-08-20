@@ -42,7 +42,7 @@ namespace BH.Adapter.Robot
                     continue;
 
                 // Check if the label exists before trying to update it
-                if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name) == -1)
+                if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name) == 0)
                 {
                     Engine.Base.Compute.RecordWarning($"FramingElementDesignProperties '{framEleDesProps.Name}' does not exist in Robot and cannot be updated. Use Create instead.");
                     continue;

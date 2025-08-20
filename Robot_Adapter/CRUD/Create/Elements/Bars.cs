@@ -64,7 +64,7 @@ namespace BH.Adapter.Robot
                     if (!CheckInputObjectAndExtractAdapterIdInt(bhomBar, out barNum, EventType.Error))
                         continue;
 
-                    if (barServer.Exist(barNum) != -1)
+                    if (barServer.Exist(barNum) > 0)
                     {
                         IFragment designFragment;
                         if (bhomBar.Fragments.TryGetValue(typeof(FramingElementDesignProperties), out designFragment))
@@ -94,7 +94,7 @@ namespace BH.Adapter.Robot
                             if (framEleDesProps != null)
                             {
                                 // Ensure the properties definition exists in Robot
-                                if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name) == -1)
+                                if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name) == 0)
                                 {
                                     Create(framEleDesProps);
                                 }
@@ -114,7 +114,7 @@ namespace BH.Adapter.Robot
                         continue;
 
                     // Skip bars that already exist (already processed above)
-                    if (barServer.Exist(barNum) != -1)
+                    if (barServer.Exist(barNum) > 0)
                         continue;
 
                     int stNodeId, endNodeId;
@@ -175,7 +175,7 @@ namespace BH.Adapter.Robot
                         FramingElementDesignProperties framEleDesProps = designFragment as FramingElementDesignProperties;
                         if (framEleDesProps != null)
                         {
-                            if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name) == -1)
+                            if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name) == 0)
                             {
                                 Create(framEleDesProps);
                             }

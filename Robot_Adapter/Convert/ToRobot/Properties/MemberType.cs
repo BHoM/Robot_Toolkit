@@ -58,6 +58,23 @@ namespace BH.Adapter.Robot
                 IRDimMembParamsE32 memberDesignParams_EC3 = memberDef.CodeParams;
                 memberDesignParams_EC3.BuckLengthCoeffY = framingElementDesignProperties.EulerBucklingLengthCoefficientY;
                 memberDesignParams_EC3.BuckLengthCoeffZ = framingElementDesignProperties.EulerBucklingLengthCoefficientZ;
+                
+                // Set lateral torsional buckling parameters if provided
+                if (framingElementDesignProperties.LateralTorsionalBuckling != null)
+                {
+                    var ltb = framingElementDesignProperties.LateralTorsionalBuckling;
+                    memberDesignParams_EC3.LateralBuckling = ltb.LateralBucklingEnabled;
+                    
+                    if (ltb.LateralBucklingEnabled)
+                    {
+                        memberDesignParams_EC3.LatCoeffUpperFlangeValue = ltb.LoadLevelUpperFlangeAuto ? 0 : ltb.LoadLevelUpperFlangeValue;
+                        memberDesignParams_EC3.LatCoeffLowerFlangeValue = ltb.LoadLevelLowerFlangeAuto ? 0 : ltb.LoadLevelLowerFlangeValue;
+                        memberDesignParams_EC3.LamLT0 = ltb.LambdaLT0;
+                        memberDesignParams_EC3.Beta = ltb.Beta;
+                        memberDesignParams_EC3.Kfl = ltb.Kfl;
+                    }
+                }
+                
                 memberDef.CodeParams = memberDesignParams_EC3;
             }
             else if (designCode == DesignCode_Steel.BS5950)
@@ -65,6 +82,14 @@ namespace BH.Adapter.Robot
                 IRDimMembParamsBS59 memberDesignParams_BS5950 = memberDef.CodeParams;
                 memberDesignParams_BS5950.BuckLengthCoeffY = framingElementDesignProperties.EulerBucklingLengthCoefficientY;
                 memberDesignParams_BS5950.BuckLengthCoeffZ = framingElementDesignProperties.EulerBucklingLengthCoefficientZ;
+                
+                // Set lateral torsional buckling parameters if provided
+                if (framingElementDesignProperties.LateralTorsionalBuckling != null)
+                {
+                    var ltb = framingElementDesignProperties.LateralTorsionalBuckling;
+                    memberDesignParams_BS5950.LateralBuckling = ltb.LateralBucklingEnabled;
+                }
+                
                 memberDef.CodeParams = memberDesignParams_BS5950;
             }
             else if (designCode == DesignCode_Steel.BS5950_2000)
@@ -72,6 +97,14 @@ namespace BH.Adapter.Robot
                 IRDimMembParamsBS59_2000 memberDesignParams_BS5950_2000 = memberDef.CodeParams;
                 memberDesignParams_BS5950_2000.BuckLengthCoeffY = framingElementDesignProperties.EulerBucklingLengthCoefficientY;
                 memberDesignParams_BS5950_2000.BuckLengthCoeffZ = framingElementDesignProperties.EulerBucklingLengthCoefficientZ;
+                
+                // Set lateral torsional buckling parameters if provided
+                if (framingElementDesignProperties.LateralTorsionalBuckling != null)
+                {
+                    var ltb = framingElementDesignProperties.LateralTorsionalBuckling;
+                    memberDesignParams_BS5950_2000.LateralBuckling = ltb.LateralBucklingEnabled;
+                }
+                
                 memberDef.CodeParams = memberDesignParams_BS5950_2000;
             }
             else if (designCode == DesignCode_Steel.ANSI_AISC_360_10)
@@ -79,6 +112,14 @@ namespace BH.Adapter.Robot
                 IRDimMembParamsANS memberDesignParams_AISC_360_10 = memberDef.CodeParams;
                 memberDesignParams_AISC_360_10.BuckLenghtCoeffY = framingElementDesignProperties.EulerBucklingLengthCoefficientY;
                 memberDesignParams_AISC_360_10.BuckLenghtCoeffZ = framingElementDesignProperties.EulerBucklingLengthCoefficientZ;
+                
+                // Set lateral torsional buckling parameters if provided
+                if (framingElementDesignProperties.LateralTorsionalBuckling != null)
+                {
+                    var ltb = framingElementDesignProperties.LateralTorsionalBuckling;
+                    memberDesignParams_AISC_360_10.LateralBuckling = ltb.LateralBucklingEnabled;
+                }
+                
                 memberDef.CodeParams = memberDesignParams_AISC_360_10;
             }
         }

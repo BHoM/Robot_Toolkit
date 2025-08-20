@@ -53,6 +53,22 @@ namespace BH.Engine.Adapters.Robot
         }
 
         /***************************************************/
+
+        public static FramingElementDesignProperties FramingElementDesignProperties(string name,
+                                                                                    double eulerBucklingLengthCoeffY = 1,
+                                                                                    double eulerBucklingLengthCoeffZ = 1,
+                                                                                    LateralTorsionalBucklingParameters lateralTorsionalBuckling = null)
+        {
+            FramingElementDesignProperties framEleDesignProps = new FramingElementDesignProperties();
+            framEleDesignProps.Name = name;
+            framEleDesignProps.EulerBucklingLengthCoefficientY = eulerBucklingLengthCoeffY;
+            framEleDesignProps.EulerBucklingLengthCoefficientZ = eulerBucklingLengthCoeffZ;
+            framEleDesignProps.LateralTorsionalBuckling = lateralTorsionalBuckling;
+
+            return framEleDesignProps;
+        }
+
+        /***************************************************/
     }
 }
 

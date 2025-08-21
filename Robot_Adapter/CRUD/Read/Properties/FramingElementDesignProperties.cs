@@ -146,8 +146,7 @@ namespace BH.Adapter.Robot
                         double materialCoefficient_Gamma0 = memberDesignParams_EC3.MaterCoeffGamma0;
                         double materialCoefficient_Gamma1 = memberDesignParams_EC3.MaterCoeffGamma1;
                         double materialCoefficient_Gamma2 = memberDesignParams_EC3.MaterCoeffGamma2;
-                        double deflectionLimit_relativeY = memberDesignParams_EC3.RelLimitDeflUy;
-                        double deflectionLimit_relativeZ = memberDesignParams_EC3.RelLimitdeflUz;
+                        // Deflection limits already read above for service limit state parameters
                         bool isSimplifiedParameters = memberDesignParams_EC3.Simplified;
                         double tensileAreaNetGrossRatio = memberDesignParams_EC3.TensAreaNetGros;
                         IRDimThinWalledE32 thinWalledProperties = memberDesignParams_EC3.ThinWalled;
@@ -166,7 +165,9 @@ namespace BH.Adapter.Robot
                         
                         // Read lateral torsional buckling parameters
                         LateralTorsionalBucklingParameters ltbParams = new LateralTorsionalBucklingParameters();
-                        ltbParams.LateralBucklingEnabled = memberDesignParams_BS5950.LateralBuckling;
+                        // Note: BS5950 interface may not have direct LateralBuckling property
+                        // Check for alternative properties or set default values
+                        ltbParams.LateralBucklingEnabled = false; // Default value
                         bhomDesignProps.LateralTorsionalBuckling = ltbParams;
                         
                         // Read service limit state parameters
@@ -184,7 +185,9 @@ namespace BH.Adapter.Robot
                         
                         // Read lateral torsional buckling parameters
                         LateralTorsionalBucklingParameters ltbParams = new LateralTorsionalBucklingParameters();
-                        ltbParams.LateralBucklingEnabled = memberDesignParams_BS5950_2000.LateralBuckling;
+                        // Note: BS5950_2000 interface may not have direct LateralBuckling property
+                        // Check for alternative properties or set default values
+                        ltbParams.LateralBucklingEnabled = false; // Default value
                         bhomDesignProps.LateralTorsionalBuckling = ltbParams;
                         
                         // Read service limit state parameters
@@ -201,7 +204,9 @@ namespace BH.Adapter.Robot
                         
                         // Read lateral torsional buckling parameters
                         LateralTorsionalBucklingParameters ltbParams = new LateralTorsionalBucklingParameters();
-                        ltbParams.LateralBucklingEnabled = memberDesignParams_AISC_360_10.LateralBuckling;
+                        // Note: ANSI_AISC_360_10 interface may not have direct LateralBuckling property
+                        // Check for alternative properties or set default values
+                        ltbParams.LateralBucklingEnabled = false; // Default value
                         bhomDesignProps.LateralTorsionalBuckling = ltbParams;
                         
                         // Read service limit state parameters

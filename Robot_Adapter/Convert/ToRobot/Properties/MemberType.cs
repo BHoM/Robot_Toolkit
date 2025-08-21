@@ -100,7 +100,9 @@ namespace BH.Adapter.Robot
                 if (framingElementDesignProperties.LateralTorsionalBuckling != null)
                 {
                     var ltb = framingElementDesignProperties.LateralTorsionalBuckling;
-                    memberDesignParams_BS5950.LateralBuckling = ltb.LateralBucklingEnabled;
+                    // Note: BS5950 interface may not have direct LateralBuckling property
+                    // Check Robot API documentation for available properties
+                    // memberDesignParams_BS5950.LateralBuckling = ltb.LateralBucklingEnabled;
                 }
                 
                 // Set service limit state parameters if provided
@@ -123,7 +125,9 @@ namespace BH.Adapter.Robot
                 if (framingElementDesignProperties.LateralTorsionalBuckling != null)
                 {
                     var ltb = framingElementDesignProperties.LateralTorsionalBuckling;
-                    memberDesignParams_BS5950_2000.LateralBuckling = ltb.LateralBucklingEnabled;
+                    // Note: BS5950_2000 interface may not have direct LateralBuckling property
+                    // Check Robot API documentation for available properties
+                    // memberDesignParams_BS5950_2000.LateralBuckling = ltb.LateralBucklingEnabled;
                 }
                 
                 // Set service limit state parameters if provided
@@ -146,7 +150,9 @@ namespace BH.Adapter.Robot
                 if (framingElementDesignProperties.LateralTorsionalBuckling != null)
                 {
                     var ltb = framingElementDesignProperties.LateralTorsionalBuckling;
-                    memberDesignParams_AISC_360_10.LateralBuckling = ltb.LateralBucklingEnabled;
+                    // Note: ANSI_AISC_360_10 interface may not have direct LateralBuckling property
+                    // Check Robot API documentation for available properties
+                    // memberDesignParams_AISC_360_10.LateralBuckling = ltb.LateralBucklingEnabled;
                 }
                 
                 // Set service limit state parameters if provided

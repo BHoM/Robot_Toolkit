@@ -20,6 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using System;
 using System.Collections.Generic;
 using BH.oM.Base;
 using BH.oM.Structure.Elements;
@@ -29,6 +30,7 @@ using BH.oM.Structure.Constraints;
 using BH.oM.Structure.Loads;
 using BH.oM.Physical.Materials;
 using BH.oM.Adapter;
+using BH.Engine.Base;
 using RobotOM;
 
 namespace BH.Adapter.Robot
@@ -42,7 +44,71 @@ namespace BH.Adapter.Robot
         protected bool Update(IEnumerable<LoadCombination> loadCombinations)
         {
             bool success = true;
-            success = ICreate(loadCombinations);
+            
+            m_RobotApplication.Project.Structure.Cases.BeginMultiOperation();
+            
+            foreach (LoadCombination lComb in loadCombinations)
+            {
+                //Check combination itself is not null
+                if (!CheckNotNull(lComb))
+                    continue;
+
+                int combinationId;
+                
+                // Extract the adapter ID (combination number) from the BHoM object
+                if (!CheckInputObjectAndExtractAdapterIdInt(lComb, out combinationId, oM.Base.Debugging.EventType.Error, null, true))
+                    continue;
+
+                // Check if the combination exists in Robot
+                if (m_RobotApplication.Project.Structure.Cases.Exist(combinationId) == -1)
+                {
+                    Engine.Base.Compute.RecordWarning("Could not find a load combination with the number " + combinationId.ToString() + " in Robot. Load combination could not be updated!");
+                    success = false;
+                    continue;
+                }
+
+                // Get the existing combination from Robot
+                IRobotCase robotCase = m_RobotApplication.Project.Structure.Cases.Get(combinationId) as IRobotCase;
+                if (robotCase == null || robotCase.Type != IRobotCaseType.I_CT_COMBINATION)
+                {
+                    Engine.Base.Compute.RecordWarning("Case with number " + combinationId.ToString() + " is not a load combination in Robot. Load combination could not be updated!");
+                    success = false;
+                    continue;
+                }
+
+                RobotCaseCombination rCaseCombination = robotCase as RobotCaseCombination;
+                if (rCaseCombination == null)
+                {
+                    Engine.Base.Compute.RecordWarning("Failed to cast case with number " + combinationId.ToString() + " to RobotCaseCombination. Load combination could not be updated!");
+                    success = false;
+                    continue;
+                }
+
+                // Update the combination name if provided
+                if (!string.IsNullOrWhiteSpace(lComb.Name))
+                    rCaseCombination.Name = lComb.Name;
+
+                // Clear existing case factors
+                rCaseCombination.CaseFactors.Clear();
+
+                // Add new case factors from the BHoM LoadCombination
+                for (int i = 0; i < lComb.LoadCases.Count; i++)
+                {
+                    //Check tuple as well as case not null
+                    if (CheckNotNull(lComb.LoadCases[i], oM.Base.Debugging.EventType.Error, typeof(LoadCombination)) &&
+                        CheckNotNull(lComb.LoadCases[i].Item2, oM.Base.Debugging.EventType.Error, typeof(LoadCombination)))
+                    {
+                        System.Tuple<double, ICase> loadcase = lComb.LoadCases[i];
+                        rCaseCombination.CaseFactors.New(lComb.LoadCases[i].Item2.Number, lComb.LoadCases[i].Item1);
+                    }
+                }
+
+                // Set the adapter ID to maintain the connection between BHoM and Robot objects
+                this.SetAdapterId(lComb, lComb.Number);
+            }
+            
+            m_RobotApplication.Project.Structure.Cases.EndMultiOperation();
+            
             return success;
         }
 

@@ -88,8 +88,12 @@ namespace BH.Adapter.Robot
                 if (!string.IsNullOrWhiteSpace(lComb.Name))
                     rCaseCombination.Name = lComb.Name;
 
-                // Clear existing case factors
-                rCaseCombination.CaseFactors.Clear();
+                // Clear existing case factors by deleting them individually
+                // Note: Robot API requires deleting case factors in reverse order to avoid index shifting
+                for (int i = rCaseCombination.CaseFactors.Count; i >= 1; i--)
+                {
+                    rCaseCombination.CaseFactors.Delete(i);
+                }
 
                 // Add new case factors from the BHoM LoadCombination
                 if (lComb.LoadCases != null && lComb.LoadCases.Count > 0)

@@ -42,52 +42,8 @@ namespace BH.Adapter.Robot
             IRobotLabelServer labelServer = m_RobotApplication.Project.Structure.Labels;
             IRobotLabel label = labelServer.CreateLike(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name, labelServer.GetDefault(IRobotLabelType.I_LT_MEMBER_TYPE));
 
-            IRDimMembDef memberDef = label.Data;
-
-            if (framEleDesProps.MemberLengthYIsRelative)
-                memberDef.SetLengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Y, -framEleDesProps.MemberLengthY);
-            else
-                memberDef.SetLengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Y, framEleDesProps.MemberLengthY);
-
-            if (framEleDesProps.MemberLengthZIsRelative)
-                memberDef.SetLengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Z, -framEleDesProps.MemberLengthZ);
-            else
-                memberDef.SetLengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Z, framEleDesProps.MemberLengthZ);
-
-
-            string steelMembersCodeType = m_RobotApplication.Project.Preferences.GetActiveCode(IRobotCodeType.I_CT_STEEL_STRUCTURES);
-
-            if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.BS_EN_1993_1_2005_NA_2008_A1_2014))
-            {
-                    IRDimMembParamsE32 memberDesignParams_EC3 = memberDef.CodeParams;
-                    memberDesignParams_EC3.BuckLengthCoeffY = framEleDesProps.EulerBucklingLengthCoefficientY;
-                    memberDesignParams_EC3.BuckLengthCoeffZ = framEleDesProps.EulerBucklingLengthCoefficientZ;
-                    memberDef.CodeParams = memberDesignParams_EC3;
-            }
-
-            if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.BS5950))
-            {
-                IRDimMembParamsBS59 memberDesignParams_BS5950 = memberDef.CodeParams;
-                memberDesignParams_BS5950.BuckLengthCoeffY = framEleDesProps.EulerBucklingLengthCoefficientY;
-                memberDesignParams_BS5950.BuckLengthCoeffZ = framEleDesProps.EulerBucklingLengthCoefficientZ;
-                memberDef.CodeParams = memberDesignParams_BS5950;
-            }
-
-            if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.BS5950_2000))
-            {
-                IRDimMembParamsBS59_2000 memberDesignParams_BS5950_2000 = memberDef.CodeParams;
-                memberDesignParams_BS5950_2000.BuckLengthCoeffY = framEleDesProps.EulerBucklingLengthCoefficientY;
-                memberDesignParams_BS5950_2000.BuckLengthCoeffZ = framEleDesProps.EulerBucklingLengthCoefficientZ;
-                memberDef.CodeParams = memberDesignParams_BS5950_2000;
-            }
-
-            if (steelMembersCodeType == BHE.Query.GetStringFromEnum(DesignCode_Steel.ANSI_AISC_360_10))
-            {
-                IRDimMembParamsANS memberDesignParams_AISC_360_10 = memberDef.CodeParams;
-                memberDesignParams_AISC_360_10.BuckLenghtCoeffY = framEleDesProps.EulerBucklingLengthCoefficientY;
-                memberDesignParams_AISC_360_10.BuckLenghtCoeffZ = framEleDesProps.EulerBucklingLengthCoefficientZ;
-                memberDef.CodeParams = memberDesignParams_AISC_360_10;
-            }
+            // Use the ToRobot method with the configured design code
+            Convert.ToRobot(label, framEleDesProps, RobotConfig.DatabaseSettings.SteelDesignCode);
 
             labelServer.Store(label);
                     
@@ -108,6 +64,9 @@ namespace BH.Adapter.Robot
                     continue;
 
                 IRobotLabel label = labelServer.CreateLike(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name, labelServer.GetDefault(IRobotLabelType.I_LT_MEMBER_TYPE));
+
+                // Use the ToRobot method with the configured design code
+                Convert.ToRobot(label, framEleDesProps, RobotConfig.DatabaseSettings.SteelDesignCode);
 
                 labelServer.Store(label);
             }

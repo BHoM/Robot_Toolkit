@@ -36,6 +36,8 @@ namespace BH.oM.Adapters.Robot
         public virtual double MemberLengthZ { get; set; } = 1;
         public virtual bool MemberLengthYIsRelative { get; set; } = true;
         public virtual bool MemberLengthZIsRelative { get; set; } = true;
+        public virtual LateralTorsionalBucklingParameters LateralTorsionalBuckling { get; set; } = null;
+        public virtual ServiceLimitStateParameters ServiceLimitState { get; set; } = null;
 
         /***************************************************/
 

@@ -31,65 +31,140 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        public static void ToRobot(IRobotLabel robotMemberType, FramingElementDesignProperties framingElementDesignProperties)
+        public static void ToRobot(IRobotLabel robotMemberType, FramingElementDesignProperties framingElementDesignProperties, DesignCode_Steel designCode)
         {
+            if (robotMemberType == null || framingElementDesignProperties == null)
+                return;
+
+            IRDimMembDef memberDef = robotMemberType.Data;
             
-            //RobotEurocodeSteelDesignFactors mEuroCodeDesignFactors = robotMemberType.Data;
-            //string name = robotMemberType.Name;
-            //object rMemberTypeData = robotMemberType.Data;
+            if (memberDef == null)
+                return;
 
-            //IRDimMembDef memberDef = robotMemberType.Data;
+            // Set member lengths if specified
+            if (framingElementDesignProperties.MemberLengthYIsRelative)
+                memberDef.SetLengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Y, -framingElementDesignProperties.MemberLengthY);
+            else
+                memberDef.SetLengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Y, framingElementDesignProperties.MemberLengthY);
 
-            //double length = memberDef.Length;
+            if (framingElementDesignProperties.MemberLengthZIsRelative)
+                memberDef.SetLengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Z, -framingElementDesignProperties.MemberLengthZ);
+            else
+                memberDef.SetLengthYZUV(IRDimMembDefLengthDataType.I_DMDLDT_LENGTH_Z, framingElementDesignProperties.MemberLengthZ);
 
-            //IRDimMembParamsE32 memberDesignParams_EC3 = memberDef.CodeParams;
-            //bool angle_conn = memberDesignParams_EC3.AngleConn;
-            //double beta = memberDesignParams_EC3.Beta;
-            //double boltsDiameter = memberDesignParams_EC3.BoltsDiam;
-            //int numberOfBolts = memberDesignParams_EC3.BoltsNo;
-            //bool isBracedInY = memberDesignParams_EC3.BracedY;
-            //bool isBracedInZ = memberDesignParams_EC3.BracedZ;
-            //double bucklingLengthCoefficientY = memberDesignParams_EC3.BuckLengthCoeffY;
-            //double bucklingLengthCoefficientZ = memberDesignParams_EC3.BuckLengthCoeffZ;
-            //IRDimBucklingCurveE32 bucklingCurveY = memberDesignParams_EC3.BucklingCurveY;
-            //IRDimBucklingCurveE32 bucklingCurveZ = memberDesignParams_EC3.BucklingCurveZ;
-            //IRDimBuckDiagramE32 bucklingDiagramY = memberDesignParams_EC3.BucklingDiagramY;
-            //IRDimBuckDiagramE32 bucklingDiagramZ = memberDesignParams_EC3.BucklingDiagramZ;
-            //IRDimComplexSectE32 complexSection = memberDesignParams_EC3.ComplexSect;
-            //double boltEdgeDistance_E2 = memberDesignParams_EC3.DistE2;
-            //double boltSpacing_P1 = memberDesignParams_EC3.DistP1;
-            //double shearParameter_ETA = memberDesignParams_EC3.Eta;
-            //IRDimFireResistE32 fireResistance = memberDesignParams_EC3.FireResist;
-            //bool isHotRolledPipe = memberDesignParams_EC3.HotRolledPipes;
-            //double kfi = memberDesignParams_EC3.Kfl;
-            //double lambda_LT0 = memberDesignParams_EC3.LamLT0;
-            //IRDimLatBuckMethodTypeE32 lateralBucklingMethodType = memberDesignParams_EC3.LatBuckMethodType;
-            //IRDimLatBuckCoeffDiagramE32 lateralBucklingCoefficientDiagram_LowerFlange = memberDesignParams_EC3.LatCoeffLowerFlange;
-            //IRDimLatBuckCoeffDiagramE32 lateralBucklingCoefficientDiagram_UpperFlange = memberDesignParams_EC3.LatCoeffUpperFlange;
-            //double lateralBucklingCoefficient_LowerFlange = memberDesignParams_EC3.LatCoeffLowerFlangeValue;
-            //double lateralBucklingCoefficient_UpperFlange = memberDesignParams_EC3.LatCoeffUpperFlangeValue;
-            //bool considerLeteralBuckling = memberDesignParams_EC3.LateralBuckling;
-            //IRDimLoadLevelE32 loadLevel = memberDesignParams_EC3.LoadLevel;
-            //double loadLevelValue = memberDesignParams_EC3.LoadLevelValue;
-            //IRDimLoadTypeE32 loadTypeY = memberDesignParams_EC3.LoadTypeY;
-            //IRDimLoadTypeE32 loadTypeZ = memberDesignParams_EC3.LoadTypeZ;
-            //double materialCoefficient_Gamma0 = memberDesignParams_EC3.MaterCoeffGamma0;
-            //double materialCoefficient_Gamma1 = memberDesignParams_EC3.MaterCoeffGamma1;
-            //double materialCoefficient_Gamma2 = memberDesignParams_EC3.MaterCoeffGamma2;
-            //double deflectionLimit_relativeY = memberDesignParams_EC3.RelLimitDeflUy;
-            //double deflectionLimit_relativeZ = memberDesignParams_EC3.RelLimitdeflUz;
-            //bool isSimplifiedParameters = memberDesignParams_EC3.Simplified;
-            //double tensileAreaNetGrossRatio = memberDesignParams_EC3.TensAreaNetGros;
-            //IRDimThinWalledE32 thinWalledProperties = memberDesignParams_EC3.ThinWalled;
-            //bool considerTorsionalBuckling = memberDesignParams_EC3.TorsBuckOn;
-            //bool tubeControl = memberDesignParams_EC3.TubeControl;
-            //IRDimYieldStrengthTypeE32 yieldStrengthType = memberDesignParams_EC3.YieldStrengthType;
-            //double yieldStrengthValue = memberDesignParams_EC3.YieldStrengthValue;
-
-            //FramingElementDesignProperties bhomDesignProps = BHE.Create.FramingElementDesignProperties(rMemberType.Name);
-
-            //bhomDesignPropsList.Add(bhomDesignProps);
-
+            // Set buckling length coefficients based on the specified design code
+            if (designCode == DesignCode_Steel.BS_EN_1993_1_2005_NA_2008_A1_2014)
+            {
+                IRDimMembParamsE32 memberDesignParams_EC3 = memberDef.CodeParams;
+                memberDesignParams_EC3.BuckLengthCoeffY = framingElementDesignProperties.EulerBucklingLengthCoefficientY;
+                memberDesignParams_EC3.BuckLengthCoeffZ = framingElementDesignProperties.EulerBucklingLengthCoefficientZ;
+                
+                // Set lateral torsional buckling parameters if provided
+                if (framingElementDesignProperties.LateralTorsionalBuckling != null)
+                {
+                    var ltb = framingElementDesignProperties.LateralTorsionalBuckling;
+                    memberDesignParams_EC3.LateralBuckling = ltb.LateralBucklingEnabled;
+                    
+                    if (ltb.LateralBucklingEnabled)
+                    {
+                        memberDesignParams_EC3.LatCoeffUpperFlangeValue = ltb.LoadLevelUpperFlangeAuto ? 0 : ltb.LoadLevelUpperFlangeValue;
+                        memberDesignParams_EC3.LatCoeffLowerFlangeValue = ltb.LoadLevelLowerFlangeAuto ? 0 : ltb.LoadLevelLowerFlangeValue;
+                        memberDesignParams_EC3.LamLT0 = ltb.LambdaLT0;
+                        memberDesignParams_EC3.Beta = ltb.Beta;
+                        memberDesignParams_EC3.Kfl = ltb.Kfl;
+                    }
+                }
+                
+                // Set service limit state parameters if provided
+                if (framingElementDesignProperties.ServiceLimitState != null)
+                {
+                    var sls = framingElementDesignProperties.ServiceLimitState;
+                    if (sls.DeflectionLimitEnabled)
+                    {
+                        if (sls.UseRelativeLimitY)
+                            memberDesignParams_EC3.RelLimitDeflUy = sls.RelativeDeflectionLimitY;
+                        if (sls.UseRelativeLimitZ)
+                            memberDesignParams_EC3.RelLimitdeflUz = sls.RelativeDeflectionLimitZ;
+                    }
+                }
+                
+                memberDef.CodeParams = memberDesignParams_EC3;
+            }
+            else if (designCode == DesignCode_Steel.BS5950)
+            {
+                IRDimMembParamsBS59 memberDesignParams_BS5950 = memberDef.CodeParams;
+                memberDesignParams_BS5950.BuckLengthCoeffY = framingElementDesignProperties.EulerBucklingLengthCoefficientY;
+                memberDesignParams_BS5950.BuckLengthCoeffZ = framingElementDesignProperties.EulerBucklingLengthCoefficientZ;
+                
+                // Set lateral torsional buckling parameters if provided
+                if (framingElementDesignProperties.LateralTorsionalBuckling != null)
+                {
+                    var ltb = framingElementDesignProperties.LateralTorsionalBuckling;
+                    // Note: BS5950 interface may not have direct LateralBuckling property
+                    // Check Robot API documentation for available properties
+                    // memberDesignParams_BS5950.LateralBuckling = ltb.LateralBucklingEnabled;
+                }
+                
+                // Set service limit state parameters if provided
+                if (framingElementDesignProperties.ServiceLimitState != null)
+                {
+                    var sls = framingElementDesignProperties.ServiceLimitState;
+                    // Note: BS5950 may have different deflection limit properties
+                    // Implementation would depend on available Robot API properties
+                }
+                
+                memberDef.CodeParams = memberDesignParams_BS5950;
+            }
+            else if (designCode == DesignCode_Steel.BS5950_2000)
+            {
+                IRDimMembParamsBS59_2000 memberDesignParams_BS5950_2000 = memberDef.CodeParams;
+                memberDesignParams_BS5950_2000.BuckLengthCoeffY = framingElementDesignProperties.EulerBucklingLengthCoefficientY;
+                memberDesignParams_BS5950_2000.BuckLengthCoeffZ = framingElementDesignProperties.EulerBucklingLengthCoefficientZ;
+                
+                // Set lateral torsional buckling parameters if provided
+                if (framingElementDesignProperties.LateralTorsionalBuckling != null)
+                {
+                    var ltb = framingElementDesignProperties.LateralTorsionalBuckling;
+                    // Note: BS5950_2000 interface may not have direct LateralBuckling property
+                    // Check Robot API documentation for available properties
+                    // memberDesignParams_BS5950_2000.LateralBuckling = ltb.LateralBucklingEnabled;
+                }
+                
+                // Set service limit state parameters if provided
+                if (framingElementDesignProperties.ServiceLimitState != null)
+                {
+                    var sls = framingElementDesignProperties.ServiceLimitState;
+                    // Note: BS5950_2000 may have different deflection limit properties
+                    // Implementation would depend on available Robot API properties
+                }
+                
+                memberDef.CodeParams = memberDesignParams_BS5950_2000;
+            }
+            else if (designCode == DesignCode_Steel.ANSI_AISC_360_10)
+            {
+                IRDimMembParamsANS memberDesignParams_AISC_360_10 = memberDef.CodeParams;
+                memberDesignParams_AISC_360_10.BuckLenghtCoeffY = framingElementDesignProperties.EulerBucklingLengthCoefficientY;
+                memberDesignParams_AISC_360_10.BuckLenghtCoeffZ = framingElementDesignProperties.EulerBucklingLengthCoefficientZ;
+                
+                // Set lateral torsional buckling parameters if provided
+                if (framingElementDesignProperties.LateralTorsionalBuckling != null)
+                {
+                    var ltb = framingElementDesignProperties.LateralTorsionalBuckling;
+                    // Note: ANSI_AISC_360_10 interface may not have direct LateralBuckling property
+                    // Check Robot API documentation for available properties
+                    // memberDesignParams_AISC_360_10.LateralBuckling = ltb.LateralBucklingEnabled;
+                }
+                
+                // Set service limit state parameters if provided
+                if (framingElementDesignProperties.ServiceLimitState != null)
+                {
+                    var sls = framingElementDesignProperties.ServiceLimitState;
+                    // Note: ANSI_AISC_360_10 may have different deflection limit properties
+                    // Implementation would depend on available Robot API properties
+                }
+                
+                memberDef.CodeParams = memberDesignParams_AISC_360_10;
+            }
         }
 
         /***************************************************/

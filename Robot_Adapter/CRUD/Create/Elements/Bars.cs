@@ -57,11 +57,64 @@ namespace BH.Adapter.Robot
                 int barNum = 0;
                 Dictionary<int, HashSet<string>> barTags = GetTypeTags(typeof(Bar));
 
+                // First pass: handle existing bars with FramingElementDesignProperties
+                List<Bar> existingBarsWithProperties = new List<Bar>();
+                foreach (Bar bhomBar in bars)
+                {
+                    if (!CheckInputObjectAndExtractAdapterIdInt(bhomBar, out barNum, EventType.Error))
+                        continue;
+
+                    if (barServer.Exist(barNum) > 0)
+                    {
+                        IFragment designFragment;
+                        if (bhomBar.Fragments.TryGetValue(typeof(FramingElementDesignProperties), out designFragment))
+                        {
+                            FramingElementDesignProperties framEleDesProps = designFragment as FramingElementDesignProperties;
+                            if (framEleDesProps != null)
+                            {
+                                existingBarsWithProperties.Add(bhomBar);
+                            }
+                        }
+                    }
+                }
+
+                // Process existing bars with properties separately to avoid cache conflicts
+                foreach (Bar bhomBar in existingBarsWithProperties)
+                {
+                    if (!CheckInputObjectAndExtractAdapterIdInt(bhomBar, out barNum, EventType.Error))
+                        continue;
+
+                    RobotBar existingBar = barServer.Get(barNum) as RobotBar;
+                    if (existingBar != null)
+                    {
+                        IFragment designFragment;
+                        if (bhomBar.Fragments.TryGetValue(typeof(FramingElementDesignProperties), out designFragment))
+                        {
+                            FramingElementDesignProperties framEleDesProps = designFragment as FramingElementDesignProperties;
+                            if (framEleDesProps != null)
+                            {
+                                // Ensure the properties definition exists in Robot
+                                if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name) == 0)
+                                {
+                                    Create(framEleDesProps);
+                                }
+                                // Assign the properties to the bar
+                                existingBar.SetLabel(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name);
+                            }
+                        }
+                    }
+                }
+
+                // Second pass: handle new bars through cache system
                 List<Bar> nonCacheBars = new List<Bar>();
                 foreach (Bar bhomBar in bars)
                 {
                     //Check bar itself is not null and correctly set up and extract ID information
                     if (!CheckInputObjectAndExtractAdapterIdInt(bhomBar, out barNum, EventType.Error))
+                        continue;
+
+                    // Skip bars that already exist (already processed above)
+                    if (barServer.Exist(barNum) > 0)
                         continue;
 
                     int stNodeId, endNodeId;
@@ -122,16 +175,12 @@ namespace BH.Adapter.Robot
                         FramingElementDesignProperties framEleDesProps = designFragment as FramingElementDesignProperties;
                         if (framEleDesProps != null)
                         {
-                            if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name) != -1)
+                            if (m_RobotApplication.Project.Structure.Labels.Exist(IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name) == 0)
                             {
                                 Create(framEleDesProps);
                             }
-                            else
-                            {
-                                List<FramingElementDesignProperties> framEleDesPropsList = new List<FramingElementDesignProperties>();
-                                framEleDesPropsList.Add(framEleDesProps);
-                                Update(framEleDesPropsList);
-                            }
+                            // If the FramingElementDesignProperties already exists, just assign it to the bar
+                            // No need to update the properties themselves when they're attached as fragments
                             rcache.SetBarLabel(barNum, IRobotLabelType.I_LT_MEMBER_TYPE, framEleDesProps.Name);
                         }
                     }                  

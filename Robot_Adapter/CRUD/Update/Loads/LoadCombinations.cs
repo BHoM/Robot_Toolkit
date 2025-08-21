@@ -59,15 +59,8 @@ namespace BH.Adapter.Robot
                 // Check if the combination exists in Robot
                 if (m_RobotApplication.Project.Structure.Cases.Exist(combinationId) == -1)
                 {
-                    Engine.Base.Compute.RecordWarning("Load combination with number " + combinationId.ToString() + " does not exist in Robot. Creating new combination instead of updating.");
-                    
-                    // Fall back to create if the combination doesn't exist
-                    List<LoadCombination> singleCombination = new List<LoadCombination> { lComb };
-                    if (!ICreate(singleCombination))
-                    {
-                        Engine.Base.Compute.RecordWarning("Failed to create load combination with number " + combinationId.ToString() + " during update fallback.");
-                        success = false;
-                    }
+                    Engine.Base.Compute.RecordWarning("Load combination with number " + combinationId.ToString() + " does not exist in Robot. Load combination could not be updated!");
+                    success = false;
                     continue;
                 }
 

@@ -92,15 +92,22 @@ namespace BH.Adapter.Robot
                 rCaseCombination.CaseFactors.Clear();
 
                 // Add new case factors from the BHoM LoadCombination
-                for (int i = 0; i < lComb.LoadCases.Count; i++)
+                if (lComb.LoadCases != null && lComb.LoadCases.Count > 0)
                 {
-                    //Check tuple as well as case not null
-                    if (CheckNotNull(lComb.LoadCases[i], oM.Base.Debugging.EventType.Error, typeof(LoadCombination)) &&
-                        CheckNotNull(lComb.LoadCases[i].Item2, oM.Base.Debugging.EventType.Error, typeof(LoadCombination)))
+                    for (int i = 0; i < lComb.LoadCases.Count; i++)
                     {
-                        System.Tuple<double, ICase> loadcase = lComb.LoadCases[i];
-                        rCaseCombination.CaseFactors.New(lComb.LoadCases[i].Item2.Number, lComb.LoadCases[i].Item1);
+                        //Check tuple as well as case not null
+                        if (CheckNotNull(lComb.LoadCases[i], oM.Base.Debugging.EventType.Error, typeof(LoadCombination)) &&
+                            CheckNotNull(lComb.LoadCases[i].Item2, oM.Base.Debugging.EventType.Error, typeof(LoadCombination)))
+                        {
+                            System.Tuple<double, ICase> loadcase = lComb.LoadCases[i];
+                            rCaseCombination.CaseFactors.New(lComb.LoadCases[i].Item2.Number, lComb.LoadCases[i].Item1);
+                        }
                     }
+                }
+                else
+                {
+                    Engine.Base.Compute.RecordWarning("Load combination with number " + combinationId.ToString() + " has no load cases. The combination has been cleared of all case factors.");
                 }
 
                 // Set the adapter ID to maintain the connection between BHoM and Robot objects

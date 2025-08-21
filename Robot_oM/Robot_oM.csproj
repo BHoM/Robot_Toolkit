@@ -78,6 +78,8 @@
     <Compile Include="Settings\DatabaseSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Structural\Properties\FramingElementDesignProperties.cs" />
+    <Compile Include="Structural\Properties\LateralTorsionalBucklingParameters.cs" />
+    <Compile Include="Structural\Properties\ServiceLimitStateParameters.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Structural\Design\" />

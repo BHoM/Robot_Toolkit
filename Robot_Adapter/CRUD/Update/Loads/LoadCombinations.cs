@@ -53,17 +53,21 @@ namespace BH.Adapter.Robot
                 if (!CheckNotNull(lComb))
                     continue;
 
-                int combinationId;
+                // Use the Number property directly (consistent with Create method)
+                int combinationId = lComb.Number;
                 
-                // Extract the adapter ID (combination number) from the BHoM object
-                if (!CheckInputObjectAndExtractAdapterIdInt(lComb, out combinationId, oM.Base.Debugging.EventType.Error, null, true))
-                    continue;
-
                 // Check if the combination exists in Robot
                 if (m_RobotApplication.Project.Structure.Cases.Exist(combinationId) == -1)
                 {
-                    Engine.Base.Compute.RecordWarning("Could not find a load combination with the number " + combinationId.ToString() + " in Robot. Load combination could not be updated!");
-                    success = false;
+                    Engine.Base.Compute.RecordWarning("Load combination with number " + combinationId.ToString() + " does not exist in Robot. Creating new combination instead of updating.");
+                    
+                    // Fall back to create if the combination doesn't exist
+                    List<LoadCombination> singleCombination = new List<LoadCombination> { lComb };
+                    if (!ICreate(singleCombination))
+                    {
+                        Engine.Base.Compute.RecordWarning("Failed to create load combination with number " + combinationId.ToString() + " during update fallback.");
+                        success = false;
+                    }
                     continue;
                 }
 

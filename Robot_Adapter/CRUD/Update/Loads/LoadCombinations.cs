@@ -53,30 +53,14 @@ namespace BH.Adapter.Robot
                 if (!CheckNotNull(lComb))
                     continue;
 
-                // Use the Number property directly (consistent with Create method)
+                // Use the Number property directly and try to get the combination
                 int combinationId = lComb.Number;
                 
-                // Check if the combination exists in Robot
-                if (m_RobotApplication.Project.Structure.Cases.Exist(combinationId) == -1)
-                {
-                    Engine.Base.Compute.RecordWarning("Load combination with number " + combinationId.ToString() + " does not exist in Robot. Load combination could not be updated!");
-                    success = false;
-                    continue;
-                }
-
-                // Get the existing combination from Robot
-                IRobotCase robotCase = m_RobotApplication.Project.Structure.Cases.Get(combinationId) as IRobotCase;
-                if (robotCase == null || robotCase.Type != IRobotCaseType.I_CT_COMBINATION)
-                {
-                    Engine.Base.Compute.RecordWarning("Case with number " + combinationId.ToString() + " is not a load combination in Robot. Load combination could not be updated!");
-                    success = false;
-                    continue;
-                }
-
-                RobotCaseCombination rCaseCombination = robotCase as RobotCaseCombination;
+                // Get the existing combination from Robot (following pattern from Loadcases Update method)
+                RobotCaseCombination rCaseCombination = m_RobotApplication.Project.Structure.Cases.Get(combinationId) as RobotCaseCombination;
                 if (rCaseCombination == null)
                 {
-                    Engine.Base.Compute.RecordWarning("Failed to cast case with number " + combinationId.ToString() + " to RobotCaseCombination. Load combination could not be updated!");
+                    Engine.Base.Compute.RecordWarning("Load combination with number " + combinationId.ToString() + " does not exist in Robot. Load combination could not be updated!");
                     success = false;
                     continue;
                 }

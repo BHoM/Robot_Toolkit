@@ -106,29 +106,38 @@ namespace BH.Adapter.Robot
             }
             else
             {
-                //Get profile at start. FOr non tapered section this will be the general definition
-                IRobotBarSectionNonstdData nonStdData = secData.GetNonstd(1);
-                if (nonStdData == null)
-                    return null;
-
-                IProfile startProfile = NonStandardProfile(secData.ShapeType, nonStdData);
-
-                //Check if a profile exists at the next position. 
-                nonStdData = secData.GetNonstd(2);
-                if (nonStdData == null)
-                    sectionProfile = startProfile;  //If no profile at second position, the section is not tapered, and start profile can be used
-                else
-                {
-                    //If profile exists, extract end position section and return section profile as tapered section
-                    IProfile endProfile = NonStandardProfile(secData.ShapeType, nonStdData);
-                    sectionProfile = Engine.Spatial.Create.TaperedProfile(startProfile, endProfile, 1);
-                }
-
-
+                sectionProfile = FromRobotNonStandardProfile(secData);
             }
 
             return sectionProfile;
 
+        }
+
+        /***************************************************/
+
+        public static IProfile FromRobotNonStandardProfile(IRobotBarSectionData secData)
+        {
+            //Get profile at start. For non tapered section this will be the general definition
+            IRobotBarSectionNonstdData nonStdData = secData.GetNonstd(1);
+            if (nonStdData == null)
+                return null;
+
+            IProfile startProfile = NonStandardProfile(secData.ShapeType, nonStdData);
+
+            //Check if a profile exists at the next position for tapered sections
+            return FromRobotTaperedProfile(secData.ShapeType, startProfile, secData.GetNonstd(2));
+        }
+
+        /***************************************************/
+
+        public static IProfile FromRobotTaperedProfile(IRobotBarSectionShapeType shapeType, IProfile startProfile, IRobotBarSectionNonstdData endNonStdData)
+        {
+            if (endNonStdData == null)
+                return startProfile;  //If no profile at second position, the section is not tapered, and start profile can be used
+
+            //If profile exists, extract end position section and return section profile as tapered section
+            IProfile endProfile = NonStandardProfile(shapeType, endNonStdData);
+            return Engine.Spatial.Create.TaperedProfile(startProfile, endProfile, 1);
         }
 
         /***************************************************/

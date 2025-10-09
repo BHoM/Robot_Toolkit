@@ -79,6 +79,13 @@ namespace BH.Adapter.Robot
             if (section.Profiles.Count == 1)
                 return ToRobotGeometricalSection(section.Profiles.First().Value as dynamic, sectionData);
 
+            return ToRobotTaperedProfile(section, sectionData);
+        }
+
+        /***************************************************/
+
+        public static bool ToRobotTaperedProfile(TaperedProfile section, IRobotBarSectionData sectionData)
+        {
             IProfile startProfile, endProfile;
 
             if (section.Profiles.Count == 2 && section.Profiles.TryGetValue(0, out startProfile) && section.Profiles.TryGetValue(1, out endProfile))

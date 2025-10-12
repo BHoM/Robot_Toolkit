@@ -217,6 +217,10 @@ namespace BH.Adapter.Robot
                 ICellularOpening opening = section.Openings[0];
                 
                 // Determine shape type based on opening type
+                // Robot API definitions:
+                // I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS (51): Section with a castellated web (round openings)
+                // I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS (50): Section with a castellated web (hexagonal openings)
+                // I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED (52): Section with a castellated web (hexagonal openings, with spacer plates)
                 if (opening is CircularOpening)
                 {
                     sectionData.Type = IRobotBarSectionType.I_BST_NS_I;

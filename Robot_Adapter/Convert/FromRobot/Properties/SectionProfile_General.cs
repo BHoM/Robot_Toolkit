@@ -98,6 +98,7 @@ namespace BH.Adapter.Robot
 
                     case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS:
                         {
+                            // I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS (51): Section with a castellated web (round openings)
                             // Create base I-section profile
                             IProfile baseProfile = BH.Engine.Spatial.Create.ISectionProfile(d, bf, Tw, Tf, r, ri);
                             // Create circular opening with diameter and spacing
@@ -116,6 +117,8 @@ namespace BH.Adapter.Robot
                     case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS:
                     case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED:
                         {
+                            // I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS (50): Section with a castellated web (hexagonal openings)
+                            // I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED (52): Section with a castellated web (hexagonal openings, with spacer plates)
                             // Create base I-section profile
                             IProfile baseProfile = BH.Engine.Spatial.Create.ISectionProfile(d, bf, Tw, Tf, r, ri);
                             // Create hexagonal opening with appropriate dimensions
@@ -290,6 +293,7 @@ namespace BH.Adapter.Robot
 
                 case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS:
                     {
+                        // I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS (51): Section with a castellated web (round openings)
                         b = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B);
                         h = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H);
                         tw = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW);
@@ -309,6 +313,8 @@ namespace BH.Adapter.Robot
                 case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS:
                 case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED:
                     {
+                        // I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS (50): Section with a castellated web (hexagonal openings)
+                        // I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED (52): Section with a castellated web (hexagonal openings, with spacer plates)
                         b = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B);
                         h = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H);
                         tw = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW);

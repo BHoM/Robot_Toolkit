@@ -95,6 +95,14 @@ namespace BH.Adapter.Robot
                     case IRobotBarSectionShapeType.I_BSST_CAE:
                         sectionProfile = BH.Engine.Spatial.Create.AngleProfile(d, bf, Tw, Tf, r, ri);
                         break;
+
+                    case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS:
+                    case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS:
+                    case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED:
+                        BH.Engine.Base.Compute.RecordWarning("Cellular/Castellated beams are not fully supported. Section will be read as a standard I-Section without opening information. Section name: " + secData.Name);
+                        sectionProfile = BH.Engine.Spatial.Create.ISectionProfile(d, bf, Tw, Tf, r, ri);
+                        break;
+
                     default:
                         return null;
                 }
@@ -249,6 +257,17 @@ namespace BH.Adapter.Robot
                     tf = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_TF);
                     tw = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_TW);
                     sectionProfile = BH.Engine.Spatial.Create.TSectionProfile(h, b, tw, tf);
+                    break;
+
+                case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS:
+                case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS:
+                case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED:
+                    b = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B);
+                    h = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H);
+                    tw = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW);
+                    tf = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF);
+                    BH.Engine.Base.Compute.RecordWarning("Cellular/Castellated beams are not fully supported. Section will be read as a standard I-Section without opening information.");
+                    sectionProfile = BH.Engine.Spatial.Create.ISectionProfile(h + (2 * tf), b, tw, tf, 0, 0);
                     break;
 
                 default:

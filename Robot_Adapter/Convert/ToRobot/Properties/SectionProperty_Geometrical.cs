@@ -66,6 +66,8 @@ namespace BH.Adapter.Robot
             if (SetRobotTypeAndShapeType(section as dynamic, sectionData))
             {
                 SetNonStandardSectionData(section as dynamic, sectionData, 0);
+                // Ensure Type and ShapeType remain correctly set after CreateNonstd call
+                SetRobotTypeAndShapeType(section as dynamic, sectionData);
                 sectionData.CalcNonstdGeometry();
                 return true;
             }
@@ -85,12 +87,23 @@ namespace BH.Adapter.Robot
             {
                 if (startProfile.GetType() == endProfile.GetType())
                 {
+                    // Set Type and ShapeType for the section based on the profile type
+                    // Both profiles must be of the same type (verified above), so setting once is sufficient
                     if (SetRobotTypeAndShapeType(startProfile as dynamic, sectionData))
                     {
+                        // Set non-standard section data for start profile (position 0)
                         bool success = SetNonStandardSectionData(startProfile as dynamic, sectionData, 0);
+                        // Set non-standard section data for end profile (position 1) 
                         success &= SetNonStandardSectionData(endProfile as dynamic, sectionData, 1);
-                        if(success)
+                        
+                        // Ensure Type and ShapeType remain correctly set after all CreateNonstd calls
+                        // This prevents any potential overwriting during non-standard data creation
+                        if (success)
+                        {
+                            // Re-affirm Type and ShapeType to ensure they are correctly set
+                            SetRobotTypeAndShapeType(startProfile as dynamic, sectionData);
                             sectionData.CalcNonstdGeometry();
+                        }
                         return success;
                     }
                 }

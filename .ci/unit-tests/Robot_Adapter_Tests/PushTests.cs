@@ -324,6 +324,196 @@ namespace BH.Tests.Adapter.Robot
             pulledPanels.Count.ShouldBe(panels.Count, "Panels storing the tag has not been correctly replaced.");
         }
 
+
+        [Test]
+        [Description("Tests that pushing multiple bars with different section profile types (ISectionProfile and BoxProfile) correctly sets distinct Type and ShapeType for each section.")]
+        public void PushBarsWithDifferentProfileTypes()
+        {
+            // Create material
+            Steel material = new Steel { Name = "TestSteel" };
+
+            // Create ISectionProfile
+            BH.oM.Spatial.ShapeProfiles.ISectionProfile iProfile = BH.Engine.Spatial.Create.ISectionProfile(
+                height: 0.5,
+                width: 0.3,
+                webThickness: 0.01,
+                flangeThickness: 0.015,
+                rootRadius: 0.01,
+                toeRadius: 0.005
+            );
+
+            // Create BoxProfile  
+            BH.oM.Spatial.ShapeProfiles.BoxProfile boxProfile = BH.Engine.Spatial.Create.BoxProfile(
+                height: 0.4,
+                width: 0.4,
+                thickness: 0.01,
+                outerRadius: 0.005,
+                innerRadius: 0.003
+            );
+
+            // Create section properties
+            SteelSection iSectionProperty = BH.Engine.Structure.Create.SteelSection(iProfile, material);
+            iSectionProperty.Name = "ISection_500x300";
+            
+            SteelSection boxSectionProperty = BH.Engine.Structure.Create.SteelSection(boxProfile, material);
+            boxSectionProperty.Name = "BoxSection_400x400";
+
+            // Create nodes
+            List<Node> nodes = new List<Node>
+            {
+                BH.Engine.Structure.Create.Node(new Point { X = 0, Y = 0, Z = 0 }),
+                BH.Engine.Structure.Create.Node(new Point { X = 5, Y = 0, Z = 0 }),
+                BH.Engine.Structure.Create.Node(new Point { X = 10, Y = 0, Z = 0 })
+            };
+
+            // Create bars with different profiles
+            List<Bar> bars = new List<Bar>
+            {
+                BH.Engine.Structure.Create.Bar(nodes[0], nodes[1], iSectionProperty, 0, "Bar1_ISection"),
+                BH.Engine.Structure.Create.Bar(nodes[1], nodes[2], boxSectionProperty, 0, "Bar2_BoxSection")
+            };
+
+            // Push nodes first
+            m_Adapter.Push(nodes);
+            
+            // Push section properties
+            List<ISectionProperty> sections = new List<ISectionProperty> { iSectionProperty, boxSectionProperty };
+            m_Adapter.Push(sections);
+
+            // Push bars
+            m_Adapter.Push(bars);
+
+            // Pull back bars to verify they were created correctly
+            List<Bar> pulledBars = m_Adapter.Pull(new FilterRequest { Type = typeof(Bar) }).Cast<Bar>().ToList();
+
+            pulledBars.Count.ShouldBe(bars.Count, "Wrong number of Bars returned.");
+
+            // Verify bars have correct names
+            var pulledBar1 = pulledBars.FirstOrDefault(b => b.Name == "Bar1_ISection");
+            var pulledBar2 = pulledBars.FirstOrDefault(b => b.Name == "Bar2_BoxSection");
+
+            pulledBar1.ShouldNotBeNull("Bar with ISectionProfile not found.");
+            pulledBar2.ShouldNotBeNull("Bar with BoxProfile not found.");
+
+            // Verify section properties are correctly assigned
+            pulledBar1.SectionProperty.ShouldNotBeNull("Bar1 should have a section property.");
+            pulledBar2.SectionProperty.ShouldNotBeNull("Bar2 should have a section property.");
+
+            pulledBar1.SectionProperty.Name.ShouldBe("ISection_500x300", "Bar1 should have ISection profile.");
+            pulledBar2.SectionProperty.Name.ShouldBe("BoxSection_400x400", "Bar2 should have BoxSection profile.");
+        }
+
+        [Test]
+        [Description("Tests that pushing multiple bars with tapered sections having different profile types (ISectionProfile and BoxProfile) works correctly.")]
+        public void PushBarsWithTaperedProfiles()
+        {
+            // Create material
+            Steel material = new Steel { Name = "TestSteel" };
+
+            // Create ISectionProfiles for tapered section
+            BH.oM.Spatial.ShapeProfiles.ISectionProfile iProfile1 = BH.Engine.Spatial.Create.ISectionProfile(
+                height: 0.5,
+                width: 0.3,
+                webThickness: 0.01,
+                flangeThickness: 0.015,
+                rootRadius: 0.01,
+                toeRadius: 0.005
+            );
+
+            BH.oM.Spatial.ShapeProfiles.ISectionProfile iProfile2 = BH.Engine.Spatial.Create.ISectionProfile(
+                height: 0.6,
+                width: 0.35,
+                webThickness: 0.012,
+                flangeThickness: 0.018,
+                rootRadius: 0.01,
+                toeRadius: 0.005
+            );
+
+            // Create BoxProfiles for tapered section
+            BH.oM.Spatial.ShapeProfiles.BoxProfile boxProfile1 = BH.Engine.Spatial.Create.BoxProfile(
+                height: 0.4,
+                width: 0.4,
+                thickness: 0.01,
+                outerRadius: 0.005,
+                innerRadius: 0.003
+            );
+
+            BH.oM.Spatial.ShapeProfiles.BoxProfile boxProfile2 = BH.Engine.Spatial.Create.BoxProfile(
+                height: 0.5,
+                width: 0.5,
+                thickness: 0.012,
+                outerRadius: 0.005,
+                innerRadius: 0.003
+            );
+
+            // Create tapered profiles
+            Dictionary<double, IProfile> iTaperedProfiles = new Dictionary<double, IProfile>
+            {
+                { 0, iProfile1 },
+                { 1, iProfile2 }
+            };
+
+            Dictionary<double, IProfile> boxTaperedProfiles = new Dictionary<double, IProfile>
+            {
+                { 0, boxProfile1 },
+                { 1, boxProfile2 }
+            };
+
+            BH.oM.Spatial.ShapeProfiles.TaperedProfile iTaperedProfile = BH.Engine.Spatial.Create.TaperedProfile(iTaperedProfiles);
+            BH.oM.Spatial.ShapeProfiles.TaperedProfile boxTaperedProfile = BH.Engine.Spatial.Create.TaperedProfile(boxTaperedProfiles);
+
+            // Create section properties
+            SteelSection iTaperedSection = BH.Engine.Structure.Create.SteelSection(iTaperedProfile, material);
+            iTaperedSection.Name = "ITapered_500to600";
+
+            SteelSection boxTaperedSection = BH.Engine.Structure.Create.SteelSection(boxTaperedProfile, material);
+            boxTaperedSection.Name = "BoxTapered_400to500";
+
+            // Create nodes
+            List<Node> nodes = new List<Node>
+            {
+                BH.Engine.Structure.Create.Node(new Point { X = 0, Y = 0, Z = 0 }),
+                BH.Engine.Structure.Create.Node(new Point { X = 5, Y = 0, Z = 0 }),
+                BH.Engine.Structure.Create.Node(new Point { X = 10, Y = 0, Z = 0 })
+            };
+
+            // Create bars with tapered profiles
+            List<Bar> bars = new List<Bar>
+            {
+                BH.Engine.Structure.Create.Bar(nodes[0], nodes[1], iTaperedSection, 0, "Bar1_ITapered"),
+                BH.Engine.Structure.Create.Bar(nodes[1], nodes[2], boxTaperedSection, 0, "Bar2_BoxTapered")
+            };
+
+            // Push nodes first
+            m_Adapter.Push(nodes);
+
+            // Push section properties
+            List<ISectionProperty> sections = new List<ISectionProperty> { iTaperedSection, boxTaperedSection };
+            m_Adapter.Push(sections);
+
+            // Push bars
+            m_Adapter.Push(bars);
+
+            // Pull back bars to verify they were created correctly
+            List<Bar> pulledBars = m_Adapter.Pull(new FilterRequest { Type = typeof(Bar) }).Cast<Bar>().ToList();
+
+            pulledBars.Count.ShouldBe(bars.Count, "Wrong number of Bars returned.");
+
+            // Verify bars have correct names
+            var pulledBar1 = pulledBars.FirstOrDefault(b => b.Name == "Bar1_ITapered");
+            var pulledBar2 = pulledBars.FirstOrDefault(b => b.Name == "Bar2_BoxTapered");
+
+            pulledBar1.ShouldNotBeNull("Bar with tapered ISectionProfile not found.");
+            pulledBar2.ShouldNotBeNull("Bar with tapered BoxProfile not found.");
+
+            // Verify section properties are correctly assigned
+            pulledBar1.SectionProperty.ShouldNotBeNull("Bar1 should have a section property.");
+            pulledBar2.SectionProperty.ShouldNotBeNull("Bar2 should have a section property.");
+
+            pulledBar1.SectionProperty.Name.ShouldBe("ITapered_500to600", "Bar1 should have tapered ISection profile.");
+            pulledBar2.SectionProperty.Name.ShouldBe("BoxTapered_400to500", "Bar2 should have tapered BoxSection profile.");
+        }
+
     }
 }
 

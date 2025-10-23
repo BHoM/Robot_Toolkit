@@ -39,8 +39,27 @@ namespace BH.Adapter.Robot
 
             ISectionProperty prop = null;
             IProfile profile = null;
+            
             try
             {
+                // Check for cellular/castellated beams first (I_BST_SPECIAL type)
+                // These return CellularSection (ISectionProperty) directly, not IProfile
+                if (secData.Type == IRobotBarSectionType.I_BST_SPECIAL)
+                {
+                    IRobotBarSectionSpecialData secSpecData = secData.Special;
+                    if (secSpecData != null)
+                    {
+                        prop = FromRobotSpecialProfile(secSpecData, secData);
+                        // Set material on the cellular section
+                        if (prop != null && material != null)
+                        {
+                            prop.Material = material;
+                        }
+                        return prop;
+                    }
+                }
+                
+                // Handle standard profiles (concrete and other geometrical sections)
                 if (secData.IsConcrete)
                     profile = FromRobotConcreteProfile(secData);
                 else

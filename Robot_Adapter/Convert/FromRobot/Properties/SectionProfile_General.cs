@@ -20,15 +20,16 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Structure.MaterialFragments;
-using BH.oM.Geometry;
-using RobotOM;
-using BH.oM.Structure.SectionProperties;
-using BH.oM.Spatial.ShapeProfiles;
 using BH.Engine.Spatial;
 using BH.Engine.Structure;
-using System;
+using BH.oM.Geometry;
+using BH.oM.Spatial.ShapeProfiles;
 using BH.oM.Spatial.ShapeProfiles.CellularOpenings;
+using BH.oM.Structure.Elements;
+using BH.oM.Structure.MaterialFragments;
+using BH.oM.Structure.SectionProperties;
+using RobotOM;
+using System;
 
 namespace BH.Adapter.Robot
 {
@@ -117,40 +118,9 @@ namespace BH.Adapter.Robot
                         }
                         break;
 
-                    case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS:
-                        {
-                            // I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS (50): Section with a castellated web (hexagonal openings)
-
-                            // Create base I-section profile
-                            IProfile baseProfile = BH.Engine.Spatial.Create.ISectionProfile(d, bf, Tw, Tf, r, ri);
-                            SteelSection steelSection = BH.Engine.Structure.Create.SteelSectionFromProfile(baseProfile);
-
-                            // Create hexagonal opening with appropriate dimensions
-                            // Note: Opening parameters are estimated as Robot API may not provide all details
-                            double webDepth = d - 2 * Tf;
-                            double openingHeight = webDepth * 0.8; // Typical ratio for castellated beams
-                            double openingWidth = openingHeight * 0.866; // Hexagon width-to-height ratio
-                            double spacing = s > 0 ? s : webDepth * 1.5; // Use spacing if available, otherwise estimate
-                            ICellularOpening opening = BH.Engine.Spatial.Create.HexagonalCellularOpening(openingHeight, openingWidth, spacing);
-                            // Create perforated profile with the opening
-                            sectionProfile = BH.Engine.Structure.Create.CellularSectionFromBaseSection(steelSection, webDepth, opening);
-                            if (s <= 0)
-                                BH.Engine.Base.Compute.RecordWarning("Opening spacing not available from Robot. Using estimated value for section: " + secData.Name);
-                        }
-                        break;
-
-                    case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED:
-                        // I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED (52): Section with a castellated web (hexagonal openings, with spacer plates)
-                        break;
-
                     default:
                         return null;
                 }
-            }
-            else if (secData.Type == IRobotBarSectionType.I_BST_COMPLEX)
-            {
-                BH.Engine.Base.Compute.RecordWarning("Complex sections can not currently be read from Robot.");
-                return null;
             }
             else
             {
@@ -176,6 +146,54 @@ namespace BH.Adapter.Robot
             }
 
             return sectionProfile;
+
+        }
+
+        /***************************************************/
+
+        public static CellularSection FromRobotSpecialProfile(IRobotBarSectionSpecialData secSpecData, IRobotBarSectionData secData)
+        {
+            CellularSection sectionProfile = null;
+
+            if (secData.Type == IRobotBarSectionType.I_BST_SPECIAL)
+            {
+                double tW = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_TW);
+                double b1 = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_B1);
+                double tf1 = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_TF1);
+                double h = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_H);
+                double b2 = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_B2);
+                double tf2 = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_TF2);
+                double d = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_D);
+                double w = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_W);
+                double c = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_C);
+                double a = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_A);
+                double hs = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_HS);
+                double bp = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_BP);
+                double tp = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_TP);
+
+                switch (secData.ShapeType)
+                {
+                    case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS:
+                        ISectionProfile baseProfile = BH.Engine.Spatial.Create.ISectionProfile(h, b1, tW, tf1, 0, 0);
+                        SteelSection steelSection = BH.Engine.Structure.Create.SteelSectionFromProfile(baseProfile);
+                        ICellularOpening opening = BH.Engine.Spatial.Create.CircularCellularOpening(d, w);
+                        sectionProfile = BH.Engine.Structure.Create.CellularSectionFromBaseSection(steelSection, h, opening);
+                        break;
+
+                    case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS:
+                        ISectionProfile baseProfileHex = BH.Engine.Spatial.Create.ISectionProfile(h, b1, tW, tf1, 0, 0);
+                        SteelSection steelSectionHex = BH.Engine.Structure.Create.SteelSectionFromProfile(baseProfileHex);
+                        ICellularOpening hexOpening = BH.Engine.Spatial.Create.HexagonalCellularOpening(d, w, c);
+                        sectionProfile = BH.Engine.Structure.Create.CellularSectionFromBaseSection(steelSectionHex, h, hexOpening);
+                        break;
+
+                    case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED:
+
+
+                }
+
+                return sectionProfile;
+            }
 
         }
 

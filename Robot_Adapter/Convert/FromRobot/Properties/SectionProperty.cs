@@ -55,7 +55,17 @@ namespace BH.Adapter.Robot
                         {
                             prop.Material = material;
                         }
+                        
+                        if (prop == null)
+                        {
+                            Engine.Base.Compute.RecordWarning($"Failed to convert special section (cellular/castellated beam) named {robotLabelName}. Section type: {secData.ShapeType}");
+                        }
+                        
                         return prop;
+                    }
+                    else
+                    {
+                        Engine.Base.Compute.RecordWarning($"Special section data not available for section {robotLabelName} of type {secData.Type}");
                     }
                 }
                 
@@ -65,9 +75,9 @@ namespace BH.Adapter.Robot
                 else
                     profile = FromRobotGeneralProfile(secData);
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-
+                Engine.Base.Compute.RecordWarning($"Exception converting section {robotLabelName}: {ex.Message}");
             }
 
             if (profile != null)

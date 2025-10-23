@@ -209,49 +209,6 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private static bool SetRobotTypeAndShapeType(this PerforatedISectionProfile section, IRobotBarSectionData sectionData)
-        {
-            // Check opening type to determine appropriate Robot section type
-            if (section.Openings != null && section.Openings.Count > 0)
-            {
-                ICellularOpening opening = section.Openings[0];
-                
-                // Determine shape type based on opening type
-                // Robot API definitions:
-                // I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS (51): Section with a castellated web (round openings)
-                // I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS (50): Section with a castellated web (hexagonal openings)
-                // I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED (52): Section with a castellated web (hexagonal openings, with spacer plates)
-                if (opening is CircularOpening)
-                {
-                    sectionData.Type = IRobotBarSectionType.I_BST_NS_I;
-                    sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS;
-                }
-                else if (opening is HexagonalOpening)
-                {
-                    sectionData.Type = IRobotBarSectionType.I_BST_NS_I;
-                    sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS;
-                }
-                else
-                {
-                    // Unknown opening type, fall back to regular I-section
-                    Engine.Base.Compute.RecordWarning($"Cellular opening type {opening.GetType().Name} not recognized. Section will be pushed as standard I-section.");
-                    sectionData.Type = IRobotBarSectionType.I_BST_NS_I;
-                    sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_I_BISYM;
-                }
-                return true;
-            }
-            else
-            {
-                // No openings, treat as regular I-section
-                Engine.Base.Compute.RecordWarning("PerforatedISectionProfile has no openings defined. Section will be pushed as standard I-section.");
-                sectionData.Type = IRobotBarSectionType.I_BST_NS_I;
-                sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_USER_I_BISYM;
-                return true;
-            }
-        }
-
-        /***************************************************/
-
         private static bool SetRobotTypeAndShapeType(this IProfile section, IRobotBarSectionData sectionData)
         {
             Engine.Base.Compute.RecordWarning("Profile of type " + section.GetType().Name + " is not yet fully supported for Steel sections. Section with name " + sectionData.Name + " set as explicit section.");
@@ -427,41 +384,6 @@ namespace BH.Adapter.Robot
             return true;
 
         }
-
-        /***************************************************/
-
-        private static bool SetNonStandardSectionData(this PerforatedISectionProfile section, IRobotBarSectionData sectionData, int position = 0)
-        {
-            // Extract base profile (should be ISectionProfile)
-            if (section.BaseProfile is ISectionProfile baseProfile)
-            {
-                IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(position);
-
-                // Set I-section dimensions from base profile
-                nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B, baseProfile.Width);
-                nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H, baseProfile.Height - (2 * baseProfile.FlangeThickness));
-                nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW, baseProfile.WebThickness);
-                nonStdData.SetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF, baseProfile.FlangeThickness);
-
-                // Note: Robot API may not support setting all cellular opening parameters (diameter, spacing, etc.)
-                // The shape type set in SetRobotTypeAndShapeType identifies it as cellular/castellated
-                // Opening parameters may need to be set manually in Robot after push
-                
-                if (section.Openings != null && section.Openings.Count > 0)
-                {
-                    Engine.Base.Compute.RecordNote($"Cellular opening parameters (diameter, spacing) cannot be fully pushed to Robot API. Section pushed with base I-section geometry and cellular/castellated type. Verify opening parameters in Robot.");
-                }
-
-                return true;
-            }
-            else
-            {
-                Engine.Base.Compute.RecordWarning($"PerforatedISectionProfile base profile is not ISectionProfile. Cannot convert to Robot cellular beam. Section name: {sectionData.Name}");
-                return false;
-            }
-        }
-
-        /***************************************************/
     }
 }
 

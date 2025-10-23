@@ -100,24 +100,6 @@ namespace BH.Adapter.Robot
                         sectionProfile = BH.Engine.Spatial.Create.AngleProfile(d, bf, Tw, Tf, r, ri);
                         break;
 
-                    case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS:
-                        {
-                            // I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS (51): Section with a castellated web (round openings)
-
-                            // Create base I-section profile
-                            IProfile baseProfile = BH.Engine.Spatial.Create.ISectionProfile(d, bf, Tw, Tf, r, ri); 
-
-                            // Create circular opening with diameter and spacing
-                            // Note: Opening parameters are estimated as Robot API may not provide all details
-                            double webDepth = d - 2 * Tf;
-                            double openingDiameter = webDepth * 0.75; // Typical ratio for cellular beams
-
-                            // Create perforated profile with the opening
-                            sectionProfile = BH.Engine.Spatial.Create.VoidedISectionProfile(d, openingDiameter, bf, Tw, Tf, r, ri);
-
-                        }
-                        break;
-
                     default:
                         return null;
                 }
@@ -160,14 +142,14 @@ namespace BH.Adapter.Robot
                 double tW = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_TW);
                 double b1 = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_B1);
                 double tf1 = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_TF1);
-                double h = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_H);
+                double h = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_H);        //Final height of section
                 double b2 = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_B2);
                 double tf2 = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_TF2);
-                double d = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_D);
-                double w = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_W);
-                double c = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_C);
-                double a = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_A);
-                double hs = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_HS);
+                double d = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_D);        //Diameter of openings  
+                double w = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_W);        //Distance between openings
+                double c = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_C);        //Cut depth of hexagonal openings (2*c = height of hexagonal opening)
+                double a = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_A);        //Spacing of hexagonal openings
+                double hs = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_HS);      //Height of spacer for shifted hexagonal openings
                 double bp = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_BP);
                 double tp = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_TP);
 
@@ -183,19 +165,27 @@ namespace BH.Adapter.Robot
                     case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS:
                         ISectionProfile baseProfileHex = BH.Engine.Spatial.Create.ISectionProfile(h, b1, tW, tf1, 0, 0);
                         SteelSection steelSectionHex = BH.Engine.Structure.Create.SteelSectionFromProfile(baseProfileHex);
-                        ICellularOpening hexOpening = BH.Engine.Spatial.Create.HexagonalCellularOpening(d, w, c);
+                        ICellularOpening hexOpening = BH.Engine.Spatial.Create.HexagonalCellularOpening(d, w, a);
                         sectionProfile = BH.Engine.Structure.Create.CellularSectionFromBaseSection(steelSectionHex, h, hexOpening);
                         break;
 
                     case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED:
+                        ISectionProfile baseProfileHexSpace = BH.Engine.Spatial.Create.ISectionProfile(h, b1, tW, tf1, 0, 0);
+                        SteelSection steelSectionHexSpace = BH.Engine.Structure.Create.SteelSectionFromProfile(baseProfileHexSpace);
+                        ICellularOpening hexOpeningSpace = BH.Engine.Spatial.Create.HexagonalCellularOpening(d, w, a, hs);
+                        sectionProfile = BH.Engine.Structure.Create.CellularSectionFromBaseSection(steelSectionHexSpace, h, hexOpeningSpace);
+                        break;
 
-
+                    default:
+                        return null;
                 }
-
                 return sectionProfile;
             }
-
+            else
+            {                 return null;
+            }
         }
+
 
         /***************************************************/
 
@@ -315,47 +305,6 @@ namespace BH.Adapter.Robot
                     tf = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_TF);
                     tw = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_T_TW);
                     sectionProfile = BH.Engine.Spatial.Create.TSectionProfile(h, b, tw, tf);
-                    break;
-
-                case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS:
-                    {
-                        // I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS (51): Section with a castellated web (round openings)
-                        b = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B);
-                        h = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H);
-                        tw = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW);
-                        tf = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF);
-                        // Create base I-section profile
-                        IProfile baseProfile = BH.Engine.Spatial.Create.ISectionProfile(h + (2 * tf), b, tw, tf, 0, 0);
-                        // Create circular opening
-                        // Note: Opening parameters are estimated as Robot API may not provide all details
-                        double openingDiameter = h * 0.75;
-                        double spacing = h * 1.5; // Typical spacing for cellular beams
-                        ICellularOpening opening = BH.Engine.Spatial.Create.CircularOpening(openingDiameter, spacing);
-                        sectionProfile = BH.Engine.Spatial.Create.PerforatedISectionProfile(baseProfile, opening);
-                        BH.Engine.Base.Compute.RecordWarning("Cellular beam opening parameters are estimated. Verify opening diameter and spacing for accuracy.");
-                    }
-                    break;
-
-                case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS:
-                case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED:
-                    {
-                        // I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS (50): Section with a castellated web (hexagonal openings)
-                        // I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED (52): Section with a castellated web (hexagonal openings, with spacer plates)
-                        b = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_B);
-                        h = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_H);
-                        tw = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TW);
-                        tf = nonStdData.GetValue(IRobotBarSectionNonstdDataValue.I_BSNDV_I_TF);
-                        // Create base I-section profile
-                        IProfile baseProfile = BH.Engine.Spatial.Create.ISectionProfile(h + (2 * tf), b, tw, tf, 0, 0);
-                        // Create hexagonal opening
-                        // Note: Opening parameters are estimated as Robot API may not provide all details
-                        double openingHeight = h * 0.8;
-                        double openingWidth = openingHeight * 0.866;
-                        double spacing = h * 1.5;
-                        ICellularOpening opening = BH.Engine.Spatial.Create.HexagonalOpening(openingHeight, openingWidth, spacing);
-                        sectionProfile = BH.Engine.Spatial.Create.PerforatedISectionProfile(baseProfile, opening);
-                        BH.Engine.Base.Compute.RecordWarning("Castellated beam opening parameters are estimated. Verify opening dimensions and spacing for accuracy.");
-                    }
                     break;
 
                 default:

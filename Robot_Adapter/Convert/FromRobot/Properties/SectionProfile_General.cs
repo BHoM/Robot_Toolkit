@@ -138,6 +138,60 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
+        public static CellularSection FromRobotCellularProfile(IRobotBarSectionData secData)
+        {
+            CellularSection sectionProfile = null;
+
+            // Extract base I-section dimensions from standard section data
+            double h = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_D);      // Total depth
+            double bf = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_BF);    // Flange width
+            double tw = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_TW);    // Web thickness
+            double tf = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_TF);    // Flange thickness
+            double r = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_RA);     // Root radius
+            double ri = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_RI);    // Internal radius
+
+            // Extract cellular opening parameters from DIM values
+            double dim1 = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_DIM1);  // Opening diameter (d) or height
+            double dim2 = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_DIM2);  // Opening spacing (H)
+            double dim3 = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_DIM3);  // Opening width (w) for hexagonal
+
+            switch (secData.ShapeType)
+            {
+                case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS:
+                    // Circular openings: dim1 = diameter (d), dim2 = spacing (H)
+                    ISectionProfile baseProfile = BH.Engine.Spatial.Create.ISectionProfile(h, bf, tw, tf, r, ri);
+                    SteelSection steelSection = BH.Engine.Structure.Create.SteelSectionFromProfile(baseProfile);
+                    ICellularOpening opening = BH.Engine.Spatial.Create.CircularCellularOpening(dim1, dim2);
+                    sectionProfile = BH.Engine.Structure.Create.CellularSectionFromBaseSection(steelSection, h, opening);
+                    break;
+
+                case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS:
+                    // Hexagonal openings: dim1 = height (d), dim2 = spacing (H), dim3 = width (w)
+                    ISectionProfile baseProfileHex = BH.Engine.Spatial.Create.ISectionProfile(h, bf, tw, tf, r, ri);
+                    SteelSection steelSectionHex = BH.Engine.Structure.Create.SteelSectionFromProfile(baseProfileHex);
+                    ICellularOpening hexOpening = BH.Engine.Spatial.Create.HexagonalCellularOpening(dim1, dim3, dim2);
+                    sectionProfile = BH.Engine.Structure.Create.CellularSectionFromBaseSection(steelSectionHex, h, hexOpening);
+                    break;
+
+                case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED:
+                    // Shifted hexagonal openings: dim1 = height (d), dim2 = spacing (H), dim3 = width (w)
+                    // Note: Spacer height not available in DIM values, using 0 as default
+                    ISectionProfile baseProfileHexShift = BH.Engine.Spatial.Create.ISectionProfile(h, bf, tw, tf, r, ri);
+                    SteelSection steelSectionHexShift = BH.Engine.Structure.Create.SteelSectionFromProfile(baseProfileHexShift);
+                    ICellularOpening hexOpeningShift = BH.Engine.Spatial.Create.HexagonalCellularOpening(dim1, dim3, dim2, 0);
+                    sectionProfile = BH.Engine.Structure.Create.CellularSectionFromBaseSection(steelSectionHexShift, h, hexOpeningShift);
+                    BH.Engine.Base.Compute.RecordNote("Spacer height for shifted hexagonal cellular beam not available from Robot DIM values. Using default value of 0.");
+                    break;
+
+                default:
+                    return null;
+            }
+
+            return sectionProfile;
+        }
+
+        /***************************************************/
+
         public static CellularSection FromRobotSpecialProfile(IRobotBarSectionSpecialData secSpecData, IRobotBarSectionData secData)
         {
             CellularSection sectionProfile = null;

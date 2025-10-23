@@ -42,8 +42,30 @@ namespace BH.Adapter.Robot
             
             try
             {
-                // Check for cellular/castellated beams first (I_BST_SPECIAL type)
+                // Check for cellular/castellated beams by shape type (Robot may report them as I_BST_STANDARD or I_BST_COMPLEX)
                 // These return CellularSection (ISectionProperty) directly, not IProfile
+                if (secData.ShapeType == IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS ||
+                    secData.ShapeType == IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS ||
+                    secData.ShapeType == IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED)
+                {
+                    // Cellular beams - extract from standard section data with DIM values
+                    prop = FromRobotCellularProfile(secData);
+                    
+                    // Set material on the cellular section
+                    if (prop != null && material != null)
+                    {
+                        prop.Material = material;
+                    }
+                    
+                    if (prop == null)
+                    {
+                        Engine.Base.Compute.RecordWarning($"Failed to convert cellular/castellated beam named {robotLabelName}. Shape type: {secData.ShapeType}, Section type: {secData.Type}");
+                    }
+                    
+                    return prop;
+                }
+                
+                // Check for cellular/castellated beams with I_BST_SPECIAL type (alternative path)
                 if (secData.Type == IRobotBarSectionType.I_BST_SPECIAL)
                 {
                     IRobotBarSectionSpecialData secSpecData = secData.Special;

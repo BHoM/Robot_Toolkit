@@ -104,6 +104,25 @@ namespace BH.Adapter.Robot
                         return null;
                 }
             }
+            else if (secData.Type == IRobotBarSectionType.I_BST_SPECIAL)
+            {
+                // Handle cellular/castellated beams using special section data
+                IRobotBarSectionSpecialData secSpecData = secData.Special;
+                if (secSpecData != null)
+                {
+                    return FromRobotSpecialProfile(secSpecData, secData);
+                }
+                else
+                {
+                    BH.Engine.Base.Compute.RecordWarning("Special section data not available for cellular beam.");
+                    return null;
+                }
+            }
+            else if (secData.Type == IRobotBarSectionType.I_BST_COMPLEX)
+            {
+                BH.Engine.Base.Compute.RecordWarning("Complex sections can not currently be read from Robot.");
+                return null;
+            }
             else
             {
                 //Get profile at start. FOr non tapered section this will be the general definition

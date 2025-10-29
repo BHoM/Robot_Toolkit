@@ -53,6 +53,9 @@ namespace BH.Adapter.Robot
                 double ri = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_RI);
                 double s = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_S);
                 double mass = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_WEIGHT);
+                double dim1 = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_DIM1);
+                double dim2 = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_DIM2);
+                double dim3 = secData.GetValue(IRobotBarSectionDataValue.I_BSDV_DIM3);
 
                 switch (secData.ShapeType)
                 {
@@ -106,6 +109,8 @@ namespace BH.Adapter.Robot
             }
             else if (secData.Type == IRobotBarSectionType.I_BST_COMPLEX)
             {
+
+
                 BH.Engine.Base.Compute.RecordWarning("Complex sections can not currently be read from Robot.");
                 return null;
             }

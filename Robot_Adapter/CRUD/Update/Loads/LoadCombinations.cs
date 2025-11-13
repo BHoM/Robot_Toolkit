@@ -56,6 +56,13 @@ namespace BH.Adapter.Robot
                 // Use the Number property directly and try to get the combination
                 int combinationId = lComb.Number;
                 
+                // Check if the RobotId matches the LoadCombination Number
+                int robotId = GetAdapterId<int>(lComb);
+                if (robotId != 0 && robotId != combinationId)
+                {
+                    Engine.Base.Compute.RecordError($"Load combination has mismatched IDs: RobotId = {robotId}, Number = {combinationId}. Using Number property for update.");
+                }
+                
                 // Get the existing combination from Robot (following pattern from Loadcases Update method)
                 RobotCaseCombination rCaseCombination = m_RobotApplication.Project.Structure.Cases.Get(combinationId) as RobotCaseCombination;
                 if (rCaseCombination == null)

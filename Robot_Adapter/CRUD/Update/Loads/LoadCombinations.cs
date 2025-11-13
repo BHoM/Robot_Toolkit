@@ -58,7 +58,14 @@ namespace BH.Adapter.Robot
                 
                 // Check if the RobotId matches the LoadCombination Number
                 int robotId = GetAdapterId<int>(lComb);
-                if (robotId != 0 && robotId != combinationId)
+                
+                // If the LoadCombination doesn't have a RobotId, assign it from the Number
+                if (robotId == 0)
+                {
+                    this.SetAdapterId(lComb, combinationId);
+                    robotId = combinationId;
+                }
+                else if (robotId != combinationId)
                 {
                     Engine.Base.Compute.RecordError($"Load combination has mismatched IDs: RobotId = {robotId}, Number = {combinationId}. Using Number property for update.");
                 }

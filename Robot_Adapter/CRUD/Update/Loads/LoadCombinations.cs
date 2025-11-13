@@ -64,6 +64,7 @@ namespace BH.Adapter.Robot
                 {
                     this.SetAdapterId(lComb, combinationId);
                     robotId = combinationId;
+                    Engine.Base.Compute.RecordNote($"LoadCombination with number {combinationId} did not have a RobotId. RobotId has been set to the LoadCombination number.");
                 }
                 else if (robotId != combinationId)
                 {

@@ -20,11 +20,14 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Structure.MaterialFragments;
 using BH.Engine.Structure;
-using RobotOM;
-using BH.oM.Structure.SectionProperties;
 using BH.oM.Spatial.ShapeProfiles;
+using BH.oM.Structure.MaterialFragments;
+using BH.oM.Structure.SectionProperties;
+using RobotOM;
+using System.Linq;
+using System.Runtime.InteropServices;
+using static System.Collections.Specialized.BitVector32;
 
 namespace BH.Adapter.Robot
 {
@@ -72,6 +75,35 @@ namespace BH.Adapter.Robot
             return true;
         }
 
+        /***************************************************/
+
+        private static bool ToRobotConcreteSection(this TaperedProfile section, IRobotBarSectionData sectionData)
+        {
+            if (section.Profiles.Count == 1)
+                return ToRobotGeometricalSection(section.Profiles.First().Value as dynamic, sectionData);
+
+            IProfile startProfile, endProfile;
+            if (section.Profiles.Count == 2 && section.Profiles.TryGetValue(0, out startProfile) && section.Profiles.TryGetValue(1, out endProfile))
+            {
+                if (startProfile.GetType() == endProfile.GetType())
+                {
+                    RectangleProfile startRectangle = startProfile as RectangleProfile;
+                    RectangleProfile endRectangle = endProfile as RectangleProfile;
+                    sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
+                    sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_RECT;
+
+                    IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+                    sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_H, startRectangle.Height);
+                    sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_B, startRectangle.Width);
+                    sectionData.Concrete.SetTapered(endRectangle.Height);
+
+                    sectionData.CalcNonstdGeometry();
+                    return true;
+                }
+            }
+            return ToRobotGeometricalSection(section.Profiles.First().Value as dynamic, sectionData);
+        }
+        
         /***************************************************/
 
         private static bool ToRobotConcreteSection(this TSectionProfile section, IRobotBarSectionData sectionData)

@@ -100,7 +100,7 @@ namespace BH.Adapter.Robot
                         return true;
                     }
 
-                    BH.Engine.Base.Compute.RecordWarning("Concrete RectangleProfile must have the same width at both ends. Section with name " + sectionData.Name + " set as explicit section based on start profile");
+                    BH.Engine.Base.Compute.RecordWarning("Concrete RectangleProfile must have the same width at both ends. Section with name " + sectionData.Name + " set with null section profile.");
                     return false;
                 }
             }

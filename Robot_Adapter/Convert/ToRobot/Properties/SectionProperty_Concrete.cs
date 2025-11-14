@@ -92,6 +92,12 @@ namespace BH.Adapter.Robot
                     sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
                     sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_RECT;
 
+                    if (startRectangle.Width != endRectangle.Width)
+                    {
+                        BH.Engine.Base.Compute.RecordWarning("Concrete RectangleProfile must have the same width at both ends.");
+                        return false;
+                    }
+
                     IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
                     sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_H, startRectangle.Height);
                     sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_B, startRectangle.Width);

@@ -46,6 +46,7 @@ namespace BH.Adapter.Robot
             double h2 = 0;
             double l1 = 0;
             double l2 = 0;
+            double taper_h2 = 0;
 
             if (!secData.IsConcrete)
             {
@@ -54,90 +55,83 @@ namespace BH.Adapter.Robot
             }
             RobotBarSectionConcreteData concMember = secData.Concrete;
             IProfile sectionProfile;
-            bool boolTapered = concMember.GetTapered(out double taper_h2);
+            bool boolTapered = concMember.GetTapered(out taper_h2);
 
-            if (secData.Type == IRobotBarSectionType.I_BST_STANDARD)
+            switch (secData.ShapeType)
             {
-                switch (secData.ShapeType)
-                {
-                    case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_RECT:
-                        h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_H);
-                        b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_B);
-                        sectionProfile = boolTapered
-                            ? BH.Engine.Spatial.Create.TaperedProfile(
-                                BH.Engine.Spatial.Create.RectangleProfile(b, h, 0),
-                                BH.Engine.Spatial.Create.RectangleProfile(b, taper_h2, 0), 1)
-                            : (IProfile)BH.Engine.Spatial.Create.RectangleProfile(h, b, 0);
-                        break;
+                case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_RECT:
+                    h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_H);
+                    b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_B);
+                    if (boolTapered)
+                        sectionProfile = BH.Engine.Spatial.Create.TaperedProfile(
+                            BH.Engine.Spatial.Create.RectangleProfile(h, b, 0),
+                            BH.Engine.Spatial.Create.RectangleProfile(taper_h2, b, 0), 1);
+                    else
+                        sectionProfile = BH.Engine.Spatial.Create.RectangleProfile(h, b, 0);
+                    break;
 
-                    case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_I:
-                        b1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B1);
-                        b2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B2);
-                        HF1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF1);
-                        HF2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF2);
-                        h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_H);
-                        b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B);
-                        if (boolTapered)
-                            sectionProfile = BH.Engine.Spatial.Create.TaperedProfile(
-                                BH.Engine.Spatial.Create.RectangleProfile(b, h, 0),
-                                BH.Engine.Spatial.Create.RectangleProfile(b, taper_h2, 0), 1);
-                        else
-                            sectionProfile = BH.Engine.Spatial.Create.FabricatedISectionProfile(h, b1, b2, b, HF1, HF2, 0);
-                        break;
+                case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_I:
+                    b1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B1);
+                    b2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B2);
+                    HF1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF1);
+                    HF2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF2);
+                    h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_H);
+                    b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B);
+                    if (boolTapered)
+                        sectionProfile = BH.Engine.Spatial.Create.TaperedProfile(
+                            BH.Engine.Spatial.Create.FabricatedISectionProfile(h, b1, b2, b, HF1, HF2, 0),
+                            BH.Engine.Spatial.Create.FabricatedISectionProfile(taper_h2, b1, b2, b, HF1, HF2, 0), 1);
+                    else
+                        sectionProfile = BH.Engine.Spatial.Create.FabricatedISectionProfile(h, b1, b2, b, HF1, HF2, 0);
+                    break;
 
-                    case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_T:
-                        h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_H);
-                        b1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_B);
-                        HF = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_HF);
-                        b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_BF);
-                        if (boolTapered)
-                            sectionProfile = BH.Engine.Spatial.Create.TaperedProfile(
-                                BH.Engine.Spatial.Create.RectangleProfile(b, h, 0),
-                                BH.Engine.Spatial.Create.RectangleProfile(b, taper_h2, 0), 1);
-                        else
-                            sectionProfile = BH.Engine.Spatial.Create.TSectionProfile(h, b, b1, HF, 0, 0);
-                        break;
+                case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_T:
+                    h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_H);
+                    b1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_B);
+                    HF = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_HF);
+                    b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_BF);
+                    if (boolTapered)
+                        sectionProfile = BH.Engine.Spatial.Create.TaperedProfile(
+                            BH.Engine.Spatial.Create.TSectionProfile(h, b, b1, HF, 0, 0),
+                            BH.Engine.Spatial.Create.TSectionProfile(taper_h2, b, b1, HF, 0, 0));
+                    else
+                        sectionProfile = BH.Engine.Spatial.Create.TSectionProfile(h, b, b1, HF, 0, 0);
+                    break;
 
-                    case IRobotBarSectionShapeType.I_BSST_CONCR_COL_R:
-                        h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H);
-                        b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_B);
-                        sectionProfile = BH.Engine.Spatial.Create.RectangleProfile(b, h, 0);
-                        break;
+                case IRobotBarSectionShapeType.I_BSST_CONCR_COL_R:
+                    h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H);
+                    b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_B);
+                    sectionProfile = BH.Engine.Spatial.Create.RectangleProfile(h, b, 0);
+                    break;
 
-                    case IRobotBarSectionShapeType.I_BSST_CONCR_COL_T:
-                        h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H);
-                        b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_B);
-                        h1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H1);
-                        h2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H2);
-                        l1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_L1);
-                        l2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_L2);
-                        sectionProfile = BH.Engine.Spatial.Create.TSectionProfile(h, b, b - l1 - l2, h - h1, 0, 0);
-                        break;
+                case IRobotBarSectionShapeType.I_BSST_CONCR_COL_T:
+                    h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H);
+                    b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_B);
+                    h1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H1);
+                    h2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H2);
+                    l1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_L1);
+                    l2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_L2);
+                    sectionProfile = BH.Engine.Spatial.Create.TSectionProfile(h, b, b - l1 - l2, h - h1, 0, 0);
+                    break;
 
-                    case IRobotBarSectionShapeType.I_BSST_CONCR_COL_C:
-                        h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_DE);
-                        sectionProfile = BH.Engine.Spatial.Create.CircleProfile(h);
-                        break;
+                case IRobotBarSectionShapeType.I_BSST_CONCR_COL_C:
+                    h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_DE);
+                    sectionProfile = BH.Engine.Spatial.Create.CircleProfile(h);
+                    break;
 
-                    case IRobotBarSectionShapeType.I_BSST_CONCR_COL_L:
-                        h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H);
-                        b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_B);
-                        h1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H1);
-                        l1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_L1);
-                        sectionProfile = BH.Engine.Spatial.Create.AngleProfile(h, b, b - l1, h - h1, 0, 0);
-                        break;
+                case IRobotBarSectionShapeType.I_BSST_CONCR_COL_L:
+                    h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H);
+                    b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_B);
+                    h1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H1);
+                    l1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_L1);
+                    sectionProfile = BH.Engine.Spatial.Create.AngleProfile(h, b, b - l1, h - h1, 0, 0);
+                    break;
 
-                    default:
-                        return null;
-                }
-            }
-            else if (secData.Type == IRobotBarSectionType.I_BST_COMPLEX)
-            {
-                BH.Engine.Base.Compute.RecordWarning("Complex sections can not currently be read from Robot.");
-                return null;
+                default:
+                    return null;
             }
            
-            return null;
+            return sectionProfile;
 
         }
 

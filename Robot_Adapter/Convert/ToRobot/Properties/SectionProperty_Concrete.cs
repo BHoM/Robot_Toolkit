@@ -20,14 +20,11 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.Engine.Structure;
 using BH.oM.Spatial.ShapeProfiles;
-using BH.oM.Structure.MaterialFragments;
 using BH.oM.Structure.SectionProperties;
 using RobotOM;
 using System.Linq;
-using System.Runtime.InteropServices;
-using static System.Collections.Specialized.BitVector32;
+
 
 namespace BH.Adapter.Robot
 {
@@ -92,22 +89,22 @@ namespace BH.Adapter.Robot
                     sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
                     sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_RECT;
 
-                    if (startRectangle.Width != endRectangle.Width)
+                    if (startRectangle.Width == endRectangle.Width)
                     {
-                        BH.Engine.Base.Compute.RecordWarning("Concrete RectangleProfile must have the same width at both ends.");
-                        return false;
+                        IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
+                        sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_H, startRectangle.Height);
+                        sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_B, startRectangle.Width);
+                        sectionData.Concrete.SetTapered(endRectangle.Height);
+
+                        sectionData.CalcNonstdGeometry();
+                        return true;
                     }
 
-                    IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
-                    sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_H, startRectangle.Height);
-                    sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_B, startRectangle.Width);
-                    sectionData.Concrete.SetTapered(endRectangle.Height);
-
-                    sectionData.CalcNonstdGeometry();
-                    return true;
+                    BH.Engine.Base.Compute.RecordWarning("Concrete RectangleProfile must have the same width at both ends. Section with name " + sectionData.Name + " set as explicit section based on start profile");
+                    return false;
                 }
             }
-            return ToRobotGeometricalSection(section.Profiles.First().Value as dynamic, sectionData);
+            return false;
         }
         
         /***************************************************/

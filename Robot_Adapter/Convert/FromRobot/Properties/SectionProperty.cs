@@ -42,7 +42,36 @@ namespace BH.Adapter.Robot
             
             try
             {
-                // Check for cellular/castellated beams by shape type (Robot may report them as I_BST_STANDARD or I_BST_COMPLEX)
+                // Check for cellular/castellated beams by trying to access Special data first
+                // Robot reports cellular beams as I_BST_COMPLEX with I_BSST_UNKNOWN shape type
+                // but the Special property still provides access to cellular beam parameters via I_BSSDV_* values
+                IRobotBarSectionSpecialData secSpecData = null;
+                try
+                {
+                    secSpecData = secData.Special;
+                }
+                catch
+                {
+                    // Special data not accessible
+                }
+                
+                if (secSpecData != null)
+                {
+                    // Try to convert as cellular beam using special data (I_BSSDV_* values)
+                    prop = FromRobotSpecialProfile(secSpecData, secData);
+                    
+                    if (prop != null)
+                    {
+                        // Successfully converted cellular beam
+                        if (material != null)
+                        {
+                            prop.Material = material;
+                        }
+                        return prop;
+                    }
+                }
+                
+                // Fallback: Check for cellular/castellated beams by shape type (if Robot reports them properly)
                 // These return CellularSection (ISectionProperty) directly, not IProfile
                 if (secData.ShapeType == IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS ||
                     secData.ShapeType == IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS ||
@@ -63,32 +92,6 @@ namespace BH.Adapter.Robot
                     }
                     
                     return prop;
-                }
-                
-                // Check for cellular/castellated beams with I_BST_SPECIAL type (alternative path)
-                if (secData.Type == IRobotBarSectionType.I_BST_SPECIAL)
-                {
-                    IRobotBarSectionSpecialData secSpecData = secData.Special;
-                    if (secSpecData != null)
-                    {
-                        prop = FromRobotSpecialProfile(secSpecData, secData);
-                        // Set material on the cellular section
-                        if (prop != null && material != null)
-                        {
-                            prop.Material = material;
-                        }
-                        
-                        if (prop == null)
-                        {
-                            Engine.Base.Compute.RecordWarning($"Failed to convert special section (cellular/castellated beam) named {robotLabelName}. Section type: {secData.ShapeType}");
-                        }
-                        
-                        return prop;
-                    }
-                    else
-                    {
-                        Engine.Base.Compute.RecordWarning($"Special section data not available for section {robotLabelName} of type {secData.Type}");
-                    }
                 }
                 
                 // Handle standard profiles (concrete and other geometrical sections)

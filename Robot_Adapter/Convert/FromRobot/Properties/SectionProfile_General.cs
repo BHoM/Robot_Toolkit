@@ -201,52 +201,65 @@ namespace BH.Adapter.Robot
         {
             CellularSection sectionProfile = null;
 
-            if (secData.Type == IRobotBarSectionType.I_BST_SPECIAL)
+            try
             {
+                // Extract cellular beam parameters from special data
+                // Note: Robot reports cellular beams as I_BST_COMPLEX with I_BSST_UNKNOWN shape type
+                // but the Special property provides access to cellular parameters via I_BSSDV_* values
                 double tW = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_TW);
                 double b1 = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_B1);
                 double tf1 = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_TF1);
                 double h = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_H);        //Final height of section
                 double b2 = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_B2);
                 double tf2 = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_TF2);
-                double d = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_D);        //Diameter of openings  
+                double d = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_D);        //Diameter or height of openings  
                 double w = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_W);        //Distance between openings
                 double c = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_C);        //Cut depth of hexagonal openings (2*c = height of hexagonal opening)
                 double a = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_A);        //Spacing of hexagonal openings
                 double hs = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_HS);      //Height of spacer for shifted hexagonal openings
-                double bp = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_BP);
-                double tp = secSpecData.GetValue(IRobotBarSectionSpecialDataValue.I_BSSDV_TP);
-
-                switch (secData.ShapeType)
+                
+                // Validate that we have cellular beam data (check for non-zero opening parameters)
+                if (d > 0 && w > 0)
                 {
-                    case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS:
-                        ISectionProfile baseProfile = BH.Engine.Spatial.Create.ISectionProfile(h, b1, tW, tf1, 0, 0);
-                        SteelSection steelSection = BH.Engine.Structure.Create.SteelSectionFromProfile(baseProfile);
-                        ICellularOpening opening = BH.Engine.Spatial.Create.CircularCellularOpening(d, w);
-                        sectionProfile = BH.Engine.Structure.Create.CellularSectionFromBaseSection(steelSection, h, opening);
-                        break;
-
-                    case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS:
-                        ISectionProfile baseProfileHex = BH.Engine.Spatial.Create.ISectionProfile(h, b1, tW, tf1, 0, 0);
-                        SteelSection steelSectionHex = BH.Engine.Structure.Create.SteelSectionFromProfile(baseProfileHex);
-                        ICellularOpening hexOpening = BH.Engine.Spatial.Create.HexagonalCellularOpening(d, w, a);
-                        sectionProfile = BH.Engine.Structure.Create.CellularSectionFromBaseSection(steelSectionHex, h, hexOpening);
-                        break;
-
-                    case IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED:
-                        ISectionProfile baseProfileHexSpace = BH.Engine.Spatial.Create.ISectionProfile(h, b1, tW, tf1, 0, 0);
-                        SteelSection steelSectionHexSpace = BH.Engine.Structure.Create.SteelSectionFromProfile(baseProfileHexSpace);
-                        ICellularOpening hexOpeningSpace = BH.Engine.Spatial.Create.HexagonalCellularOpening(d, w, a, hs);
-                        sectionProfile = BH.Engine.Structure.Create.CellularSectionFromBaseSection(steelSectionHexSpace, h, hexOpeningSpace);
-                        break;
-
-                    default:
-                        return null;
+                    // Determine opening type based on available parameters
+                    // If 'a' (hexagonal spacing) is 0 or very small, assume circular openings
+                    // Otherwise, assume hexagonal openings
+                    ISectionProfile baseProfile = BH.Engine.Spatial.Create.ISectionProfile(h, b1, tW, tf1, 0, 0);
+                    SteelSection steelSection = BH.Engine.Structure.Create.SteelSectionFromProfile(baseProfile);
+                    ICellularOpening opening;
+                    
+                    if (a > 0.001) // Hexagonal opening (has spacing parameter 'a')
+                    {
+                        if (hs > 0.001) // Shifted hexagonal with spacer
+                        {
+                            opening = BH.Engine.Spatial.Create.HexagonalCellularOpening(d, w, a, hs);
+                            Engine.Base.Compute.RecordNote($"Converted cellular beam as shifted hexagonal opening: d={d}, w={w}, a={a}, hs={hs}");
+                        }
+                        else // Standard hexagonal
+                        {
+                            opening = BH.Engine.Spatial.Create.HexagonalCellularOpening(d, w, a);
+                            Engine.Base.Compute.RecordNote($"Converted cellular beam as hexagonal opening: d={d}, w={w}, a={a}");
+                        }
+                    }
+                    else // Circular opening (a=0 or very small)
+                    {
+                        opening = BH.Engine.Spatial.Create.CircularCellularOpening(d, w);
+                        Engine.Base.Compute.RecordNote($"Converted cellular beam as circular opening: d={d}, w={w}");
+                    }
+                    
+                    sectionProfile = BH.Engine.Structure.Create.CellularSectionFromBaseSection(steelSection, h, opening);
+                    return sectionProfile;
                 }
-                return sectionProfile;
+                else
+                {
+                    Engine.Base.Compute.RecordWarning($"Special section data available but opening parameters invalid: d={d}, w={w}. Not a cellular beam.");
+                    return null;
+                }
             }
-            else
-            {                 return null;
+            catch (System.Exception ex)
+            {
+                Engine.Base.Compute.RecordWarning($"Failed to extract cellular beam from special data: {ex.Message}");
+                return null;
             }
         }
 

@@ -88,7 +88,7 @@ namespace BH.Adapter.Robot
                     // RectangleProfile
                     if (startProfile is RectangleProfile)
                     {
-                        return HandleRectangleTaper(
+                        return RectangleTaper(
                             startProfile as RectangleProfile,
                             endProfile as RectangleProfile,
                             sectionData);
@@ -97,7 +97,7 @@ namespace BH.Adapter.Robot
                     // TSectionProfile
                     if (startProfile is TSectionProfile)
                     {
-                        return HandleTeeTaper(
+                        return TeeTaper(
                             startProfile as TSectionProfile,
                             endProfile as TSectionProfile,
                             sectionData);
@@ -106,7 +106,7 @@ namespace BH.Adapter.Robot
                     // ISectionProfile
                     if (startProfile is ISectionProfile)
                     {
-                        return HandleITaper(
+                        return ITaper(
                             startProfile as ISectionProfile,
                             endProfile as ISectionProfile,
                             sectionData);
@@ -115,7 +115,7 @@ namespace BH.Adapter.Robot
                     // FabISectionProfile
                     if (startProfile is FabricatedISectionProfile)
                     {
-                        return HandleFabITaper(
+                        return FabITaper(
                             startProfile as FabricatedISectionProfile,
                             endProfile as FabricatedISectionProfile,
                             sectionData);
@@ -129,7 +129,7 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private static bool HandleRectangleTaper(RectangleProfile startRect, RectangleProfile endRect, IRobotBarSectionData sectionData)
+        private static bool RectangleTaper(RectangleProfile startRect, RectangleProfile endRect, IRobotBarSectionData sectionData)
         {
             if (startRect == null || endRect == null)
                 return false;
@@ -153,7 +153,7 @@ namespace BH.Adapter.Robot
             return true;
         }
 
-        private static bool HandleTeeTaper(TSectionProfile startT, TSectionProfile endT, IRobotBarSectionData sectionData)
+        private static bool TeeTaper(TSectionProfile startT, TSectionProfile endT, IRobotBarSectionData sectionData)
         {
             if (startT == null || endT == null)
                 return false;
@@ -183,7 +183,7 @@ namespace BH.Adapter.Robot
             return true;
         }
 
-        private static bool HandleITaper(ISectionProfile startI, ISectionProfile endI, IRobotBarSectionData sectionData)
+        private static bool ITaper(ISectionProfile startI, ISectionProfile endI, IRobotBarSectionData sectionData)
         {
             if (startI == null || endI == null)
                 return false;
@@ -214,7 +214,7 @@ namespace BH.Adapter.Robot
             return true;
         }
 
-        private static bool HandleFabITaper(FabricatedISectionProfile startI, FabricatedISectionProfile endI, IRobotBarSectionData sectionData)
+        private static bool FabITaper(FabricatedISectionProfile startI, FabricatedISectionProfile endI, IRobotBarSectionData sectionData)
         {
             if (startI == null || endI == null)
                 return false;

@@ -20,7 +20,9 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using BH.Engine.Base;
 using BH.Engine.Geometry;
+using BH.oM.Adapters.Robot;
 using BH.oM.Geometry;
 using BH.oM.Structure.Loads;
 using RobotOM;
@@ -54,11 +56,24 @@ namespace BH.Adapter.Robot
             if (points.First().SquareDistance(points.Last()) < Tolerance.Distance * Tolerance.Distance)
                 points.RemoveAt(points.Count - 1);
 
+            List<int> contPanelNumbers = load.FindFragment<ContourLoadPanelNumbers>()?.PanelNumbers;
+
+            if (contPanelNumbers == null)
+            {
+                // If no panel numbers are provided, Robot will auto-detect objects
+                loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_AUTO_DETECT_OBJECTS, 1);
+            }
+            else
+            {
+                // If panel numbers are provided, convert them to a string and set the objects
+                loadRecord.Objects.FromText(ToRobotSelectionString(contPanelNumbers));
+            }
+
             loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PX1, load.Force.X);
             loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PY1, load.Force.Y);
             loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PZ1, load.Force.Z);
             loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_NPOINTS, points.Count);
-            loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_AUTO_DETECT_OBJECTS, 1);
+
             loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_LOCAL, (load.Axis == LoadAxis.Global) ? 0 : 1);
             loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PROJECTION, load.Projected ? 1 : 0);
 
@@ -67,8 +82,8 @@ namespace BH.Adapter.Robot
 
             for (int cp = 0; cp < points.Count; cp++)
             {
-                loadRecord.SetContourPoint(cp +1, points[cp].X, points[cp].Y, points[cp].Z);
-            }            
+                loadRecord.SetContourPoint(cp + 1, points[cp].X, points[cp].Y, points[cp].Z);
+            }
         }
 
         /***************************************************/

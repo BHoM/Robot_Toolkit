@@ -248,10 +248,8 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        private static bool NearlyEqual(double a, double b)
+        private static bool Equals(double a, double b, double tol)
         {
-            // Simple tolerance helper; adjust as needed.
-            const double tol = 1e-6;
             return Math.Abs(a - b) < tol;
         }
 

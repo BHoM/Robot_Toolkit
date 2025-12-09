@@ -214,7 +214,7 @@ namespace BH.Adapter.Robot
             return true;
         }
 
-        private static bool FabITaper(FabricatedISectionProfile startI, FabricatedISectionProfile endI, IRobotBarSectionData sectionData)
+        private static bool FabricatedISectionTaper(FabricatedISectionProfile startI, FabricatedISectionProfile endI, IRobotBarSectionData sectionData)
         {
             if (startI == null || endI == null)
                 return false;

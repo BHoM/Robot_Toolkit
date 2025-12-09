@@ -183,7 +183,7 @@ namespace BH.Adapter.Robot
             return true;
         }
 
-        private static bool ITaper(ISectionProfile startI, ISectionProfile endI, IRobotBarSectionData sectionData)
+        private static bool ISectionTaper(ISectionProfile startI, ISectionProfile endI, IRobotBarSectionData sectionData)
         {
             if (startI == null || endI == null)
                 return false;

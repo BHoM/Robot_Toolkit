@@ -20,6 +20,7 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using BH.oM.Geometry;
 using BH.oM.Spatial.ShapeProfiles;
 using BH.oM.Structure.SectionProperties;
 using RobotOM;
@@ -135,7 +136,7 @@ namespace BH.Adapter.Robot
                 return false;
 
             // Rule: width must remain constant (based on original logic).
-            if (!Equals(startRect.Width, endRect.Width, 1e-6))
+            if (!Equals(startRect.Width, endRect.Width, Tolerance.Distance))
             {
                 BH.Engine.Base.Compute.RecordWarning("Concrete tapered rectangle requires constant width. Section " + sectionData.Name + " aborted.");
                 return false;
@@ -159,8 +160,8 @@ namespace BH.Adapter.Robot
                 return false;
 
             // Assumed constants: FlangeWidth and WebThickness must match.
-            if (!Equals(startT.Width, endT.Width, 1e-6) ||
-                !Equals(startT.WebThickness, endT.WebThickness, 1e-6) || !Equals(startT.FlangeThickness, endT.FlangeThickness, 1e-6))
+            if (!Equals(startT.Width, endT.Width, Tolerance.Distance) ||
+                !Equals(startT.WebThickness, endT.WebThickness, Tolerance.Distance) || !Equals(startT.FlangeThickness, endT.FlangeThickness, Tolerance.Distance))
             {
                 BH.Engine.Base.Compute.RecordWarning("T tapered section " + sectionData.Name +
                     " requires constant flange width, flange thickness and web thickness.");
@@ -189,8 +190,8 @@ namespace BH.Adapter.Robot
                 return false;
 
             // Assumed constants: flange widths & web thickness must match.
-            if (!Equals(startI.Width, endI.Width, 1e-6) ||
-                !Equals(startI.WebThickness, endI.WebThickness, 1e-6) || !Equals(startI.FlangeThickness, endI.FlangeThickness, 1e-6))
+            if (!Equals(startI.Width, endI.Width, Tolerance.Distance) ||
+                !Equals(startI.WebThickness, endI.WebThickness, Tolerance.Distance) || !Equals(startI.FlangeThickness, endI.FlangeThickness, Tolerance.Distance))
             {
                 BH.Engine.Base.Compute.RecordWarning("I tapered section " + sectionData.Name +
                     " requires constant flange widths and web thickness.");
@@ -220,9 +221,9 @@ namespace BH.Adapter.Robot
                 return false;
 
             // Assumed constants: flange widths & web thickness must match.
-            if (!Equals(startI.TopFlangeWidth, endI.TopFlangeWidth, 1e-6) || !Equals(startI.BotFlangeWidth, endI.BotFlangeWidth, 1e-6) || 
-                !Equals(startI.WebThickness, endI.WebThickness, 1e-6) || !Equals(startI.TopFlangeThickness, endI.TopFlangeThickness, 1e-6) ||
-                !Equals(startI.BotFlangeThickness, endI.BotFlangeThickness, 1e-6))
+            if (!Equals(startI.TopFlangeWidth, endI.TopFlangeWidth, Tolerance.Distance) || !Equals(startI.BotFlangeWidth, endI.BotFlangeWidth, Tolerance.Distance) || 
+                !Equals(startI.WebThickness, endI.WebThickness, Tolerance.Distance) || !Equals(startI.TopFlangeThickness, endI.TopFlangeThickness, Tolerance.Distance) ||
+                !Equals(startI.BotFlangeThickness, endI.BotFlangeThickness, Tolerance.Distance))
             {
                 BH.Engine.Base.Compute.RecordWarning("I tapered section " + sectionData.Name +
                     " requires constant flange widths and web thickness.");

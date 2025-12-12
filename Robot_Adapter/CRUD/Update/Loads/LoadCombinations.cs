@@ -75,9 +75,8 @@ namespace BH.Adapter.Robot
                 RobotCaseCombination rCaseCombination = m_RobotApplication.Project.Structure.Cases.Get(combinationId) as RobotCaseCombination;
                 if (rCaseCombination == null)
                 {
-                    Engine.Base.Compute.RecordWarning("Load combination with number " + combinationId.ToString() + " does not exist in Robot. Load combination could not be updated!");
-                    success = false;
-                    continue;
+                    Engine.Base.Compute.RecordError("Load combination with number " + combinationId.ToString() + " does not exist in Robot. Load combination could not be updated!");
+                    return false;
                 }
 
                 // Update the combination name if provided

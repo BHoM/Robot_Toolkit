@@ -57,7 +57,7 @@ namespace BH.Adapter.Robot
                 int combinationId = lComb.Number;
                 
                 // Check if the RobotId matches the LoadCombination Number
-                int robotId = GetAdapterId<int>(lComb);
+                int robotId = Query.HasAdapterIdFragment(lComb, typeof(RobotId)) ? GetAdapterId<int>(lComb) : 0;
                 
                 // If the LoadCombination doesn't have a RobotId, assign it from the Number
                 if (robotId == 0)

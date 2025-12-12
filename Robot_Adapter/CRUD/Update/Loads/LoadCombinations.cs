@@ -22,15 +22,13 @@
 
 using System;
 using System.Collections.Generic;
-using BH.oM.Base;
-using BH.oM.Structure.Elements;
-using BH.oM.Structure.SectionProperties;
-using BH.oM.Structure.SurfaceProperties;
-using BH.oM.Structure.Constraints;
 using BH.oM.Structure.Loads;
-using BH.oM.Physical.Materials;
-using BH.oM.Adapter;
 using BH.Engine.Base;
+using BH.oM.Base;
+using BH.oM.Structure;
+using BH.oM.Adapters.Robot;
+using BH.Engine.Adapter;
+using BH.oM.Base.Debugging;
 using RobotOM;
 
 namespace BH.Adapter.Robot
@@ -50,32 +48,35 @@ namespace BH.Adapter.Robot
             foreach (LoadCombination lComb in loadCombinations)
             {
                 //Check combination itself is not null
-                if (!CheckNotNull(lComb))
-                    continue;
+                if(!CheckNotNull(lComb))
+{
+                    Compute.RecordError("LoadCombination is null.");
+                    return false;
+                }
 
                 // Use the Number property directly and try to get the combination
                 int combinationId = lComb.Number;
                 
                 // Check if the RobotId matches the LoadCombination Number
-                int robotId = Query.HasAdapterIdFragment(lComb, typeof(RobotId)) ? GetAdapterId<int>(lComb) : 0;
+                int robotId = Engine.Adapter.Query.HasAdapterIdFragment(lComb, typeof(RobotId)) ? GetAdapterId<int>(lComb) : 0;
                 
                 // If the LoadCombination doesn't have a RobotId, assign it from the Number
                 if (robotId == 0)
                 {
                     this.SetAdapterId(lComb, combinationId);
                     robotId = combinationId;
-                    Engine.Base.Compute.RecordWarning($"LoadCombination with number {combinationId} did not have a RobotId. RobotId has been set to the LoadCombination number.");
+                    Compute.RecordWarning($"LoadCombination with number {combinationId} did not have a RobotId. RobotId has been set to the LoadCombination number.");
                 }
                 else if (robotId != combinationId)
                 {
-                    Engine.Base.Compute.RecordWarning($"Load combination has mismatched IDs: RobotId = {robotId}, Number = {combinationId}. Using Number property for update.");
+                    Compute.RecordWarning($"Load combination has mismatched IDs: RobotId = {robotId}, Number = {combinationId}. Using Number property for update.");
                 }
                 
                 // Get the existing combination from Robot (following pattern from Loadcases Update method)
                 RobotCaseCombination rCaseCombination = m_RobotApplication.Project.Structure.Cases.Get(combinationId) as RobotCaseCombination;
                 if (rCaseCombination == null)
                 {
-                    Engine.Base.Compute.RecordError("Load combination with number " + combinationId.ToString() + " does not exist in Robot. Load combination could not be updated!");
+                    Compute.RecordError("Load combination with number " + combinationId.ToString() + " does not exist in Robot. Load combination could not be updated!");
                     return false;
                 }
 
@@ -93,11 +94,15 @@ namespace BH.Adapter.Robot
                 // Add new case factors from the BHoM LoadCombination
                 if (lComb.LoadCases != null && lComb.LoadCases.Count > 0)
                 {
+                    for (int i = rCaseCombination.CaseFactors.Count; i >= 1; i--)
+                    {
+                        rCaseCombination.CaseFactors.Delete(i);
+                    }
                     for (int i = 0; i < lComb.LoadCases.Count; i++)
                     {
                         //Check tuple as well as case not null
-                        if (CheckNotNull(lComb.LoadCases[i], oM.Base.Debugging.EventType.Error, typeof(LoadCombination)) &&
-                            CheckNotNull(lComb.LoadCases[i].Item2, oM.Base.Debugging.EventType.Error, typeof(LoadCombination)))
+                        if (CheckNotNull(lComb.LoadCases[i], EventType.Error, typeof(LoadCombination)) &&
+                            CheckNotNull(lComb.LoadCases[i].Item2, EventType.Error, typeof(LoadCombination)))
                         {
                             System.Tuple<double, ICase> loadcase = lComb.LoadCases[i];
                             rCaseCombination.CaseFactors.New(lComb.LoadCases[i].Item2.Number, lComb.LoadCases[i].Item1);
@@ -106,11 +111,9 @@ namespace BH.Adapter.Robot
                 }
                 else
                 {
-                    Engine.Base.Compute.RecordWarning("Load combination with number " + combinationId.ToString() + " has no load cases.");
+                    Compute.RecordWarning("Load combination with number " + combinationId.ToString() + " has no load cases.");
                 }
 
-                // Set the adapter ID to maintain the connection between BHoM and Robot objects
-                this.SetAdapterId(lComb, lComb.Number);
             }
             
             m_RobotApplication.Project.Structure.Cases.EndMultiOperation();

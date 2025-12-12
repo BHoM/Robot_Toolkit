@@ -46,6 +46,7 @@ namespace BH.Adapter.Robot
             double h2 = 0;
             double l1 = 0;
             double l2 = 0;
+            double taper_h2 = 0;
 
             if (!secData.IsConcrete)
             {
@@ -54,13 +55,19 @@ namespace BH.Adapter.Robot
             }
             RobotBarSectionConcreteData concMember = secData.Concrete;
             IProfile sectionProfile;
+            bool boolTapered = concMember.GetTapered(out taper_h2);
 
             switch (secData.ShapeType)
             {
                 case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_RECT:
                     h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_H);
                     b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_B);
-                    sectionProfile = BH.Engine.Spatial.Create.RectangleProfile(h, b, 0);
+                    if (boolTapered)
+                        sectionProfile = BH.Engine.Spatial.Create.TaperedProfile(
+                            BH.Engine.Spatial.Create.RectangleProfile(h, b, 0),
+                            BH.Engine.Spatial.Create.RectangleProfile(taper_h2, b, 0), 1);
+                    else
+                        sectionProfile = BH.Engine.Spatial.Create.RectangleProfile(h, b, 0);
                     break;
 
                 case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_I:
@@ -70,7 +77,12 @@ namespace BH.Adapter.Robot
                     HF2 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF2);
                     h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_H);
                     b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B);
-                    sectionProfile = BH.Engine.Spatial.Create.FabricatedISectionProfile(h, b1, b2, b, HF1, HF2, 0);
+                    if (boolTapered)
+                        sectionProfile = BH.Engine.Spatial.Create.TaperedProfile(
+                            BH.Engine.Spatial.Create.FabricatedISectionProfile(h, b1, b2, b, HF1, HF2, 0),
+                            BH.Engine.Spatial.Create.FabricatedISectionProfile(taper_h2, b1, b2, b, HF1, HF2, 0), 1);
+                    else
+                        sectionProfile = BH.Engine.Spatial.Create.FabricatedISectionProfile(h, b1, b2, b, HF1, HF2, 0);
                     break;
 
                 case IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_T:
@@ -78,13 +90,18 @@ namespace BH.Adapter.Robot
                     b1 = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_B);
                     HF = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_HF);
                     b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_BF);
-                    sectionProfile = BH.Engine.Spatial.Create.TSectionProfile(h, b, b1, HF, 0, 0);
+                    if (boolTapered)
+                        sectionProfile = BH.Engine.Spatial.Create.TaperedProfile(
+                            BH.Engine.Spatial.Create.TSectionProfile(h, b, b1, HF, 0, 0),
+                            BH.Engine.Spatial.Create.TSectionProfile(taper_h2, b, b1, HF, 0, 0));
+                    else
+                        sectionProfile = BH.Engine.Spatial.Create.TSectionProfile(h, b, b1, HF, 0, 0);
                     break;
 
                 case IRobotBarSectionShapeType.I_BSST_CONCR_COL_R:
                     h = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_H);
                     b = concMember.GetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_COL_B);
-                    sectionProfile = BH.Engine.Spatial.Create.RectangleProfile(b, h, 0);
+                    sectionProfile = BH.Engine.Spatial.Create.RectangleProfile(h, b, 0);
                     break;
 
                 case IRobotBarSectionShapeType.I_BSST_CONCR_COL_T:
@@ -113,7 +130,7 @@ namespace BH.Adapter.Robot
                 default:
                     return null;
             }
-
+           
             return sectionProfile;
 
         }

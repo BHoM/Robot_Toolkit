@@ -106,7 +106,7 @@ namespace BH.Adapter.Robot
                 }
                 else
                 {
-                    Engine.Base.Compute.RecordWarning("Load combination with number " + combinationId.ToString() + " has no load cases. The combination has been cleared of all case factors.");
+                    Engine.Base.Compute.RecordWarning("Load combination with number " + combinationId.ToString() + " has no load cases.");
                 }
 
                 // Set the adapter ID to maintain the connection between BHoM and Robot objects

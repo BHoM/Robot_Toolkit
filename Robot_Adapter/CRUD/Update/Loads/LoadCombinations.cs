@@ -68,7 +68,7 @@ namespace BH.Adapter.Robot
                 }
                 else if (robotId != combinationId)
                 {
-                    Engine.Base.Compute.RecordError($"Load combination has mismatched IDs: RobotId = {robotId}, Number = {combinationId}. Using Number property for update.");
+                    Engine.Base.Compute.RecordWarning($"Load combination has mismatched IDs: RobotId = {robotId}, Number = {combinationId}. Using Number property for update.");
                 }
                 
                 // Get the existing combination from Robot (following pattern from Loadcases Update method)

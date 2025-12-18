@@ -20,11 +20,13 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using BH.oM.Structure.MaterialFragments;
-using BH.Engine.Structure;
-using RobotOM;
-using BH.oM.Structure.SectionProperties;
+using BH.oM.Geometry;
 using BH.oM.Spatial.ShapeProfiles;
+using BH.oM.Structure.SectionProperties;
+using RobotOM;
+using System;
+using System.Linq;
+
 
 namespace BH.Adapter.Robot
 {
@@ -65,11 +67,191 @@ namespace BH.Adapter.Robot
             sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_RECT;
 
             IRobotBarSectionNonstdData nonStdData = sectionData.CreateNonstd(0);
-            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_H, section.Height);
-            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_B, section.Width);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_RECT_H, section.Height);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_RECT_B, section.Width);
 
             sectionData.CalcNonstdGeometry();
             return true;
+        }
+
+        /***************************************************/
+
+        private static bool ToRobotConcreteSection(this TaperedProfile section, IRobotBarSectionData sectionData)
+        {
+            if (section.Profiles.Count == 1)
+                return ToRobotGeometricalSection(section.Profiles.First().Value as dynamic, sectionData);
+
+            IProfile startProfile, endProfile;
+            if (section.Profiles.Count == 2 && section.Profiles.TryGetValue(0, out startProfile) && section.Profiles.TryGetValue(1, out endProfile))
+            {
+                if (startProfile.GetType() == endProfile.GetType())
+                {
+                    // RectangleProfile
+                    if (startProfile is RectangleProfile)
+                    {
+                        return RectangleTaper(
+                            startProfile as RectangleProfile,
+                            endProfile as RectangleProfile,
+                            sectionData);
+                    }
+
+                    // TSectionProfile
+                    if (startProfile is TSectionProfile)
+                    {
+                        return TeeTaper(
+                            startProfile as TSectionProfile,
+                            endProfile as TSectionProfile,
+                            sectionData);
+                    }
+
+                    // ISectionProfile
+                    if (startProfile is ISectionProfile)
+                    {
+                        return ISectionTaper(
+                            startProfile as ISectionProfile,
+                            endProfile as ISectionProfile,
+                            sectionData);
+                    }
+
+                    // FabISectionProfile
+                    if (startProfile is FabricatedISectionProfile)
+                    {
+                        return FabricatedISectionTaper(
+                            startProfile as FabricatedISectionProfile,
+                            endProfile as FabricatedISectionProfile,
+                            sectionData);
+                    }
+                }
+                BH.Engine.Base.Compute.RecordWarning("Tapered section end profiles must match.");
+                return false;
+            }
+            return false;
+        }
+
+        /***************************************************/
+
+        private static bool RectangleTaper(RectangleProfile startRect, RectangleProfile endRect, IRobotBarSectionData sectionData)
+        {
+            if (startRect == null || endRect == null)
+                return false;
+
+            // Rule: width must remain constant (based on original logic).
+            if (!Equals(startRect.Width, endRect.Width, Tolerance.Distance))
+            {
+                BH.Engine.Base.Compute.RecordWarning("Concrete tapered rectangle requires constant width. Section " + sectionData.Name + " aborted.");
+                return false;
+            }
+
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_RECT;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_RECT;
+
+            IRobotBarSectionNonstdData nonStd = sectionData.CreateNonstd(0);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_RECT_H, startRect.Height);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_RECT_B, startRect.Width);
+            sectionData.Concrete.SetTapered(endRect.Height);
+
+            sectionData.CalcNonstdGeometry();
+            return true;
+        }
+
+        private static bool TeeTaper(TSectionProfile startT, TSectionProfile endT, IRobotBarSectionData sectionData)
+        {
+            if (startT == null || endT == null)
+                return false;
+
+            // Assumed constants: FlangeWidth and WebThickness must match.
+            if (!Equals(startT.Width, endT.Width, Tolerance.Distance) ||
+                !Equals(startT.WebThickness, endT.WebThickness, Tolerance.Distance) || !Equals(startT.FlangeThickness, endT.FlangeThickness, Tolerance.Distance))
+            {
+                BH.Engine.Base.Compute.RecordWarning("T tapered section " + sectionData.Name +
+                    " requires constant flange width, flange thickness and web thickness.");
+                return false;
+            }
+
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_T;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_T;
+
+            IRobotBarSectionNonstdData nonStd = sectionData.CreateNonstd(0);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_BF, startT.Width);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_H, startT.Height);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_HF, startT.FlangeThickness);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_T_B, startT.WebThickness);
+
+            // Taper depth
+            sectionData.Concrete.SetTapered(endT.Height);
+
+            sectionData.CalcNonstdGeometry();
+            return true;
+        }
+
+        private static bool ISectionTaper(ISectionProfile startI, ISectionProfile endI, IRobotBarSectionData sectionData)
+        {
+            if (startI == null || endI == null)
+                return false;
+
+            // Assumed constants: flange widths & web thickness must match.
+            if (!Equals(startI.Width, endI.Width, Tolerance.Distance) ||
+                !Equals(startI.WebThickness, endI.WebThickness, Tolerance.Distance) || !Equals(startI.FlangeThickness, endI.FlangeThickness, Tolerance.Distance))
+            {
+                BH.Engine.Base.Compute.RecordWarning("I tapered section " + sectionData.Name +
+                    " requires constant flange widths and web thickness.");
+                return false;
+            }
+
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_I;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_I;
+
+            IRobotBarSectionNonstdData nonStd = sectionData.CreateNonstd(0);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_H, startI.Height);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B1, startI.Width);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B2, startI.Width);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF1, startI.FlangeThickness);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF2, startI.FlangeThickness);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B, startI.WebThickness);
+
+            sectionData.Concrete.SetTapered(endI.Height);
+
+            sectionData.CalcNonstdGeometry();
+            return true;
+        }
+
+        private static bool FabricatedISectionTaper(FabricatedISectionProfile startI, FabricatedISectionProfile endI, IRobotBarSectionData sectionData)
+        {
+            if (startI == null || endI == null)
+                return false;
+
+            // Assumed constants: flange widths & web thickness must match.
+            if (!Equals(startI.TopFlangeWidth, endI.TopFlangeWidth, Tolerance.Distance) || !Equals(startI.BotFlangeWidth, endI.BotFlangeWidth, Tolerance.Distance) || 
+                !Equals(startI.WebThickness, endI.WebThickness, Tolerance.Distance) || !Equals(startI.TopFlangeThickness, endI.TopFlangeThickness, Tolerance.Distance) ||
+                !Equals(startI.BotFlangeThickness, endI.BotFlangeThickness, Tolerance.Distance))
+            {
+                BH.Engine.Base.Compute.RecordWarning("I tapered section " + sectionData.Name +
+                    " requires constant flange widths and web thickness.");
+                return false;
+            }
+
+            sectionData.Type = IRobotBarSectionType.I_BST_NS_I;
+            sectionData.ShapeType = IRobotBarSectionShapeType.I_BSST_CONCR_BEAM_I;
+
+            IRobotBarSectionNonstdData nonStd = sectionData.CreateNonstd(0);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_H, startI.Height);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B1, startI.TopFlangeWidth);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B2, startI.BotFlangeWidth);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF1, startI.TopFlangeThickness);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_HF2, startI.BotFlangeThickness);
+            sectionData.Concrete.SetValue(IRobotBarSectionConcreteDataValue.I_BSCDV_BEAM_I_B, startI.WebThickness);
+
+            sectionData.Concrete.SetTapered(endI.Height);
+
+            sectionData.CalcNonstdGeometry();
+            return true;
+        }
+
+        /***************************************************/
+
+        private static bool Equals(double a, double b, double tol)
+        {
+            return Math.Abs(a - b) < tol;
         }
 
         /***************************************************/

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Description>https://github.com/BHoM/Robot_Toolkit</Description>
-	<FileVersion>9.0.0.0</FileVersion>
+	<FileVersion>9.1.0.0</FileVersion>
 	<AssemblyVersion>9.0.0.0</AssemblyVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

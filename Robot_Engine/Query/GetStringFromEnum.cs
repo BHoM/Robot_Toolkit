@@ -20,17 +20,17 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using BH.oM.Adapters.Robot;
+using BH.oM.Base.Attributes;
 
 namespace BH.Engine.Adapters.Robot
 {
     public static partial class Query
     {
+        [Description("Returns the Robot-recognised string representation of the given steel design code.")]
+        [Input("designCode", "The steel design code enum value to convert.")]
+        [Output("string", "The string representation of the steel design code as used by Robot.")]
         public static string GetStringFromEnum(this DesignCode_Steel designCode)
         {
             switch (designCode)
@@ -48,6 +48,9 @@ namespace BH.Engine.Adapters.Robot
             }
         }
 
+        [Description("Returns the Robot-recognised string representation of the given material database.")]
+        [Input("materialDB", "The material database enum value to convert.")]
+        [Output("string", "The string representation of the material database as used by Robot.")]
         public static string GetStringFromEnum(this MaterialDB materialDB)
         {
             switch (materialDB)
@@ -63,6 +66,9 @@ namespace BH.Engine.Adapters.Robot
             }
         }
 
+        [Description("Returns the Robot-recognised string representation of the given section database.")]
+        [Input("sectionDB", "The section database enum value to convert.")]
+        [Output("string", "The string representation of the section database as used by Robot.")]
         public static string GetStringFromEnum(this SectionDB sectionDB)
         {
             switch (sectionDB)

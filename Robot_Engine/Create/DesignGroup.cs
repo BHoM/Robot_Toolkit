@@ -21,7 +21,9 @@
  */
 
 using System.Collections.Generic;
+using System.ComponentModel;
 using BH.oM.Adapters.Robot;
+using BH.oM.Base.Attributes;
 
 namespace BH.Engine.Adapters.Robot
 {
@@ -31,6 +33,11 @@ namespace BH.Engine.Adapters.Robot
         /****           Public Constructors             ****/
         /***************************************************/
 
+        [Description("Creates a DesignGroup defining a set of elements to be designed together in Robot.")]
+        [Input("number", "The number identifier for the design group in Robot.")]
+        [Input("materialName", "The name of the material assigned to the design group.")]
+        [Input("elementIds", "The list of element identifiers belonging to this design group.")]
+        [Output("designGroup", "The DesignGroup object for use with the Robot adapter.")]
         public static DesignGroup DesignGroup(int number = 0, string materialName = "", List<int> elementIds = null)
         {
             DesignGroup designGroup = new DesignGroup();

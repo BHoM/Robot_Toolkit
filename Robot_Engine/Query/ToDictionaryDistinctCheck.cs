@@ -22,9 +22,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BH.oM.Base.Attributes;
 
 namespace BH.Engine.Adapters.Robot
@@ -35,6 +34,10 @@ namespace BH.Engine.Adapters.Robot
         /****             Public Methods                ****/
         /***************************************************/
 
+        [Description("Converts a collection to a dictionary using a key selector, recording a warning if duplicate keys are found and using the first occurrence.")]
+        [Input("list", "The collection to convert to a dictionary.")]
+        [Input("selector", "The function used to extract the string key from each element.")]
+        [Output("dictionary", "A dictionary keyed by the selector result, using the first element where duplicate keys exist.")]
         public static Dictionary<string, T> ToDictionaryDistinctCheck<T>(this IEnumerable<T> list, Func<T, string> selector)
         {
             var group = list.Where(x => x != null && selector(x) != null).GroupBy(selector);

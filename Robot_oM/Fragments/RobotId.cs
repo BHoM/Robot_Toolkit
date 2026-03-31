@@ -34,7 +34,7 @@ namespace BH.oM.Adapters.Robot
     public class RobotId : IAdapterId
     {
         [Description("The identifier of the obejct in robot. Will be an integer for element types and cases and string for property types.")]
-        public object Id { get; set; }
+        public virtual object Id { get; set; }
     }
 }
 

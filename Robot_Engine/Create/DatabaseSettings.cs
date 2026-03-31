@@ -21,7 +21,9 @@
  */
 
 using System;
+using System.ComponentModel;
 using BH.oM.Adapters.Robot;
+using BH.oM.Base.Attributes;
 
 namespace BH.Engine.Adapters.Robot
 {
@@ -31,7 +33,11 @@ namespace BH.Engine.Adapters.Robot
         /****           Public Constructors             ****/
         /***************************************************/
 
-        public static DatabaseSettings DatabaseSettings(MaterialDB materialDB = MaterialDB.British, 
+        [Description("Creates a DatabaseSettings object defining which Robot material and section databases to use.")]
+        [Input("materialDB", "The material database to use in Robot.")]
+        [Input("sectionDB", "The section database to use in Robot.")]
+        [Output("databaseSettings", "The DatabaseSettings object for use with the Robot adapter.")]
+        public static DatabaseSettings DatabaseSettings(MaterialDB materialDB = MaterialDB.British,
                                                         SectionDB sectionDB = SectionDB.UKST)
         {
             DatabaseSettings databaseSettings = new DatabaseSettings();
@@ -43,7 +49,11 @@ namespace BH.Engine.Adapters.Robot
 
         /***************************************************/
 
-        public static DatabaseSettings DatabaseSettings(string materialDB = "British", 
+        [Description("Creates a DatabaseSettings object defining which Robot material and section databases to use, specified by name strings.")]
+        [Input("materialDB", "The name of the material database to use in Robot.")]
+        [Input("sectionDB", "The name of the section database to use in Robot.")]
+        [Output("databaseSettings", "The DatabaseSettings object for use with the Robot adapter.")]
+        public static DatabaseSettings DatabaseSettings(string materialDB = "British",
                                                         string sectionDB = "UKST")
         {
             DatabaseSettings databaseSettings = new DatabaseSettings();

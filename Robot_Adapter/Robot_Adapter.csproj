@@ -1,342 +1,133 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A4FE6182-A985-44E0-A5BF-3E54C6EA30BF}</ProjectGuid>
+<TargetFramework>net472</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BH.Adapter.Robot</RootNamespace>
-    <AssemblyName>Robot_Adapter</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+	<Description>https://github.com/BHoM/Robot_Toolkit</Description>
+    <Copyright>Copyright © https://github.com/BHoM</Copyright>
+    <AssemblyVersion>9.0.0.0</AssemblyVersion>
+    <FileVersion>9.1.0.0</FileVersion>
   </PropertyGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if not &quot;$(ConfigurationName)&quot; == &quot;Test&quot; (xcopy &quot;$(TargetDir)$(TargetFileName)&quot; &quot;C:\ProgramData\BHoM\Assemblies&quot; /Y)" />
+  </Target>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
     <OutputPath>..\Build\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <DocumentationFile>
     </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
     <OutputPath>..\Build\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\Build\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Adapter_Engine">
-      <HintPath>C:\ProgramData\BHoM\Assemblies\Adapter_Engine.dll</HintPath>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\Adapter_Engine.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="Adapter_oM">
-      <HintPath>C:\ProgramData\BHoM\Assemblies\Adapter_oM.dll</HintPath>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\Adapter_oM.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="Analytical_oM">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\ProgramData\BHoM\Assemblies\Analytical_oM.dll</HintPath>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\Analytical_oM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BHoM">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\ProgramData\BHoM\Assemblies\BHoM.dll</HintPath>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\BHoM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BHoM_Adapter">
-      <HintPath>C:\ProgramData\BHoM\Assemblies\BHoM_Adapter.dll</HintPath>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\BHoM_Adapter.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="BHoM_Engine">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\ProgramData\BHoM\Assemblies\BHoM_Engine.dll</HintPath>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\BHoM_Engine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Data_oM">
-      <HintPath>C:\ProgramData\BHoM\Assemblies\Data_oM.dll</HintPath>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\Data_oM.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="Dimensional_oM">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\ProgramData\BHoM\Assemblies\Dimensional_oM.dll</HintPath>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\Dimensional_oM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Geometry_Engine">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\ProgramData\BHoM\Assemblies\Geometry_Engine.dll</HintPath>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\Geometry_Engine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Geometry_oM">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\ProgramData\BHoM\Assemblies\Geometry_oM.dll</HintPath>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\Geometry_oM.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="Interop.RobotOM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BHoM.Interop.Robot2018.1.0.0\lib\net45\Interop.RobotOM.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Physical_oM">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\ProgramData\BHoM\Assemblies\Physical_oM.dll</HintPath>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\Physical_oM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Serialiser_Engine">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\ProgramData\BHoM\Assemblies\Serialiser_Engine.dll</HintPath>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\Serialiser_Engine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Spatial_Engine">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\ProgramData\BHoM\Assemblies\Spatial_Engine.dll</HintPath>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\Spatial_Engine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Spatial_oM">
-      <HintPath>C:\ProgramData\BHoM\Assemblies\Spatial_oM.dll</HintPath>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\Spatial_oM.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="Structure_AdapterModules">
-      <HintPath>C:\ProgramData\BHoM\Assemblies\Structure_AdapterModules.dll</HintPath>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\Structure_AdapterModules.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="Structure_Engine">
-      <HintPath>C:\ProgramData\BHoM\Assemblies\Structure_Engine.dll</HintPath>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\Structure_Engine.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="Structure_oM">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\ProgramData\BHoM\Assemblies\Structure_oM.dll</HintPath>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\Structure_oM.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <Reference Include="Interop.RobotOM">
+      <HintPath>..\packages\BHoM.Interop.Robot2018.1.0.0\lib\net45\Interop.RobotOM.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdapterActions\Pull.cs" />
-    <Compile Include="AdapterActions\Push.cs" />
-    <Compile Include="Adapter\ErrorMessages.cs" />
-    <Compile Include="Adapter\InputChecks.cs" />
-    <Compile Include="Convert\FromRobot\Elements\Bar.cs" />
-    <Compile Include="Convert\FromRobot\Elements\Node.cs" />
-    <Compile Include="Convert\FromRobot\Elements\Panel.cs" />
-    <Compile Include="Convert\FromRobot\Elements\RigidLink.cs" />
-    <Compile Include="Convert\FromRobot\Geometry\Point.cs" />
-    <Compile Include="Convert\FromRobot\Geometry\Curve.cs" />
-    <Compile Include="Convert\FromRobot\Loads\AreaUniformTemperatureLoad.cs" />
-    <Compile Include="Convert\FromRobot\Loads\AreaUniformlyDistributedLoad.cs" />
-    <Compile Include="Convert\FromRobot\Loads\BarPointLoad.cs" />
-    <Compile Include="Convert\FromRobot\Loads\BarUniformTemperatureLoad.cs" />
-    <Compile Include="Convert\FromRobot\Loads\BarUniformlyDistributedLoad.cs" />
-    <Compile Include="Convert\FromRobot\Loads\BarVaryingDistributedLoad.cs" />
-    <Compile Include="Convert\FromRobot\Loads\GravityLoad.cs" />
-    <Compile Include="Convert\FromRobot\Loads\Load.cs" />
-    <Compile Include="Convert\FromRobot\Loads\PointAcceleration.cs" />
-    <Compile Include="Convert\FromRobot\Loads\PointDisplacement.cs" />
-    <Compile Include="Convert\FromRobot\Loads\PointLoad.cs" />
-    <Compile Include="Convert\FromRobot\Loads\PointVelocity.cs" />
-    <Compile Include="Convert\FromRobot\Properties\Offset.cs" />
-    <Compile Include="Convert\ToRobot\Elements\Panel.cs" />
-    <Compile Include="Convert\ToRobot\Geometry\Circle.cs" />
-    <Compile Include="Convert\ToRobot\Geometry\Arc.cs" />
-    <Compile Include="Convert\ToRobot\Geometry\Polyline.cs" />
-    <Compile Include="Convert\ToRobot\Geometry\Line.cs" />
-    <Compile Include="Convert\ToRobot\Loads\AreaUniformTemperatureLoad.cs" />
-    <Compile Include="Convert\ToRobot\Loads\GeometricalLineLoad.cs" />
-    <Compile Include="Convert\ToRobot\Loads\ContourLoad.cs" />
-    <Compile Include="Convert\ToRobot\Loads\BarUniformTemperatureLoad.cs" />
-    <Compile Include="Convert\ToRobot\Loads\BarVaryingDistributedLoad.cs" />
-    <Compile Include="Convert\ToRobot\Loads\ILoad.cs" />
-    <Compile Include="Convert\ToRobot\Loads\PointAcceleration.cs" />
-    <Compile Include="Convert\ToRobot\Loads\PointVelocity.cs" />
-    <Compile Include="Convert\ToRobot\Loads\PointDisplacement.cs" />
-    <Compile Include="Convert\ToRobot\Loads\BarPointLoad.cs" />
-    <Compile Include="Convert\ToRobot\Loads\AreaUniformlyDistributedLoad.cs" />
-    <Compile Include="Convert\ToRobot\Loads\GravityLoad.cs" />
-    <Compile Include="Convert\ToRobot\Loads\BarUniformlyDistributedLoad.cs" />
-    <Compile Include="Convert\ToRobot\Loads\PointLoad.cs" />
-    <Compile Include="Convert\ToRobot\Loads\LoadcaseNature.cs" />
-    <Compile Include="Convert\FromRobot\Properties\LinearRelease.cs" />
-    <Compile Include="Convert\FromRobot\Properties\BarRelease.cs" />
-    <Compile Include="Convert\FromRobot\Properties\Material.cs" />
-    <Compile Include="Convert\FromRobot\Properties\SectionProperty.cs" />
-    <Compile Include="Convert\FromRobot\Properties\Support.cs" />
-    <Compile Include="Convert\FromRobot\Properties\SurfaceProperty.cs" />
-    <Compile Include="Convert\FromRobot\Properties\SectionProfile_Concrete.cs" />
-    <Compile Include="Convert\FromRobot\Properties\SectionProfile_General.cs" />
-    <Compile Include="Convert\FromRobot\Groups and Lists\Selections.cs" />
-    <Compile Include="Convert\ToRobot\Elements\Bar.cs" />
-    <Compile Include="Convert\ToRobot\Geometry\Point.cs" />
-    <Compile Include="Convert\ToRobot\Groups and Lists\DataBase.cs" />
-    <Compile Include="Convert\ToRobot\Groups and Lists\DesignGroup.cs" />
-    <Compile Include="Convert\ToRobot\Enums\Enums.cs" />
-    <Compile Include="Convert\ToRobot\Geometry\Curve.cs" />
-    <Compile Include="Convert\ToRobot\Groups and Lists\Group.cs" />
-    <Compile Include="Convert\ToRobot\Groups and Lists\Lists.cs" />
-    <Compile Include="Convert\ToRobot\Properties\Offset.cs" />
-    <Compile Include="Convert\ToRobot\Properties\Material.cs" />
-    <Compile Include="Convert\ToRobot\Properties\MemberType.cs" />
-    <Compile Include="Convert\ToRobot\Properties\LinearRelease.cs" />
-    <Compile Include="Convert\ToRobot\Properties\SurfaceProperty.cs" />
-    <Compile Include="Convert\ToRobot\Properties\SectionProperty_Concrete.cs" />
-    <Compile Include="Convert\ToRobot\Properties\SectionProperty_Geometrical.cs" />
-    <Compile Include="Convert\ToRobot\Properties\Support.cs" />
-    <Compile Include="Convert\ToRobot\Properties\BarRelease.cs" />
-    <Compile Include="Convert\ToRobot\Properties\SectionProperty.cs" />
-    <Compile Include="CRUD\Create\Properties\LinearReleases.cs" />
-    <Compile Include="CRUD\Create\Properties\Offset.cs" />
-    <Compile Include="CRUD\Create\Properties\Supports.cs" />
-    <Compile Include="CRUD\Create\Groups and Lists\DesignGroups.cs" />
-    <Compile Include="CRUD\Create\Properties\FramingElementDesignProperties.cs" />
-    <Compile Include="CRUD\Create\Properties\LinkConstraints.cs" />
-    <Compile Include="CRUD\Create\Elements\Bars.cs" />
-    <Compile Include="CRUD\Create\Elements\FEMeshes.cs" />
-    <Compile Include="CRUD\Create\Properties\BarReleases.cs" />
-    <Compile Include="CRUD\Create\Loads\LoadCombination.cs" />
-    <Compile Include="CRUD\Create\Properties\SurfaceProperties.cs" />
-    <Compile Include="CRUD\Create\Groups and Lists\Groups.cs" />
-    <Compile Include="CRUD\Create\Elements\Panels.cs" />
-    <Compile Include="CRUD\Create\Loads\Loads.cs" />
-    <Compile Include="CRUD\Create\Elements\Nodes.cs" />
-    <Compile Include="CRUD\Create\Loads\Loadcase.cs" />
-    <Compile Include="CRUD\Create\Properties\Materials.cs" />
-    <Compile Include="CRUD\Create\Properties\SectionProperties.cs" />
-    <Compile Include="CRUD\Create\Elements\RigidLinks.cs" />
-    <Compile Include="CRUD\Delete\Delete.cs" />
-    <Compile Include="CRUD\Create\Create.cs" />
-    <Compile Include="AdapterActions\Execute.cs" />
-    <Compile Include="CRUD\Read\Loads\ControurLoads.cs" />
-    <Compile Include="CRUD\Read\Loads\GeometricalLineLoads.cs" />
-    <Compile Include="CRUD\Read\Loads\LoadCombinations.cs" />
-    <Compile Include="CRUD\Read\Properties\Labels.cs" />
-    <Compile Include="CRUD\Read\Properties\LinearReleases.cs" />
-    <Compile Include="CRUD\Read\Properties\Offset.cs" />
-    <Compile Include="CRUD\Update\Elements\Nodes.cs" />
-    <Compile Include="CRUD\Update\Loads\LoadCombinations.cs" />
-    <Compile Include="CRUD\Update\Loads\Loadcases.cs" />
-    <Compile Include="CRUD\Update\Properties\LinkConstraints.cs" />
-    <Compile Include="CRUD\Update\Properties\Offset.cs" />
-    <Compile Include="CRUD\Update\Properties\SectionProperties.cs" />
-    <Compile Include="CRUD\Update\Properties\Supports.cs" />
-    <Compile Include="CRUD\Update\Properties\LinearReleases.cs" />
-    <Compile Include="CRUD\Update\Elements\Panels.cs" />
-    <Compile Include="CRUD\Update\Properties\Materials.cs" />
-    <Compile Include="CRUD\Update\Properties\SurfaceProperties.cs" />
-    <Compile Include="Types\NextId.cs" />
-    <Compile Include="CRUD\Read\Elements\Bars.cs" />
-    <Compile Include="CRUD\Read\Elements\Groups.cs" />
-    <Compile Include="CRUD\Read\Elements\Meshes.cs" />
-    <Compile Include="CRUD\Read\Elements\RigidLinks.cs" />
-    <Compile Include="CRUD\Read\Loads\Loads.cs" />
-    <Compile Include="CRUD\Read\Elements\Nodes.cs" />
-    <Compile Include="CRUD\Read\Properties\Supports.cs" />
-    <Compile Include="CRUD\Read\Elements\Openings.cs" />
-    <Compile Include="CRUD\Read\Elements\Panels.cs" />
-    <Compile Include="CRUD\Read\Properties\LinkConstraints.cs" />
-    <Compile Include="CRUD\Read\Properties\SurfaceProperties.cs" />
-    <Compile Include="CRUD\Read\Properties\SectionProperties.cs" />
-    <Compile Include="CRUD\Read\Properties\Materials.cs" />
-    <Compile Include="CRUD\Read\Properties\Releases.cs" />
-    <Compile Include="CRUD\Read\Loads\Loadcases.cs" />
-    <Compile Include="CRUD\Read\Elements\DesignGroups.cs" />
-    <Compile Include="CRUD\Read\Properties\FramingElementDesignProperties.cs" />
-    <Compile Include="CRUD\Read\Results\BarResults.cs" />
-    <Compile Include="CRUD\Read\Results\GlobalResults.cs" />
-    <Compile Include="CRUD\Read\Results\MeshResults.cs" />
-    <Compile Include="CRUD\Read\Read.cs" />
-    <Compile Include="CRUD\Read\Results\NodeResults.cs" />
-    <Compile Include="CRUD\Read\Results\ResultUtils.cs" />
-    <Compile Include="CRUD\Update\Properties\FramingElementDesignProperties.cs" />
-    <Compile Include="CRUD\Update\Elements\Bars.cs" />
-    <Compile Include="CRUD\Update\IUpdate.cs" />
-    <Compile Include="CRUD\Update\UpdateTags.cs" />
-    <Compile Include="Types\Comparer.cs" />
-    <Compile Include="Types\DependencyTypes.cs" />
-    <Compile Include="Adapter\RobotAdapter.cs" />
-    <Compile Include="XXLegacy\ResultEnums_for Reference.cs" />
-    <Compile Include="XXLegacy\Elements\GridIO.cs" />
-    <Compile Include="XXLegacy\Elements\GroupIO.cs" />
-    <Compile Include="XXLegacy\Elements\LevelIO.cs" />
-    <Compile Include="XXLegacy\Elements\MeshIO.cs" />
-    <Compile Include="XXLegacy\Elements\RigidLinkIO.cs" />
-    <Compile Include="XXLegacy\Results\NodeResults.cs" />
-    <Compile Include="XXLegacy\Base\Label.cs" />
-    <Compile Include="XXLegacy\Elements\FiniteElement.cs" />
-    <Compile Include="XXLegacy\Loads\LoadIO.cs" />
-    <Compile Include="XXLegacy\Interface\ResultAdapter.cs" />
-    <Compile Include="XXLegacy\Properties\SupportIO.cs" />
-    <Compile Include="XXLegacy\Results\BarResults.cs" />
-    <Compile Include="XXLegacy\Results\Global.cs" />
-    <Compile Include="XXLegacy\Results\PanelResults.cs" />
-    <Compile Include="XXLegacy\Results\SlabReinforcementResults.cs" />
-    <Compile Include="XXLegacy\Results\Storey.cs" />
-    <Compile Include="XXLegacy\Interface\ElementAdapter.cs" />
-    <Compile Include="XXLegacy\Properties\PropertyIO.cs" />
-    <Compile Include="XXLegacy\Base\Utils.cs" />
-    <Compile Include="XXLegacy\Wind\WindCFD.cs" />
-    <Compile Include="XXLegacy\Base\Enums.cs" />
-    <Compile Include="XXLegacy\Elements\PanelIO.cs" />
-    <Compile Include="XXLegacy\Elements\NodeIO.cs" />
-    <Compile Include="XXLegacy\Elements\BarIO.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Remove="XXLegacy\Base\View.cs" />
+    <Compile Remove="XXLegacy\Interface\CommandAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="XXLegacy\Properties\Section Properties\Reinforced Concrete\" />
     <Folder Include="XXLegacy\Properties\Section Properties\Steel\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Robot_Engine\Robot_Engine.csproj">
-      <Project>{45d542cd-79b5-485a-ba39-0163230431f0}</Project>
-      <Name>Robot_Engine</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\Robot_oM\Robot_oM.csproj">
-      <Project>{0dd05698-6a33-4092-bfad-ff702685feaf}</Project>
-      <Name>Robot_oM</Name>
-      <Private>False</Private>
-    </ProjectReference>
+    <ProjectReference Include="..\Robot_Engine\Robot_Engine.csproj" />
+    <ProjectReference Include="..\Robot_oM\Robot_oM.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>if not "$(ConfigurationName)" == "Test" (xcopy "$(TargetDir)$(TargetFileName)" "C:\ProgramData\BHoM\Assemblies" /Y)</PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

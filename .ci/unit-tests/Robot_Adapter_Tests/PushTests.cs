@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2025, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2026, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -46,6 +46,7 @@ namespace BH.Tests.Adapter.Robot
         RobotAdapter m_Adapter;
 
         [OneTimeSetUp]
+        [Description("Creates a new empty Robot model once for all tests in the fixture.")]
         public void OntimeSetup()
         {
             m_Adapter = new RobotAdapter("", null, true);
@@ -54,6 +55,7 @@ namespace BH.Tests.Adapter.Robot
         }
 
         [SetUp]
+        [Description("Resets the Robot model to a new empty state and clears BHoM events before each test.")]
         public void Setup()
         {
             m_Adapter.Execute(new NewModel());
@@ -61,7 +63,8 @@ namespace BH.Tests.Adapter.Robot
         }
 
         [TearDown]
-        public void TearDown() 
+        [Description("Closes the Robot model without saving and logs any BHoM events raised during the test.")]
+        public void TearDown()
         {
             m_Adapter.Execute(new Close { SaveBeforeClose = false });
             var events = BH.Engine.Base.Query.CurrentEvents();
@@ -76,6 +79,7 @@ namespace BH.Tests.Adapter.Robot
         }
 
         [Test]
+        [Description("Tests that pushing Bars with tags correctly stores tags and that the tag cache is cleared after the push.")]
         public void PushBarsWithTag()
         {
             //Generate some random bars
@@ -222,6 +226,7 @@ namespace BH.Tests.Adapter.Robot
 
 
         [Test]
+        [Description("Tests that pushing Panels with tags correctly stores tags and that the tag cache is cleared after the push.")]
         public void PushPanelsWithTag()
         {
             //Generate some random panels
@@ -326,4 +331,5 @@ namespace BH.Tests.Adapter.Robot
 
     }
 }
+
 

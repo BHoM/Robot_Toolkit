@@ -1,6 +1,6 @@
 /*
  * This file is part of the Buildings and Habitats object Model (BHoM)
- * Copyright (c) 2015 - 2025, the respective contributors. All rights reserved.
+ * Copyright (c) 2015 - 2026, the respective contributors. All rights reserved.
  *
  * Each contributor holds copyright over their respective contributions.
  * The project versioning (Git) records all such contribution source information.
@@ -51,6 +51,7 @@ namespace BH.Tests.Adapter.Robot
 
         RobotAdapter m_Adapter;
         [OneTimeSetUp]
+        [Description("Opens the Robot model file once for all tests in the fixture.")]
         public void OneTimeSetup()
         {
             //Starts the RobotAdapter and opens the model file stored in the .ci folder
@@ -64,12 +65,14 @@ namespace BH.Tests.Adapter.Robot
         }
 
         [SetUp]
+        [Description("Clears BHoM events before each test.")]
         public void Setup()
         {
             BH.Engine.Base.Compute.ClearCurrentEvents();
         }
 
         [TearDown]
+        [Description("Logs any BHoM events raised during the test.")]
         public void TearDown()
         {
             var events = BH.Engine.Base.Query.CurrentEvents();
@@ -88,6 +91,7 @@ namespace BH.Tests.Adapter.Robot
         /***************************************************/
 
         [Test]
+        [Description("Tests that pulling Bars filtered by tag returns only the Bars belonging to the specified Robot group.")]
         public void PullBarsWithTag()
         {
             //Checks correctly extracting all bars in the Robot group corresponding to the tag
@@ -101,6 +105,7 @@ namespace BH.Tests.Adapter.Robot
         /***************************************************/
 
         [Test]
+        [Description("Tests that pulling Panels filtered by tag returns only the Panels belonging to the specified Robot group.")]
         public void PullPanelsWithTag()
         {
             //Checks correctly extracting all Panels in the Robot group corresponding to the tag
@@ -115,6 +120,7 @@ namespace BH.Tests.Adapter.Robot
         /***************************************************/
 
         [Test]
+        [Description("Tests that pulling Nodes filtered by tag returns only the Nodes belonging to the specified Robot group.")]
         public void PullNodesWithTag()
         {
             //Checks correctly extracting all Nodes in the Robot group corresponding to the tag
@@ -128,6 +134,7 @@ namespace BH.Tests.Adapter.Robot
         /***************************************************/
 
         [Test]
+        [Description("Tests that global reaction results are correctly pulled and match expected values for each load case.")]
         public void PullGlobalReactions()
         {
             //Pull global results
@@ -146,6 +153,7 @@ namespace BH.Tests.Adapter.Robot
         /***************************************************/
 
         [Test]
+        [Description("Tests that nodal modal results and global modal mass and frequency results are correctly pulled and are mutually consistent.")]
         public void PullModalResults()
         {
             //Pull nodal modal results
@@ -296,4 +304,5 @@ namespace BH.Tests.Adapter.Robot
         /***************************************************/
     }
 }
+
 

@@ -53,7 +53,7 @@ However, do **not** treat the documentation as infallible.
 
 ### If the documentation appears inconsistent:
 Prefer, in order:
-1. actual compileable interop types used in the project
+1. actual compilable interop types used in the project
 2. actual usage patterns already working in the repository
 3. COM interop reality
 4. the documented semantic intent

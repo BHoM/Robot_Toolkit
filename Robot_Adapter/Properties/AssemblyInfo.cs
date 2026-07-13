@@ -20,38 +20,41 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
-using System.Collections.Generic;
-using System.ComponentModel;
-using BH.oM.Adapters.Robot;
-using BH.oM.Base.Attributes;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
-namespace BH.Engine.Adapters.Robot
-{
-    public static partial class Create
-    {
-        /***************************************************/
-        /****           Public Constructors             ****/
-        /***************************************************/
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("Robot_Adapter")]
+[assembly: AssemblyDescription("https://github.com/BHoM/Robot_Toolkit")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Robot_Adapter")]
+[assembly: AssemblyCopyright("Copyright © https://github.com/BHoM")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
 
-        [Description("Creates a DesignGroup defining a set of elements to be designed together in Robot.")]
-        [Input("number", "The number identifier for the design group in Robot.")]
-        [Input("materialName", "The name of the material assigned to the design group.")]
-        [Input("elementIds", "The list of element identifiers belonging to this design group.")]
-        [Output("designGroup", "The DesignGroup object for use with the Robot adapter.")]
-        public static DesignGroup DesignGroup(int number = 0, string materialName = "", List<int> elementIds = null)
-        {
-            DesignGroup designGroup = new DesignGroup();
-            designGroup.Number = number;
-            designGroup.MaterialName = materialName;
-            if (elementIds != null)
-                designGroup.MemberIds = elementIds;
+// Setting ComVisible to false makes the types in this assembly not visible 
+// to COM components.  If you need to access a type in this assembly from 
+// COM, set the ComVisible attribute to true on that type.
+[assembly: ComVisible(false)]
 
-            return designGroup;
-        }
+// The following GUID is for the ID of the typelib if this project is exposed to COM
+[assembly: Guid("e0d6b6d6-2cf3-40ce-bc2d-50e29b30657a")]
 
-        /***************************************************/
-    }
-}
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version 
+//      Build Number
+//      Revision
+//
+// You can specify all the values or you can default the Build and Revision Numbers 
+// by using the '*' as shown below:
+// [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("9.0.0.0")]
+[assembly: AssemblyFileVersion("9.3.0.0")]
 
 
 

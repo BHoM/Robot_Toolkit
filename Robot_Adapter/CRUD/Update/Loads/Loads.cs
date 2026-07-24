@@ -20,46 +20,54 @@
  * along with this code. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>.      
  */
 
+using System.Collections.Generic;
+using BH.oM.Base;
 using BH.oM.Structure.Loads;
 using RobotOM;
 
 namespace BH.Adapter.Robot
 {
-    public static partial class Convert
+    public partial class RobotAdapter
     {
         /***************************************************/
-        /****           Public Methods                  ****/
+        /****           Protected Methods               ****/
         /***************************************************/
-       
-        public static void ToRobot(this BarUniformTemperatureLoad load, RobotSimpleCase sCase, RobotGroupServer rGroupServer)
+
+        protected bool Update(IEnumerable<ILoad> loads)
         {
-            if (load.TemperatureChange == 0)
+            RobotCaseServer caseServer = m_RobotApplication.Project.Structure.Cases;
+
+            foreach (ILoad load in loads)
             {
-                Engine.Base.Compute.RecordWarning("Zero thermal loads are not pushed to Robot");
-                return;
+                BHoMObject bhomLoad = load as BHoMObject;
+                int loadRecordId;
+
+                if (!CheckInputObjectAndExtractAdapterIdInt(bhomLoad, out loadRecordId, oM.Base.Debugging.EventType.Error, null, true))
+                    continue;
+
+                if (!CheckNotNull(load.Loadcase, oM.Base.Debugging.EventType.Error, load.GetType()))
+                    continue;
+
+                RobotSimpleCase sCase = caseServer.Get(load.Loadcase.Number) as RobotSimpleCase;
+                if (sCase == null)
+                {
+                    Engine.Base.Compute.RecordWarning($"Could not find a loadcase with number {load.Loadcase.Number} in Robot. Load could not be updated.");
+                    continue;
+                }
+
+                IRobotLoadRecord loadRecord = sCase.Records.Get(loadRecordId);
+                if (loadRecord == null)
+                {
+                    Engine.Base.Compute.RecordWarning($"Could not find a load record with id {loadRecordId} in loadcase {load.Loadcase.Number}. Load could not be updated.");
+                    continue;
+                }
+
+                Convert.UpdateLoadValue(load as dynamic, loadRecord);
             }
-            IRobotLoadRecord loadRecord = sCase.Records.Create(IRobotLoadRecordType.I_LRT_BAR_THERMAL);
-            loadRecord.Objects.FromText(load.CreateIdListOrGroupName(rGroupServer));
-            loadRecord.SetValue((short)IRobotBarThermalRecordValues.I_BTRV_TX, load.TemperatureChange);
 
-        }
-
-        /***************************************************/
-
-        public static void UpdateLoadValue(this BarUniformTemperatureLoad load, IRobotLoadRecord loadRecord)
-        {
-            if (!load.IsLoadRecordType(loadRecord, IRobotLoadRecordType.I_LRT_BAR_THERMAL))
-                return;
-
-            loadRecord.SetValue((short)IRobotBarThermalRecordValues.I_BTRV_TX, load.TemperatureChange);
+            return true;
         }
 
         /***************************************************/
     }
 }
-
-
-
-
-
-

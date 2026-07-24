@@ -89,9 +89,32 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
+        public static void UpdateLoadValue(this GravityLoad load, IRobotLoadRecord loadRecord)
+        {
+            if (!load.IsLoadRecordType(loadRecord, IRobotLoadRecordType.I_LRT_DEAD) || load.GravityDirection == null)
+                return;
+
+            if (loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_X) != 0)
+            {
+                loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_X, load.GravityDirection.X.Sign());
+                loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_COEFF, Math.Abs(load.GravityDirection.X));
+            }
+            else if (loadRecord.GetValue((short)IRobotDeadRecordValues.I_DRV_Y) != 0)
+            {
+                loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Y, load.GravityDirection.Y.Sign());
+                loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_COEFF, Math.Abs(load.GravityDirection.Y));
+            }
+            else
+            {
+                loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_Z, load.GravityDirection.Z.Sign());
+                loadRecord.SetValue((short)IRobotDeadRecordValues.I_DRV_COEFF, Math.Abs(load.GravityDirection.Z));
+            }
+        }
+
+        /***************************************************/
+
     }
 }
-
 
 
 

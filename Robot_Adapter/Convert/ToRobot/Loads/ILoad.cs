@@ -22,6 +22,7 @@
 
 using BH.oM.Structure.Loads;
 using RobotOM;
+using BH.Engine.Base;
 
 namespace BH.Adapter.Robot
 {
@@ -38,9 +39,35 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
+
+        public static void UpdateLoadValue(this ILoad load, IRobotLoadRecord loadRecord)
+        {
+            if (load != null)
+                Compute.RecordError("Load update for type '" + load.GetType() + "' not supported");
+        }
+
+        /***************************************************/
+
+        private static bool IsLoadRecordType(this ILoad load, IRobotLoadRecord loadRecord, IRobotLoadRecordType loadRecordType)
+        {
+            if (loadRecord == null)
+            {
+                Compute.RecordWarning($"Could not access the Robot load record for load type '{load?.GetType().Name}'.");
+                return false;
+            }
+
+            if (loadRecord.Type != loadRecordType)
+            {
+                Compute.RecordWarning($"Robot load record type '{loadRecord.Type}' does not match '{loadRecordType}' for load type '{load?.GetType().Name}'.");
+                return false;
+            }
+
+            return true;
+        }
+
+        /***************************************************/
     }
 }
-
 
 
 

@@ -60,9 +60,30 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
+
+        public static void UpdateLoadValue(this BarPointLoad load, IRobotLoadRecord loadRecord)
+        {
+            if (!load.IsLoadRecordType(loadRecord, IRobotLoadRecordType.I_LRT_BAR_FORCE_CONCENTRATED))
+                return;
+
+            if (load.Force != null)
+            {
+                loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FX, load.Force.X);
+                loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FY, load.Force.Y);
+                loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_FZ, load.Force.Z);
+            }
+
+            if (load.Moment != null)
+            {
+                loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CX, load.Moment.X);
+                loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CY, load.Moment.Y);
+                loadRecord.SetValue((short)IRobotBarForceConcentrateRecordValues.I_BFCRV_CZ, load.Moment.Z);
+            }
+        }
+
+        /***************************************************/
     }
 }
-
 
 
 

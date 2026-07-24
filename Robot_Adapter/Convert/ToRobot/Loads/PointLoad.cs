@@ -57,9 +57,30 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
+
+        public static void UpdateLoadValue(this PointLoad load, IRobotLoadRecord loadRecord)
+        {
+            if (!load.IsLoadRecordType(loadRecord, IRobotLoadRecordType.I_LRT_NODE_FORCE))
+                return;
+
+            if (load.Force != null)
+            {
+                loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_FX, load.Force.X);
+                loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_FY, load.Force.Y);
+                loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_FZ, load.Force.Z);
+            }
+
+            if (load.Moment != null)
+            {
+                loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_CX, load.Moment.X);
+                loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_CY, load.Moment.Y);
+                loadRecord.SetValue((short)IRobotNodeForceRecordValues.I_NFRV_CZ, load.Moment.Z);
+            }
+        }
+
+        /***************************************************/
     }
 }
-
 
 
 

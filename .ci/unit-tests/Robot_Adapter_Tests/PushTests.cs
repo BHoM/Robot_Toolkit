@@ -329,7 +329,49 @@ namespace BH.Tests.Adapter.Robot
             pulledPanels.Count.ShouldBe(panels.Count, "Panels storing the tag has not been correctly replaced.");
         }
 
+        [Test]
+        [Description("Tests that updating a load changes only its value and keeps other load parameters unchanged.")]
+        public void UpdateBarPointLoadValueOnly()
+        {
+            Bar bar = Engine.Base.Create.RandomObject(typeof(Bar), 11) as Bar;
+            Loadcase loadcase = new Loadcase { Number = 1, Name = "Loadcase 1" };
+
+            m_Adapter.Push(new List<Bar> { bar });
+            m_Adapter.Push(new List<Loadcase> { loadcase });
+
+            BarPointLoad load = new BarPointLoad
+            {
+                Objects = new BHoMGroup<Bar> { Elements = new List<Bar> { bar } },
+                Loadcase = loadcase,
+                Force = new Vector { X = 1, Y = 2, Z = 3 },
+                Moment = new Vector { X = 4, Y = 5, Z = 6 },
+                DistanceFromA = 0.25,
+                Axis = LoadAxis.Global
+            };
+
+            m_Adapter.Push(new List<ILoad> { load });
+
+            load.Fragments.ContainsKey(typeof(RobotId)).ShouldBeTrue("Pushed load should receive a Robot id so it can be updated.");
+
+            load.Force = new Vector { X = 10, Y = 20, Z = 30 };
+            load.Moment = new Vector { X = 40, Y = 50, Z = 60 };
+            load.DistanceFromA = 0.75;
+            load.Axis = LoadAxis.Local;
+
+            m_Adapter.Update(new List<ILoad> { load });
+
+            List<BarPointLoad> pulledLoads = m_Adapter.Pull(new FilterRequest { Type = typeof(BarPointLoad) }).Cast<BarPointLoad>().ToList();
+
+            pulledLoads.Count.ShouldBe(1, "Wrong number of bar point loads returned.");
+            pulledLoads[0].Force.X.ShouldBe(load.Force.X, "Load force should be updated.");
+            pulledLoads[0].Force.Y.ShouldBe(load.Force.Y, "Load force should be updated.");
+            pulledLoads[0].Force.Z.ShouldBe(load.Force.Z, "Load force should be updated.");
+            pulledLoads[0].Moment.X.ShouldBe(load.Moment.X, "Load moment should be updated.");
+            pulledLoads[0].Moment.Y.ShouldBe(load.Moment.Y, "Load moment should be updated.");
+            pulledLoads[0].Moment.Z.ShouldBe(load.Moment.Z, "Load moment should be updated.");
+            pulledLoads[0].DistanceFromA.ShouldBe(0.25, "Load position should remain unchanged.");
+            pulledLoads[0].Axis.ShouldBe(LoadAxis.Global, "Load axis should remain unchanged.");
+        }
+
     }
 }
-
-

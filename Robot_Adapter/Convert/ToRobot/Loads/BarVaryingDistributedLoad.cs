@@ -75,9 +75,30 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
+
+        public static void UpdateLoadValue(this BarVaryingDistributedLoad load, IRobotLoadRecord loadRecord)
+        {
+            if (!load.IsLoadRecordType(loadRecord, IRobotLoadRecordType.I_LRT_BAR_TRAPEZOIDALE))
+                return;
+
+            if (load.ForceAtStart != null)
+            {
+                loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PX1, load.ForceAtStart.X);
+                loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PY1, load.ForceAtStart.Y);
+                loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PZ1, load.ForceAtStart.Z);
+            }
+
+            if (load.ForceAtEnd != null)
+            {
+                loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PX2, load.ForceAtEnd.X);
+                loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PY2, load.ForceAtEnd.Y);
+                loadRecord.SetValue((short)IRobotBarTrapezoidaleRecordValues.I_BTRV_PZ2, load.ForceAtEnd.Z);
+            }
+        }
+
+        /***************************************************/
     }
 }
-
 
 
 

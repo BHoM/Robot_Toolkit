@@ -77,9 +77,34 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
+
+        public static void UpdateLoadValue(this BarUniformlyDistributedLoad load, IRobotLoadRecord loadRecord)
+        {
+            if (loadRecord == null)
+                return;
+
+            if (loadRecord.Type == IRobotLoadRecordType.I_LRT_BAR_UNIFORM && load.Force != null)
+            {
+                loadRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PX, load.Force.X);
+                loadRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PY, load.Force.Y);
+                loadRecord.SetValue((short)IRobotBarUniformRecordValues.I_BURV_PZ, load.Force.Z);
+                return;
+            }
+
+            if (loadRecord.Type == IRobotLoadRecordType.I_LRT_BAR_MOMENT_DISTRIBUTED && load.Moment != null)
+            {
+                loadRecord.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MX, load.Moment.X);
+                loadRecord.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MY, load.Moment.Y);
+                loadRecord.SetValue((short)IRobotBarMomentDistributedRecordValues.I_BMDRV_MZ, load.Moment.Z);
+                return;
+            }
+
+            Engine.Base.Compute.RecordWarning($"Robot load record type '{loadRecord.Type}' does not match a supported uniformly distributed bar load record for load type '{load?.GetType().Name}'.");
+        }
+
+        /***************************************************/
     }
 }
-
 
 
 

@@ -28,6 +28,7 @@ using BH.Engine.Structure;
 using System.Linq;
 using RobotOM;
 using BH.oM.Structure.Elements;
+using BH.oM.Adapters.Robot;
 
 namespace BH.Adapter.Robot
 {
@@ -52,7 +53,17 @@ namespace BH.Adapter.Robot
 
                 IRobotCase rCase = caseServer.Get(load.Loadcase.Number);
                 RobotSimpleCase sCase = rCase as RobotSimpleCase;
-                Convert.ToRobot(load as dynamic, sCase, rGroupServer);               
+                if (sCase == null)
+                    continue;
+
+                int recordCountBefore = sCase.Records.Count;
+                Convert.ToRobot(load as dynamic, sCase, rGroupServer);
+                int addedRecordCount = sCase.Records.Count - recordCountBefore;
+
+                if (addedRecordCount == 1 && load is BHoMObject)
+                    this.SetAdapterId(load as BHoMObject, recordCountBefore + 1);
+                else if (addedRecordCount > 1)
+                    Engine.Base.Compute.RecordNote($"Load of type {load.GetType().Name} was split into multiple Robot records. No load record id was assigned for updates.");
             }
             
             return true;
@@ -119,7 +130,6 @@ namespace BH.Adapter.Robot
     }
 
 }
-
 
 
 

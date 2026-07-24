@@ -29,6 +29,7 @@ using BH.oM.Geometry;
 using BH.oM.Base;
 using BH.oM.Structure.Loads;
 using BH.Engine.Adapters.Robot;
+using BH.oM.Adapters.Robot;
 
 
 namespace BH.Adapter.Robot
@@ -92,6 +93,7 @@ namespace BH.Adapter.Robot
                                             Axis = localAxis == 1 ? LoadAxis.Local : LoadAxis.Global,
                                             Projected = projectedLoad == 1
                                         };
+                                        SetAdapterId(contourLoad, j);
                                         bhomLoads.Add(contourLoad);
                                         break;
                                 }
@@ -120,7 +122,6 @@ namespace BH.Adapter.Robot
     }
 
 }
-
 
 
 

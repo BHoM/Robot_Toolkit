@@ -56,9 +56,20 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
+
+        public static void UpdateLoadValue(this AreaUniformlyDistributedLoad load, IRobotLoadRecord loadRecord)
+        {
+            if (!load.IsLoadRecordType(loadRecord, IRobotLoadRecordType.I_LRT_UNIFORM) || load.Pressure == null)
+                return;
+
+            loadRecord.SetValue((short)IRobotUniformRecordValues.I_URV_PX, load.Pressure.X);
+            loadRecord.SetValue((short)IRobotUniformRecordValues.I_URV_PY, load.Pressure.Y);
+            loadRecord.SetValue((short)IRobotUniformRecordValues.I_URV_PZ, load.Pressure.Z);
+        }
+
+        /***************************************************/
     }
 }
-
 
 
 

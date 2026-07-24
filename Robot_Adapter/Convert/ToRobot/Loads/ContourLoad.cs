@@ -87,9 +87,20 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
+
+        public static void UpdateLoadValue(this ContourLoad load, IRobotLoadRecord loadRecord)
+        {
+            if (!load.IsLoadRecordType(loadRecord, IRobotLoadRecordType.I_LRT_IN_CONTOUR) || load.Force == null)
+                return;
+
+            loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PX1, load.Force.X);
+            loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PY1, load.Force.Y);
+            loadRecord.SetValue((short)IRobotInContourRecordValues.I_ICRV_PZ1, load.Force.Z);
+        }
+
+        /***************************************************/
     }
 }
-
 
 
 

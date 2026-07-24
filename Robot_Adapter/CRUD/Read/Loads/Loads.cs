@@ -32,6 +32,7 @@ using BH.oM.Base;
 using BH.oM.Structure.Loads;
 using BH.oM.Adapters.Robot;
 using BH.Engine.Adapters.Robot;
+using BH.oM.Base;
 
 
 namespace BH.Adapter.Robot
@@ -151,6 +152,7 @@ namespace BH.Adapter.Robot
                                 {
                                     SetLoadGroup(load, objects.Cast<IBHoMObject>());
                                     load.Loadcase = bhomLoadCases[sCase.Number];
+                                    SetAdapterId(load as BHoMObject, j);
                                     bhomLoads.Add(load);
                                 }
                                 else
@@ -251,7 +253,6 @@ namespace BH.Adapter.Robot
     }
 
 }
-
 
 
 

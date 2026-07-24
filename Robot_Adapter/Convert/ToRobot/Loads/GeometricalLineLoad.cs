@@ -69,9 +69,44 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
+
+        public static void UpdateLoadValue(this oM.Structure.Loads.GeometricalLineLoad load, IRobotLoadRecord loadRecord)
+        {
+            if (!load.IsLoadRecordType(loadRecord, IRobotLoadRecordType.I_LRT_LINEAR_3D))
+                return;
+
+            if (load.ForceA != null)
+            {
+                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PX1, load.ForceA.X);
+                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PY1, load.ForceA.Y);
+                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PZ1, load.ForceA.Z);
+            }
+
+            if (load.ForceB != null)
+            {
+                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PX2, load.ForceB.X);
+                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PY2, load.ForceB.Y);
+                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_PZ2, load.ForceB.Z);
+            }
+
+            if (load.MomentA != null)
+            {
+                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MX1, load.MomentA.X);
+                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MY1, load.MomentA.Y);
+                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MZ1, load.MomentA.Z);
+            }
+
+            if (load.MomentB != null)
+            {
+                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MX2, load.MomentB.X);
+                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MY2, load.MomentB.Y);
+                loadRecord.SetValue((short)IRobotLinear3DRecordValues.I_L3DRV_MZ2, load.MomentB.Z);
+            }
+        }
+
+        /***************************************************/
     }
 }
-
 
 
 

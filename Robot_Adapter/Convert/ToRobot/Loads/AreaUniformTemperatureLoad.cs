@@ -46,9 +46,18 @@ namespace BH.Adapter.Robot
         }
 
         /***************************************************/
+
+        public static void UpdateLoadValue(this AreaUniformTemperatureLoad load, IRobotLoadRecord loadRecord)
+        {
+            if (!load.IsLoadRecordType(loadRecord, IRobotLoadRecordType.I_LRT_THERMAL_IN_3_POINTS))
+                return;
+
+            loadRecord.SetValue((short)IRobotThermalIn3PointsRecordValues.I_3PRV_TX1, load.TemperatureChange);
+        }
+
+        /***************************************************/
     }
 }
-
 
 
 

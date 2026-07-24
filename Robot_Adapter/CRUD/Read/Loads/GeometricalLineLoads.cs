@@ -96,6 +96,7 @@ namespace BH.Adapter.Robot
                                             Axis = local.FromRobotLoadAxis(),
                                             Loadcase = bhomLoadCases[sCase.Number]
                                         };
+                                        SetAdapterId(contourLoad, j);
                                         bhomLoads.Add(contourLoad);
                                         break;
                                 }
@@ -124,7 +125,6 @@ namespace BH.Adapter.Robot
     }
 
 }
-
 
 
 

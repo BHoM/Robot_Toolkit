@@ -39,16 +39,70 @@ namespace BH.Adapter.Robot
 
             ISectionProperty prop = null;
             IProfile profile = null;
+            
             try
             {
+                // Check for cellular/castellated beams by trying to access Special data first
+                // Robot reports cellular beams as I_BST_COMPLEX with I_BSST_UNKNOWN shape type
+                // but the Special property still provides access to cellular beam parameters via I_BSSDV_* values
+                IRobotBarSectionSpecialData secSpecData = null;
+                try
+                {
+                    secSpecData = secData.Special;
+                }
+                catch
+                {
+                    // Special data not accessible
+                }
+                
+                if (secSpecData != null)
+                {
+                    // Try to convert as cellular beam using special data (I_BSSDV_* values)
+                    prop = FromRobotSpecialProfile(secSpecData, secData);
+                    
+                    if (prop != null)
+                    {
+                        // Successfully converted cellular beam
+                        if (material != null)
+                        {
+                            prop.Material = material;
+                        }
+                        return prop;
+                    }
+                }
+                
+                // Fallback: Check for cellular/castellated beams by shape type (if Robot reports them properly)
+                // These return CellularSection (ISectionProperty) directly, not IProfile
+                if (secData.ShapeType == IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_ROUND_OPENINGS ||
+                    secData.ShapeType == IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS ||
+                    secData.ShapeType == IRobotBarSectionShapeType.I_BSST_SPEC_CASTELLATED_WEB_HEXAGONAL_OPENINGS_SHIFTED)
+                {
+                    // Cellular beams - extract from standard section data with DIM values
+                    prop = FromRobotCellularProfile(secData);
+                    
+                    // Set material on the cellular section
+                    if (prop != null && material != null)
+                    {
+                        prop.Material = material;
+                    }
+                    
+                    if (prop == null)
+                    {
+                        Engine.Base.Compute.RecordWarning($"Failed to convert cellular/castellated beam named {robotLabelName}. Shape type: {secData.ShapeType}, Section type: {secData.Type}");
+                    }
+                    
+                    return prop;
+                }
+                
+                // Handle standard profiles (concrete and other geometrical sections)
                 if (secData.IsConcrete)
                     profile = FromRobotConcreteProfile(secData);
                 else
                     profile = FromRobotGeneralProfile(secData);
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-
+                Engine.Base.Compute.RecordWarning($"Exception converting section {robotLabelName}: {ex.Message}");
             }
 
             if (profile != null)

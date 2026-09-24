@@ -1,13 +1,13 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Robot_Adapter", "Robot_Adapter\Robot_Adapter.csproj", "{A4FE6182-A985-44E0-A5BF-3E54C6EA30BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Robot_Adapter", "Robot_Adapter\Robot_Adapter.csproj", "{A4FE6182-A985-44E0-A5BF-3E54C6EA30BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Robot_Engine", "Robot_Engine\Robot_Engine.csproj", "{45D542CD-79B5-485A-BA39-0163230431F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Robot_Engine", "Robot_Engine\Robot_Engine.csproj", "{45D542CD-79B5-485A-BA39-0163230431F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Robot_oM", "Robot_oM\Robot_oM.csproj", "{0DD05698-6A33-4092-BFAD-FF702685FEAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Robot_oM", "Robot_oM\Robot_oM.csproj", "{0DD05698-6A33-4092-BFAD-FF702685FEAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

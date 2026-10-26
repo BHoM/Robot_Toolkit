@@ -39,6 +39,7 @@ using BH.oM.Data.Requests;
 using System.Linq;
 using BH.oM.Adapter;
 using RobotOM;
+using BH.oM.Spatial.SettingOut;
 
 namespace BH.Adapter.Robot
 {
@@ -60,6 +61,8 @@ namespace BH.Adapter.Robot
                 return ReadNodes(indices);
             else if (type == typeof(Bar))
                 return ReadBars(indices);
+            else if (type == typeof(Grid))
+                return ReadGrids(indices);
             else if (type == typeof(Opening))
                 return ReadOpenings();
             else if (type == typeof(Constraint4DOF))

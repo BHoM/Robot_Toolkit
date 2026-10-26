@@ -34,6 +34,7 @@ using BH.oM.Base.Attributes;
 using BH.Engine.Adapters.Robot;
 using BH.oM.Adapter;
 using BH.oM.Base;
+using BH.oM.Spatial.SettingOut;
 
 namespace BH.Adapter.Robot
 {
@@ -117,6 +118,11 @@ namespace BH.Adapter.Robot
                 if (first is Panel)
                 {
                     success = CreateCollection(objects as IEnumerable<Panel>);
+                }
+
+                if (first is Grid)
+                {
+                    success = CreateCollection(objects as IEnumerable<Grid>);
                 }
 
                 if (first is Opening)

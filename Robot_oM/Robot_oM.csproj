@@ -24,6 +24,21 @@
       <HintPath>$(ProgramData)\BHoM\Assemblies\BHoM.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Analytical_oM">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\Analytical_oM.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Data_oM">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\Data_oM.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Quantities_oM">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(ProgramData)\BHoM\Assemblies\Quantities_oM.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Geometry_oM">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(ProgramData)\BHoM\Assemblies\Geometry_oM.dll</HintPath>

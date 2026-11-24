@@ -22,6 +22,8 @@
 
 using System;
 using System.ComponentModel;
+using BH.oM.Analytical.Results;
+using BH.oM.Base;
 using BH.oM.Quantities.Attributes;
 using BH.oM.Structure.Design;
 
@@ -29,7 +31,7 @@ namespace BH.oM.Adapters.Robot
 {
     [Description("Result of a Robot steel member verification for a single member. ResultCase is the name of the governing ultimate limit state case. \n" +
                  "Values for a limit state that was not checked are NaN.")]
-    public class SteelMemberVerification : DesignResult
+    public class SteelMemberVerification : DesignResult, IResultItem, IImmutable
     {
         /***************************************************/
         /****            Public Properties              ****/

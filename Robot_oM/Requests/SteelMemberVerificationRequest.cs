@@ -26,7 +26,7 @@ using BH.oM.Structure.Requests;
 
 namespace BH.oM.Adapters.Robot
 {
-    [Description("Runs Robot's steel member verification for the requested members and load cases, and returns a SteelMemberVerification result for each member. " +
+    [Description("Runs Robot's steel member verification for the requested members and load cases, and returns a SteelMemberVerification result for each member. \n" +
                  "The model must have been analysed first. The members are checked with the design code and member type labels already set in Robot.")]
     public class SteelMemberVerificationRequest : IStructuralResultRequest
     {
@@ -46,11 +46,11 @@ namespace BH.oM.Adapters.Robot
         [Description("If true, the ultimate limit state checks are carried out and the utilisation and slenderness values are populated.")]
         public virtual bool UltimateLimitState { get; set; } = true;
 
-        [Description("If true, the serviceability limit state checks are carried out and the deflection and displacement values are populated. " +
+        [Description("If true, the serviceability limit state checks are carried out and the deflection and displacement values are populated. \n" +
                      "Only members whose Robot member type has deflection or displacement checks switched on return values.")]
         public virtual bool ServiceabilityLimitState { get; set; } = false;
 
-        [Description("If true, design code specific values (resistances, buckling factors and the individual check ratios) are read for each member. " +
+        [Description("If true, design code specific values (resistances, buckling factors and the individual check ratios) are read for each member. \n" +
                      "Only EN 1993-1-1 is supported so far. Reading them makes the pull slower on large models.")]
         public virtual bool IncludeCodeResults { get; set; } = true;
 

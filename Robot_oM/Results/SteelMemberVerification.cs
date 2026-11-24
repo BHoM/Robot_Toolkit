@@ -22,12 +22,12 @@
 
 using System;
 using System.ComponentModel;
-using BH.oM.Structure.Design;
 using BH.oM.Quantities.Attributes;
+using BH.oM.Structure.Design;
 
 namespace BH.oM.Adapters.Robot
 {
-    [Description("Result of a Robot steel member verification for a single member. ResultCase is the name of the governing ultimate limit state case. " +
+    [Description("Result of a Robot steel member verification for a single member. ResultCase is the name of the governing ultimate limit state case. \n" +
                  "Values for a limit state that was not checked are NaN.")]
     public class SteelMemberVerification : DesignResult
     {
@@ -99,7 +99,7 @@ namespace BH.oM.Adapters.Robot
         [Description("Name of the case governing the global Y displacement.")]
         public virtual string DisplacementGoverningCaseY { get; }
 
-        [Description("Design code specific values for the governing ultimate limit state, such as resistances, buckling factors and the individual check ratios. " +
+        [Description("Design code specific values for the governing ultimate limit state, such as resistances, buckling factors and the individual check ratios. \n" +
                      "Null if they were not requested, or if the design code is not supported yet. Currently only EN 1993-1-1 is supported.")]
         public virtual ISteelDesignCodeResults CodeResults { get; }
 

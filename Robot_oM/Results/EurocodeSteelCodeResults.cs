@@ -26,7 +26,7 @@ using BH.oM.Quantities.Attributes;
 
 namespace BH.oM.Adapters.Robot
 {
-    [Description("EN 1993-1-1 values from a Robot steel member verification, at the governing point of the governing ultimate limit state case. " +
+    [Description("EN 1993-1-1 values from a Robot steel member verification, at the governing point of the governing ultimate limit state case. \n" +
                  "Values Robot did not calculate or report for the member are NaN.")]
     public class EurocodeSteelCodeResults : BHoMObject, ISteelDesignCodeResults
     {

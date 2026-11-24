@@ -33,7 +33,7 @@ namespace BH.Adapter.Robot
         /****           Public Methods                  ****/
         /***************************************************/
 
-        [Description("Converts the code specific results object of a Robot steel member verification (IRDimDetailedRes.CodeResults) to BHoM, based on the design code name. " +
+        [Description("Converts the code specific results object of a Robot steel member verification (IRDimDetailedRes.CodeResults) to BHoM, based on the design code name. \n" +
                      "Returns null for design codes that are not supported yet.")]
         public static ISteelDesignCodeResults FromRobotSteelCodeResults(object codeResults, string designCode)
         {
@@ -48,8 +48,8 @@ namespace BH.Adapter.Robot
 
         /***************************************************/
 
-        [Description("Converts the code specific results object of a Robot steel member verification to EN 1993-1-1 results. " +
-                     "Robot spreads these values over the IRDimCodeResE32_1 to IRDimCodeResE32_4 interfaces, so they are read by name through late binding. " +
+        [Description("Converts the code specific results object of a Robot steel member verification to EN 1993-1-1 results. \n" +
+                     "Robot spreads these values over the IRDimCodeResE32_1 to IRDimCodeResE32_4 interfaces, so they are read by name through late binding. \n" +
                      "Values Robot does not expose are set to NaN.")]
         public static EurocodeSteelCodeResults FromRobotEurocodeSteelCodeResults(object codeResults)
         {
